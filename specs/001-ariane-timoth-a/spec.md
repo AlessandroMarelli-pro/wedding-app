@@ -104,7 +104,7 @@ Wedding guests visit the Ariane & Timothe wedding website to learn about wedding
 - **FR-014**: System MUST store and track RSVP confirmations with associated hash codes
 - **FR-015**: System MUST prevent duplicate RSVP submissions for the same hash code
 - **FR-016**: System MUST authenticate administrators before allowing access to admin functionality with email and password
-- **FR-017**: System MUST validate and process CSV file format [NEEDS CLARIFICATION: specific CSV structure, required fields, and data validation rules not specified]
+- **FR-017**: System MUST validate and process CSV file format with firstname, lastname and email (optionnal)
 - **FR-018**: System MUST integrate with calendar services for the "add to calendar" feature with ical format
 - **FR-019**: System MUST handle map integration for displaying accommodation locations with Google Maps
 
