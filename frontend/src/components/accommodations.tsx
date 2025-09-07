@@ -1,3 +1,13 @@
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui';
+import { DollarSign, ExternalLink, MapPin, Phone, Star } from 'lucide-react';
+
 interface Accommodation {
   id: string;
   name: string;
@@ -7,6 +17,8 @@ interface Accommodation {
   priceRange?: string;
   isRecommended: boolean;
   displayOrder: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface AccommodationsListProps {
@@ -24,11 +36,14 @@ export function AccommodationsList({
 
   if (accommodations.length === 0) {
     return (
-      <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-rose-100 text-center">
-        <p className="text-gray-600">
-          Accommodation recommendations will be available soon.
-        </p>
-      </div>
+      <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
+        <CardContent className="text-center py-12">
+          <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <p className="text-muted-foreground">
+            Accommodation recommendations will be available soon.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -36,98 +51,101 @@ export function AccommodationsList({
     accommodation,
   }: {
     accommodation: Accommodation;
-  }) => (
-    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-rose-100 hover:shadow-xl transition-all duration-300">
-      <div className="flex items-start justify-between mb-4">
-        <h3 className="text-2xl font-serif text-gray-800">
-          {accommodation.name}
-        </h3>
-        {accommodation.isRecommended && (
-          <span className="bg-gradient-to-r from-rose-400 to-pink-400 text-white px-3 py-1 rounded-full text-sm font-medium">
-            Recommended
-          </span>
-        )}
-      </div>
+  }) => {
+    const openMaps = () => {
+      if (accommodation.latitude && accommodation.longitude) {
+        window.open(
+          `https://maps.google.com/?q=${accommodation.latitude},${accommodation.longitude}`,
+          '_blank',
+        );
+      } else {
+        window.open(
+          `https://maps.google.com/?q=${encodeURIComponent(accommodation.address)}`,
+          '_blank',
+        );
+      }
+    };
 
-      <p className="text-gray-700 mb-6 leading-relaxed">
-        {accommodation.description}
-      </p>
-
-      <div className="space-y-3">
-        <div className="flex items-start">
-          <svg
-            className="w-5 h-5 text-rose-500 mt-0.5 mr-3 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <p className="text-gray-600">{accommodation.address}</p>
-        </div>
-
-        {accommodation.contactInfo && (
-          <div className="flex items-center">
-            <svg
-              className="w-5 h-5 text-rose-500 mr-3 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-              />
-            </svg>
-            <p className="text-gray-600">{accommodation.contactInfo}</p>
+    return (
+      <Card className="bg-card/60 backdrop-blur-sm border shadow-lg hover:shadow-xl transition-all duration-300 group">
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between">
+            <CardTitle className="text-xl font-serif text-foreground group-hover:text-primary transition-colors">
+              {accommodation.name}
+            </CardTitle>
+            {accommodation.isRecommended && (
+              <Badge
+                variant="default"
+                className="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500"
+              >
+                <Star className="w-3 h-3 mr-1" />
+                Recommended
+              </Badge>
+            )}
           </div>
-        )}
+        </CardHeader>
 
-        {accommodation.priceRange && (
-          <div className="flex items-center">
-            <svg
-              className="w-5 h-5 text-rose-500 mr-3 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-              />
-            </svg>
-            <p className="text-gray-600 font-medium">
-              {accommodation.priceRange}
-            </p>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground leading-relaxed">
+            {accommodation.description}
+          </p>
+
+          <div className="space-y-3">
+            <div className="flex items-start space-x-3">
+              <MapPin className="w-4 h-4 text-rose-500 mt-1 flex-shrink-0" />
+              <p className="text-sm text-muted-foreground">
+                {accommodation.address}
+              </p>
+            </div>
+
+            {accommodation.contactInfo && (
+              <div className="flex items-center space-x-3">
+                <Phone className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                <p className="text-sm text-muted-foreground">
+                  {accommodation.contactInfo}
+                </p>
+              </div>
+            )}
+
+            {accommodation.priceRange && (
+              <div className="flex items-center space-x-3">
+                <DollarSign className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                <p className="text-sm text-muted-foreground font-medium">
+                  {accommodation.priceRange}
+                </p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </div>
-  );
+
+          <div className="pt-4 border-t">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openMaps}
+              className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              View on Maps
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="space-y-12">
       {recommended.length > 0 && (
         <div>
-          <h3 className="text-2xl font-serif text-gray-800 mb-8 text-center">
-            Our Recommendations
-          </h3>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-serif text-foreground mb-2">
+              Our Recommendations
+            </h3>
+            <p className="text-muted-foreground">
+              These are our top picks for your stay
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommended.map((accommodation) => (
               <AccommodationCard
                 key={accommodation.id}
@@ -141,11 +159,16 @@ export function AccommodationsList({
       {others.length > 0 && (
         <div>
           {recommended.length > 0 && (
-            <h3 className="text-2xl font-serif text-gray-800 mb-8 text-center">
-              Other Options
-            </h3>
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-serif text-foreground mb-2">
+                More Options
+              </h3>
+              <p className="text-muted-foreground">
+                Additional accommodations in the area
+              </p>
+            </div>
           )}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {others.map((accommodation) => (
               <AccommodationCard
                 key={accommodation.id}
