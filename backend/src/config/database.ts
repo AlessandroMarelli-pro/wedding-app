@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DatabaseConfig implements TypeOrmOptionsFactory {
@@ -10,7 +10,8 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'sqlite',
-      database: this.configService.get<string>('DATABASE_URL') || 'database.sqlite',
+      database:
+        this.configService.get<string>('DATABASE_URL') || 'database.sqlite',
       entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
       migrations: [__dirname + '/../migrations/*{.ts,.js}'],
       synchronize: process.env.NODE_ENV !== 'production', // Only for development
@@ -20,10 +21,10 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
   }
 }
 
-// Export DataSource for migrations
-export const AppDataSource = new DataSource({
+// DataSource for migrations - single default export required by TypeORM CLI
+const AppDataSource = new DataSource({
   type: 'sqlite',
-  database: process.env.DATABASE_URL || 'database.sqlite',
+  database: process.env.DATABASE_URL || 'wedding.db',
   entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
   synchronize: false,

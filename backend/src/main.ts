@@ -1,32 +1,173 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
+  // Global API prefix
+  app.setGlobalPrefix('api');
+
+  // Enable CORS for frontend communication
+  app.enableCors({
+    origin: [
+      'http://localhost:3000', // Next.js development server
+      'http://localhost:3001', // Alternative port
+      'https://wedding.example.com', // Production domain
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+    ],
+    credentials: true,
+    maxAge: 86400, // 24 hours
+  });
+
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
+      whitelist: true, // Remove properties not in DTO
+      forbidNonWhitelisted: true, // Throw error for non-whitelisted properties
+      transform: true, // Transform payloads to DTO instances
+      disableErrorMessages: process.env.NODE_ENV === 'production',
     }),
   );
-  
-  // CORS configuration
-  app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
+
+  // Security headers
+  app.use((req: any, res: any, next: any) => {
+    // Security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader(
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains',
+    );
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    // Content Security Policy
+    res.setHeader(
+      'Content-Security-Policy',
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: https:",
+        "font-src 'self' data:",
+        "connect-src 'self' http://localhost:* https:",
+        "frame-ancestors 'none'",
+      ].join('; '),
+    );
+
+    next();
   });
-  
-  // Global API prefix
-  app.setGlobalPrefix('api');
-  
+
+  // Rate limiting (basic implementation)
+  const rateLimitMap = new Map();
+  app.use((req: any, res: any, next: any) => {
+    const clientIP = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    const windowMs = 15 * 60 * 1000; // 15 minutes
+    const maxRequests = 100; // Max requests per window
+
+    if (!rateLimitMap.has(clientIP)) {
+      rateLimitMap.set(clientIP, { count: 1, resetTime: now + windowMs });
+      return next();
+    }
+
+    const clientData = rateLimitMap.get(clientIP);
+
+    if (now > clientData.resetTime) {
+      // Reset the window
+      rateLimitMap.set(clientIP, { count: 1, resetTime: now + windowMs });
+      return next();
+    }
+
+    if (clientData.count >= maxRequests) {
+      return res.status(429).json({
+        error: 'Too Many Requests',
+        message: 'Rate limit exceeded. Please try again later.',
+        retryAfter: Math.ceil((clientData.resetTime - now) / 1000),
+      });
+    }
+
+    clientData.count++;
+    next();
+  });
+
+  // Swagger API documentation
+  if (process.env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('Wedding Website API')
+      .setDescription('REST API for wedding website management and RSVP system')
+      .setVersion('1.0')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'JWT',
+          description: 'Enter JWT token',
+          in: 'header',
+        },
+        'JWT-auth',
+      )
+      .addTag('Authentication', 'Admin login endpoints')
+      .addTag('Public', 'Public endpoints (no authentication required)')
+      .addTag('Admin', 'Admin-only endpoints (requires authentication)')
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document, {
+      swaggerOptions: {
+        persistAuthorization: true,
+        tagsSorter: 'alpha',
+        operationsSorter: 'alpha',
+      },
+    });
+
+    console.log(
+      '📚 Swagger documentation available at: http://localhost:3001/api/docs',
+    );
+  }
+
+  // Global error handler
+  app.use((error: any, req: any, res: any, next: any) => {
+    console.error('Global error handler:', error);
+
+    if (res.headersSent) {
+      return next(error);
+    }
+
+    const status = error.status || 500;
+    const message =
+      process.env.NODE_ENV === 'production'
+        ? 'Internal server error'
+        : error.message;
+
+    res.status(status).json({
+      error: error.name || 'Error',
+      message,
+      timestamp: new Date().toISOString(),
+      path: req.url,
+    });
+  });
+
   const port = process.env.PORT || 3001;
   await app.listen(port);
-  
-  console.log(`Backend server running on http://localhost:${port}/api`);
+
+  console.log('🚀 Wedding API Server started successfully!');
+  console.log(`📍 Server running on: http://localhost:${port}`);
+  console.log(`🔗 API endpoints: http://localhost:${port}/api`);
+  console.log('💒 Ready to manage your wedding website!');
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  console.error('❌ Failed to start server:', error);
+  process.exit(1);
+});
