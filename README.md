@@ -313,23 +313,43 @@ npm run start:dev  # Will recreate with seed data
 
 ## 📝 Sample Data
 
-The application includes sample data for testing:
+The application includes comprehensive demo data for testing:
 
 ### Admin Login
 
-- Email: `admin@wedding.com`
-- Password: `admin123`
+- **Email**: `admin@wedding.com`
+- **Password**: `admin123`
 
-### Sample Hash Codes
+### Sample RSVP Hash Codes
 
-After starting the application, sample guest hash codes will be generated. Check the admin dashboard for valid codes to test RSVP functionality.
+Test the RSVP functionality with these codes:
 
-### Sample Content
+| Hash Code  | Guest Name    | Party Size | Status       |
+| ---------- | ------------- | ---------- | ------------ |
+| `DEMO2024` | Emma Johnson  | 2          | ✅ Confirmed |
+| `FAMILY01` | Michael Smith | 4          | ✅ Confirmed |
+| `COUPLE99` | Sarah Davis   | 2          | ❌ Declined  |
+| `FRIEND42` | James Wilson  | 1          | ⏳ Pending   |
+| `COLLEGE8` | Lisa Brown    | 3          | ✅ Confirmed |
+| `WORK2023` | David Miller  | 2          | ⏳ Pending   |
+| `BESTMAN1` | Alex Thompson | 1          | ✅ Confirmed |
+| `COUSIN77` | Marie Dubois  | 3          | ⏳ Pending   |
 
-- Wedding date: June 15, 2024
-- Location: Vineyard Estate
-- 4 program events from ceremony to reception
-- 3 accommodation recommendations
+### Demo Content
+
+- **Wedding**: Ariane & Timothe, June 15, 2024
+- **Venue**: Château de Malmaison, France
+- **Program**: 4 events from ceremony to reception
+- **Accommodations**: 4 options including hotels and Airbnb
+- **Guests**: 8 sample guests with various RSVP statuses
+- **Statistics**: Realistic dashboard data for testing
+
+### Refreshing Demo Data
+
+```bash
+cd backend
+npm run seed:demo
+```
 
 ## 🚀 Production Deployment
 

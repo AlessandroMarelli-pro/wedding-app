@@ -16,6 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { memoryStorage } from 'multer';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { CSVUpload } from '../entities/csv-upload.entity';
 import { Guest } from '../entities/guest.entity';
@@ -31,7 +32,24 @@ export class AdminController {
   constructor(private readonly guestService: GuestService) {}
 
   @Post('guests/upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      fileFilter: (req, file, cb) => {
+        if (
+          file.mimetype === 'text/csv' ||
+          file.mimetype === 'application/vnd.ms-excel'
+        ) {
+          cb(null, true);
+        } else {
+          cb(new Error('Only CSV files are allowed'), false);
+        }
+      },
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+      },
+    }),
+  )
   @ApiOperation({ summary: 'Upload CSV file with guests' })
   @ApiConsumes('multipart/form-data')
   @ApiResponse({
@@ -51,16 +69,37 @@ export class AdminController {
       throw new Error('No file uploaded');
     }
 
-    if (file.mimetype !== 'text/csv') {
-      throw new Error('File must be a CSV');
+    if (!file.buffer) {
+      throw new Error('File buffer is empty or invalid');
     }
 
-    const fileContent = file.buffer.toString('utf-8');
-    return this.guestService.processCSVFile(
-      fileContent,
-      file.originalname,
-      user.sub,
-    );
+    if (!file.originalname.toLowerCase().endsWith('.csv')) {
+      throw new Error('File must have a .csv extension');
+    }
+
+    try {
+      const fileContent = file.buffer.toString('utf-8');
+
+      if (!fileContent.trim()) {
+        throw new Error('CSV file is empty');
+      }
+
+      return this.guestService.processCSVFile(
+        fileContent,
+        file.originalname,
+        user.sub,
+      );
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.includes('Invalid byte sequence')
+      ) {
+        throw new Error(
+          'File encoding is not valid UTF-8. Please save your CSV file with UTF-8 encoding.',
+        );
+      }
+      throw error;
+    }
   }
 
   @Get('guests')

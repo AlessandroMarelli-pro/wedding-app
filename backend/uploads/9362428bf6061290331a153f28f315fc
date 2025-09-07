@@ -1,0 +1,17 @@
+firstName,lastName,email,phoneNumber,partySize,dietaryRestrictions,specialRequests
+Emma,Johnson,emma.johnson@example.com,+1-555-0101,2,,
+Michael,Smith,michael.smith@example.com,+1-555-0102,4,Vegetarian for 2 guests,High chair needed for toddler
+Sarah,Davis,sarah.davis@example.com,+1-555-0103,2,Gluten-free,
+James,Wilson,james.wilson@example.com,+1-555-0104,1,,Wheelchair accessible seating
+Lisa,Brown,lisa.brown@example.com,+1-555-0105,3,No shellfish allergies,
+David,Miller,david.miller@example.com,+1-555-0106,2,Vegan,
+Alex,Thompson,alex.thompson@example.com,+1-555-0107,1,,Best man speech at 8 PM
+Marie,Dubois,marie.dubois@example.com,+33-1-23-45-67-89,3,Lactose intolerant,Traveling from France
+Robert,Garcia,robert.garcia@example.com,+1-555-0108,2,,
+Jennifer,Martinez,jennifer.martinez@example.com,+1-555-0109,1,Nut allergy,
+William,Anderson,william.anderson@example.com,+1-555-0110,3,,
+Jessica,Taylor,jessica.taylor@example.com,+1-555-0111,2,Pescatarian,
+Christopher,Thomas,christopher.thomas@example.com,+1-555-0112,1,,
+Amanda,Jackson,amanda.jackson@example.com,+1-555-0113,4,Dairy-free for 1 guest,Stroller parking needed
+Daniel,White,daniel.white@example.com,+1-555-0114,2,,
+Ashley,Harris,ashley.harris@example.com,+1-555-0115,1,Vegetarian,
