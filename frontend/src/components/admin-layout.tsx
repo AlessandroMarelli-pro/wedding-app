@@ -178,28 +178,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Mobile menu */}
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200">
-            {navigation.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => router.push(item.href)}
-                className={`block px-3 py-2 text-base font-medium rounded-md transition-colors w-full text-left ${
-                  router.pathname === item.href
-                    ? 'bg-rose-50 text-rose-600'
-                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center">
-                  {item.icon}
-                  <span className="ml-2">{item.name}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white">
             <div className="px-4 pt-2 pb-3 space-y-1">

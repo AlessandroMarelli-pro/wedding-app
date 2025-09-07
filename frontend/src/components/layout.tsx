@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
+import { Menu, X } from 'lucide-react';
 import Head from 'next/head';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -145,16 +146,24 @@ export function Navigation({
     { id: 'rsvp', label: 'RSVP' },
   ],
 }: NavigationProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleSectionChange = (sectionId: string) => {
+    onSectionChange?.(sectionId);
+    setIsMobileMenuOpen(false); // Close mobile menu when navigating
+  };
+
   return (
     <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b">
       <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="flex justify-center space-x-2 md:space-x-8 overflow-x-auto">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex justify-center space-x-8">
           {sections.map((item) => (
             <button
               key={item.id}
-              onClick={() => onSectionChange?.(item.id)}
+              onClick={() => handleSectionChange(item.id)}
               className={cn(
-                'px-3 md:px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap text-sm md:text-base',
+                'px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap text-base',
                 currentSection === item.id
                   ? 'bg-primary text-primary-foreground font-medium shadow-sm'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted',
@@ -163,6 +172,50 @@ export function Navigation({
               {item.label}
             </button>
           ))}
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className="md:hidden">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-serif text-foreground">
+              {sections.find((s) => s.id === currentSection)?.label ||
+                'Wedding'}
+            </h2>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="absolute left-0 right-0 top-full bg-background/95 backdrop-blur-md border-b shadow-lg">
+              <div className="max-w-6xl mx-auto px-4 py-2">
+                <div className="grid grid-cols-2 gap-2">
+                  {sections.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => handleSectionChange(item.id)}
+                      className={cn(
+                        'px-4 py-3 rounded-lg transition-all duration-300 text-sm font-medium text-center',
+                        currentSection === item.id
+                          ? 'bg-primary text-primary-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted',
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
