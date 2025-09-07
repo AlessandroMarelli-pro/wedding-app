@@ -26,6 +26,18 @@ export class Guest {
   @Column({ name: 'hash_code', length: 8, unique: true })
   hashCode!: string;
 
+  @Column({ name: 'phone_number', length: 20, nullable: true })
+  phoneNumber?: string;
+
+  @Column({ name: 'party_size', type: 'integer', default: 1 })
+  partySize!: number;
+
+  @Column({ name: 'dietary_restrictions', type: 'text', nullable: true })
+  dietaryRestrictions?: string;
+
+  @Column({ name: 'special_requests', type: 'text', nullable: true })
+  specialRequests?: string;
+
   @Column({ name: 'csv_upload_id' })
   csvUploadId!: string;
 

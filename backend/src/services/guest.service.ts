@@ -7,9 +7,13 @@ import { CSVUpload, UploadStatus } from '../entities/csv-upload.entity';
 import { Guest } from '../entities/guest.entity';
 
 export interface CSVRow {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email?: string;
+  phoneNumber?: string;
+  partySize: number;
+  dietaryRestrictions?: string;
+  specialRequests?: string;
 }
 
 export interface ProcessedCSVResult {
@@ -39,8 +43,38 @@ export class GuestService {
     private readonly csvUploadRepository: Repository<CSVUpload>,
   ) {}
 
+  /**
+   * Get the RSVP confirmation for a guest by their hash code.
+   * Returns the RSVPConfirmation entity if found, otherwise null.
+   */
+  async getRSVPConfirmationByHashCode(hashCode: string) {
+    const guest = await this.guestRepository.findOne({
+      where: { hashCode: hashCode.toUpperCase() },
+      relations: ['rsvpConfirmation'],
+    });
+    if (!guest) {
+      throw new BadRequestException('Guest not found');
+    }
+    return guest.rsvpConfirmation || null;
+  }
+
+  /**
+   * Get the RSVP confirmation for a guest by their guest ID.
+   * Returns the RSVPConfirmation entity if found, otherwise null.
+   */
+  async getRSVPConfirmationByGuestId(guestId: string) {
+    const guest = await this.guestRepository.findOne({
+      where: { id: guestId },
+      relations: ['rsvpConfirmation'],
+    });
+    if (!guest) {
+      throw new BadRequestException('Guest not found');
+    }
+    return guest.rsvpConfirmation || null;
+  }
   async getAllGuests(): Promise<Guest[]> {
     return this.guestRepository.find({
+      relations: ['rsvpConfirmation'],
       order: { lastName: 'ASC', firstName: 'ASC' },
     });
   }
@@ -147,26 +181,26 @@ export class GuestService {
     const errors: string[] = [];
 
     // Validate firstname
-    if (!row.firstname || typeof row.firstname !== 'string') {
+    if (!row.firstName || typeof row.firstName !== 'string') {
       errors.push('firstname is required');
     } else {
-      row.firstname = row.firstname.trim();
-      if (row.firstname.length === 0) {
-        errors.push('firstname cannot be empty');
-      } else if (row.firstname.length > 50) {
-        errors.push('firstname must be 50 characters or less');
+      row.firstName = row.firstName.trim();
+      if (row.firstName.length === 0) {
+        errors.push('firstName cannot be empty');
+      } else if (row.firstName.length > 50) {
+        errors.push('firstName must be 50 characters or less');
       }
     }
 
-    // Validate lastname
-    if (!row.lastname || typeof row.lastname !== 'string') {
-      errors.push('lastname is required');
+    // Validate lastName
+    if (!row.lastName || typeof row.lastName !== 'string') {
+      errors.push('lastName is required');
     } else {
-      row.lastname = row.lastname.trim();
-      if (row.lastname.length === 0) {
-        errors.push('lastname cannot be empty');
-      } else if (row.lastname.length > 50) {
-        errors.push('lastname must be 50 characters or less');
+      row.lastName = row.lastName.trim();
+      if (row.lastName.length === 0) {
+        errors.push('lastName cannot be empty');
+      } else if (row.lastName.length > 50) {
+        errors.push('lastName must be 50 characters or less');
       }
     }
 
@@ -194,24 +228,24 @@ export class GuestService {
     row: CSVRow,
     csvUploadId: string,
   ): Promise<Guest> {
-    // Check for duplicate (firstname + lastname combination)
+    // Check for duplicate (firstname + lastName combination)
     const existingGuest = await this.guestRepository.findOne({
       where: {
-        firstName: row.firstname,
-        lastName: row.lastname,
+        firstName: row.firstName,
+        lastName: row.lastName,
       },
     });
 
     if (existingGuest) {
-      throw new Error(`Guest ${row.firstname} ${row.lastname} already exists`);
+      throw new Error(`Guest ${row.firstName} ${row.lastName} already exists`);
     }
 
     // Generate unique hash code
     const hashCode = await this.generateUniqueHashCode();
 
     const guest = this.guestRepository.create({
-      firstName: row.firstname,
-      lastName: row.lastname,
+      firstName: row.firstName,
+      lastName: row.lastName,
       email: row.email,
       hashCode,
       csvUploadId,

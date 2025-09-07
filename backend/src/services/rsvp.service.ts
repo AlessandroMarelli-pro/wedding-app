@@ -10,6 +10,9 @@ import { RSVPConfirmation } from '../entities/rsvp-confirmation.entity';
 
 export interface RSVPRequest {
   hashCode: string;
+  isAttending: boolean;
+  confirmedPartySize: number;
+  message?: string;
 }
 
 export interface RSVPResponse {
@@ -40,13 +43,18 @@ export class RSVPService {
     ipAddress: string,
     userAgent?: string,
   ): Promise<RSVPResponse> {
-    const { hashCode } = request;
+    const { hashCode, isAttending, confirmedPartySize, message } = request;
 
     // Validate hash code format
     if (!this.isValidHashCodeFormat(hashCode)) {
       throw new BadRequestException(
         'Invalid hash code format. Must be 8 alphanumeric characters.',
       );
+    }
+
+    // Validate party size
+    if (confirmedPartySize < 0) {
+      throw new BadRequestException('Confirmed party size cannot be negative.');
     }
 
     // Find guest by hash code
@@ -58,9 +66,16 @@ export class RSVPService {
       throw new NotFoundException('Invalid hash code. Guest not found.');
     }
 
+    // Validate party size against original invitation
+    if (confirmedPartySize > guest.partySize) {
+      throw new BadRequestException(
+        `Confirmed party size (${confirmedPartySize}) cannot exceed original invitation size (${guest.partySize}).`,
+      );
+    }
+
     // Check if already confirmed
     const existingConfirmation = await this.rsvpRepository.findOne({
-      where: { hashCode: hashCode.toUpperCase() },
+      where: { guestId: guest.id },
     });
 
     if (existingConfirmation) {
@@ -68,20 +83,25 @@ export class RSVPService {
     }
 
     // Create RSVP confirmation
-    const confirmation = this.rsvpRepository.create({
-      hashCode: hashCode.toUpperCase(),
-      guestId: guest.id,
-      confirmedAt: new Date(),
-      ipAddress,
-      userAgent,
-    });
+    const confirmation = new RSVPConfirmation();
+    confirmation.guestId = guest.id;
+    confirmation.confirmedAt = new Date();
+    confirmation.ipAddress = ipAddress;
+    confirmation.userAgent = userAgent || undefined;
+    confirmation.isAttending = isAttending || true;
+    confirmation.confirmedPartySize = isAttending ? confirmedPartySize : 0;
+    confirmation.message = message || undefined;
 
     const savedConfirmation = await this.rsvpRepository.save(confirmation);
+
+    const responseMessage = isAttending
+      ? `Thank you for confirming your attendance! We look forward to celebrating with ${confirmedPartySize === 1 ? 'you' : `all ${confirmedPartySize} of you`}!`
+      : 'Thank you for letting us know. We will miss you at the celebration!';
 
     return {
       success: true,
       guestName: `${guest.firstName} ${guest.lastName}`,
-      message: 'Thank you for confirming your attendance!',
+      message: responseMessage,
       confirmedAt: savedConfirmation.confirmedAt,
     };
   }
@@ -96,8 +116,17 @@ export class RSVPService {
   async getConfirmationByHashCode(
     hashCode: string,
   ): Promise<RSVPConfirmation | null> {
-    return this.rsvpRepository.findOne({
+    // Find guest by hash code first
+    const guest = await this.guestRepository.findOne({
       where: { hashCode: hashCode.toUpperCase() },
+    });
+
+    if (!guest) {
+      return null;
+    }
+
+    return this.rsvpRepository.findOne({
+      where: { guestId: guest.id },
       relations: ['guest'],
     });
   }
@@ -135,21 +164,14 @@ export class RSVPService {
   async getPendingGuestsList(): Promise<
     Array<{ guestName: string; hashCode: string; email?: string }>
   > {
-    // Get all guests
-    const allGuests = await this.guestRepository.find();
-
-    // Get all confirmed hash codes
-    const confirmedHashCodes = await this.rsvpRepository.find({
-      select: ['hashCode'],
+    // Get all guests with their confirmations
+    const guestsWithConfirmations = await this.guestRepository.find({
+      relations: ['rsvpConfirmation'],
     });
 
-    const confirmedHashCodeSet = new Set(
-      confirmedHashCodes.map((c) => c.hashCode),
-    );
-
     // Filter out confirmed guests
-    const pendingGuests = allGuests.filter(
-      (guest) => !confirmedHashCodeSet.has(guest.hashCode),
+    const pendingGuests = guestsWithConfirmations.filter(
+      (guest) => !guest.rsvpConfirmation,
     );
 
     return pendingGuests.map((guest) => ({
@@ -170,8 +192,17 @@ export class RSVPService {
   }
 
   async isGuestConfirmed(hashCode: string): Promise<boolean> {
-    const confirmation = await this.rsvpRepository.findOne({
+    // Find guest by hash code first
+    const guest = await this.guestRepository.findOne({
       where: { hashCode: hashCode.toUpperCase() },
+    });
+
+    if (!guest) {
+      return false;
+    }
+
+    const confirmation = await this.rsvpRepository.findOne({
+      where: { guestId: guest.id },
     });
 
     return !!confirmation;

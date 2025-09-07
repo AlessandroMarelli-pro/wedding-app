@@ -75,16 +75,39 @@ export class EnhancedDemoData1700000003000 implements MigrationInterface {
       },
     ];
 
-    // Insert sample guests
+    // Create sample CSV upload record first (need to get an admin ID)
+    const adminResult = await queryRunner.query(
+      `SELECT "id" FROM "admins" LIMIT 1`,
+    );
+    const adminId = adminResult[0]?.id;
+
+    if (!adminId) {
+      throw new Error(
+        'No admin user found. Please run the initial seeding first.',
+      );
+    }
+
+    const csvUploadId = uuidv4();
+    await queryRunner.query(
+      `
+      INSERT INTO "csv_uploads" (
+        "id", "filename", "total_rows", "processed_rows", "status", "uploaded_by",
+        "created_at", "updated_at"
+      )
+      VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+    `,
+      [csvUploadId, 'demo_guest_list.csv', 6, 6, 'completed', adminId],
+    );
+
+    // Insert sample guests (only with columns that exist in the original schema)
     for (const guest of sampleGuests) {
       await queryRunner.query(
         `
         INSERT INTO "guests" (
           "id", "hash_code", "first_name", "last_name", "email", 
-          "phone_number", "party_size", "dietary_restrictions", 
-          "special_requests", "created_at", "updated_at"
+          "csv_upload_id", "created_at", "updated_at"
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+        VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
       `,
         [
           guest.id,
@@ -92,86 +115,14 @@ export class EnhancedDemoData1700000003000 implements MigrationInterface {
           guest.firstName,
           guest.lastName,
           guest.email,
-          guest.phoneNumber,
-          guest.partySize,
-          guest.dietaryRestrictions,
-          guest.specialRequests,
+          csvUploadId, // Use the CSV upload ID created above
         ],
       );
     }
 
-    // Create sample RSVP confirmations for some guests
-    const rsvpConfirmations = [
-      {
-        id: uuidv4(),
-        guestId: sampleGuests[0].id, // Emma Johnson
-        isAttending: true,
-        confirmedPartySize: 2,
-        message:
-          "So excited to celebrate with you both! Can't wait for the big day.",
-        confirmedAt: new Date('2024-05-01T10:30:00Z').toISOString(),
-      },
-      {
-        id: uuidv4(),
-        guestId: sampleGuests[1].id, // Michael Smith
-        isAttending: true,
-        confirmedPartySize: 4,
-        message:
-          'The whole family is looking forward to it. Thank you for including us!',
-        confirmedAt: new Date('2024-05-03T14:15:00Z').toISOString(),
-      },
-      {
-        id: uuidv4(),
-        guestId: sampleGuests[2].id, // Sarah Davis
-        isAttending: false,
-        confirmedPartySize: 0,
-        message:
-          "Unfortunately we won't be able to make it due to a prior commitment. Wishing you both all the best!",
-        confirmedAt: new Date('2024-05-05T09:45:00Z').toISOString(),
-      },
-      {
-        id: uuidv4(),
-        guestId: sampleGuests[4].id, // Lisa Brown
-        isAttending: true,
-        confirmedPartySize: 3,
-        message: "Wouldn't miss it for the world! See you there.",
-        confirmedAt: new Date('2024-05-07T16:20:00Z').toISOString(),
-      },
-    ];
+    // RSVP confirmations will be added in a later migration after the schema is updated
 
-    // Insert RSVP confirmations
-    for (const rsvp of rsvpConfirmations) {
-      await queryRunner.query(
-        `
-        INSERT INTO "rsvp_confirmations" (
-          "id", "guest_id", "is_attending", "confirmed_party_size", 
-          "message", "confirmed_at", "created_at", "updated_at"
-        )
-        VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-      `,
-        [
-          rsvp.id,
-          rsvp.guestId,
-          rsvp.isAttending ? 1 : 0,
-          rsvp.confirmedPartySize,
-          rsvp.message,
-          rsvp.confirmedAt,
-        ],
-      );
-    }
-
-    // Create sample CSV upload record
-    const csvUploadId = uuidv4();
-    await queryRunner.query(
-      `
-      INSERT INTO "csv_uploads" (
-        "id", "filename", "total_guests", "successful_imports", 
-        "created_at", "updated_at"
-      )
-      VALUES (?, ?, ?, ?, datetime('now'), datetime('now'))
-    `,
-      [csvUploadId, 'demo_guest_list.csv', 6, 6],
-    );
+    // CSV upload record was already created above
 
     // Update wedding info with more detailed demo data
     await queryRunner.query(

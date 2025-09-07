@@ -1,6 +1,7 @@
 export { AccommodationsList } from './accommodations';
 export { AdminLayout } from './admin-layout';
 export { DefaultErrorFallback, ErrorBoundary } from './error-boundary';
+export { GuestDetailsModal } from './guest-details-modal';
 export { Layout, Navigation, Section, SectionHeader } from './layout';
 export { RSVPForm } from './rsvp-form';
 export { WeddingCountdown, WeddingPresentation } from './wedding-presentation';
