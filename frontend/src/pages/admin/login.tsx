@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -175,12 +176,13 @@ export default function AdminLogin() {
 
             <div className="mt-8 pt-6 border-t border-rose-100 text-center">
               <p className="text-sm text-gray-600">
-                <a
+                {/* shadcn-mcp */}
+                <Link
                   href="/"
                   className="text-rose-600 hover:text-rose-700 font-medium"
                 >
                   ← Back to Wedding Site
-                </a>
+                </Link>
               </p>
             </div>
           </div>

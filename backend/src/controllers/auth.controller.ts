@@ -24,7 +24,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Login successful',
-    type: LoginResponse,
+    //  type: LoginResponse,
   })
   @ApiResponse({
     status: 401,

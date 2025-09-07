@@ -35,7 +35,7 @@ export class RSVPController {
   @ApiResponse({
     status: 200,
     description: 'RSVP confirmed',
-    type: RSVPResponse,
+    //  type: RSVPResponse,
   })
   @ApiResponse({
     status: 400,
@@ -88,7 +88,7 @@ export class AdminRSVPController {
   @ApiResponse({
     status: 200,
     description: 'RSVP statistics',
-    type: RSVPStats,
+    //  type: RSVPStats,
   })
   async getRSVPStats(): Promise<RSVPStats> {
     return this.rsvpService.getRSVPStats();

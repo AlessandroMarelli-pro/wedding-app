@@ -33,8 +33,8 @@ export class CSVUpload {
   @Column({ name: 'error_rows', type: 'int', default: 0 })
   errorRows!: number;
 
-  @Column({ type: 'enum', enum: UploadStatus, default: UploadStatus.PENDING })
-  status!: UploadStatus;
+  @Column({ default: UploadStatus.PENDING })
+  status!: string;
 
   @Column({ name: 'error_log', type: 'text', nullable: true })
   errorLog?: string;

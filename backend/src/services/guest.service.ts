@@ -91,7 +91,7 @@ export class GuestService {
 
       await this.csvUploadRepository.save(savedUpload);
       return savedUpload;
-    } catch (error) {
+    } catch (error: any) {
       // Mark as failed
       savedUpload.status = UploadStatus.FAILED;
       savedUpload.errorLog = JSON.stringify([error.message]);
@@ -123,7 +123,7 @@ export class GuestService {
               csvUploadId,
             );
             guests.push(guest);
-          } catch (error) {
+          } catch (error: any) {
             errors.push(`Row ${rowNumber}: ${error.message}`);
           }
         },
@@ -136,7 +136,7 @@ export class GuestService {
             guests,
           });
         },
-        error: (error) => {
+        error: (error: any) => {
           reject(new Error(`CSV parsing error: ${error.message}`));
         },
       });
