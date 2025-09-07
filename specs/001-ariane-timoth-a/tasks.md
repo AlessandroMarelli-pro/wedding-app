@@ -154,3 +154,4 @@ Task: "Create CSVUpload entity in backend/src/entities/csv-upload.entity.ts"
 
 - [P] tasks use different files and can run simultaneously
 - Commit after each completed task for progress tracking
+- copy https://withjoy.com/timothe-and-ariane style for the frontend
