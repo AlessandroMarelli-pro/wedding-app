@@ -40,11 +40,33 @@ async function seedDemoData() {
     console.log('📊 Database connection established');
 
     // Clear existing demo data (keep structure)
-    await dataSource.getRepository(RSVPConfirmation).delete({});
-    await dataSource.getRepository(Guest).delete({});
-    await dataSource.getRepository(CSVUpload).delete({});
+    await dataSource.getRepository(RSVPConfirmation).clear();
+    await dataSource.getRepository(Guest).clear();
+    await dataSource.getRepository(CSVUpload).clear();
+    await dataSource.getRepository(Accommodation).clear();
 
     console.log('🧹 Cleared existing demo data');
+
+    // First, get or create an admin user for the CSV upload
+    const adminRepository = dataSource.getRepository(Admin);
+    let admin = await adminRepository.findOne({ where: {} });
+    if (!admin) {
+      throw new Error(
+        'No admin user found. Please run migrations first to create initial admin user.',
+      );
+    }
+
+    // Create CSV upload record first (required for guests)
+    const csvUploadRepository = dataSource.getRepository(CSVUpload);
+    const csvUpload = await csvUploadRepository.save({
+      filename: 'demo_guest_list.csv',
+      totalRows: 8,
+      processedRows: 8,
+      errorRows: 0,
+      status: 'completed',
+      uploadedBy: admin.id,
+    });
+    console.log('📄 Created CSV upload record');
 
     // Create sample guests
     const guestRepository = dataSource.getRepository(Guest);
@@ -131,7 +153,15 @@ async function seedDemoData() {
       },
     ];
 
-    const createdGuests = await guestRepository.save(sampleGuests);
+    const createdGuests = await Promise.all(
+      sampleGuests.map(async (guestData) => {
+        const guest = guestRepository.create({
+          ...guestData,
+          csvUploadId: csvUpload.id,
+        });
+        return guestRepository.save(guest);
+      }),
+    );
     console.log(`👥 Created ${createdGuests.length} sample guests`);
 
     // Create sample RSVP confirmations
@@ -144,6 +174,9 @@ async function seedDemoData() {
         message:
           "So excited to celebrate with you both! Can't wait for the big day. 💕",
         confirmedAt: new Date('2024-05-01T10:30:00Z'),
+        ipAddress: '192.168.1.100',
+        userAgent:
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       },
       {
         guest: createdGuests[1], // Michael Smith
@@ -152,6 +185,9 @@ async function seedDemoData() {
         message:
           'The whole family is looking forward to it. Thank you for including us! The kids are especially excited.',
         confirmedAt: new Date('2024-05-03T14:15:00Z'),
+        ipAddress: '192.168.1.101',
+        userAgent:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
       },
       {
         guest: createdGuests[2], // Sarah Davis
@@ -160,6 +196,9 @@ async function seedDemoData() {
         message:
           "Unfortunately we won't be able to make it due to a prior commitment. Wishing you both all the best! 💐",
         confirmedAt: new Date('2024-05-05T09:45:00Z'),
+        ipAddress: '192.168.1.102',
+        userAgent:
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
       },
       {
         guest: createdGuests[4], // Lisa Brown
@@ -168,6 +207,9 @@ async function seedDemoData() {
         message:
           "Wouldn't miss it for the world! See you there. Can't wait to party! 🎉",
         confirmedAt: new Date('2024-05-07T16:20:00Z'),
+        ipAddress: '192.168.1.102',
+        userAgent:
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
       },
       {
         guest: createdGuests[6], // Alex Thompson (Best man)
@@ -176,20 +218,86 @@ async function seedDemoData() {
         message:
           'Honored to be your best man! Speech is ready and tissues are packed. 😄',
         confirmedAt: new Date('2024-05-10T11:00:00Z'),
+        ipAddress: '192.168.1.102',
+        userAgent:
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
       },
     ];
 
     await rsvpRepository.save(rsvpConfirmations);
     console.log(`💌 Created ${rsvpConfirmations.length} RSVP confirmations`);
 
-    // Create sample CSV upload record
-    const csvUploadRepository = dataSource.getRepository(CSVUpload);
-    await csvUploadRepository.save({
-      filename: 'demo_guest_list.csv',
-      totalGuests: createdGuests.length,
-      successfulImports: createdGuests.length,
-    });
-    console.log('📄 Created CSV upload record');
+    // CSV upload record was already created above
+
+    // Add more accommodations
+    const accommodationRepository = dataSource.getRepository(Accommodation);
+    const newAccommodations = [
+      {
+        name: 'Hôtel des Bergues - Four Seasons',
+        description:
+          'Luxury 5-star hotel with stunning views of Lake Geneva and the Alps. Features world-class spa, Michelin-starred dining, and impeccable service. Perfect for a special celebration.',
+        address: '33 Quai des Bergues, 1201 Geneva, Switzerland',
+        contactInfo: '+41 22 908 70 00 | fourseasons.com/geneva',
+        priceRange: '€400-650/night',
+        isRecommended: true,
+        displayOrder: 5,
+      },
+      {
+        name: 'Hotel Malmaison Paris',
+        description:
+          'Boutique hotel just 5 minutes from the venue. Contemporary design meets historic charm in this intimate property with personalized service.',
+        address: '6 Rue de la Station, 92500 Rueil-Malmaison, France',
+        contactInfo: '+33 1 47 29 67 67 | hotel-malmaison-paris.com',
+        priceRange: '€150-220/night',
+        isRecommended: true,
+        displayOrder: 6,
+      },
+      {
+        name: 'Airbnb - Luxury Penthouse in Neuilly',
+        description:
+          'Stunning penthouse apartment with rooftop terrace and panoramic views of Paris. Modern amenities, full kitchen, and space for up to 6 guests.',
+        address: 'Various locations in Neuilly-sur-Seine, France',
+        contactInfo: 'Book via Airbnb | Search "Neuilly penthouse wedding"',
+        priceRange: '€200-350/night',
+        isRecommended: false,
+        displayOrder: 7,
+      },
+      {
+        name: 'Campanile Rueil-Malmaison',
+        description:
+          'Budget-friendly hotel with comfortable rooms and continental breakfast. Great value option just 10 minutes from the venue.',
+        address: '32 Avenue Paul Doumer, 92500 Rueil-Malmaison, France',
+        contactInfo: '+33 1 47 14 44 44 | campanile.com',
+        priceRange: '€70-95/night',
+        isRecommended: false,
+        displayOrder: 8,
+      },
+      {
+        name: 'Château de Versailles - Trianon Palace',
+        description:
+          'Historic luxury hotel on the grounds of Versailles Palace. An unforgettable experience with royal gardens, spa, and fine dining.',
+        address: '1 Boulevard de la Reine, 78000 Versailles, France',
+        contactInfo: '+33 1 30 84 50 00 | trianonpalace.fr',
+        priceRange: '€350-500/night',
+        isRecommended: true,
+        displayOrder: 9,
+      },
+      {
+        name: 'Hotel Ibis Styles Paris La Défense Courbevoie',
+        description:
+          'Modern hotel near La Défense business district. Colorful design, comfortable rooms, and excellent transport links to the venue.',
+        address: '110 Esplanade du Général de Gaulle, 92400 Courbevoie, France',
+        contactInfo: '+33 1 55 91 96 96 | ibis.com',
+        priceRange: '€85-120/night',
+        isRecommended: false,
+        displayOrder: 10,
+      },
+    ];
+
+    await accommodationRepository.save(newAccommodations);
+    console.log(
+      `🏨 Added ${newAccommodations.length} additional accommodations`,
+    );
 
     // Update wedding info with enhanced content
     const weddingInfoRepository = dataSource.getRepository(WeddingInfo);
