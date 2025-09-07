@@ -1,6 +1,7 @@
 export { AccommodationService } from './accommodation.service';
 export { AuthService } from './auth.service';
 export { GuestService } from './guest.service';
+export { ProgramService } from './program.service';
 export { RSVPService } from './rsvp.service';
 export { WeddingService } from './wedding.service';
 
@@ -23,3 +24,8 @@ export type {
 } from './guest.service';
 
 export type { RSVPRequest, RSVPResponse, RSVPStats } from './rsvp.service';
+
+export type {
+  CreateProgramEventDto,
+  UpdateProgramEventDto,
+} from './program.service';
