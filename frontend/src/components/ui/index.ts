@@ -4,5 +4,7 @@ export * from './card';
 export * from './dialog';
 export * from './input';
 export * from './label';
+export * from './loading';
 export * from './separator';
 export * from './toast';
+export * from './toaster';
