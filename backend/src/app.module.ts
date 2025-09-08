@@ -43,6 +43,7 @@ import {
   AdminRSVPController,
   AdminWeddingController,
   AuthController,
+  ImageController,
   ProgramController,
   RSVPController,
   WeddingController,
@@ -88,6 +89,7 @@ import {
     RSVPController,
     AdminRSVPController,
     AdminController,
+    ImageController,
   ],
   providers: [
     AuthService,

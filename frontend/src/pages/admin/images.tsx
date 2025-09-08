@@ -13,9 +13,6 @@ interface UploadedImage {
   size: number;
   usageLocation: string;
   altText?: string;
-  url: string;
-  thumbnailUrl?: string;
-  optimizedUrl?: string;
   createdAt: string;
 }
 
@@ -74,6 +71,25 @@ export default function AdminImages() {
       hour: 'numeric',
       minute: '2-digit',
     });
+  };
+
+  // Helper functions to generate image URLs using the new API endpoints
+  const getImageUrl = (imageId: string): string => {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+    return `${baseUrl}/images/${imageId}`;
+  };
+
+  const getThumbnailUrl = (imageId: string): string => {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+    return `${baseUrl}/images/${imageId}/thumbnail`;
+  };
+
+  const getOptimizedUrl = (imageId: string): string => {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+    return `${baseUrl}/images/${imageId}/optimized`;
   };
 
   if (loading) {
@@ -148,9 +164,10 @@ export default function AdminImages() {
                   >
                     <div className="aspect-w-16 aspect-h-9 bg-gray-100">
                       <img
-                        src={image.url}
+                        src={getThumbnailUrl(image.id)}
                         alt={image.altText || image.originalName}
                         className="w-full h-48 object-cover"
+                        loading="lazy"
                       />
                     </div>
                     <div className="p-4">
@@ -167,20 +184,35 @@ export default function AdminImages() {
                       </div>
                       <div className="mt-3 flex space-x-2">
                         <button
-                          onClick={() => window.open(image.url, '_blank')}
+                          onClick={() =>
+                            window.open(getImageUrl(image.id), '_blank')
+                          }
                           className="flex-1 bg-blue-600 text-white py-1 px-3 rounded text-sm hover:bg-blue-700 transition-colors"
                         >
-                          View
+                          View Original
                         </button>
                         <button
-                          onClick={() => {
+                          onClick={() =>
+                            window.open(getOptimizedUrl(image.id), '_blank')
+                          }
+                          className="flex-1 bg-green-600 text-white py-1 px-3 rounded text-sm hover:bg-green-700 transition-colors"
+                        >
+                          View Optimized
+                        </button>
+                        <button
+                          onClick={async () => {
                             if (
                               confirm(
                                 'Are you sure you want to delete this image?',
                               )
                             ) {
-                              // TODO: Implement delete functionality
-                              console.log('Delete image:', image.id);
+                              try {
+                                await ApiService.deleteImage(image.id);
+                                await fetchImages(); // Refresh the list
+                              } catch (error) {
+                                console.error('Error deleting image:', error);
+                                setError('Failed to delete image');
+                              }
                             }
                           }}
                           className="flex-1 bg-red-600 text-white py-1 px-3 rounded text-sm hover:bg-red-700 transition-colors"
