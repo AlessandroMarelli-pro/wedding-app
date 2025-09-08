@@ -12,8 +12,11 @@ import { AccommodationMap } from './maps';
 
 interface AccommodationsListProps {
   accommodations: Accommodation[];
-  weddingLocation?: {
-    address: string;
+  weddingInfo: {
+    weddingAddress: string;
+    weddingDate: string;
+    coupleNames: string;
+    locationDirections?: string;
     latitude?: number;
     longitude?: number;
   };
@@ -21,7 +24,7 @@ interface AccommodationsListProps {
 
 export function AccommodationsList({
   accommodations,
-  weddingLocation,
+  weddingInfo,
 }: AccommodationsListProps) {
   const sortedAccommodations = [...accommodations].sort(
     (a, b) => a.displayOrder - b.displayOrder,
@@ -133,20 +136,12 @@ export function AccommodationsList({
       {/* Interactive Map */}
       {accommodations.length > 0 && (
         <div className="container-responsive">
-          <div className="text-center mb-6 sm:mb-8">
-            <h3 className="heading-responsive font-serif text-foreground mb-2">
-              Accommodation Map
-            </h3>
-            <p className="text-responsive text-muted-foreground">
-              Explore our recommended accommodations and get directions
-            </p>
-          </div>
           <AccommodationMap
             accommodations={accommodations}
-            weddingLocation={weddingLocation}
+            weddingInfo={weddingInfo}
             height="300px"
-            showDirections={true}
-            showDetails={true}
+            showDirections={false}
+            showDetails={false}
             className="mb-6 sm:mb-8"
           />
         </div>

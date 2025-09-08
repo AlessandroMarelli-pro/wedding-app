@@ -10,8 +10,11 @@ import { Card } from '../ui/card';
 
 interface AccommodationMapProps {
   accommodations: Accommodation[];
-  weddingLocation?: {
-    address: string;
+  weddingInfo: {
+    weddingAddress: string;
+    weddingDate: string;
+    coupleNames: string;
+    locationDirections?: string;
     latitude?: number;
     longitude?: number;
   };
@@ -28,7 +31,7 @@ interface SelectedAccommodation extends Accommodation {
 
 const AccommodationMap: React.FC<AccommodationMapProps> = ({
   accommodations,
-  weddingLocation,
+  weddingInfo,
   className = '',
   height = '400px',
   showDirections = true,
@@ -38,6 +41,7 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
   const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+  const markerRef = useRef<google.maps.Marker | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,19 +73,36 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
 
       // Convert accommodations to markers
       const markers =
-        mapsService.convertAccommodationsToMarkers(accommodations);
+        await mapsService.convertAccommodationsToMarkers(accommodations);
 
       // Calculate map bounds and center
       const bounds = mapsService.calculateBounds(markers);
-      const center = mapsService.calculateCenter(markers) || {
-        lat: 48.8566,
-        lng: 2.3522,
-      }; // Default to Paris
 
+      let venuePosition: { lat: number; lng: number };
+      // Use provided coordinates or geocode the address
+
+      if (weddingInfo.latitude && weddingInfo.longitude) {
+        venuePosition = {
+          lat: weddingInfo.latitude,
+          lng: weddingInfo.longitude,
+        };
+      } else {
+        const geocoded = await mapsService.geocodeAddress(
+          weddingInfo.weddingAddress,
+        );
+        if (!geocoded) {
+          throw new Error('Could not find wedding venue location');
+        }
+        venuePosition = geocoded;
+      }
+      const center = {
+        lat: venuePosition.lat,
+        lng: venuePosition.lng,
+      }; // Default to Paris
       // Create map instance
       const map = new google.maps.Map(mapRef.current, {
         center,
-        zoom: bounds ? 12 : 10,
+        zoom: 10,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         mapTypeControl: true,
         streetViewControl: false,
@@ -97,6 +118,22 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
       });
 
       mapInstanceRef.current = map;
+      // Create venue marker
+      const marker = new google.maps.Marker({
+        position: new google.maps.LatLng(venuePosition.lat, venuePosition.lng),
+        map,
+        title: 'Wedding Venue',
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 12,
+          fillColor: '#ef4444',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 3,
+        },
+      });
+
+      markerRef.current = marker;
 
       // Fit bounds if we have multiple accommodations
       if (bounds && markers.length > 1) {
@@ -110,7 +147,12 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
       // Create info window
       const infoWindow = new google.maps.InfoWindow();
       infoWindowRef.current = infoWindow;
-
+      // Add click listener to marker
+      marker.addListener('click', () => {
+        const content = createVenueInfoWindowContent();
+        infoWindow.setContent(content);
+        infoWindow.open(map, marker);
+      });
       // Create markers
       const googleMarkers: google.maps.Marker[] = [];
 
@@ -152,41 +194,7 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
       markersRef.current = googleMarkers;
 
       // Add wedding location marker if provided
-      if (
-        weddingLocation &&
-        weddingLocation.latitude &&
-        weddingLocation.longitude
-      ) {
-        const weddingMarker = new google.maps.Marker({
-          position: new google.maps.LatLng(
-            weddingLocation.latitude,
-            weddingLocation.longitude,
-          ),
-          map,
-          title: 'Wedding Location',
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 10,
-            fillColor: '#ef4444',
-            fillOpacity: 1,
-            strokeColor: '#ffffff',
-            strokeWeight: 3,
-          },
-        });
-
-        weddingMarker.addListener('click', () => {
-          const content = `
-            <div class="p-2">
-              <h3 class="font-semibold text-lg text-red-600">💒 Wedding Location</h3>
-              <p class="text-sm text-gray-600">${weddingLocation.address}</p>
-            </div>
-          `;
-          infoWindow.setContent(content);
-          infoWindow.open(map, weddingMarker);
-        });
-
-        googleMarkers.push(weddingMarker);
-      }
+      // Use provided coordinates or geocode the address
 
       setIsLoading(false);
     } catch (err) {
@@ -194,7 +202,37 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
       setError(err instanceof Error ? err.message : 'Failed to load map');
       setIsLoading(false);
     }
-  }, [accommodations, weddingLocation]);
+  }, [accommodations, weddingInfo]);
+  // Create venue info window content
+  const createVenueInfoWindowContent = (): string => {
+    const weddingDate = new Date(weddingInfo.weddingDate);
+    const formattedDate = weddingDate.toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    return `
+      <div class="p-4 max-w-sm">
+        <div class="text-center mb-3">
+          <div class="text-2xl mb-1">💒</div>
+          <h3 class="font-bold text-lg text-red-600">${weddingInfo.coupleNames}</h3>
+          <p class="text-sm text-gray-600">Mariage</p>
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <Calendar class="w-4 h-4 text-gray-500" />
+            <span class="text-gray-700">${formattedDate}</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <MapPin class="w-4 h-4 text-gray-500 mt-0.5" />
+            <span class="text-gray-700">${weddingInfo.weddingAddress}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  };
 
   // Create info window content
   const createInfoWindowContent = (accommodation: Accommodation): string => {
@@ -215,14 +253,14 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
   // Get directions to selected accommodation
   const getDirections = useCallback(
     async (accommodation: Accommodation) => {
-      if (!weddingLocation || !weddingLocation.address) {
+      if (!weddingInfo || !weddingInfo.weddingAddress) {
         alert('Wedding location not available for directions');
         return;
       }
 
       try {
         const directionsResult = await mapsService.getDirections({
-          origin: weddingLocation.address,
+          origin: weddingInfo.weddingAddress,
           destination: accommodation.address,
           travelMode: 'DRIVING',
         });
@@ -263,7 +301,7 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
         alert('Failed to get directions');
       }
     },
-    [weddingLocation, directionsRenderer],
+    [weddingInfo, directionsRenderer],
   );
 
   // Clear directions
@@ -365,7 +403,7 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
             </div>
           </div>
 
-          {showDirections && weddingLocation && (
+          {showDirections && weddingInfo && (
             <div className="flex gap-2">
               <Button
                 onClick={() => getDirections(selectedAccommodation)}
@@ -383,42 +421,6 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
               )}
             </div>
           )}
-        </Card>
-      )}
-
-      {/* Accommodations List */}
-      {accommodations.length > 0 && (
-        <Card className="p-4">
-          <h3 className="font-semibold text-lg mb-3">
-            Accommodations ({accommodations.length})
-          </h3>
-          <div className="space-y-2">
-            {accommodations.map((accommodation) => (
-              <div
-                key={accommodation.id}
-                className="flex items-center justify-between p-2 border rounded hover:bg-gray-50 cursor-pointer"
-                onClick={() => setSelectedAccommodation(accommodation)}
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{accommodation.name}</span>
-                    {accommodation.isRecommended && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-green-100 text-green-800 text-xs"
-                      >
-                        Recommandé
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {accommodation.address}
-                  </p>
-                </div>
-                <MapPin className="w-4 h-4 text-gray-400" />
-              </div>
-            ))}
-          </div>
         </Card>
       )}
     </div>

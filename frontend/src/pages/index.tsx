@@ -1,13 +1,15 @@
+import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
+import { Vortex } from '@/components/ui/vortex';
+import { IconArrowDown } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import {
   AccommodationsList,
+  FloatingNavbarLayout,
   RSVPForm,
   Section,
   SectionHeader,
-  SidebarLayout,
-  VenueMap,
   WeddingCountdown,
   WeddingPresentation,
   WeddingProgram,
@@ -37,7 +39,7 @@ export default function HomePage({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <SidebarLayout
+        <FloatingNavbarLayout
           type="public"
           currentSection={currentSection}
           onSectionChange={setCurrentSection}
@@ -52,7 +54,7 @@ export default function HomePage({
               </p>
             </div>
           </div>
-        </SidebarLayout>
+        </FloatingNavbarLayout>
       </>
     );
   }
@@ -96,7 +98,7 @@ export default function HomePage({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <SidebarLayout
+      <FloatingNavbarLayout
         type="public"
         currentSection={currentSection}
         onSectionChange={scrollToSection}
@@ -105,12 +107,50 @@ export default function HomePage({
           {/* Hero Section */}
           <div className="relative h-screen w-full overflow-hidden">
             {/* Hero Image - Fixed Background */}
-            <div
+            <Vortex
+              backgroundColor="black"
+              rangeY={800}
+              baseHue={12}
+              particleCount={50}
+              className="flex items-center flex-col justify-center px-2 md:px-10  py-4 w-full h-full"
+            >
+              <div className="relative z-10 flex items-center justify-center h-full px-4">
+                <div className="text-center text-white max-w-4xl mx-auto">
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif mb-6 leading-tight">
+                    Ariane & Timothe
+                  </h1>
+
+                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
+
+                  <p className="text-xl md:text-2xl mb-12 font-light opacity-90">
+                    Nous avons hâte de vous accueillir aux Lauziers pour
+                    célébrer notre mariage le 13 Juillet 2026
+                  </p>
+                  <div className="mb-16">
+                    <WeddingCountdown targetDate={weddingInfo.weddingDate} />
+                  </div>
+
+                  {/* Scroll indicator */}
+                  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+                    <HoverBorderGradient
+                      containerClassName="rounded-full"
+                      as="button"
+                      className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2 cursor-pointer"
+                      onClick={() => scrollToSection('our-story')}
+                    >
+                      <IconArrowDown />
+                      <span>Détails</span>
+                    </HoverBorderGradient>
+                  </div>
+                </div>
+              </div>
+            </Vortex>
+            {/*          <div
               className="absolute inset-0 bg-cover bg-center bg-fixed"
               style={{
                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${getHeroImageUrl()}')`,
               }}
-            />
+            /> */}
 
             {/* Hero Content Overlay */}
             <div className="relative z-10 flex items-center justify-center h-full px-4">
@@ -153,10 +193,7 @@ export default function HomePage({
 
           {/* Our Story Section */}
           <Section id="our-story" background="accent" className="pt-20">
-            <SectionHeader
-              title="Our Story"
-              subtitle="How our love story began and brought us to this beautiful moment"
-            />
+            <SectionHeader title="Un petit mot" subtitle="" />
             <WeddingPresentation
               weddingInfo={weddingInfo}
               onRSVPClick={() => scrollToSection('rsvp')}
@@ -166,29 +203,21 @@ export default function HomePage({
           {/* Wedding Details Section */}
           <Section id="details" background="default">
             <SectionHeader
-              title="Wedding Details"
-              subtitle="All the important information about our special day"
+              title="Informations"
+              subtitle="Toutes les informations importantes sur notre mariage"
             />
-
-            {/* Countdown */}
-            <div className="mb-16">
-              <WeddingCountdown targetDate={weddingInfo.weddingDate} />
-            </div>
 
             {/* Additional Details Card */}
             <div className="container-responsive">
               <div className="bg-card/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border text-center">
-                <h3 className="heading-responsive font-serif text-foreground mb-6">
-                  Join Us in Celebration
-                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-left">
                   <div>
                     <h4 className="font-semibold text-responsive text-foreground mb-2">
-                      Date & Time
+                      Date
                     </h4>
                     <p className="text-responsive text-muted-foreground">
                       {new Date(weddingInfo.weddingDate).toLocaleDateString(
-                        'en-US',
+                        'fr-FR',
                         {
                           weekday: 'long',
                           year: 'numeric',
@@ -200,7 +229,7 @@ export default function HomePage({
                   </div>
                   <div>
                     <h4 className="font-semibold text-responsive text-foreground mb-2">
-                      Location
+                      Lieu
                     </h4>
                     <p className="text-responsive text-muted-foreground">
                       {weddingInfo.weddingAddress}
@@ -211,7 +240,7 @@ export default function HomePage({
                 {weddingInfo.locationDirections && (
                   <div className="mt-6 pt-6 border-t">
                     <h4 className="font-semibold text-responsive text-foreground mb-2">
-                      Getting There
+                      Comment venir ?
                     </h4>
                     <p className="text-responsive text-muted-foreground whitespace-pre-line">
                       {weddingInfo.locationDirections}
@@ -222,14 +251,11 @@ export default function HomePage({
             </div>
 
             {/* Venue Map */}
-            <div className="mt-8 sm:mt-12">
+            {/*  <div className="mt-8 sm:mt-12">
               <div className="text-center mb-6 sm:mb-8">
                 <h3 className="heading-responsive font-serif text-foreground mb-2">
-                  Wedding Venue Location
+                  Lieu du mariage
                 </h3>
-                <p className="text-responsive text-muted-foreground">
-                  Find the wedding venue and get directions
-                </p>
               </div>
               <VenueMap
                 weddingInfo={{
@@ -242,9 +268,9 @@ export default function HomePage({
                 }}
                 height="300px"
                 showDirections={true}
-                showDetails={true}
+                showDetails={false}
               />
-            </div>
+            </div> */}
           </Section>
 
           {/* Accommodations Section */}
@@ -253,17 +279,17 @@ export default function HomePage({
               title="Where to Stay"
               subtitle="We've selected some wonderful places for you to stay during our celebration"
             />
+
             <AccommodationsList
               accommodations={accommodations}
-              weddingLocation={
-                weddingInfo
-                  ? {
-                      address: weddingInfo.weddingAddress,
-                      latitude: undefined, // We'll need to add this to the wedding info entity
-                      longitude: undefined, // We'll need to add this to the wedding info entity
-                    }
-                  : undefined
-              }
+              weddingInfo={{
+                weddingAddress: weddingInfo.weddingAddress,
+                weddingDate: weddingInfo.weddingDate,
+                coupleNames: weddingInfo.coupleNames,
+                locationDirections: weddingInfo.locationDirections,
+                latitude: undefined, // We'll need to add this to the wedding info entity
+                longitude: undefined, // We'll need to add this to the wedding info entity
+              }}
             />
           </Section>
 
@@ -287,7 +313,7 @@ export default function HomePage({
             </div>
           </Section>
         </div>
-      </SidebarLayout>
+      </FloatingNavbarLayout>
     </>
   );
 }

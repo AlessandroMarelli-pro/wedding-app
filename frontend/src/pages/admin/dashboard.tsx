@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AdminStats } from '../../components/admin-stats';
-import { SidebarLayout } from '../../components/sidebar-layout';
+import { FloatingNavbarLayout } from '../../components/floating-navbar-layout';
 import { Card, CardContent } from '../../components/ui/card';
 
 interface RSVPStats {
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
           <title>Dashboard - Wedding Admin</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <SidebarLayout type="admin" currentPath="/admin/dashboard">
+        <FloatingNavbarLayout type="admin" currentPath="/admin/dashboard">
           <div className="p-6">
             <div className="animate-pulse space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -163,7 +163,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        </SidebarLayout>
+        </FloatingNavbarLayout>
       </>
     );
   }
@@ -175,7 +175,7 @@ export default function AdminDashboard() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <SidebarLayout type="admin" currentPath="/admin/dashboard">
+      <FloatingNavbarLayout type="admin" currentPath="/admin/dashboard">
         <div className="p-6 space-y-8">
           <div>
             <h1 className="text-3xl font-serif text-gray-800 mb-2">
@@ -444,7 +444,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-      </SidebarLayout>
+      </FloatingNavbarLayout>
     </>
   );
 }

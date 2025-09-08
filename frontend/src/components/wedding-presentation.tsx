@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Heart } from 'lucide-react';
 
 interface WeddingInfo {
   id: string;
@@ -35,14 +33,10 @@ export function WeddingPresentation({
       {/* Couple's Message */}
       <div className="text-center container-responsive">
         <div className="bg-card/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg border">
-          <Heart className="w-8 h-8 sm:w-12 sm:h-12 text-rose-500 mx-auto mb-4 sm:mb-6" />
           <p className="text-responsive text-muted-foreground leading-relaxed font-light italic">
             "{weddingInfo.presentationMessage}"
           </p>
           <div className="mt-6 sm:mt-8">
-            <p className="text-lg sm:text-xl md:text-2xl font-serif text-foreground">
-              With love,
-            </p>
             <p className="text-xl sm:text-2xl md:text-3xl font-serif text-foreground mt-2">
               {weddingInfo.coupleNames}
             </p>
@@ -51,7 +45,7 @@ export function WeddingPresentation({
       </div>
 
       {/* Additional Information */}
-      {(weddingInfo.dressCode || weddingInfo.specialInstructions) && (
+      {/* {(weddingInfo.dressCode || weddingInfo.specialInstructions) && (
         <div className="container-responsive">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {weddingInfo.dressCode && (
@@ -85,17 +79,17 @@ export function WeddingPresentation({
             )}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* RSVP Call to Action */}
       <div className="text-center container-responsive">
         <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 border">
           <h3 className="heading-responsive font-serif text-foreground mb-4">
-            Can't wait to celebrate with you!
+            Hâte de fêter ça avec vous!
           </h3>
           <p className="text-responsive text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
-            Please let us know if you'll be joining us for our special day. Your
-            presence would make our celebration complete.
+            Merci de nous faire savoir si vous vous joindrez à nous pour cette
+            journée spéciale. Votre présence rendra notre célébration parfaite.
           </p>
           <Button
             size="lg"
@@ -160,24 +154,18 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
 
   return (
     <div className={cn('text-center container-responsive', className)}>
-      <h3 className="heading-responsive font-serif text-foreground mb-6">
-        Counting down to our special day
-      </h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-sm sm:max-w-md mx-auto">
         {[
-          { label: 'Days', value: timeLeft.days },
-          { label: 'Hours', value: timeLeft.hours },
+          { label: 'Jours', value: timeLeft.days },
+          { label: 'Heures', value: timeLeft.hours },
           { label: 'Minutes', value: timeLeft.minutes },
-          { label: 'Seconds', value: timeLeft.seconds },
+          { label: 'Secondes', value: timeLeft.seconds },
         ].map((item) => (
-          <div
-            key={item.label}
-            className="bg-card/60 rounded-lg p-3 sm:p-4 border"
-          >
-            <div className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">
+          <div key={item.label} className="bg-card/60 rounded-lg p-3 sm:p-4 ">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-white">
               {item.value.toString().padStart(2, '0')}
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-xs sm:text-sm text-muted-white">
               {item.label}
             </div>
           </div>

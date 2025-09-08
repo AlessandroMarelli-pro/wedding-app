@@ -210,19 +210,27 @@ export class MapsService {
   /**
    * Convert accommodations to map markers
    */
-  convertAccommodationsToMarkers(accommodations: Accommodation[]): MapMarker[] {
-    return accommodations
-      .filter((acc) => acc.latitude && acc.longitude)
-      .map((acc) => ({
-        id: acc.id,
-        position: {
-          lat: acc.latitude!,
-          lng: acc.longitude!,
-        },
-        title: acc.name,
-        description: acc.description,
-        color: acc.isRecommended ? '#10b981' : '#6b7280', // Green for recommended, gray for others
-      }));
+  async convertAccommodationsToMarkers(
+    accommodations: Accommodation[],
+  ): Promise<MapMarker[]> {
+    return Promise.all(
+      accommodations.map(async (acc) => {
+        const geocoded = await mapsService.geocodeAddress(acc.address);
+        if (!geocoded) {
+          throw new Error('Could not find wedding venue location');
+        }
+        return {
+          id: acc.id,
+          position: {
+            lat: geocoded.lat!,
+            lng: geocoded.lng!,
+          },
+          title: acc.name,
+          description: acc.description,
+          color: acc.isRecommended ? '#10b981' : '#6b7280', // Green for recommended, gray for others
+        };
+      }),
+    );
   }
 
   /**

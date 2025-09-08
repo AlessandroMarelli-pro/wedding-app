@@ -6,11 +6,11 @@ export {
   QuickCalendarDownload,
 } from './calendar-download';
 export { DefaultErrorFallback, ErrorBoundary } from './error-boundary';
+export { FloatingNavbarLayout } from './floating-navbar-layout';
 export { GuestDetailsModal } from './guest-details-modal';
 export { ImageUpload } from './image-upload';
 export { AccommodationMap, VenueMap } from './maps';
 export { RSVPForm } from './rsvp-form';
 export { Section, SectionHeader } from './section-components';
-export { SidebarLayout } from './sidebar-layout';
 export { WeddingCountdown, WeddingPresentation } from './wedding-presentation';
 export { WeddingProgram } from './wedding-program';
