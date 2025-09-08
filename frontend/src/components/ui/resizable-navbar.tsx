@@ -1,11 +1,6 @@
 'use client';
 import { IconMenu2, IconX } from '@tabler/icons-react';
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-} from 'motion/react';
+import { AnimatePresence, motion, useScroll } from 'motion/react';
 import { cn } from 'src/lib/utils';
 
 import React, { useRef, useState } from 'react';
@@ -55,14 +50,6 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     offset: ['start start', 'end start'],
   });
   const [visible, setVisible] = useState<boolean>(false);
-
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    if (latest > 100) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  });
 
   return (
     <motion.div

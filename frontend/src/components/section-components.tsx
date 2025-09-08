@@ -23,7 +23,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn('py-20 px-4', backgroundClasses[background], className)}
+      className={cn(' px-4', backgroundClasses[background], className)}
     >
       <div className="max-w-6xl mx-auto">{children}</div>
     </section>
@@ -43,7 +43,7 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div className={cn('text-center mb-16', className)}>
-      <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground mb-4">
+      <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground mb-4 ">
         {title}
       </h2>
       <div className="w-24 h-px bg-gradient-to-r from-transparent via-border to-transparent mx-auto mb-6" />
