@@ -1,14 +1,6 @@
 'use client';
 
 import {
-  IconCalendar,
-  IconClock,
-  IconHeart,
-  IconHome,
-  IconMail,
-  IconMapPin,
-} from '@tabler/icons-react';
-import {
   Calendar,
   Edit3,
   ExternalLink,
@@ -19,8 +11,17 @@ import {
   Users,
 } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
-import { FloatingNav } from './ui/floating-navbar';
+import { ReactNode, useState } from 'react';
+import {
+  MobileNav,
+  MobileNavHeader,
+  MobileNavMenu,
+  MobileNavToggle,
+  Navbar,
+  NavbarLogo,
+  NavBody,
+  NavItems,
+} from './ui/resizable-navbar';
 
 interface FloatingNavbarLayoutProps {
   children: ReactNode;
@@ -67,34 +68,24 @@ const adminNavigation = [
 // Public navigation configuration
 const publicNavigation = [
   {
-    name: 'Home',
-    link: '#home',
-    icon: <IconHome className="w-4 h-4" />,
-  },
-  {
     name: 'Our Story',
     link: '#our-story',
-    icon: <IconHeart className="w-4 h-4" />,
   },
   {
     name: 'Details',
     link: '#details',
-    icon: <IconCalendar className="w-4 h-4" />,
   },
   {
     name: 'Accommodations',
     link: '#accommodations',
-    icon: <IconMapPin className="w-4 h-4" />,
   },
   {
     name: 'Program',
     link: '#program',
-    icon: <IconClock className="w-4 h-4" />,
   },
   {
     name: 'RSVP',
     link: '#rsvp',
-    icon: <IconMail className="w-4 h-4" />,
   },
 ];
 
@@ -147,12 +138,44 @@ export function FloatingNavbarLayout({
             onClick: handleLogout,
           },
         ];
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Floating Navigation */}
-      <FloatingNav navItems={navbarItems} />
+      <Navbar>
+        {/* Desktop Navigation */}
+        <NavBody>
+          <NavbarLogo />
+          <NavItems items={navItems} />
+        </NavBody>
 
+        {/* Mobile Navigation */}
+        <MobileNav>
+          <MobileNavHeader>
+            <NavbarLogo />
+            <MobileNavToggle
+              isOpen={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
+          </MobileNavHeader>
+
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
+            {navItems.map((item, idx) => (
+              <a
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="relative text-neutral-600 dark:text-neutral-300"
+              >
+                <span className="block">{item.name}</span>
+              </a>
+            ))}
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
       {/* Main Content */}
       <main>{children}</main>
     </div>

@@ -1,4 +1,10 @@
 @import 'tailwindcss';
+.geist-mono-dev {
+  font-family: 'Geist Mono', monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 @source './pages/**/*.{ts,tsx}';
 @source './components/**/*.{ts,tsx}';
@@ -151,6 +157,7 @@
   /* Smooth scrolling for mobile */
   html {
     scroll-behavior: smooth;
+    font-family: 'Geist Mono', monospace;
   }
 
   /* Prevent zoom on input focus (iOS) */

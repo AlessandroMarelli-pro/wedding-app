@@ -1,7 +1,9 @@
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 import { Vortex } from '@/components/ui/vortex';
+import { cn } from '@/lib/utils';
 import { IconArrowDown } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
+import { Pacifico } from 'next/font/google';
 import Head from 'next/head';
 import { useState } from 'react';
 import {
@@ -15,6 +17,11 @@ import {
   WeddingProgram,
 } from '../components';
 import { WeddingInfo } from '../types/api';
+const pacifico = Pacifico({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-pacifico',
+});
 
 interface HomePageProps {
   weddingInfo: WeddingInfo | null;
@@ -103,33 +110,38 @@ export default function HomePage({
         currentSection={currentSection}
         onSectionChange={scrollToSection}
       >
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen ">
           {/* Hero Section */}
-          <div className="relative h-screen w-full overflow-hidden">
+          <div className="relative h-screen w-full overflow-hidden bg-black">
             {/* Hero Image - Fixed Background */}
             <Vortex
-              backgroundColor="black"
+              backgroundColor="red"
               rangeY={800}
-              baseHue={12}
+              baseHue={120}
               particleCount={50}
               className="flex items-center flex-col justify-center px-2 md:px-10  py-4 w-full h-full"
             >
-              <div className="relative z-10 flex items-center justify-center h-full px-4">
-                <div className="text-center text-white max-w-4xl mx-auto">
-                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif mb-6 leading-tight">
-                    Ariane & Timothe
+              <div className="relative z-10 flex items-center justify-center h-full w-full px-4 color-black">
+                <div className="text-center text-white max-w-4xl mx-auto color-black ">
+                  <h1
+                    className={cn(
+                      'text-5xl md:text-7xl lg:text-8xl font-serif mb-6 leading-tight color-black',
+                      pacifico.className,
+                    )}
+                  >
+                    Ariane & Timothé
                   </h1>
-
                   <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
-
-                  <p className="text-xl md:text-2xl mb-12 font-light opacity-90">
+                  <p className="text-xl md:text-2xl mb-2 font-light opacity-90">
                     Nous avons hâte de vous accueillir aux Lauziers pour
-                    célébrer notre mariage le 13 Juillet 2026
+                    célébrer notre mariage le
+                  </p>{' '}
+                  <p className="text-xl md:text-2xl mb-12 font-light opacity-90">
+                    13 Juillet 2026
                   </p>
                   <div className="mb-16">
                     <WeddingCountdown targetDate={weddingInfo.weddingDate} />
                   </div>
-
                   {/* Scroll indicator */}
                   <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
                     <HoverBorderGradient
@@ -153,46 +165,48 @@ export default function HomePage({
             /> */}
 
             {/* Hero Content Overlay */}
-            <div className="relative z-10 flex items-center justify-center h-full px-4">
-              <div className="text-center text-white max-w-4xl mx-auto">
-                <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
+            <Section id="home">
+              <div className="relative z-10 flex items-center justify-center h-full px-4">
+                <div className="text-center text-white max-w-4xl mx-auto">
+                  <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
 
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif mb-6 leading-tight">
-                  Ariane & Timothe
-                </h1>
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif mb-6 leading-tight">
+                    Ariane & Timothe
+                  </h1>
 
-                <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
+                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
 
-                <p className="text-xl md:text-2xl mb-12 font-light opacity-90">
-                  Nous avons hâte de vous accueillir aux Lauziers pour célébrer
-                  notre mariage
-                </p>
+                  <p className="text-xl md:text-2xl mb-12 font-light opacity-90">
+                    Nous avons hâte de vous accueillir aux Lauziers pour
+                    célébrer notre mariage
+                  </p>
 
-                {/* Scroll indicator */}
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-                  <div className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center">
-                    <svg
-                      className="w-4 h-4 text-white/70 mt-2"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 5v14m0 0l-5-5m5 5l5-5"
-                      />
-                    </svg>
+                  {/* Scroll indicator */}
+                  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+                    <div className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center">
+                      <svg
+                        className="w-4 h-4 text-white/70 mt-2"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 5v14m0 0l-5-5m5 5l5-5"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </Section>
           </div>
 
           {/* Our Story Section */}
-          <Section id="our-story" background="accent" className="pt-20">
+          <Section id="our-story" background="default" className="pt-20">
             <SectionHeader title="Un petit mot" subtitle="" />
             <WeddingPresentation
               weddingInfo={weddingInfo}

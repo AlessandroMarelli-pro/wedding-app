@@ -52,6 +52,13 @@ export default function Document() {
           href="/icons/icon-16x16.png"
         />
 
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap"
+          rel="stylesheet"
+        />
+
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />
 
