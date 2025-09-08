@@ -1,9 +1,12 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
+  Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -11,8 +14,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -20,16 +25,24 @@ import { memoryStorage } from 'multer';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { CSVUpload } from '../entities/csv-upload.entity';
 import { Guest } from '../entities/guest.entity';
+import { UploadedImage } from '../entities/uploaded-image.entity';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtPayload } from '../services/auth.service';
 import { GuestService } from '../services/guest.service';
+import {
+  ImageProcessingOptions,
+  ImageService,
+} from '../services/image.service';
 
 @ApiTags('Admin')
 @Controller('admin')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class AdminController {
-  constructor(private readonly guestService: GuestService) {}
+  constructor(
+    private readonly guestService: GuestService,
+    private readonly imageService: ImageService,
+  ) {}
 
   @Post('guests/upload')
   @UseInterceptors(
@@ -179,5 +192,326 @@ export class AdminController {
   async seedAccommodations(): Promise<{ message: string }> {
     // This would require AccommodationService injection
     return { message: 'Seeding endpoint - implement in future iteration' };
+  }
+
+  // Image Management Endpoints
+
+  @Post('images/upload')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: memoryStorage(),
+      fileFilter: (req, file, cb) => {
+        const allowedMimeTypes = [
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+        ];
+        if (allowedMimeTypes.includes(file.mimetype)) {
+          cb(null, true);
+        } else {
+          cb(
+            new Error('Only image files (JPEG, PNG, WebP) are allowed'),
+            false,
+          );
+        }
+      },
+      limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB limit
+      },
+    }),
+  )
+  @ApiOperation({ summary: 'Upload an image' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+        usageLocation: {
+          type: 'string',
+          description:
+            'Where the image will be used (e.g., "gallery", "hero", "accommodation")',
+        },
+        altText: {
+          type: 'string',
+          description: 'Alternative text for accessibility',
+        },
+        maxWidth: {
+          type: 'number',
+          description: 'Maximum width for resizing',
+        },
+        maxHeight: {
+          type: 'number',
+          description: 'Maximum height for resizing',
+        },
+        quality: {
+          type: 'number',
+          description: 'Image quality (1-100)',
+        },
+        format: {
+          type: 'string',
+          enum: ['jpeg', 'png', 'webp'],
+          description: 'Output format',
+        },
+      },
+      required: ['image', 'usageLocation'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Image uploaded successfully',
+    type: UploadedImage,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid file or parameters',
+  })
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('usageLocation') usageLocation: string,
+    @CurrentUser() user: JwtPayload,
+    @Body('altText') altText?: string,
+    @Body('maxWidth') maxWidth?: string,
+    @Body('maxHeight') maxHeight?: string,
+    @Body('quality') quality?: string,
+    @Body('format') format?: 'jpeg' | 'png' | 'webp',
+  ): Promise<UploadedImage> {
+    if (!file) {
+      throw new Error('No image file uploaded');
+    }
+
+    if (!file.buffer) {
+      throw new Error('File buffer is empty or invalid');
+    }
+
+    if (!usageLocation) {
+      throw new Error('Usage location is required');
+    }
+
+    const processingOptions: ImageProcessingOptions = {};
+
+    if (maxWidth) {
+      processingOptions.maxWidth = parseInt(maxWidth, 10);
+    }
+
+    if (maxHeight) {
+      processingOptions.maxHeight = parseInt(maxHeight, 10);
+    }
+
+    if (quality) {
+      processingOptions.quality = parseInt(quality, 10);
+    }
+
+    if (format) {
+      processingOptions.format = format;
+    }
+
+    return this.imageService.uploadImage(
+      {
+        originalName: file.originalname,
+        buffer: file.buffer,
+        mimeType: file.mimetype,
+        usageLocation,
+        altText,
+      },
+      user.sub,
+      processingOptions,
+    );
+  }
+
+  @Get('images')
+  @ApiOperation({ summary: 'Get all uploaded images' })
+  @ApiQuery({
+    name: 'usageLocation',
+    required: false,
+    description: 'Filter by usage location',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of uploaded images',
+    type: [UploadedImage],
+  })
+  async getImages(
+    @Query('usageLocation') usageLocation?: string,
+  ): Promise<UploadedImage[]> {
+    if (usageLocation) {
+      return this.imageService.getImagesByUsageLocation(usageLocation);
+    }
+    return this.imageService.getAllImages();
+  }
+
+  @Get('images/:id')
+  @ApiOperation({ summary: 'Get image by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Image details',
+    type: UploadedImage,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Image not found',
+  })
+  async getImageById(@Param('id') id: string): Promise<UploadedImage> {
+    return this.imageService.getImageById(id);
+  }
+
+  @Put('images/:id')
+  @ApiOperation({ summary: 'Update image metadata' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        altText: {
+          type: 'string',
+          description: 'Alternative text for accessibility',
+        },
+        usageLocation: {
+          type: 'string',
+          description: 'Where the image is used',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Image metadata updated',
+    type: UploadedImage,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Image not found',
+  })
+  async updateImageMetadata(
+    @Param('id') id: string,
+    @Body() updateData: { altText?: string; usageLocation?: string },
+  ): Promise<UploadedImage> {
+    return this.imageService.updateImageMetadata(id, updateData);
+  }
+
+  @Delete('images/:id')
+  @ApiOperation({ summary: 'Delete an image' })
+  @ApiResponse({
+    status: 200,
+    description: 'Image deleted successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Image not found',
+  })
+  async deleteImage(@Param('id') id: string): Promise<{ message: string }> {
+    await this.imageService.deleteImage(id);
+    return { message: 'Image deleted successfully' };
+  }
+
+  @Post('images/:id/thumbnail')
+  @ApiOperation({ summary: 'Generate thumbnail for an image' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        width: {
+          type: 'number',
+          default: 200,
+          description: 'Thumbnail width',
+        },
+        height: {
+          type: 'number',
+          default: 200,
+          description: 'Thumbnail height',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Thumbnail generated',
+    schema: {
+      type: 'object',
+      properties: {
+        thumbnailFilename: {
+          type: 'string',
+        },
+        thumbnailUrl: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async generateThumbnail(
+    @Param('id') id: string,
+    @Body('width') width?: number,
+    @Body('height') height?: number,
+  ): Promise<{ thumbnailFilename: string; thumbnailUrl: string }> {
+    const thumbnailFilename = await this.imageService.createThumbnail(
+      id,
+      width || 200,
+      height || 200,
+    );
+
+    return {
+      thumbnailFilename,
+      thumbnailUrl: this.imageService.getImageUrl(thumbnailFilename),
+    };
+  }
+
+  @Post('images/:id/optimize')
+  @ApiOperation({ summary: 'Optimize image for web' })
+  @ApiResponse({
+    status: 201,
+    description: 'Web-optimized version created',
+    schema: {
+      type: 'object',
+      properties: {
+        optimizedFilename: {
+          type: 'string',
+        },
+        optimizedUrl: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async optimizeForWeb(
+    @Param('id') id: string,
+  ): Promise<{ optimizedFilename: string; optimizedUrl: string }> {
+    const optimizedFilename = await this.imageService.optimizeForWeb(id);
+
+    return {
+      optimizedFilename,
+      optimizedUrl: this.imageService.getImageUrl(optimizedFilename),
+    };
+  }
+
+  @Post('images/cleanup')
+  @ApiOperation({ summary: 'Clean up orphaned image files' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cleanup completed',
+    schema: {
+      type: 'object',
+      properties: {
+        deletedFilesCount: {
+          type: 'number',
+        },
+        message: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async cleanupOrphanedFiles(): Promise<{
+    deletedFilesCount: number;
+    message: string;
+  }> {
+    const deletedCount = await this.imageService.cleanupOrphanedFiles();
+
+    return {
+      deletedFilesCount: deletedCount,
+      message: `Cleaned up ${deletedCount} orphaned image files`,
+    };
   }
 }

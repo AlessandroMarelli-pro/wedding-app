@@ -1,6 +1,7 @@
 export { AccommodationService } from './accommodation.service';
 export { AuthService } from './auth.service';
 export { GuestService } from './guest.service';
+export { ImageService } from './image.service';
 export { ProgramService } from './program.service';
 export { RSVPService } from './rsvp.service';
 export { WeddingService } from './wedding.service';
@@ -29,3 +30,9 @@ export type {
   CreateProgramEventDto,
   UpdateProgramEventDto,
 } from './program.service';
+
+export type {
+  ImageProcessingOptions,
+  ImageUploadDto,
+  ProcessedImageResult,
+} from './image.service';
