@@ -11,6 +11,7 @@ export interface CreateProgramEventDto {
   location: string;
   displayOrder: number;
   includeInCalendar?: boolean;
+  icon?: string;
 }
 
 export interface UpdateProgramEventDto {
@@ -21,6 +22,7 @@ export interface UpdateProgramEventDto {
   location?: string;
   displayOrder?: number;
   includeInCalendar?: boolean;
+  icon?: string;
 }
 
 @Injectable()

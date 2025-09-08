@@ -1,12 +1,26 @@
 import {
+  Bell,
+  Cake,
   Calendar,
+  Camera,
   Clock,
+  Coffee,
   Download,
   Edit,
+  Flower,
+  Gift,
+  Heart,
   MapPin,
+  Music,
+  PartyPopper,
   Plus,
   Save,
+  Sparkles,
+  Star,
   Trash2,
+  Users,
+  Utensils,
+  Wine,
   X,
 } from 'lucide-react';
 import Head from 'next/head';
@@ -33,6 +47,7 @@ interface ProgramEvent {
   location: string;
   displayOrder: number;
   includeInCalendar: boolean;
+  icon?: string;
 }
 
 interface EventFormData {
@@ -42,6 +57,7 @@ interface EventFormData {
   endTime: string;
   location: string;
   includeInCalendar: boolean;
+  icon?: string;
 }
 
 export default function AdminProgram() {
@@ -56,6 +72,7 @@ export default function AdminProgram() {
     endTime: '',
     location: '',
     includeInCalendar: true,
+    icon: '',
   });
   const [message, setMessage] = useState<{
     type: 'success' | 'error';
@@ -178,6 +195,7 @@ export default function AdminProgram() {
       endTime: event.endTime.slice(0, 16),
       location: event.location,
       includeInCalendar: event.includeInCalendar,
+      icon: event.icon || '',
     });
     setIsCreating(false);
   };
@@ -202,6 +220,7 @@ export default function AdminProgram() {
       endTime: '',
       location: '',
       includeInCalendar: true,
+      icon: '',
     });
   };
 
@@ -215,6 +234,32 @@ export default function AdminProgram() {
       minute: '2-digit',
       hour12: true,
     });
+  };
+
+  // Available icons for selection
+  const availableIcons = [
+    { name: 'Heart', component: Heart },
+    { name: 'Music', component: Music },
+    { name: 'Camera', component: Camera },
+    { name: 'Utensils', component: Utensils },
+    { name: 'Gift', component: Gift },
+    { name: 'Users', component: Users },
+    { name: 'Sparkles', component: Sparkles },
+    { name: 'Coffee', component: Coffee },
+    { name: 'Wine', component: Wine },
+    { name: 'Cake', component: Cake },
+    { name: 'PartyPopper', component: PartyPopper },
+    { name: 'Bell', component: Bell },
+    { name: 'Star', component: Star },
+    { name: 'Flower', component: Flower },
+    { name: 'Calendar', component: Calendar },
+    { name: 'Clock', component: Clock },
+    { name: 'MapPin', component: MapPin },
+  ];
+
+  const getIconComponent = (iconName: string) => {
+    const icon = availableIcons.find((i) => i.name === iconName);
+    return icon ? icon.component : Calendar;
   };
 
   if (isLoading) {
@@ -255,7 +300,10 @@ export default function AdminProgram() {
                 Manage your wedding schedule and events
               </p>
             </div>
-            <Button onClick={startCreate} className="flex items-center gap-2">
+            <Button
+              onClick={startCreate}
+              className="flex items-center gap-2 bg-blue-500 text-white hover:bg-blue-600"
+            >
               <Plus className="w-4 h-4" />
               Add Event
             </Button>
@@ -337,6 +385,46 @@ export default function AdminProgram() {
                     />
                   </div>
 
+                  <div>
+                    <Label htmlFor="icon">Icon</Label>
+                    <div className="grid grid-cols-6 gap-2 mt-2 p-4 border border-input rounded-md">
+                      {availableIcons.map(
+                        ({ name, component: IconComponent }) => (
+                          <button
+                            key={name}
+                            type="button"
+                            onClick={() =>
+                              setFormData({ ...formData, icon: name })
+                            }
+                            className={`p-2 rounded-md border transition-colors ${
+                              formData.icon === name
+                                ? 'border-blue-500 bg-blue-50 text-blue-600'
+                                : 'border-gray-300 hover:bg-gray-50'
+                            }`}
+                            title={name}
+                          >
+                            <div className="relative">
+                              <IconComponent className="w-5 h-5 mx-auto" />
+                              {formData.icon === name && (
+                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                </div>
+                              )}
+                            </div>
+                          </button>
+                        ),
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Select an icon to represent this event
+                      {formData.icon && (
+                        <span className="ml-2 text-blue-600 font-medium">
+                          Selected: {formData.icon}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="startTime">Start Time</Label>
@@ -386,7 +474,10 @@ export default function AdminProgram() {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button type="submit" className="flex items-center gap-2">
+                    <Button
+                      type="submit"
+                      className="flex items-center gap-2 bg-blue-500 text-white hover:bg-blue-600"
+                    >
                       <Save className="w-4 h-4" />
                       {editingEvent ? 'Update Event' : 'Create Event'}
                     </Button>
@@ -433,6 +524,16 @@ export default function AdminProgram() {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
+                            {event.icon && (
+                              <div className="text-primary">
+                                {(() => {
+                                  const IconComponent = getIconComponent(
+                                    event.icon,
+                                  );
+                                  return <IconComponent className="w-5 h-5" />;
+                                })()}
+                              </div>
+                            )}
                             <h3 className="text-lg font-serif text-foreground">
                               {event.title}
                             </h3>

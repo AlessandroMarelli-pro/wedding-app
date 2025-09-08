@@ -32,6 +32,9 @@ export class ProgramEvent {
   @Column({ name: 'include_in_calendar', default: true })
   includeInCalendar!: boolean;
 
+  @Column({ length: 50, nullable: true })
+  icon!: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
