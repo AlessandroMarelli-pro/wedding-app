@@ -95,7 +95,6 @@ export class AdminController {
 
     try {
       const fileContent = file.buffer.toString('utf-8');
-
       if (!fileContent.trim()) {
         throw new Error('CSV file is empty');
       }
@@ -153,6 +152,135 @@ export class AdminController {
       throw new Error(`CSV upload with ID ${id} not found`);
     }
     return upload;
+  }
+
+  @Get('guests/uploads/:id/report')
+  @ApiOperation({ summary: 'Get detailed CSV upload report' })
+  @ApiResponse({
+    status: 200,
+    description: 'Detailed upload report with errors and warnings',
+    schema: {
+      type: 'object',
+      properties: {
+        upload: {
+          type: 'object',
+          description: 'Upload metadata',
+        },
+        errorReport: {
+          type: 'object',
+          properties: {
+            simpleErrors: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Simple error messages',
+            },
+            detailedErrors: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  row: { type: 'number' },
+                  field: { type: 'string' },
+                  value: { type: 'string' },
+                  message: { type: 'string' },
+                  severity: { type: 'string', enum: ['error', 'warning'] },
+                  code: { type: 'string' },
+                },
+              },
+            },
+            warnings: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  row: { type: 'number' },
+                  field: { type: 'string' },
+                  value: { type: 'string' },
+                  message: { type: 'string' },
+                  code: { type: 'string' },
+                },
+              },
+            },
+            summary: {
+              type: 'object',
+              properties: {
+                duplicatesSkipped: { type: 'number' },
+                emptyRowsSkipped: { type: 'number' },
+                validationErrors: { type: 'number' },
+                dataWarnings: { type: 'number' },
+                fieldsProcessed: { type: 'array', items: { type: 'string' } },
+                processingTime: { type: 'number' },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Upload not found',
+  })
+  async getCSVUploadReport(@Param('id') uploadId: string): Promise<{
+    upload: CSVUpload;
+    errorReport?: {
+      simpleErrors: string[];
+      detailedErrors: any[];
+      warnings: any[];
+      summary: any;
+    };
+  }> {
+    return this.guestService.getCSVUploadReport(uploadId);
+  }
+
+  @Get('guests/validation-stats')
+  @ApiOperation({ summary: 'Get CSV validation statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'CSV validation statistics',
+    schema: {
+      type: 'object',
+      properties: {
+        totalUploads: { type: 'number' },
+        successfulUploads: { type: 'number' },
+        failedUploads: { type: 'number' },
+        totalRowsProcessed: { type: 'number' },
+        totalErrors: { type: 'number' },
+        commonErrors: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              code: { type: 'string' },
+              count: { type: 'number' },
+              message: { type: 'string' },
+            },
+          },
+        },
+        commonWarnings: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              code: { type: 'string' },
+              count: { type: 'number' },
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  })
+  async getCSVValidationStats(): Promise<{
+    totalUploads: number;
+    successfulUploads: number;
+    failedUploads: number;
+    totalRowsProcessed: number;
+    totalErrors: number;
+    commonErrors: { code: string; count: number; message: string }[];
+    commonWarnings: { code: string; count: number; message: string }[];
+  }> {
+    return this.guestService.getCSVValidationStats();
   }
 
   @Get('guests/uploads/:id/guests')

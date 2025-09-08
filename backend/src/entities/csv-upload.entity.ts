@@ -2,8 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -49,10 +47,10 @@ export class CSVUpload {
   updatedAt!: Date;
 
   // Relationships
-  @ManyToOne('Admin', 'csvUploads')
+  /*   @ManyToOne('Admin', 'csvUploads')
   @JoinColumn({ name: 'uploaded_by' })
   uploadedByAdmin!: any;
-
+ */
   @OneToMany('Guest', 'csvUpload')
-  guests!: any[];
+  guests?: any[];
 }
