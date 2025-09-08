@@ -9,6 +9,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import sharp from 'sharp';
 import { Repository } from 'typeorm';
+import {
+  FILE_TYPES,
+  UPLOAD_PATHS,
+  validateFileSecurity,
+} from '../config/upload';
 import { UploadedImage } from '../entities/uploaded-image.entity';
 
 export interface ImageUploadDto {
@@ -36,14 +41,9 @@ export interface ProcessedImageResult {
 
 @Injectable()
 export class ImageService {
-  private readonly uploadDir = './uploads';
-  private readonly allowedMimeTypes = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp',
-  ];
-  private readonly maxFileSize = 10 * 1024 * 1024; // 10MB
+  private readonly uploadDir = UPLOAD_PATHS.IMAGES;
+  private readonly allowedMimeTypes = FILE_TYPES.IMAGES.mimeTypes;
+  private readonly maxFileSize = FILE_TYPES.IMAGES.maxSize;
 
   constructor(
     @InjectRepository(UploadedImage)
@@ -57,6 +57,18 @@ export class ImageService {
     uploadedBy: string,
     processingOptions?: ImageProcessingOptions,
   ): Promise<UploadedImage> {
+    // Security validation
+    const mockFile: Express.Multer.File = {
+      originalname: imageData.originalName,
+      mimetype: imageData.mimeType,
+      buffer: imageData.buffer,
+      size: imageData.buffer.length,
+    } as Express.Multer.File;
+
+    if (!validateFileSecurity(mockFile)) {
+      throw new BadRequestException('File failed security validation');
+    }
+
     // Validate file size
     if (imageData.buffer.length > this.maxFileSize) {
       throw new BadRequestException(
@@ -65,7 +77,7 @@ export class ImageService {
     }
 
     // Validate MIME type
-    if (!this.allowedMimeTypes.includes(imageData.mimeType)) {
+    if (!this.allowedMimeTypes.includes(imageData.mimeType as any)) {
       throw new BadRequestException(
         `Unsupported file type. Allowed types: ${this.allowedMimeTypes.join(', ')}`,
       );

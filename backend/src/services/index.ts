@@ -4,6 +4,7 @@ export { GuestService } from './guest.service';
 export { ImageService } from './image.service';
 export { ProgramService } from './program.service';
 export { RSVPService } from './rsvp.service';
+export { UploadMaintenanceService } from './upload-maintenance.service';
 export { WeddingService } from './wedding.service';
 
 export type { JwtPayload, LoginRequest, LoginResponse } from './auth.service';

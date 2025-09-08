@@ -3,8 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MulterModule } from '@nestjs/platform-express';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfig } from './config/database';
+import { documentUploadConfig } from './config/upload';
 
 // Import entities
 import {
@@ -26,6 +28,7 @@ import {
   ImageService,
   ProgramService,
   RSVPService,
+  UploadMaintenanceService,
   WeddingService,
 } from './services';
 
@@ -48,6 +51,7 @@ import {
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConfig,
     }),
@@ -67,8 +71,8 @@ import {
       secret: process.env.JWT_SECRET || 'wedding-jwt-secret',
       signOptions: { expiresIn: '1d' },
     }),
-    MulterModule.register({
-      dest: './uploads',
+    MulterModule.registerAsync({
+      useFactory: () => documentUploadConfig,
     }),
   ],
   controllers: [
@@ -91,6 +95,7 @@ import {
     ImageService,
     ProgramService,
     RSVPService,
+    UploadMaintenanceService,
   ],
 })
 export class AppModule {}

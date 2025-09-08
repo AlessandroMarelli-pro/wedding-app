@@ -4,8 +4,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import { AppModule } from './app.module';
+import { initializeUploadSystem } from './config/upload';
 
 async function bootstrap() {
+  // Initialize upload system before creating the app
+  initializeUploadSystem();
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Global API prefix

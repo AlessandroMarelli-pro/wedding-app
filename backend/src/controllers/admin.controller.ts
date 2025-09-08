@@ -22,6 +22,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { memoryStorage } from 'multer';
+import { imageUploadConfig } from '../config/upload';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { CSVUpload } from '../entities/csv-upload.entity';
 import { Guest } from '../entities/guest.entity';
@@ -33,6 +34,7 @@ import {
   ImageProcessingOptions,
   ImageService,
 } from '../services/image.service';
+import { UploadMaintenanceService } from '../services/upload-maintenance.service';
 
 @ApiTags('Admin')
 @Controller('admin')
@@ -42,6 +44,7 @@ export class AdminController {
   constructor(
     private readonly guestService: GuestService,
     private readonly imageService: ImageService,
+    private readonly uploadMaintenanceService: UploadMaintenanceService,
   ) {}
 
   @Post('guests/upload')
@@ -197,30 +200,7 @@ export class AdminController {
   // Image Management Endpoints
 
   @Post('images/upload')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: memoryStorage(),
-      fileFilter: (req, file, cb) => {
-        const allowedMimeTypes = [
-          'image/jpeg',
-          'image/jpg',
-          'image/png',
-          'image/webp',
-        ];
-        if (allowedMimeTypes.includes(file.mimetype)) {
-          cb(null, true);
-        } else {
-          cb(
-            new Error('Only image files (JPEG, PNG, WebP) are allowed'),
-            false,
-          );
-        }
-      },
-      limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB limit
-      },
-    }),
-  )
+  @UseInterceptors(FileInterceptor('image', imageUploadConfig))
   @ApiOperation({ summary: 'Upload an image' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -513,5 +493,136 @@ export class AdminController {
       deletedFilesCount: deletedCount,
       message: `Cleaned up ${deletedCount} orphaned image files`,
     };
+  }
+
+  // Upload System Maintenance Endpoints
+
+  @Post('system/cleanup')
+  @ApiOperation({ summary: 'Manual cleanup of temporary and orphaned files' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cleanup completed',
+    schema: {
+      type: 'object',
+      properties: {
+        tempFiles: { type: 'number' },
+        orphanedFiles: { type: 'number' },
+        freedSpace: { type: 'number' },
+        message: { type: 'string' },
+      },
+    },
+  })
+  async manualCleanup(): Promise<{
+    tempFiles: number;
+    orphanedFiles: number;
+    freedSpace: number;
+    message: string;
+  }> {
+    const result = await this.uploadMaintenanceService.manualCleanup();
+
+    return {
+      ...result,
+      message: `Cleanup completed: ${result.tempFiles} temp files, ${result.orphanedFiles} orphaned files removed`,
+    };
+  }
+
+  @Get('system/storage')
+  @ApiOperation({ summary: 'Get storage usage statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Storage usage report',
+    schema: {
+      type: 'object',
+      properties: {
+        totalFiles: { type: 'number' },
+        totalSize: { type: 'number' },
+        totalSizeFormatted: { type: 'string' },
+        directories: {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+            properties: {
+              files: { type: 'number' },
+              size: { type: 'number' },
+              sizeFormatted: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  })
+  async getStorageUsage(): Promise<{
+    totalFiles: number;
+    totalSize: number;
+    totalSizeFormatted: string;
+    directories: Record<
+      string,
+      { files: number; size: number; sizeFormatted: string }
+    >;
+  }> {
+    const usage = await this.uploadMaintenanceService.getStorageUsage();
+
+    // Format sizes for readability
+    const formatFileSize = (bytes: number): string => {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
+
+    const formattedDirectories: Record<
+      string,
+      { files: number; size: number; sizeFormatted: string }
+    > = {};
+
+    for (const [dir, stats] of Object.entries(usage.directories)) {
+      formattedDirectories[dir] = {
+        ...stats,
+        sizeFormatted: formatFileSize(stats.size),
+      };
+    }
+
+    return {
+      totalFiles: usage.totalFiles,
+      totalSize: usage.totalSize,
+      totalSizeFormatted: formatFileSize(usage.totalSize),
+      directories: formattedDirectories,
+    };
+  }
+
+  @Get('system/health')
+  @ApiOperation({ summary: 'Check upload system health' })
+  @ApiResponse({
+    status: 200,
+    description: 'System health status',
+    schema: {
+      type: 'object',
+      properties: {
+        healthy: { type: 'boolean' },
+        issues: { type: 'array', items: { type: 'string' } },
+        directories: {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+            properties: {
+              exists: { type: 'boolean' },
+              writable: { type: 'boolean' },
+              readable: { type: 'boolean' },
+            },
+          },
+        },
+      },
+    },
+  })
+  async checkSystemHealth(): Promise<{
+    healthy: boolean;
+    issues: string[];
+    directories: Record<
+      string,
+      { exists: boolean; writable: boolean; readable: boolean }
+    >;
+  }> {
+    return this.uploadMaintenanceService.validateUploadHealth();
   }
 }
