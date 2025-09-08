@@ -26,6 +26,9 @@ export class WeddingInfo {
   @Column({ name: 'location_directions', type: 'text' })
   locationDirections!: string;
 
+  @Column({ name: 'hero_image_id', nullable: true })
+  heroImageId!: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { WeddingInfo } from '../entities/wedding-info.entity';
+import { ImageService } from './image.service';
 
 export interface CreateWeddingInfoDto {
   coupleNames: string;
@@ -9,6 +10,7 @@ export interface CreateWeddingInfoDto {
   weddingAddress: string;
   weddingDate: Date;
   locationDirections: string;
+  heroImageId?: string;
 }
 
 export interface UpdateWeddingInfoDto {
@@ -17,6 +19,7 @@ export interface UpdateWeddingInfoDto {
   weddingAddress?: string;
   weddingDate?: Date;
   locationDirections?: string;
+  heroImageId?: string;
 }
 
 @Injectable()
@@ -24,6 +27,7 @@ export class WeddingService {
   constructor(
     @InjectRepository(WeddingInfo)
     private readonly weddingInfoRepository: Repository<WeddingInfo>,
+    private readonly imageService: ImageService,
   ) {}
 
   async getWeddingInfo(): Promise<WeddingInfo> {
@@ -35,7 +39,8 @@ export class WeddingService {
     if (!weddingInfo) {
       throw new NotFoundException('Wedding information not found');
     }
-
+    const heroImage = await this.imageService.getImagesByUsageLocation('hero');
+    weddingInfo.heroImageId = heroImage[0].id;
     return weddingInfo;
   }
 

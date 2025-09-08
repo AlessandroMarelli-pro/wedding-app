@@ -63,11 +63,21 @@ export default function HomePage({
     }
   };
 
+  // Helper function to get hero image URL
+  const getHeroImageUrl = (): string => {
+    if (weddingInfo.heroImageId) {
+      const baseUrl =
+        process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+      return `${baseUrl}/images/${weddingInfo.heroImageId}`;
+    }
+    return '/images/hero-wedding.jpg'; // Fallback to default image
+  };
+
   return (
     <Layout
       title={`${weddingInfo.coupleNames} - Wedding`}
       description={`Join us for the wedding celebration of ${weddingInfo.coupleNames}`}
-      heroImage="/images/hero-wedding.jpg"
+      heroImage={getHeroImageUrl()}
     >
       {/* Fixed Navigation */}
       <Navigation

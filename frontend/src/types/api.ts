@@ -6,6 +6,7 @@ export interface WeddingInfo {
   weddingAddress: string;
   weddingDate: string;
   locationDirections: string;
+  heroImageId?: string;
   createdAt: string;
   updatedAt: string;
 }
