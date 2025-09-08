@@ -19,7 +19,7 @@ export interface MapMarker {
     lat: number;
     lng: number;
   };
-  title: string;
+  title?: string;
   description?: string;
   icon?: string;
   color?: string;
@@ -225,8 +225,8 @@ export class MapsService {
             lat: geocoded.lat!,
             lng: geocoded.lng!,
           },
-          title: acc.name,
-          description: acc.description,
+          // title: acc.name,
+          //description: acc.description,
           color: acc.isRecommended ? '#10b981' : '#6b7280', // Green for recommended, gray for others
         };
       }),

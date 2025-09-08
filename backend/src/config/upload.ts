@@ -22,7 +22,7 @@ export const FILE_TYPES = {
       'image/webp',
       'image/gif',
     ],
-    maxSize: 10 * 1024 * 1024, // 10MB
+    maxSize: 20 * 1024 * 1024, // 10MB
     extensions: ['.jpg', '.jpeg', '.png', '.webp', '.gif'],
   },
   DOCUMENTS: {

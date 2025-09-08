@@ -276,8 +276,8 @@ export default function HomePage({
           {/* Accommodations Section */}
           <Section id="accommodations" background="muted">
             <SectionHeader
-              title="Where to Stay"
-              subtitle="We've selected some wonderful places for you to stay during our celebration"
+              title="Où dormir ?"
+              subtitle="Nous avons sélectionné quelques endroits pour vous pour votre séjour"
             />
 
             <AccommodationsList
@@ -296,8 +296,8 @@ export default function HomePage({
           {/* Wedding Program Section */}
           <Section id="program" background="default">
             <SectionHeader
-              title="Wedding Schedule"
-              subtitle="Here's how our special day will unfold"
+              title="Programme"
+              subtitle="Voici comment notre jour se déroulera"
             />
             <WeddingProgram />
           </Section>

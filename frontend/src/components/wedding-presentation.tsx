@@ -32,7 +32,11 @@ export function WeddingPresentation({
     <div className={cn('space-y-8 sm:space-y-12', className)}>
       {/* Couple's Message */}
       <div className="text-center container-responsive">
-        <div className="bg-card/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg border">
+        <div className="bg-card/60 backdrop-blur-sm  p-6 sm:p-8 md:p-12 shadow-lg border">
+          <Icon className="absolute h-6 w-6 -top-3 -left-3  text-black" />
+          <Icon className="absolute h-6 w-6 -bottom-3 -left-3  text-black" />
+          <Icon className="absolute h-6 w-6 -top-3 -right-3  text-black" />
+          <Icon className="absolute h-6 w-6 -bottom-3 -right-3  text-black" />
           <p className="text-responsive text-muted-foreground leading-relaxed font-light italic">
             "{weddingInfo.presentationMessage}"
           </p>
@@ -177,3 +181,4 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
 
 // Fix React import for countdown component
 import * as React from 'react';
+import { Icon } from './ui/evervault-card';

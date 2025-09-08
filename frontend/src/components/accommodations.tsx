@@ -77,7 +77,7 @@ export function AccommodationsList({
                 className="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500"
               >
                 <Star className="w-3 h-3 mr-1" />
-                Recommended
+                Recommandé
               </Badge>
             )}
           </div>
@@ -123,7 +123,7 @@ export function AccommodationsList({
               className="touch-target w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              View on Maps
+              Voir sur Maps
             </Button>
           </div>
         </CardContent>
@@ -151,10 +151,10 @@ export function AccommodationsList({
         <div className="container-responsive">
           <div className="text-center mb-6 sm:mb-8">
             <h3 className="heading-responsive font-serif text-foreground mb-2">
-              Our Recommendations
+              Nos recommandations
             </h3>
             <p className="text-responsive text-muted-foreground">
-              These are our top picks for your stay
+              Ces sont nos top picks pour votre séjour
             </p>
           </div>
           <div className="grid-responsive">
@@ -173,11 +173,8 @@ export function AccommodationsList({
           {recommended.length > 0 && (
             <div className="text-center mb-6 sm:mb-8">
               <h3 className="heading-responsive font-serif text-foreground mb-2">
-                More Options
+                Plus d'options
               </h3>
-              <p className="text-responsive text-muted-foreground">
-                Additional accommodations in the area
-              </p>
             </div>
           )}
           <div className="grid-responsive">
