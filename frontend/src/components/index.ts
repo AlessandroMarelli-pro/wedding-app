@@ -10,10 +10,10 @@ export {
 export { DefaultErrorFallback, ErrorBoundary } from './error-boundary';
 export { GuestDetailsModal } from './guest-details-modal';
 export { ImageUpload } from './image-upload';
-export { Layout, Navigation, Section, SectionHeader } from './layout';
 export { AccommodationMap, VenueMap } from './maps';
 export { PublicSidebar } from './public-sidebar';
 export { RSVPForm } from './rsvp-form';
+export { Section, SectionHeader } from './section-components';
 export { SidebarLayout } from './sidebar-layout';
 export { WeddingCountdown, WeddingPresentation } from './wedding-presentation';
 export { WeddingProgram } from './wedding-program';

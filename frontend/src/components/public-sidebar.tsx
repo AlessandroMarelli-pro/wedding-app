@@ -7,18 +7,20 @@ import {
   SidebarProvider,
   useSidebar,
 } from '@/components/ui/sidebar';
-import {
-  Calendar,
-  Clock,
-  ExternalLink,
-  Heart,
-  Home,
-  Mail,
-  MapPin,
-} from 'lucide-react';
+
 import { motion } from 'motion/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+
+import {
+  IconCalendar,
+  IconClock,
+  IconExternalLink,
+  IconHeart,
+  IconHome,
+  IconMail,
+  IconMapPin,
+} from '@tabler/icons-react';
 
 interface PublicSidebarProps {
   currentSection?: string;
@@ -31,9 +33,8 @@ function PublicLogo() {
   return (
     <div className="px-2 py-4 border-b border-neutral-200 dark:border-neutral-700">
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gradient-to-br from-rose-400 to-pink-500 rounded-lg flex items-center justify-center">
-          <Heart className="w-4 h-4 text-white" />
-        </div>
+        <IconHeart className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+
         <motion.span
           animate={{
             display: animate
@@ -63,37 +64,49 @@ export function PublicSidebar({
     {
       label: 'Home',
       href: '#home',
-      icon: <Home className="w-5 h-5" />,
+      icon: (
+        <IconHome className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       id: 'home',
     },
     {
       label: 'Our Story',
       href: '#our-story',
-      icon: <Heart className="w-5 h-5" />,
+      icon: (
+        <IconHeart className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       id: 'our-story',
     },
     {
       label: 'Details',
       href: '#details',
-      icon: <Calendar className="w-5 h-5" />,
+      icon: (
+        <IconCalendar className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       id: 'details',
     },
     {
       label: 'Accommodations',
       href: '#accommodations',
-      icon: <MapPin className="w-5 h-5" />,
+      icon: (
+        <IconMapPin className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       id: 'accommodations',
     },
     {
       label: 'Program',
       href: '#program',
-      icon: <Clock className="w-5 h-5" />,
+      icon: (
+        <IconClock className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       id: 'program',
     },
     {
       label: 'RSVP',
       href: '#rsvp',
-      icon: <Mail className="w-5 h-5" />,
+      icon: (
+        <IconMail className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       id: 'rsvp',
     },
   ];
@@ -137,7 +150,7 @@ export function PublicSidebar({
               link={{
                 label: 'View Full Site',
                 href: '/',
-                icon: <ExternalLink className="w-4 h-4" />,
+                icon: <IconExternalLink className="w-4 h-4" />,
               }}
               className="rounded-lg px-2 py-2 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-300"
             />

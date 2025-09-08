@@ -124,7 +124,8 @@ export default function HomePage({
                 <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
 
                 <p className="text-xl md:text-2xl mb-12 font-light opacity-90">
-                  Together forever starts here
+                  Nous avons hâte de vous accueillir aux Lauziers pour célébrer
+                  notre mariage
                 </p>
 
                 {/* Scroll indicator */}
