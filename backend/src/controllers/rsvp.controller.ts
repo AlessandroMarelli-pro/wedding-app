@@ -63,6 +63,62 @@ export class RSVPController {
     const confirmed = await this.rsvpService.isGuestConfirmed(hashCode);
     return { confirmed };
   }
+
+  @Get('guest/:hashCode')
+  @ApiOperation({ summary: 'Get guest information by hash code' })
+  @ApiResponse({
+    status: 200,
+    description: 'Guest information',
+    schema: {
+      type: 'object',
+      properties: {
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string', nullable: true },
+        phoneNumber: { type: 'string', nullable: true },
+        partySize: { type: 'number' },
+        dietaryRestrictions: { type: 'string', nullable: true },
+        specialRequests: { type: 'string', nullable: true },
+        confirmed: { type: 'boolean' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Guest not found',
+  })
+  async getGuestInfo(@Param('hashCode') hashCode: string): Promise<
+    | {
+        firstName: string;
+        lastName: string;
+        email?: string;
+        phoneNumber?: string;
+        partySize: number;
+        dietaryRestrictions?: string;
+        specialRequests?: string;
+        confirmed: boolean;
+      }
+    | { error: string }
+  > {
+    const guest = await this.rsvpService.getGuestByHashCode(hashCode);
+
+    if (!guest) {
+      return { error: 'Guest not found or invalid hash code' };
+    }
+
+    const confirmed = await this.rsvpService.isGuestConfirmed(hashCode);
+
+    return {
+      firstName: guest.firstName,
+      lastName: guest.lastName,
+      email: guest.email,
+      phoneNumber: guest.phoneNumber,
+      partySize: guest.partySize,
+      dietaryRestrictions: guest.dietaryRestrictions,
+      specialRequests: guest.specialRequests,
+      confirmed,
+    };
+  }
 }
 
 @ApiTags('Admin')

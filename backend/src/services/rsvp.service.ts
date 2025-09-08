@@ -208,6 +208,17 @@ export class RSVPService {
     return !!confirmation;
   }
 
+  async getGuestByHashCode(hashCode: string): Promise<Guest | null> {
+    // Validate hash code format first
+    if (!this.isValidHashCodeFormat(hashCode)) {
+      return null;
+    }
+
+    return this.guestRepository.findOne({
+      where: { hashCode: hashCode.toUpperCase() },
+    });
+  }
+
   private isValidHashCodeFormat(hashCode: string): boolean {
     // Must be exactly 8 characters, alphanumeric (A-Z, 0-9)
     const hashCodeRegex = /^[A-Z0-9]{8}$/;
