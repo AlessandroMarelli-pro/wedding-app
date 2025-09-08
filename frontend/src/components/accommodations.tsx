@@ -117,7 +117,7 @@ export function AccommodationsList({
               variant="outline"
               size="sm"
               onClick={openMaps}
-              className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+              className="touch-target w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
               View on Maps
@@ -129,40 +129,40 @@ export function AccommodationsList({
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12">
       {/* Interactive Map */}
       {accommodations.length > 0 && (
-        <div>
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-serif text-foreground mb-2">
+        <div className="container-responsive">
+          <div className="text-center mb-6 sm:mb-8">
+            <h3 className="heading-responsive font-serif text-foreground mb-2">
               Accommodation Map
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-responsive text-muted-foreground">
               Explore our recommended accommodations and get directions
             </p>
           </div>
           <AccommodationMap
             accommodations={accommodations}
             weddingLocation={weddingLocation}
-            height="500px"
+            height="300px"
             showDirections={true}
             showDetails={true}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           />
         </div>
       )}
 
       {recommended.length > 0 && (
-        <div>
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-serif text-foreground mb-2">
+        <div className="container-responsive">
+          <div className="text-center mb-6 sm:mb-8">
+            <h3 className="heading-responsive font-serif text-foreground mb-2">
               Our Recommendations
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-responsive text-muted-foreground">
               These are our top picks for your stay
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid-responsive">
             {recommended.map((accommodation) => (
               <AccommodationCard
                 key={accommodation.id}
@@ -174,18 +174,18 @@ export function AccommodationsList({
       )}
 
       {others.length > 0 && (
-        <div>
+        <div className="container-responsive">
           {recommended.length > 0 && (
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-serif text-foreground mb-2">
+            <div className="text-center mb-6 sm:mb-8">
+              <h3 className="heading-responsive font-serif text-foreground mb-2">
                 More Options
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-responsive text-muted-foreground">
                 Additional accommodations in the area
               </p>
             </div>
           )}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid-responsive">
             {others.map((accommodation) => (
               <AccommodationCard
                 key={accommodation.id}

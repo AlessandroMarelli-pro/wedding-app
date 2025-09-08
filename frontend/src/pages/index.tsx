@@ -101,17 +101,17 @@ export default function HomePage({
         </div>
 
         {/* Additional Details Card */}
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-card/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border text-center">
-            <h3 className="text-2xl font-serif text-foreground mb-6">
+        <div className="container-responsive">
+          <div className="bg-card/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border text-center">
+            <h3 className="heading-responsive font-serif text-foreground mb-6">
               Join Us in Celebration
             </h3>
-            <div className="grid md:grid-cols-2 gap-8 text-left">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-left">
               <div>
-                <h4 className="font-semibold text-foreground mb-2">
+                <h4 className="font-semibold text-responsive text-foreground mb-2">
                   Date & Time
                 </h4>
-                <p className="text-muted-foreground">
+                <p className="text-responsive text-muted-foreground">
                   {new Date(weddingInfo.weddingDate).toLocaleDateString(
                     'en-US',
                     {
@@ -124,8 +124,10 @@ export default function HomePage({
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-2">Location</h4>
-                <p className="text-muted-foreground">
+                <h4 className="font-semibold text-responsive text-foreground mb-2">
+                  Location
+                </h4>
+                <p className="text-responsive text-muted-foreground">
                   {weddingInfo.weddingAddress}
                 </p>
               </div>
@@ -133,10 +135,10 @@ export default function HomePage({
 
             {weddingInfo.locationDirections && (
               <div className="mt-6 pt-6 border-t">
-                <h4 className="font-semibold text-foreground mb-2">
+                <h4 className="font-semibold text-responsive text-foreground mb-2">
                   Getting There
                 </h4>
-                <p className="text-muted-foreground whitespace-pre-line">
+                <p className="text-responsive text-muted-foreground whitespace-pre-line">
                   {weddingInfo.locationDirections}
                 </p>
               </div>
@@ -145,12 +147,12 @@ export default function HomePage({
         </div>
 
         {/* Venue Map */}
-        <div className="mt-12">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-serif text-foreground mb-2">
+        <div className="mt-8 sm:mt-12">
+          <div className="text-center mb-6 sm:mb-8">
+            <h3 className="heading-responsive font-serif text-foreground mb-2">
               Wedding Venue Location
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-responsive text-muted-foreground">
               Find the wedding venue and get directions
             </p>
           </div>
@@ -163,7 +165,7 @@ export default function HomePage({
               latitude: undefined, // We'll need to add this to the wedding info entity
               longitude: undefined, // We'll need to add this to the wedding info entity
             }}
-            height="400px"
+            height="300px"
             showDirections={true}
             showDetails={true}
           />
@@ -205,7 +207,7 @@ export default function HomePage({
           title="RSVP"
           subtitle="We can't wait to celebrate with you! Please confirm your attendance"
         />
-        <div className="max-w-2xl mx-auto">
+        <div className="container-responsive max-w-2xl mx-auto">
           <RSVPForm />
         </div>
       </Section>

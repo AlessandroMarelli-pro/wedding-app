@@ -31,17 +31,19 @@ export function WeddingPresentation({
   const isValidDate = !isNaN(weddingDate.getTime());
 
   return (
-    <div className={cn('space-y-12', className)}>
+    <div className={cn('space-y-8 sm:space-y-12', className)}>
       {/* Couple's Message */}
-      <div className="text-center max-w-4xl mx-auto">
-        <div className="bg-card/60 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-lg border">
-          <Heart className="w-12 h-12 text-rose-500 mx-auto mb-6" />
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light italic">
+      <div className="text-center container-responsive">
+        <div className="bg-card/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg border">
+          <Heart className="w-8 h-8 sm:w-12 sm:h-12 text-rose-500 mx-auto mb-4 sm:mb-6" />
+          <p className="text-responsive text-muted-foreground leading-relaxed font-light italic">
             "{weddingInfo.presentationMessage}"
           </p>
-          <div className="mt-8">
-            <p className="text-2xl font-serif text-foreground">With love,</p>
-            <p className="text-3xl font-serif text-foreground mt-2">
+          <div className="mt-6 sm:mt-8">
+            <p className="text-lg sm:text-xl md:text-2xl font-serif text-foreground">
+              With love,
+            </p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-serif text-foreground mt-2">
               {weddingInfo.coupleNames}
             </p>
           </div>
@@ -50,49 +52,55 @@ export function WeddingPresentation({
 
       {/* Additional Information */}
       {(weddingInfo.dressCode || weddingInfo.specialInstructions) && (
-        <div className="grid md:grid-cols-2 gap-8">
-          {weddingInfo.dressCode && (
-            <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-serif">Dress Code</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                <p className="text-muted-foreground">{weddingInfo.dressCode}</p>
-              </CardContent>
-            </Card>
-          )}
+        <div className="container-responsive">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            {weddingInfo.dressCode && (
+              <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="heading-responsive font-serif">
+                    Dress Code
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <p className="text-responsive text-muted-foreground">
+                    {weddingInfo.dressCode}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
 
-          {weddingInfo.specialInstructions && (
-            <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-serif">
-                  Special Notes
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                <p className="text-muted-foreground whitespace-pre-line">
-                  {weddingInfo.specialInstructions}
-                </p>
-              </CardContent>
-            </Card>
-          )}
+            {weddingInfo.specialInstructions && (
+              <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="heading-responsive font-serif">
+                    Special Notes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <p className="text-responsive text-muted-foreground whitespace-pre-line">
+                    {weddingInfo.specialInstructions}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         </div>
       )}
 
       {/* RSVP Call to Action */}
-      <div className="text-center">
-        <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-8 border">
-          <h3 className="text-2xl font-serif text-foreground mb-4">
+      <div className="text-center container-responsive">
+        <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 border">
+          <h3 className="heading-responsive font-serif text-foreground mb-4">
             Can't wait to celebrate with you!
           </h3>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-responsive text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
             Please let us know if you'll be joining us for our special day. Your
             presence would make our celebration complete.
           </p>
           <Button
             size="lg"
             onClick={onRSVPClick}
-            className="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            className="touch-target bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-6 sm:px-8 py-3 text-responsive font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
           >
             RSVP Now
           </Button>
@@ -151,22 +159,27 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
   }
 
   return (
-    <div className={cn('text-center', className)}>
-      <h3 className="text-xl font-serif text-foreground mb-6">
+    <div className={cn('text-center container-responsive', className)}>
+      <h3 className="heading-responsive font-serif text-foreground mb-6">
         Counting down to our special day
       </h3>
-      <div className="grid grid-cols-4 gap-4 max-w-md mx-auto">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-sm sm:max-w-md mx-auto">
         {[
           { label: 'Days', value: timeLeft.days },
           { label: 'Hours', value: timeLeft.hours },
           { label: 'Minutes', value: timeLeft.minutes },
           { label: 'Seconds', value: timeLeft.seconds },
         ].map((item) => (
-          <div key={item.label} className="bg-card/60 rounded-lg p-4 border">
-            <div className="text-2xl font-bold text-foreground">
+          <div
+            key={item.label}
+            className="bg-card/60 rounded-lg p-3 sm:p-4 border"
+          >
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">
               {item.value.toString().padStart(2, '0')}
             </div>
-            <div className="text-sm text-muted-foreground">{item.label}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              {item.label}
+            </div>
           </div>
         ))}
       </div>
