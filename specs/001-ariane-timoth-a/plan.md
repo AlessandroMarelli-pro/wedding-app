@@ -1,7 +1,7 @@
-# Implementation Plan: Ariane & Timothe Wedding Website
+# Implementation Plan: Frontend Enhancement with Aceternity UI
 
-**Branch**: `001-ariane-timoth-a` | **Date**: 2025-09-07 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/001-ariane-timoth-a/spec.md`
+**Branch**: `001-ariane-timoth-a` | **Date**: 2025-09-08 | **Spec**: [spec.md](/Users/alessandro/dev/cursor-dev/wedding-app/specs/001-ariane-timoth-a/spec.md)
+**Input**: Feature specification from `/specs/001-ariane-timoth-a/spec.md` + User enhancement: "I want to improve the frontend with Aceternity UI"
 
 ## Execution Flow (/plan command scope)
 ```
@@ -29,51 +29,57 @@
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
-Wedding website featuring guest presentation, RSVP management with 8-character hash codes generated from CSV uploads, accommodation recommendations with maps, calendar integration, and admin content management. Built as SPA for landing (with SSR) + SPA admin with NestJS API backend.
+Wedding website for Ariane & Timothe featuring: landing page with RSVP system, wedding program with calendar integration, location directions, accommodation recommendations with map, and admin panel for content management. Enhancement: Replace existing ShadCN UI components with modern Aceternity UI components for improved visual design and animations.
 
 ## Technical Context
-**Language/Version**: TypeScript with Node.js 18+  
-**Primary Dependencies**: NestJS (backend API), Next.js (frontend with SSR), ShadCN (design system)  
-**Storage**: SQLite (local database)  
-**Testing**: Jest for unit/integration tests, Cypress for E2E  
-**Target Platform**: Web application (desktop and mobile responsive)
-**Project Type**: web - determines frontend + backend structure  
-**Performance Goals**: <500ms page load, <200ms API response times  
-**Constraints**: SQLite limitations, Google Maps API integration, iCal format support  
-**Scale/Scope**: Small wedding (~100-200 guests), content management for 1-2 admin users
+**Language/Version**: TypeScript 5.7, Node.js 18+  
+**Primary Dependencies**: Next.js 15, React 19, NestJS, Aceternity UI (new), Tailwind CSS 4, Framer Motion  
+**Storage**: SQLite with TypeORM, file uploads with Multer  
+**Testing**: Jest, Cypress E2E, Testing Library React  
+**Target Platform**: Web application (modern browsers)
+**Project Type**: web (frontend + backend) - using existing structure  
+**Performance Goals**: <200ms p95 response time, smooth 60fps animations with Aceternity UI  
+**Constraints**: Replace ShadCN UI with Aceternity UI without breaking existing functionality  
+**Scale/Scope**: Small wedding guest list (~100 guests), admin content management system
+
+**Enhancement Details**: 
+- Replace existing ShadCN/UI components with Aceternity UI equivalents
+- Maintain existing functionality while improving visual design
+- Add modern animations and micro-interactions
+- Ensure responsive design across all devices
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 **Simplicity**:
-- Projects: 2 (frontend, backend) ✅
-- Using framework directly? Yes - NestJS/Next.js without wrappers ✅
-- Single data model? Yes - TypeORM entities shared ✅
-- Avoiding patterns? Yes - direct service injection, no Repository pattern ✅
+- Projects: [#] (max 3 - e.g., api, cli, tests)
+- Using framework directly? (no wrapper classes)
+- Single data model? (no DTOs unless serialization differs)
+- Avoiding patterns? (no Repository/UoW without proven need)
 
 **Architecture**:
-- EVERY feature as library? No - wedding-specific application ❌
-- Libraries listed: N/A - single-purpose app
-- CLI per library: N/A - web application
-- Library docs: N/A - application not library
+- EVERY feature as library? (no direct app code)
+- Libraries listed: [name + purpose for each]
+- CLI per library: [commands with --help/--version/--format]
+- Library docs: llms.txt format planned?
 
 **Testing (NON-NEGOTIABLE)**:
-- RED-GREEN-Refactor cycle enforced? Yes - TDD workflow planned ✅
-- Git commits show tests before implementation? Yes - required ✅
-- Order: Contract→Integration→E2E→Unit strictly followed? Yes ✅
-- Real dependencies used? Yes - actual SQLite database ✅
-- Integration tests for: API contracts, CSV processing, authentication ✅
-- FORBIDDEN: Implementation before test, skipping RED phase ✅
+- RED-GREEN-Refactor cycle enforced? (test MUST fail first)
+- Git commits show tests before implementation?
+- Order: Contract→Integration→E2E→Unit strictly followed?
+- Real dependencies used? (actual DBs, not mocks)
+- Integration tests for: new libraries, contract changes, shared schemas?
+- FORBIDDEN: Implementation before test, skipping RED phase
 
 **Observability**:
-- Structured logging included? Yes - NestJS logger with context ✅
-- Frontend logs → backend? Yes - API error logging ✅
-- Error context sufficient? Yes - stack traces + request context ✅
+- Structured logging included?
+- Frontend logs → backend? (unified stream)
+- Error context sufficient?
 
 **Versioning**:
-- Version number assigned? 1.0.0 (wedding event-specific) ✅
-- BUILD increments on every change? Yes - semantic versioning ✅
-- Breaking changes handled? Yes - API versioning plan ✅
+- Version number assigned? (MAJOR.MINOR.BUILD)
+- BUILD increments on every change?
+- Breaking changes handled? (parallel tests, migration plan)
 
 ## Project Structure
 
@@ -125,7 +131,7 @@ ios/ or android/
 └── [platform-specific structure]
 ```
 
-**Structure Decision**: Option 2 (Web application) - Frontend (Next.js SPA) + Backend (NestJS API)
+**Structure Decision**: Option 2 (Web application) - frontend/ and backend/ directories already established
 
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:
@@ -186,24 +192,17 @@ ios/ or android/
 **Task Generation Strategy**:
 - Load `/templates/tasks-template.md` as base
 - Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
-- Database setup: TypeORM entities + migrations (8 entities)
-- API contract tests: 15+ endpoints from OpenAPI spec
-- NestJS services: Authentication, CSV processing, RSVP validation
-- Next.js pages: Landing (SSR), Admin (SPA), RSVP form
-- Integration features: Google Maps, calendar export, image upload
+- Each contract → contract test task [P]
+- Each entity → model creation task [P] 
+- Each user story → integration test task
+- Implementation tasks to make tests pass
 
 **Ordering Strategy**:
-- TDD order: Contract tests → Integration tests → Implementation
-- Dependency order: Database → API → Frontend
-- Core features first: Auth → CSV upload → RSVP → Content management
-- Mark [P] for parallel execution: Independent components and tests
+- TDD order: Tests before implementation 
+- Dependency order: Models before services before UI
+- Mark [P] for parallel execution (independent files)
 
-**Estimated Output**: 30-35 numbered, ordered tasks covering:
-- 8 database entity creation tasks
-- 15 API endpoint test + implementation tasks  
-- 6 frontend page/component tasks
-- 5 integration tasks (maps, calendar, CSV, images)
-- Performance and deployment tasks
+**Estimated Output**: 25-30 numbered, ordered tasks in tasks.md
 
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 
@@ -219,25 +218,26 @@ ios/ or android/
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| Not library-based architecture | Wedding-specific application with single deployment target | Library architecture adds unnecessary abstraction for event-specific website |
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
 
 
 ## Progress Tracking
 *This checklist is updated during execution flow*
 
 **Phase Status**:
-- [x] Phase 0: Research complete (/plan command)
-- [x] Phase 1: Design complete (/plan command)
-- [x] Phase 2: Task planning complete (/plan command - describe approach only)
+- [ ] Phase 0: Research complete (/plan command)
+- [ ] Phase 1: Design complete (/plan command)
+- [ ] Phase 2: Task planning complete (/plan command - describe approach only)
 - [ ] Phase 3: Tasks generated (/tasks command)
 - [ ] Phase 4: Implementation complete
 - [ ] Phase 5: Validation passed
 
 **Gate Status**:
-- [x] Initial Constitution Check: PASS (with documented deviation)
-- [x] Post-Design Constitution Check: PASS (with documented deviation)
-- [x] All NEEDS CLARIFICATION resolved
-- [x] Complexity deviations documented
+- [ ] Initial Constitution Check: PASS
+- [ ] Post-Design Constitution Check: PASS
+- [ ] All NEEDS CLARIFICATION resolved
+- [ ] Complexity deviations documented
 
 ---
 *Based on Constitution v2.1.1 - See `/memory/constitution.md`*

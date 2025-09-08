@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AdminLayout } from '../../components/admin-layout';
+import { SidebarLayout } from '../../components/sidebar-layout';
 
 interface WeddingInfo {
   id: string;
@@ -98,15 +98,23 @@ export default function AdminWedding() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-10 bg-gray-200 rounded"></div>
+      <>
+        <Head>
+          <title>Wedding Info - Wedding Admin</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <SidebarLayout type="admin" currentPath="/admin/wedding">
+          <div className="p-6">
+            <div className="animate-pulse space-y-6">
+              <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+              <div className="space-y-4">
+                <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                <div className="h-10 bg-gray-200 rounded"></div>
+              </div>
+            </div>
           </div>
-        </div>
-      </AdminLayout>
+        </SidebarLayout>
+      </>
     );
   }
 
@@ -117,8 +125,8 @@ export default function AdminWedding() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminLayout>
-        <div className="max-w-4xl mx-auto">
+      <SidebarLayout type="admin" currentPath="/admin/wedding">
+        <div className="p-6 max-w-4xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-serif text-gray-800 mb-2">
               Wedding Information
@@ -358,7 +366,7 @@ export default function AdminWedding() {
             </div>
           )}
         </div>
-      </AdminLayout>
+      </SidebarLayout>
     </>
   );
 }

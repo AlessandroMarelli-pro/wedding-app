@@ -238,23 +238,128 @@ npm run type-check
 When running in development mode, Swagger API documentation is available at:
 http://localhost:3001/api/docs
 
-### Key Endpoints
+### Complete API Reference
 
-#### Public Endpoints
+#### Public Endpoints (No Authentication Required)
+
+**Wedding Information**
 
 - `GET /api/wedding` - Get wedding information
-- `GET /api/accommodations` - Get accommodations list
-- `GET /api/program` - Get wedding program events
-- `GET /api/program/calendar` - Download calendar (.ics)
-- `POST /api/rsvp` - Submit RSVP with hash code
 
-#### Admin Endpoints (JWT Required)
+**Accommodations**
+
+- `GET /api/accommodations` - Get all accommodations
+- `GET /api/accommodations/recommended` - Get recommended accommodations only
+
+**Program Events**
+
+- `GET /api/program` - Get wedding program events
+- `GET /api/program/calendar` - Download calendar (.ics file)
+
+**RSVP System**
+
+- `POST /api/rsvp` - Submit RSVP with hash code
+- `GET /api/rsvp/:hashCode` - Get guest information by hash code
+
+**Images**
+
+- `GET /api/images/:id` - Serve image by ID (with caching headers)
+
+**Authentication**
 
 - `POST /api/auth/login` - Admin login
-- `GET /admin/rsvp/stats` - RSVP statistics
-- `POST /admin/guests/upload` - Upload CSV guest list
-- `PUT /admin/wedding` - Update wedding information
-- Full CRUD for accommodations, program events
+
+#### Admin Endpoints (JWT Authentication Required)
+
+**Wedding Management**
+
+- `PUT /api/admin/wedding` - Update wedding information
+
+**Guest Management**
+
+- `POST /api/admin/guests/upload` - Upload CSV file with guests
+- `GET /api/admin/guests` - Get all guests with pagination and search
+- `GET /api/admin/guests/uploads` - Get all CSV uploads
+- `GET /api/admin/guests/uploads/:id` - Get CSV upload details
+- `GET /api/admin/guests/uploads/:id/report` - Get detailed CSV upload report
+- `GET /api/admin/guests/uploads/:id/guests` - Get guests from specific upload
+- `GET /api/admin/guests/validation-stats` - Get CSV validation statistics
+- `GET /api/admin/guests/export` - Export all guest data as CSV
+- `GET /api/admin/guests/export/data` - Get guest export data as JSON
+- `DELETE /api/admin/guests/:id` - Delete a guest
+- `DELETE /api/admin/guests/uploads/:id/guests` - Delete all guests from a specific upload
+
+**Accommodations Management**
+
+- `POST /api/admin/accommodations` - Create new accommodation
+- `GET /api/admin/accommodations` - Get all accommodations (admin view)
+- `PUT /api/admin/accommodations/:id` - Update accommodation
+- `DELETE /api/admin/accommodations/:id` - Delete accommodation
+- `POST /api/admin/seed/accommodations` - Seed default accommodations
+
+**Program Management**
+
+- `POST /api/admin/program` - Create new program event
+- `GET /api/admin/program` - Get all program events (admin view)
+- `PUT /api/admin/program/:id` - Update program event
+- `DELETE /api/admin/program/:id` - Delete program event
+- `PUT /api/admin/program/reorder` - Reorder program events
+
+**RSVP Management**
+
+- `GET /api/admin/rsvp/confirmations` - Get all RSVP confirmations
+- `GET /api/admin/rsvp/stats` - Get RSVP statistics
+- `GET /api/admin/rsvp/confirmed` - Get list of confirmed guests
+- `GET /api/admin/rsvp/pending` - Get list of pending guests
+- `GET /api/admin/rsvp/recent` - Get recent confirmations
+- `DELETE /api/admin/rsvp/confirmations/:id` - Delete RSVP confirmation
+
+**Image Management**
+
+- `POST /api/admin/images/upload` - Upload an image
+- `GET /api/admin/images` - Get all uploaded images with pagination
+- `GET /api/admin/images/:id` - Get image metadata by ID
+- `PUT /api/admin/images/:id` - Update image metadata
+- `DELETE /api/admin/images/:id` - Delete an image
+- `POST /api/admin/images/:id/thumbnail` - Generate thumbnail for an image
+- `POST /api/admin/images/:id/optimize` - Optimize image for web
+- `POST /api/admin/images/cleanup` - Clean up orphaned image files
+
+**System Management**
+
+- `POST /api/admin/system/cleanup` - Manual cleanup of temporary and orphaned files
+- `GET /api/admin/system/storage` - Get storage usage statistics
+- `GET /api/admin/system/health` - Check upload system health
+
+**Analytics & Reporting**
+
+- `GET /api/admin/analytics/rsvp` - Get comprehensive RSVP analytics
+- `GET /api/admin/analytics/dashboard` - Get dashboard summary statistics
+- `GET /api/admin/analytics/uploads` - Get upload analytics and statistics
+
+### Authentication
+
+All admin endpoints require JWT authentication. Include the token in the Authorization header:
+
+```
+Authorization: Bearer <your-jwt-token>
+```
+
+### File Uploads
+
+**CSV Upload** (`POST /api/admin/guests/upload`)
+
+- Content-Type: `multipart/form-data`
+- Field name: `file`
+- File size limit: 5MB
+- Supported formats: CSV files
+
+**Image Upload** (`POST /api/admin/images/upload`)
+
+- Content-Type: `multipart/form-data`
+- Field name: `image`
+- Supported formats: JPEG, PNG, WebP
+- Automatic optimization and thumbnail generation
 
 ## 🎨 Customization
 

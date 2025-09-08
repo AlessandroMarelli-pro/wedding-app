@@ -15,5 +15,8 @@
     "utils": "src/lib/utils",
     "ui": "src/components/ui"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "lucide",
+  "registries": {
+    "@aceternity": "https://ui.aceternity.com/registry/{name}.json"
+  }
 }

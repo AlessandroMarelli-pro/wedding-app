@@ -6,12 +6,12 @@ import {
   RSVPForm,
   Section,
   SectionHeader,
-  SidebarLayout,
   VenueMap,
   WeddingCountdown,
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
+import { SidebarLayout } from '../components/sidebar-layout';
 import { WeddingInfo } from '../types/api';
 
 interface HomePageProps {
@@ -56,15 +56,6 @@ export default function HomePage({
       </>
     );
   }
-
-  const sections = [
-    { id: 'home', label: 'Home' },
-    { id: 'our-story', label: 'Our Story' },
-    { id: 'details', label: 'Details' },
-    { id: 'accommodations', label: 'Stay' },
-    { id: 'program', label: 'Schedule' },
-    { id: 'rsvp', label: 'RSVP' },
-  ];
 
   const scrollToSection = (sectionId: string) => {
     setCurrentSection(sectionId);
@@ -236,8 +227,8 @@ export default function HomePage({
                   weddingDate: weddingInfo.weddingDate,
                   coupleNames: weddingInfo.coupleNames,
                   locationDirections: weddingInfo.locationDirections,
-                  latitude: undefined, // We'll need to add this to the wedding info entity
-                  longitude: undefined, // We'll need to add this to the wedding info entity
+                  latitude: undefined,
+                  longitude: undefined,
                 }}
                 height="300px"
                 showDirections={true}
@@ -258,8 +249,8 @@ export default function HomePage({
                 weddingInfo
                   ? {
                       address: weddingInfo.weddingAddress,
-                      latitude: undefined, // We'll need to add this to the wedding info entity
-                      longitude: undefined, // We'll need to add this to the wedding info entity
+                      latitude: undefined,
+                      longitude: undefined,
                     }
                   : undefined
               }
