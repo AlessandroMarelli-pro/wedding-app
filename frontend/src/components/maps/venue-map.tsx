@@ -273,10 +273,12 @@ const VenueMap: React.FC<VenueMapProps> = ({
           },
         });
 
-        renderer.setDirections(directionsResult);
+        renderer.setDirections(
+          directionsResult as google.maps.DirectionsResult,
+        );
         renderer.setMap(mapInstanceRef.current);
         setDirectionsRenderer(renderer);
-        setDirectionsResult(directionsResult);
+        setDirectionsResult(directionsResult as google.maps.DirectionsResult);
       }
     } catch (error) {
       console.error('Error getting directions:', error);
@@ -416,13 +418,13 @@ const VenueMap: React.FC<VenueMapProps> = ({
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-green-600" />
                   <span className="font-medium text-green-900">
-                    {directionsResult.routes[0]?.legs[0]?.duration.text}
+                    {directionsResult.routes[0]?.legs[0]?.duration?.text}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Navigation className="w-4 h-4 text-green-600" />
                   <span className="text-sm text-green-800">
-                    {directionsResult.routes[0]?.legs[0]?.distance.text}
+                    {directionsResult.routes[0]?.legs[0]?.distance?.text}
                   </span>
                 </div>
                 <Button

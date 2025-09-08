@@ -242,7 +242,9 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
             },
           });
 
-          renderer.setDirections(directionsResult);
+          renderer.setDirections(
+            directionsResult as google.maps.DirectionsResult,
+          );
           renderer.setMap(mapInstanceRef.current);
           setDirectionsRenderer(renderer);
 
