@@ -1,8 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Calendar, Clock, Heart, MapPin } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 interface WeddingInfo {
   id: string;
@@ -47,77 +46,6 @@ export function WeddingPresentation({
             </p>
           </div>
         </div>
-      </div>
-
-      {/* Wedding Details Grid */}
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Date & Time */}
-        <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-          <CardHeader className="text-center pb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Calendar className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-2xl font-serif">When</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            {isValidDate && (
-              <>
-                <div>
-                  <p className="text-lg font-medium text-foreground">
-                    {weddingDate.toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-
-                {weddingInfo.ceremonyTime && (
-                  <div className="flex items-center justify-center space-x-2 text-muted-foreground">
-                    <Clock className="w-4 h-4" />
-                    <span>Ceremony: {weddingInfo.ceremonyTime}</span>
-                  </div>
-                )}
-
-                {weddingInfo.receptionTime && (
-                  <div className="flex items-center justify-center space-x-2 text-muted-foreground">
-                    <Clock className="w-4 h-4" />
-                    <span>Reception: {weddingInfo.receptionTime}</span>
-                  </div>
-                )}
-              </>
-            )}
-
-            {!isValidDate && (
-              <p className="text-muted-foreground">Date to be announced</p>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Location */}
-        <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-          <CardHeader className="text-center pb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-2xl font-serif">Where</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <p className="text-lg text-foreground leading-relaxed">
-              {weddingInfo.weddingAddress}
-            </p>
-
-            {weddingInfo.locationDirections && (
-              <div className="text-sm text-muted-foreground">
-                <Separator className="my-4" />
-                <p className="whitespace-pre-line">
-                  {weddingInfo.locationDirections}
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
 
       {/* Additional Information */}

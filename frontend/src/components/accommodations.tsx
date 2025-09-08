@@ -7,26 +7,21 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { DollarSign, ExternalLink, MapPin, Phone, Star } from 'lucide-react';
-
-interface Accommodation {
-  id: string;
-  name: string;
-  description: string;
-  address: string;
-  contactInfo?: string;
-  priceRange?: string;
-  isRecommended: boolean;
-  displayOrder: number;
-  latitude?: number;
-  longitude?: number;
-}
+import { Accommodation } from '../types/api';
+import { AccommodationMap } from './maps';
 
 interface AccommodationsListProps {
   accommodations: Accommodation[];
+  weddingLocation?: {
+    address: string;
+    latitude?: number;
+    longitude?: number;
+  };
 }
 
 export function AccommodationsList({
   accommodations,
+  weddingLocation,
 }: AccommodationsListProps) {
   const sortedAccommodations = [...accommodations].sort(
     (a, b) => a.displayOrder - b.displayOrder,
@@ -135,6 +130,28 @@ export function AccommodationsList({
 
   return (
     <div className="space-y-12">
+      {/* Interactive Map */}
+      {accommodations.length > 0 && (
+        <div>
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-serif text-foreground mb-2">
+              Accommodation Map
+            </h3>
+            <p className="text-muted-foreground">
+              Explore our recommended accommodations and get directions
+            </p>
+          </div>
+          <AccommodationMap
+            accommodations={accommodations}
+            weddingLocation={weddingLocation}
+            height="500px"
+            showDirections={true}
+            showDetails={true}
+            className="mb-8"
+          />
+        </div>
+      )}
+
       {recommended.length > 0 && (
         <div>
           <div className="text-center mb-8">

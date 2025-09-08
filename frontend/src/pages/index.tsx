@@ -7,6 +7,7 @@ import {
   RSVPForm,
   Section,
   SectionHeader,
+  VenueMap,
   WeddingCountdown,
   WeddingPresentation,
   WeddingProgram,
@@ -142,6 +143,31 @@ export default function HomePage({
             )}
           </div>
         </div>
+
+        {/* Venue Map */}
+        <div className="mt-12">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-serif text-foreground mb-2">
+              Wedding Venue Location
+            </h3>
+            <p className="text-muted-foreground">
+              Find the wedding venue and get directions
+            </p>
+          </div>
+          <VenueMap
+            weddingInfo={{
+              weddingAddress: weddingInfo.weddingAddress,
+              weddingDate: weddingInfo.weddingDate,
+              coupleNames: weddingInfo.coupleNames,
+              locationDirections: weddingInfo.locationDirections,
+              latitude: undefined, // We'll need to add this to the wedding info entity
+              longitude: undefined, // We'll need to add this to the wedding info entity
+            }}
+            height="400px"
+            showDirections={true}
+            showDetails={true}
+          />
+        </div>
       </Section>
 
       {/* Accommodations Section */}
@@ -150,7 +176,18 @@ export default function HomePage({
           title="Where to Stay"
           subtitle="We've selected some wonderful places for you to stay during our celebration"
         />
-        <AccommodationsList accommodations={accommodations} />
+        <AccommodationsList
+          accommodations={accommodations}
+          weddingLocation={
+            weddingInfo
+              ? {
+                  address: weddingInfo.weddingAddress,
+                  latitude: undefined, // We'll need to add this to the wedding info entity
+                  longitude: undefined, // We'll need to add this to the wedding info entity
+                }
+              : undefined
+          }
+        />
       </Section>
 
       {/* Wedding Program Section */}
