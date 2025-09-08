@@ -2,8 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -47,7 +45,7 @@ export class UploadedImage {
   updatedAt!: Date;
 
   // Relationships
-  @ManyToOne('Admin', 'uploadedImages')
+  /*   @ManyToOne('Admin', 'uploadedImages')
   @JoinColumn({ name: 'uploaded_by' })
-  uploadedByAdmin!: any;
+  uploadedByAdmin!: any; */
 }

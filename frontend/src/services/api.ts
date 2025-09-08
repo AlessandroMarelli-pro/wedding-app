@@ -286,6 +286,61 @@ export class ApiService {
     return response.data;
   }
 
+  // Image Management
+  static async uploadImage(
+    file: File,
+    options: {
+      usageLocation: string;
+      altText?: string;
+      maxWidth?: number;
+      maxHeight?: number;
+      quality?: number;
+      format?: 'jpeg' | 'png' | 'webp';
+    },
+  ): Promise<any> {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('usageLocation', options.usageLocation);
+
+    if (options.altText) formData.append('altText', options.altText);
+    if (options.maxWidth)
+      formData.append('maxWidth', options.maxWidth.toString());
+    if (options.maxHeight)
+      formData.append('maxHeight', options.maxHeight.toString());
+    if (options.quality) formData.append('quality', options.quality.toString());
+    if (options.format) formData.append('format', options.format);
+
+    const response = await api.post('/admin/images/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+
+  static async getImages(usageLocation?: string): Promise<any[]> {
+    const params = usageLocation ? { usageLocation } : {};
+    const response = await api.get('/admin/images', { params });
+    return response.data;
+  }
+
+  static async getImageById(id: string): Promise<any> {
+    const response = await api.get(`/admin/images/${id}`);
+    return response.data;
+  }
+
+  static async updateImageMetadata(
+    id: string,
+    data: { altText?: string; usageLocation?: string },
+  ): Promise<any> {
+    const response = await api.put(`/admin/images/${id}`, data);
+    return response.data;
+  }
+
+  static async deleteImage(id: string): Promise<void> {
+    await api.delete(`/admin/images/${id}`);
+  }
+
   // Utility methods
   static async healthCheck(): Promise<{ status: string; timestamp: string }> {
     try {

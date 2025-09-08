@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AdminLayout } from '../../components/admin-layout';
+import { AdminStats } from '../../components/admin-stats';
 import { Card, CardContent } from '../../components/ui/card';
 
 interface RSVPStats {
@@ -263,6 +264,14 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+
+          {/* Advanced Analytics */}
+          <div className="mt-8">
+            <h2 className="text-2xl font-serif text-gray-800 mb-4">
+              Advanced Analytics
+            </h2>
+            <AdminStats />
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* CSV Upload */}

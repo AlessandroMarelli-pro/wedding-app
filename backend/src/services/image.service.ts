@@ -129,7 +129,7 @@ export class ImageService {
   async getImageById(id: string): Promise<UploadedImage> {
     const image = await this.uploadedImageRepository.findOne({
       where: { id },
-      relations: ['uploadedByAdmin'],
+      //relations: ['uploadedByAdmin'],
     });
 
     if (!image) {
@@ -145,14 +145,14 @@ export class ImageService {
     return this.uploadedImageRepository.find({
       where: { usageLocation },
       order: { createdAt: 'DESC' },
-      relations: ['uploadedByAdmin'],
+      // relations: ['uploadedByAdmin'],
     });
   }
 
   async getAllImages(): Promise<UploadedImage[]> {
     return this.uploadedImageRepository.find({
       order: { createdAt: 'DESC' },
-      relations: ['uploadedByAdmin'],
+      //relations: ['uploadedByAdmin'],
     });
   }
 

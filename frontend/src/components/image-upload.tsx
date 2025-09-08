@@ -1,251 +1,123 @@
-import {
-  AlertCircle,
-  CheckCircle,
-  Download,
-  Eye,
-  Image as ImageIcon,
-  Loader2,
-  Upload,
-  X,
-} from 'lucide-react';
-import React, { useCallback, useRef, useState } from 'react';
-import { Badge } from './ui/badge';
+import { AlertCircle, Image as ImageIcon, Upload, X } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from './ui/card';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 
-interface UploadedImage {
-  id: string;
-  originalName: string;
-  filename: string;
-  mimeType: string;
-  size: number;
-  width: number;
-  height: number;
-  altText?: string;
-  usageLocation: string;
-  uploadedBy: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 interface ImageUploadProps {
-  onUploadComplete?: (image: UploadedImage) => void;
-  onUploadError?: (error: string) => void;
-  usageLocation: string;
-  maxFiles?: number;
-  acceptedFileTypes?: string[];
-  maxFileSize?: number; // in MB
+  onUpload?: (file: File, options: ImageUploadOptions) => Promise<void>;
   className?: string;
 }
 
-interface ImagePreview {
-  file: File;
-  preview: string;
-  altText: string;
-  uploading: boolean;
-  uploaded: boolean;
-  error?: string;
-  uploadedImage?: UploadedImage;
-}
-
-interface ProcessingOptions {
+interface ImageUploadOptions {
+  usageLocation: string;
+  altText?: string;
   maxWidth?: number;
   maxHeight?: number;
   quality?: number;
   format?: 'jpeg' | 'png' | 'webp';
 }
 
-export function ImageUpload({
-  onUploadComplete,
-  onUploadError,
-  usageLocation,
-  maxFiles = 10,
-  acceptedFileTypes = ['image/jpeg', 'image/png', 'image/webp'],
-  maxFileSize = 10, // 10MB default
-  className = '',
-}: ImageUploadProps) {
-  const [images, setImages] = useState<ImagePreview[]>([]);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [processingOptions, setProcessingOptions] = useState<ProcessingOptions>(
-    {
-      quality: 85,
-    },
-  );
-  const fileInputRef = useRef<HTMLInputElement>(null);
+interface UploadedImage {
+  id: string;
+  filename: string;
+  originalName: string;
+  mimeType: string;
+  size: number;
+  usageLocation: string;
+  altText?: string;
+  url: string;
+  thumbnailUrl?: string;
+  optimizedUrl?: string;
+  createdAt: string;
+}
 
-  const handleFileSelect = useCallback(
-    (files: FileList | null) => {
-      if (!files) return;
+export function ImageUpload({ onUpload, className }: ImageUploadProps) {
+  const [dragActive, setDragActive] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadOptions, setUploadOptions] = useState<ImageUploadOptions>({
+    usageLocation: 'gallery',
+    altText: '',
+    maxWidth: 1920,
+    maxHeight: 1080,
+    quality: 85,
+    format: 'jpeg',
+  });
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
 
-      const newImages: ImagePreview[] = [];
-      const maxFileSizeBytes = maxFileSize * 1024 * 1024;
-
-      Array.from(files).forEach((file) => {
-        // Validate file type
-        if (!acceptedFileTypes.includes(file.type)) {
-          onUploadError?.(
-            `File type ${file.type} is not supported. Allowed types: ${acceptedFileTypes.join(', ')}`,
-          );
-          return;
-        }
-
-        // Validate file size
-        if (file.size > maxFileSizeBytes) {
-          onUploadError?.(
-            `File ${file.name} is too large. Maximum size: ${maxFileSize}MB`,
-          );
-          return;
-        }
-
-        // Check if we've reached the max files limit
-        if (images.length + newImages.length >= maxFiles) {
-          onUploadError?.(`Maximum ${maxFiles} files allowed`);
-          return;
-        }
-
-        // Create preview
-        const preview = URL.createObjectURL(file);
-        newImages.push({
-          file,
-          preview,
-          altText: file.name.replace(/\.[^/.]+$/, ''), // Remove extension for default alt text
-          uploading: false,
-          uploaded: false,
-        });
-      });
-
-      setImages((prev) => [...prev, ...newImages]);
-    },
-    [images.length, maxFiles, acceptedFileTypes, maxFileSize, onUploadError],
-  );
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragOver(false);
-      handleFileSelect(e.dataTransfer.files);
-    },
-    [handleFileSelect],
-  );
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
+  const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setIsDragOver(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  }, []);
-
-  const removeImage = useCallback((index: number) => {
-    setImages((prev) => {
-      const newImages = [...prev];
-      URL.revokeObjectURL(newImages[index].preview);
-      newImages.splice(index, 1);
-      return newImages;
-    });
-  }, []);
-
-  const updateAltText = useCallback((index: number, altText: string) => {
-    setImages((prev) => {
-      const newImages = [...prev];
-      newImages[index].altText = altText;
-      return newImages;
-    });
-  }, []);
-
-  const uploadImage = useCallback(
-    async (index: number) => {
-      const image = images[index];
-      if (!image || image.uploading || image.uploaded) return;
-
-      setImages((prev) => {
-        const newImages = [...prev];
-        newImages[index].uploading = true;
-        newImages[index].error = undefined;
-        return newImages;
-      });
-
-      try {
-        const token = localStorage.getItem('adminToken');
-        if (!token) {
-          throw new Error('No authentication token found');
-        }
-
-        const formData = new FormData();
-        formData.append('image', image.file);
-        formData.append('usageLocation', usageLocation);
-        formData.append('altText', image.altText);
-
-        // Add processing options if set
-        if (processingOptions.maxWidth) {
-          formData.append('maxWidth', processingOptions.maxWidth.toString());
-        }
-        if (processingOptions.maxHeight) {
-          formData.append('maxHeight', processingOptions.maxHeight.toString());
-        }
-        if (processingOptions.quality) {
-          formData.append('quality', processingOptions.quality.toString());
-        }
-        if (processingOptions.format) {
-          formData.append('format', processingOptions.format);
-        }
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/images/upload`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-          },
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Upload failed');
-        }
-
-        const uploadedImage: UploadedImage = await response.json();
-
-        setImages((prev) => {
-          const newImages = [...prev];
-          newImages[index].uploading = false;
-          newImages[index].uploaded = true;
-          newImages[index].uploadedImage = uploadedImage;
-          return newImages;
-        });
-
-        onUploadComplete?.(uploadedImage);
-      } catch (error: any) {
-        setImages((prev) => {
-          const newImages = [...prev];
-          newImages[index].uploading = false;
-          newImages[index].error = error.message;
-          return newImages;
-        });
-
-        onUploadError?.(error.message);
-      }
-    },
-    [images, usageLocation, processingOptions, onUploadComplete, onUploadError],
-  );
-
-  const uploadAllImages = useCallback(async () => {
-    const pendingImages = images
-      .map((img, index) => ({ img, index }))
-      .filter(({ img }) => !img.uploading && !img.uploaded);
-
-    for (const { index } of pendingImages) {
-      await uploadImage(index);
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
     }
-  }, [images, uploadImage]);
+  }, []);
 
-  const formatFileSize = (bytes: number): string => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/')) {
+        setSelectedFile(file);
+        setUploadError(null);
+        setUploadSuccess(null);
+      } else {
+        setUploadError('Please select an image file');
+      }
+    }
+  }, []);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        setSelectedFile(file);
+        setUploadError(null);
+        setUploadSuccess(null);
+      } else {
+        setUploadError('Please select an image file');
+      }
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile || !onUpload) return;
+
+    setUploading(true);
+    setUploadError(null);
+    setUploadSuccess(null);
+
+    try {
+      await onUpload(selectedFile, uploadOptions);
+      setUploadSuccess('Image uploaded successfully!');
+      setSelectedFile(null);
+      // Reset file input
+      const fileInput = document.getElementById(
+        'file-input',
+      ) as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : 'Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -253,312 +125,268 @@ export function ImageUpload({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const getImageUrl = (filename: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${filename}`;
-  };
-
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Processing Options */}
+      {/* Upload Area */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Processing Options</CardTitle>
+          <CardTitle>Upload Image</CardTitle>
+          <CardDescription>
+            Upload images for your wedding website
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <Label htmlFor="maxWidth">Max Width (px)</Label>
-              <Input
-                id="maxWidth"
-                type="number"
-                placeholder="e.g., 1920"
-                value={processingOptions.maxWidth || ''}
-                onChange={(e) =>
-                  setProcessingOptions((prev) => ({
-                    ...prev,
-                    maxWidth: e.target.value
-                      ? parseInt(e.target.value)
-                      : undefined,
-                  }))
-                }
-              />
+          {/* Drag and Drop Area */}
+          <div
+            className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+              dragActive
+                ? 'border-blue-400 bg-blue-50'
+                : 'border-gray-300 hover:border-gray-400'
+            }`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <input
+              id="file-input"
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="space-y-4">
+              <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
+              <div>
+                <p className="text-lg font-medium text-gray-900">
+                  Drop your image here
+                </p>
+                <p className="text-sm text-gray-500">
+                  or click to browse files
+                </p>
+              </div>
+              <p className="text-xs text-gray-400">
+                Supports JPG, PNG, GIF, WebP up to 10MB
+              </p>
             </div>
-            <div>
-              <Label htmlFor="maxHeight">Max Height (px)</Label>
-              <Input
-                id="maxHeight"
-                type="number"
-                placeholder="e.g., 1080"
-                value={processingOptions.maxHeight || ''}
-                onChange={(e) =>
-                  setProcessingOptions((prev) => ({
-                    ...prev,
-                    maxHeight: e.target.value
-                      ? parseInt(e.target.value)
-                      : undefined,
-                  }))
-                }
-              />
+          </div>
+
+          {/* Selected File Info */}
+          {selectedFile && (
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <ImageIcon className="h-8 w-8 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {selectedFile.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {formatFileSize(selectedFile.size)}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedFile(null);
+                    const fileInput = document.getElementById(
+                      'file-input',
+                    ) as HTMLInputElement;
+                    if (fileInput) fileInput.value = '';
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-            <div>
-              <Label htmlFor="quality">Quality (1-100)</Label>
-              <Input
-                id="quality"
-                type="number"
-                min="1"
-                max="100"
-                value={processingOptions.quality || 85}
-                onChange={(e) =>
-                  setProcessingOptions((prev) => ({
-                    ...prev,
-                    quality: parseInt(e.target.value) || 85,
-                  }))
-                }
-              />
+          )}
+
+          {/* Upload Options */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="usage-location">Usage Location</Label>
+                <select
+                  id="usage-location"
+                  value={uploadOptions.usageLocation}
+                  onChange={(e) =>
+                    setUploadOptions({
+                      ...uploadOptions,
+                      usageLocation: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="gallery">Gallery</option>
+                  <option value="hero">Hero Section</option>
+                  <option value="accommodation">Accommodation</option>
+                  <option value="program">Program</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <Label htmlFor="alt-text">Alt Text (Accessibility)</Label>
+                <Input
+                  id="alt-text"
+                  type="text"
+                  placeholder="Describe the image for screen readers"
+                  value={uploadOptions.altText || ''}
+                  onChange={(e) =>
+                    setUploadOptions({
+                      ...uploadOptions,
+                      altText: e.target.value,
+                    })
+                  }
+                />
+              </div>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="max-width">Max Width (px)</Label>
+                <Input
+                  id="max-width"
+                  type="number"
+                  placeholder="1920"
+                  value={uploadOptions.maxWidth || ''}
+                  onChange={(e) =>
+                    setUploadOptions({
+                      ...uploadOptions,
+                      maxWidth: parseInt(e.target.value) || undefined,
+                    })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="max-height">Max Height (px)</Label>
+                <Input
+                  id="max-height"
+                  type="number"
+                  placeholder="1080"
+                  value={uploadOptions.maxHeight || ''}
+                  onChange={(e) =>
+                    setUploadOptions({
+                      ...uploadOptions,
+                      maxHeight: parseInt(e.target.value) || undefined,
+                    })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="quality">Quality (1-100)</Label>
+                <Input
+                  id="quality"
+                  type="number"
+                  min="1"
+                  max="100"
+                  placeholder="85"
+                  value={uploadOptions.quality || ''}
+                  onChange={(e) =>
+                    setUploadOptions({
+                      ...uploadOptions,
+                      quality: parseInt(e.target.value) || undefined,
+                    })
+                  }
+                />
+              </div>
+            </div>
+
             <div>
               <Label htmlFor="format">Output Format</Label>
               <select
                 id="format"
-                value={processingOptions.format || ''}
+                value={uploadOptions.format || 'jpeg'}
                 onChange={(e) =>
-                  setProcessingOptions((prev) => ({
-                    ...prev,
-                    format: e.target.value as
-                      | 'jpeg'
-                      | 'png'
-                      | 'webp'
-                      | undefined,
-                  }))
+                  setUploadOptions({
+                    ...uploadOptions,
+                    format: e.target.value as 'jpeg' | 'png' | 'webp',
+                  })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="">Keep Original</option>
                 <option value="jpeg">JPEG</option>
                 <option value="png">PNG</option>
                 <option value="webp">WebP</option>
               </select>
             </div>
           </div>
+
+          {/* Upload Button */}
+          <Button
+            onClick={handleUpload}
+            disabled={!selectedFile || uploading}
+            className="w-full bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white"
+          >
+            {uploading ? (
+              <>
+                <Upload className="mr-2 h-4 w-4 animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              <>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload Image
+              </>
+            )}
+          </Button>
+
+          {/* Status Messages */}
+          {uploadError && (
+            <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-md text-red-800">
+              <AlertCircle className="h-4 w-4" />
+              <span className="text-sm">{uploadError}</span>
+            </div>
+          )}
+
+          {uploadSuccess && (
+            <div className="flex items-center space-x-2 p-3 bg-green-50 border border-green-200 rounded-md text-green-800">
+              <ImageIcon className="h-4 w-4" />
+              <span className="text-sm">{uploadSuccess}</span>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Upload Area */}
-      <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-          isDragOver
-            ? 'border-rose-500 bg-rose-50'
-            : 'border-gray-300 hover:border-gray-400'
-        }`}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-      >
-        <div className="flex flex-col items-center space-y-4">
-          <div className="p-3 bg-gray-100 rounded-full">
-            <Upload className="w-8 h-8 text-gray-400" />
+      {/* Usage Instructions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Usage Guidelines</CardTitle>
+          <CardDescription>
+            Best practices for wedding website images
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="space-y-2">
+            <h4 className="font-medium text-gray-900">Image Sizes</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Hero images: 1920x1080px or larger</li>
+              <li>• Gallery images: 1200x800px minimum</li>
+              <li>• Accommodation photos: 800x600px minimum</li>
+            </ul>
           </div>
-
-          <div>
-            <p className="text-lg font-medium text-gray-700">
-              Drop images here or click to select
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              Supported formats: {acceptedFileTypes.join(', ')} • Max size:{' '}
-              {maxFileSize}MB • Max files: {maxFiles}
-            </p>
+          <div className="space-y-2">
+            <h4 className="font-medium text-gray-900">File Formats</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• JPEG: Best for photos with many colors</li>
+              <li>• PNG: Best for images with transparency</li>
+              <li>• WebP: Best for modern browsers (smaller file size)</li>
+            </ul>
           </div>
-
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="mt-4"
-          >
-            <ImageIcon className="w-4 h-4 mr-2" />
-            Select Images
-          </Button>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            accept={acceptedFileTypes.join(',')}
-            onChange={(e) => handleFileSelect(e.target.files)}
-            className="hidden"
-          />
-        </div>
-      </div>
-
-      {/* Image Previews */}
-      {images.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">
-              Selected Images ({images.length})
-            </h3>
-            {images.some((img) => !img.uploaded && !img.uploading) && (
-              <Button
-                onClick={uploadAllImages}
-                disabled={images.some((img) => img.uploading)}
-                className="bg-rose-600 hover:bg-rose-700"
-              >
-                Upload All Images
-              </Button>
-            )}
+          <div className="space-y-2">
+            <h4 className="font-medium text-gray-900">Accessibility</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Always provide descriptive alt text</li>
+              <li>• Avoid text-heavy images</li>
+              <li>• Ensure good contrast for readability</li>
+            </ul>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {images.map((image, index) => (
-              <Card key={index} className="overflow-hidden">
-                <div className="relative">
-                  <img
-                    src={
-                      image.uploaded && image.uploadedImage
-                        ? getImageUrl(image.uploadedImage.filename)
-                        : image.preview
-                    }
-                    alt={image.altText}
-                    className="w-full h-48 object-cover"
-                  />
-
-                  {/* Status Overlay */}
-                  <div className="absolute top-2 right-2 flex space-x-1">
-                    {image.uploading && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-blue-100 text-blue-800"
-                      >
-                        <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                        Uploading
-                      </Badge>
-                    )}
-                    {image.uploaded && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-green-100 text-green-800"
-                      >
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Uploaded
-                      </Badge>
-                    )}
-                    {image.error && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-red-100 text-red-800"
-                      >
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                        Error
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Remove Button */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-2 left-2 p-1 h-8 w-8 bg-white/80 hover:bg-white"
-                    disabled={image.uploading}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                <CardContent className="p-4 space-y-3">
-                  <div>
-                    <Label
-                      htmlFor={`alt-${index}`}
-                      className="text-sm font-medium"
-                    >
-                      Alt Text
-                    </Label>
-                    <Input
-                      id={`alt-${index}`}
-                      value={image.altText}
-                      onChange={(e) => updateAltText(index, e.target.value)}
-                      placeholder="Describe the image"
-                      disabled={image.uploading}
-                      className="mt-1"
-                    />
-                  </div>
-
-                  <div className="flex justify-between items-center text-sm text-gray-500">
-                    <span>{formatFileSize(image.file.size)}</span>
-                    <span>{image.file.type}</span>
-                  </div>
-
-                  {image.error && (
-                    <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-                      {image.error}
-                    </div>
-                  )}
-
-                  {image.uploaded && image.uploadedImage && (
-                    <div className="text-sm text-green-600 bg-green-50 p-2 rounded">
-                      <div>
-                        Processed: {image.uploadedImage.width} ×{' '}
-                        {image.uploadedImage.height}
-                      </div>
-                      <div>
-                        Final size: {formatFileSize(image.uploadedImage.size)}
-                      </div>
-                    </div>
-                  )}
-
-                  {!image.uploaded && !image.uploading && (
-                    <Button
-                      onClick={() => uploadImage(index)}
-                      size="sm"
-                      className="w-full bg-rose-600 hover:bg-rose-700"
-                    >
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload
-                    </Button>
-                  )}
-
-                  {image.uploaded && image.uploadedImage && (
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          window.open(
-                            getImageUrl(image.uploadedImage!.filename),
-                            '_blank',
-                          )
-                        }
-                        className="flex-1"
-                      >
-                        <Eye className="w-4 h-4 mr-1" />
-                        View
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const link = document.createElement('a');
-                          link.href = getImageUrl(
-                            image.uploadedImage!.filename,
-                          );
-                          link.download = image.uploadedImage!.originalName;
-                          link.click();
-                        }}
-                        className="flex-1"
-                      >
-                        <Download className="w-4 h-4 mr-1" />
-                        Download
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-export default ImageUpload;
