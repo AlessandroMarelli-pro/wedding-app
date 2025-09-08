@@ -1,5 +1,6 @@
 export { AccommodationService } from './accommodation.service';
 export { AuthService } from './auth.service';
+export { CalendarService } from './calendar.service';
 export { GuestService } from './guest.service';
 export { ImageService } from './image.service';
 export { ProgramService } from './program.service';

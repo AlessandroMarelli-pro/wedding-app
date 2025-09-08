@@ -7,18 +7,21 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ProgramEvent } from '../entities/program-event.entity';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { CalendarService } from '../services/calendar.service';
 import {
   CreateProgramEventDto,
   ProgramService,
@@ -28,7 +31,10 @@ import {
 @ApiTags('Public')
 @Controller('program')
 export class ProgramController {
-  constructor(private readonly programService: ProgramService) {}
+  constructor(
+    private readonly programService: ProgramService,
+    private readonly calendarService: CalendarService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all program events' })
@@ -42,10 +48,24 @@ export class ProgramController {
   }
 
   @Get('calendar')
-  @ApiOperation({ summary: 'Download calendar file (.ics)' })
+  @ApiOperation({
+    summary: 'Download complete wedding program calendar (.ics)',
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    description: 'Custom calendar name',
+    example: 'Wedding Program',
+  })
+  @ApiQuery({
+    name: 'timezone',
+    required: false,
+    description: 'Calendar timezone',
+    example: 'America/New_York',
+  })
   @ApiResponse({
     status: 200,
-    description: 'iCalendar file',
+    description: 'iCalendar file for all program events',
     headers: {
       'Content-Type': {
         description: 'text/calendar',
@@ -55,18 +75,126 @@ export class ProgramController {
       },
     },
   })
-  @Header('Content-Type', 'text/calendar')
-  @Header('Content-Disposition', 'attachment; filename=wedding-program.ics')
-  async downloadCalendar(@Res() res: Response): Promise<void> {
+  @Header('Content-Type', 'text/calendar; charset=utf-8')
+  async downloadCalendar(
+    @Res() res: Response,
+    @Query('name') calendarName?: string,
+    @Query('timezone') timezone?: string,
+  ): Promise<void> {
     try {
-      const icalContent = await this.programService.generateCalendar();
+      const icalContent = await this.calendarService.generateProgramCalendar({
+        calendarName: calendarName || 'Wedding Program',
+        description: 'Complete wedding ceremony and reception program',
+        timezone: timezone || 'UTC',
+        method: 'PUBLISH',
+      });
+
+      const filename = `wedding-program-${new Date().toISOString().split('T')[0]}.ics`;
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
       res.send(icalContent);
     } catch (error) {
-      res.status(404).json({
-        error: 'Calendar not available',
-        message: 'No program events found or calendar generation failed',
+      res.status(500).json({
+        error: 'Calendar generation failed',
+        message:
+          error instanceof Error ? error.message : 'Unknown error occurred',
       });
     }
+  }
+
+  @Get('events/:id/calendar')
+  @ApiOperation({ summary: 'Download single event calendar (.ics)' })
+  @ApiQuery({
+    name: 'timezone',
+    required: false,
+    description: 'Calendar timezone',
+    example: 'America/New_York',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'iCalendar file for single event',
+    headers: {
+      'Content-Type': {
+        description: 'text/calendar',
+      },
+      'Content-Disposition': {
+        description: 'attachment; filename=wedding-event.ics',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Event not found',
+  })
+  @Header('Content-Type', 'text/calendar; charset=utf-8')
+  async downloadEventCalendar(
+    @Param('id') eventId: string,
+    @Res() res: Response,
+    @Query('timezone') timezone?: string,
+  ): Promise<void> {
+    try {
+      const icalContent = await this.calendarService.generateEventCalendar(
+        eventId,
+        {
+          timezone: timezone || 'UTC',
+          method: 'PUBLISH',
+        },
+      );
+
+      const event = await this.programService.getEventById(eventId);
+      const filename = `wedding-${event.title.toLowerCase().replace(/\s+/g, '-')}.ics`;
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+      res.send(icalContent);
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Event not found') {
+        res.status(404).json({
+          error: 'Event not found',
+          message: `Program event with ID ${eventId} not found`,
+        });
+      } else {
+        res.status(500).json({
+          error: 'Calendar generation failed',
+          message:
+            error instanceof Error ? error.message : 'Unknown error occurred',
+        });
+      }
+    }
+  }
+
+  @Get('calendar/stats')
+  @ApiOperation({ summary: 'Get calendar statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Calendar statistics',
+    schema: {
+      type: 'object',
+      properties: {
+        totalEvents: { type: 'number' },
+        upcomingEvents: { type: 'number' },
+        pastEvents: { type: 'number' },
+        eventsIncludedInCalendar: { type: 'number' },
+        nextEvent: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            startTime: { type: 'string', format: 'date-time' },
+            location: { type: 'string' },
+          },
+        },
+      },
+    },
+  })
+  async getCalendarStats(): Promise<{
+    totalEvents: number;
+    upcomingEvents: number;
+    pastEvents: number;
+    eventsIncludedInCalendar: number;
+    nextEvent?: {
+      title: string;
+      startTime: Date;
+      location?: string;
+    };
+  }> {
+    return this.calendarService.getCalendarStats();
   }
 }
 
@@ -75,7 +203,10 @@ export class ProgramController {
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class AdminProgramController {
-  constructor(private readonly programService: ProgramService) {}
+  constructor(
+    private readonly programService: ProgramService,
+    private readonly calendarService: CalendarService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all program events (admin)' })

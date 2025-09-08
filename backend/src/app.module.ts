@@ -24,6 +24,7 @@ import {
 import {
   AccommodationService,
   AuthService,
+  CalendarService,
   GuestService,
   ImageService,
   ProgramService,
@@ -91,6 +92,7 @@ import {
     AuthService,
     WeddingService,
     AccommodationService,
+    CalendarService,
     GuestService,
     ImageService,
     ProgramService,

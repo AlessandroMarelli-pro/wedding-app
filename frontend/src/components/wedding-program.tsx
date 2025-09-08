@@ -1,13 +1,8 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-  Calendar as CalendarIcon,
-  Clock,
-  Download,
-  MapPin,
-} from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { QuickCalendarDownload } from './calendar-download';
 
 interface ProgramEvent {
   id: string;
@@ -57,26 +52,7 @@ export function WeddingProgram() {
     });
   };
 
-  const downloadCalendar = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/program/calendar`,
-      );
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'wedding-program.ics';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      }
-    } catch (error) {
-      console.error('Error downloading calendar:', error);
-    }
-  };
+  // Calendar download is now handled by the QuickCalendarDownload component
 
   if (isLoading) {
     return (
@@ -166,20 +142,9 @@ export function WeddingProgram() {
         </CardContent>
       </Card>
 
-      {/* Calendar download */}
-      <div className="text-center">
-        <Button
-          onClick={downloadCalendar}
-          variant="outline"
-          size="lg"
-          className="bg-card/60 backdrop-blur-sm border-rose-200 text-rose-700 hover:bg-rose-50 hover:border-rose-300 shadow-md hover:shadow-lg"
-        >
-          <Download className="w-5 h-5 mr-2" />
-          Add to Calendar
-        </Button>
-        <p className="text-sm text-muted-foreground mt-2">
-          Download the complete schedule to your calendar app
-        </p>
+      {/* Enhanced calendar download */}
+      <div className="flex justify-center">
+        <QuickCalendarDownload className="bg-card/60 backdrop-blur-sm border-rose-200 text-rose-700 hover:bg-rose-50 hover:border-rose-300 shadow-md hover:shadow-lg" />
       </div>
     </div>
   );

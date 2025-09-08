@@ -58,7 +58,20 @@ export function Layout({
                 {/* Scroll indicator */}
                 <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
                   <div className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center">
-                    <div className="w-1 h-3 bg-white/60 rounded-full mt-2" />
+                    <svg
+                      className="w-4 h-4 text-white/70 mt-2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 5v14m0 0l-5-5m5 5l5-5"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
