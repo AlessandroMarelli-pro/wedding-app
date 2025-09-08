@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -21,6 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 import { memoryStorage } from 'multer';
 import { imageUploadConfig } from '../config/upload';
 import { CurrentUser } from '../decorators/current-user.decorator';
@@ -28,6 +30,7 @@ import { CSVUpload } from '../entities/csv-upload.entity';
 import { Guest } from '../entities/guest.entity';
 import { UploadedImage } from '../entities/uploaded-image.entity';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { AnalyticsService } from '../services/analytics.service';
 import { JwtPayload } from '../services/auth.service';
 import { GuestService } from '../services/guest.service';
 import {
@@ -42,6 +45,7 @@ import { UploadMaintenanceService } from '../services/upload-maintenance.service
 @ApiBearerAuth()
 export class AdminController {
   constructor(
+    private readonly analyticsService: AnalyticsService,
     private readonly guestService: GuestService,
     private readonly imageService: ImageService,
     private readonly uploadMaintenanceService: UploadMaintenanceService,
@@ -752,5 +756,171 @@ export class AdminController {
     >;
   }> {
     return this.uploadMaintenanceService.validateUploadHealth();
+  }
+
+  // Analytics and Reporting Endpoints
+
+  @Get('analytics/rsvp')
+  @ApiOperation({ summary: 'Get comprehensive RSVP analytics' })
+  @ApiResponse({
+    status: 200,
+    description: 'RSVP analytics data',
+    schema: {
+      type: 'object',
+      properties: {
+        overview: {
+          type: 'object',
+          properties: {
+            totalGuests: { type: 'number' },
+            totalInvited: { type: 'number' },
+            totalConfirmed: { type: 'number' },
+            totalDeclined: { type: 'number' },
+            totalPending: { type: 'number' },
+            responseRate: { type: 'number' },
+            attendanceRate: { type: 'number' },
+          },
+        },
+        attendance: {
+          type: 'object',
+          properties: {
+            totalExpectedAttendees: { type: 'number' },
+            confirmedAttendees: { type: 'number' },
+            averagePartySize: { type: 'number' },
+            partySizeDistribution: { type: 'object' },
+          },
+        },
+        timeline: {
+          type: 'object',
+          properties: {
+            dailyResponses: { type: 'array' },
+            weeklyResponses: { type: 'array' },
+            monthlyResponses: { type: 'array' },
+          },
+        },
+        demographics: {
+          type: 'object',
+          properties: {
+            dietaryRestrictions: { type: 'array' },
+            specialRequests: { type: 'array' },
+            phoneNumberProvided: { type: 'object' },
+            emailProvided: { type: 'object' },
+          },
+        },
+        recentActivity: { type: 'array' },
+      },
+    },
+  })
+  async getRSVPAnalytics() {
+    return this.analyticsService.getRSVPAnalytics();
+  }
+
+  @Get('analytics/dashboard')
+  @ApiOperation({ summary: 'Get dashboard summary statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Dashboard summary data',
+    schema: {
+      type: 'object',
+      properties: {
+        totalGuests: { type: 'number' },
+        responseRate: { type: 'number' },
+        attendanceRate: { type: 'number' },
+        confirmedAttendees: { type: 'number' },
+        recentResponses: { type: 'number' },
+        pendingInvitations: { type: 'number' },
+      },
+    },
+  })
+  async getDashboardSummary() {
+    return this.analyticsService.getDashboardSummary();
+  }
+
+  @Get('analytics/uploads')
+  @ApiOperation({ summary: 'Get upload analytics and statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Upload analytics data',
+    schema: {
+      type: 'object',
+      properties: {
+        totalUploads: { type: 'number' },
+        successfulUploads: { type: 'number' },
+        failedUploads: { type: 'number' },
+        totalGuestsImported: { type: 'number' },
+        averageGuestsPerUpload: { type: 'number' },
+        uploadHistory: { type: 'array' },
+        errorAnalysis: {
+          type: 'object',
+          properties: {
+            commonErrors: { type: 'array' },
+            errorTrends: { type: 'array' },
+          },
+        },
+      },
+    },
+  })
+  async getUploadAnalytics() {
+    return this.analyticsService.getUploadAnalytics();
+  }
+
+  @Get('guests/export')
+  @ApiOperation({ summary: 'Export all guest data as CSV' })
+  @ApiResponse({
+    status: 200,
+    description: 'CSV file with guest data',
+    headers: {
+      'Content-Type': {
+        description: 'text/csv',
+        schema: { type: 'string' },
+      },
+      'Content-Disposition': {
+        description: 'attachment; filename="guests-export.csv"',
+        schema: { type: 'string' },
+      },
+    },
+  })
+  async exportGuestsCSV(@Res() res: Response) {
+    const csvContent = await this.analyticsService.generateGuestCSV();
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="guests-export.csv"',
+    );
+    res.send(csvContent);
+  }
+
+  @Get('guests/export/data')
+  @ApiOperation({ summary: 'Get guest export data as JSON' })
+  @ApiResponse({
+    status: 200,
+    description: 'Guest data for export',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+          email: { type: 'string' },
+          phoneNumber: { type: 'string' },
+          partySize: { type: 'number' },
+          dietaryRestrictions: { type: 'string' },
+          specialRequests: { type: 'string' },
+          hashCode: { type: 'string' },
+          rsvpStatus: {
+            type: 'string',
+            enum: ['pending', 'confirmed', 'declined'],
+          },
+          confirmedPartySize: { type: 'number' },
+          rsvpMessage: { type: 'string' },
+          rsvpDate: { type: 'string', format: 'date-time' },
+          createdAt: { type: 'string', format: 'date-time' },
+        },
+      },
+    },
+  })
+  async getGuestExportData() {
+    return this.analyticsService.getGuestExportData();
   }
 }

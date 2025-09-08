@@ -2,13 +2,17 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {
   Accommodation,
   CSVUpload,
+  DashboardSummary,
   Guest,
+  GuestExportData,
   LoginRequest,
   LoginResponse,
+  RSVPAnalytics,
   RSVPConfirmation,
   RSVPRequest,
   RSVPResponse,
   RSVPStats,
+  UploadAnalytics,
   WeddingInfo,
 } from '../types/api';
 
@@ -248,6 +252,38 @@ export class ApiService {
 
   static async deleteConfirmation(id: string): Promise<void> {
     await api.delete(`/admin/rsvp/confirmations/${id}`);
+  }
+
+  // Analytics and Reporting
+  static async getRSVPAnalytics(): Promise<RSVPAnalytics> {
+    const response = await api.get<RSVPAnalytics>('/admin/analytics/rsvp');
+    return response.data;
+  }
+
+  static async getDashboardSummary(): Promise<DashboardSummary> {
+    const response = await api.get<DashboardSummary>(
+      '/admin/analytics/dashboard',
+    );
+    return response.data;
+  }
+
+  static async getUploadAnalytics(): Promise<UploadAnalytics> {
+    const response = await api.get<UploadAnalytics>('/admin/analytics/uploads');
+    return response.data;
+  }
+
+  static async getGuestExportData(): Promise<GuestExportData[]> {
+    const response = await api.get<GuestExportData[]>(
+      '/admin/guests/export/data',
+    );
+    return response.data;
+  }
+
+  static async exportGuestsCSV(): Promise<Blob> {
+    const response = await api.get('/admin/guests/export', {
+      responseType: 'blob',
+    });
+    return response.data;
   }
 
   // Utility methods

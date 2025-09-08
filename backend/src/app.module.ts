@@ -23,6 +23,7 @@ import {
 // Import services
 import {
   AccommodationService,
+  AnalyticsService,
   AuthService,
   CalendarService,
   GuestService,
@@ -92,6 +93,7 @@ import {
     AuthService,
     WeddingService,
     AccommodationService,
+    AnalyticsService,
     CalendarService,
     GuestService,
     ImageService,

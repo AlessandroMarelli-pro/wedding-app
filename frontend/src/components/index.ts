@@ -1,5 +1,6 @@
 export { AccommodationsList } from './accommodations';
 export { AdminLayout } from './admin-layout';
+export { AdminStats } from './admin-stats';
 export {
   CalendarDownload,
   DetailedCalendarDownload,
