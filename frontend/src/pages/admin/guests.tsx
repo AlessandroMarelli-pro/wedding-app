@@ -1,5 +1,5 @@
-import { AdminLayout } from '@/components/admin-layout';
 import { GuestDetailsModal } from '@/components/guest-details-modal';
+import { SidebarLayout } from '@/components/sidebar-layout';
 import {
   Badge,
   Button,
@@ -279,9 +279,9 @@ export default function GuestsPage() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
+      <SidebarLayout type="admin" currentPath="/admin/guests">
         <LoadingSpinner />
-      </AdminLayout>
+      </SidebarLayout>
     );
   }
 
@@ -292,7 +292,7 @@ export default function GuestsPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminLayout>
+      <SidebarLayout type="admin" currentPath="/admin/guests">
         <div className="space-y-8">
           <div>
             <h1 className="text-3xl font-serif text-gray-800 mb-2">
@@ -593,7 +593,7 @@ export default function GuestsPage() {
           onClose={handleCloseModal}
           onDelete={handleDeleteGuest}
         />
-      </AdminLayout>
+      </SidebarLayout>
     </>
   );
 }

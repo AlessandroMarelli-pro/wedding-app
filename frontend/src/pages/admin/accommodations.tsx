@@ -10,7 +10,7 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AdminLayout } from '../../components/admin-layout';
+import { SidebarLayout } from '../../components/sidebar-layout';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import {
@@ -227,7 +227,7 @@ export default function AdminAccommodations() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
+      <SidebarLayout type="admin" currentPath="/admin/accommodations">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
           <div className="space-y-4">
@@ -241,7 +241,7 @@ export default function AdminAccommodations() {
             ))}
           </div>
         </div>
-      </AdminLayout>
+      </SidebarLayout>
     );
   }
 
@@ -252,7 +252,7 @@ export default function AdminAccommodations() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminLayout>
+      <SidebarLayout type="admin" currentPath="/admin/accommodations">
         <div className="space-y-6">
           {/* Header */}
           <div className="flex justify-between items-center">
@@ -548,7 +548,7 @@ export default function AdminAccommodations() {
             )}
           </div>
         </div>
-      </AdminLayout>
+      </SidebarLayout>
     </>
   );
 }

@@ -26,7 +26,7 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AdminLayout } from '../../components/admin-layout';
+import { SidebarLayout } from '../../components/sidebar-layout';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import {
@@ -264,7 +264,7 @@ export default function AdminProgram() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
+      <SidebarLayout type="admin" currentPath="/admin/program">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-muted rounded w-64"></div>
           <div className="space-y-4">
@@ -278,7 +278,7 @@ export default function AdminProgram() {
             ))}
           </div>
         </div>
-      </AdminLayout>
+      </SidebarLayout>
     );
   }
 
@@ -289,7 +289,7 @@ export default function AdminProgram() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminLayout>
+      <SidebarLayout type="admin" currentPath="/admin/program">
         <div className="space-y-8">
           <div className="flex justify-between items-center">
             <div>
@@ -594,7 +594,7 @@ export default function AdminProgram() {
             )}
           </div>
         </div>
-      </AdminLayout>
+      </SidebarLayout>
     </>
   );
 }
