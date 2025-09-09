@@ -304,7 +304,11 @@ export default function HomePage({
           </Section>
 
           {/* Wedding Program Section */}
-          <Section id="program" background="default">
+          <Section
+            id="program"
+            background="default"
+            className="h-screen max-h-screen overflow-y-auto"
+          >
             <SectionHeader
               title="Programme"
               subtitle="Voici comment notre jour se déroulera"
@@ -313,12 +317,12 @@ export default function HomePage({
           </Section>
 
           {/* RSVP Section */}
-          <Section id="rsvp" background="accent">
+          <Section id="rsvp" background="accent" className="h-screen">
             <SectionHeader
               title="RSVP"
               subtitle="We can't wait to celebrate with you! Please confirm your attendance"
             />
-            <div className="container-responsive max-w-2xl mx-auto">
+            <div className="mx-auto">
               <RSVPForm />
             </div>
           </Section>

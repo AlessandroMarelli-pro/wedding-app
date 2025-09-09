@@ -88,7 +88,7 @@ export function WeddingProgram() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="max-h-screen overflow-y-auto">
       <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
         <CardContent className="p-8">
           <div className="space-y-8">
