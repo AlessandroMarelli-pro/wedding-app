@@ -6,6 +6,15 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+export interface Direction {
+  type: 'car' | 'train' | 'car rental';
+  information: string; // markdown text
+  location: {
+    address: string;
+    link?: string;
+  };
+}
+
 @Entity('wedding_info')
 export class WeddingInfo {
   @PrimaryGeneratedColumn('uuid')
@@ -23,8 +32,8 @@ export class WeddingInfo {
   @Column({ name: 'wedding_date', type: 'datetime' })
   weddingDate!: Date;
 
-  @Column({ name: 'location_directions', type: 'text' })
-  locationDirections!: string;
+  @Column({ name: 'location_directions', type: 'json' })
+  locationDirections!: Direction[];
 
   @Column({ name: 'hero_image_id', nullable: true })
   heroImageId!: string;

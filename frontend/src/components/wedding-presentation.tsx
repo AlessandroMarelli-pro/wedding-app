@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { Direction } from '../types/api';
 
 interface WeddingInfo {
   id: string;
@@ -7,7 +8,7 @@ interface WeddingInfo {
   weddingDate: string;
   weddingAddress: string;
   presentationMessage: string;
-  locationDirections?: string;
+  locationDirections?: Direction[];
   ceremonyTime?: string;
   receptionTime?: string;
   dressCode?: string;
@@ -119,7 +120,9 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
   if (!timeLeft) {
     return (
       <div className={cn('text-center', className)}>
-        <p className="text-2xl  text-foreground">The big day is here! 🎉</p>
+        <p className="text-2xl  text-foreground text-white">
+          The big day is here! 🎉
+        </p>
       </div>
     );
   }

@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { DollarSign, ExternalLink, MapPin, Phone, Star } from 'lucide-react';
-import { Accommodation } from '../types/api';
+import { Accommodation, Direction } from '../types/api';
 import { AccommodationMap } from './maps';
 
 interface AccommodationsListProps {
@@ -16,7 +16,7 @@ interface AccommodationsListProps {
     weddingAddress: string;
     weddingDate: string;
     coupleNames: string;
-    locationDirections?: string;
+    locationDirections?: Direction[];
     latitude?: number;
     longitude?: number;
   };

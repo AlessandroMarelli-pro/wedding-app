@@ -1,11 +1,20 @@
 // Wedding Information
+export interface Direction {
+  type: 'car' | 'train' | 'car rental';
+  information: string; // markdown text
+  location: {
+    address: string;
+    link?: string;
+  };
+}
+
 export interface WeddingInfo {
   id: string;
   coupleNames: string;
   presentationMessage: string;
   weddingAddress: string;
   weddingDate: string;
-  locationDirections: string;
+  locationDirections: Direction[];
   heroImageId?: string;
   createdAt: string;
   updatedAt: string;

@@ -3,7 +3,7 @@
 import { MapPin, Navigation } from 'lucide-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { mapsService } from '../../services/maps.service';
-import { Accommodation } from '../../types/api';
+import { Accommodation, Direction } from '../../types/api';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button-pers';
 import { Card } from '../ui/card';
@@ -14,7 +14,7 @@ interface AccommodationMapProps {
     weddingAddress: string;
     weddingDate: string;
     coupleNames: string;
-    locationDirections?: string;
+    locationDirections?: Direction[];
     latitude?: number;
     longitude?: number;
   };

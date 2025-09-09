@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { WeddingInfo } from '../entities/wedding-info.entity';
+import { Direction, WeddingInfo } from '../entities/wedding-info.entity';
 import { ImageService } from './image.service';
 
 export interface CreateWeddingInfoDto {
@@ -9,7 +9,7 @@ export interface CreateWeddingInfoDto {
   presentationMessage: string;
   weddingAddress: string;
   weddingDate: Date;
-  locationDirections: string;
+  locationDirections: Direction[];
   heroImageId?: string;
 }
 
@@ -18,7 +18,7 @@ export interface UpdateWeddingInfoDto {
   presentationMessage?: string;
   weddingAddress?: string;
   weddingDate?: Date;
-  locationDirections?: string;
+  locationDirections?: Direction[];
   heroImageId?: string;
 }
 
@@ -39,8 +39,10 @@ export class WeddingService {
     if (!weddingInfo) {
       throw new NotFoundException('Wedding information not found');
     }
-    const heroImage = await this.imageService.getImagesByUsageLocation('hero');
-    weddingInfo.heroImageId = heroImage[0].id;
+    const heroImages = await this.imageService.getImagesByUsageLocation('hero');
+    if (heroImages.length > 0) {
+      weddingInfo.heroImageId = heroImages[0].id;
+    }
     return weddingInfo;
   }
 

@@ -312,15 +312,43 @@ After years of adventures together, we're ready to say "I do" surrounded by the 
 
 Your presence is the greatest gift we could ask for as we begin this beautiful new chapter of our lives together. ✨💕`;
 
-      existingWeddingInfo.locationDirections = `The Château de Malmaison is located in the heart of Rueil-Malmaison, just 20 minutes from central Paris.
+      existingWeddingInfo.locationDirections = [
+        {
+          type: 'car' as const,
+          information: `**BY CAR**: Free parking is available on-site. Use GPS coordinates: 48.8698° N, 2.1659° E
 
-🚗 **BY CAR**: Free parking is available on-site. Use GPS coordinates: 48.8698° N, 2.1659° E
+The Château de Malmaison is located in the heart of Rueil-Malmaison, just 20 minutes from central Paris.`,
+          location: {
+            address:
+              'Château de Malmaison, Avenue du Château, 92500 Rueil-Malmaison, France',
+            link: 'https://maps.google.com/?q=Château+de+Malmaison+Rueil-Malmaison',
+          },
+        },
+        {
+          type: 'train' as const,
+          information: `**BY PUBLIC TRANSPORT**: Take RER A to Rueil-Malmaison station (25 minutes from Châtelet), then bus 244 (direction Rueil Centre) to "Château" stop (5 minutes). The venue is a 2-minute walk from the bus stop.
 
-🚊 **BY PUBLIC TRANSPORT**: Take RER A to Rueil-Malmaison station (25 minutes from Châtelet), then bus 244 (direction Rueil Centre) to "Château" stop (5 minutes). The venue is a 2-minute walk from the bus stop.
+**Alternative**: Take Metro Line 1 to La Défense, then bus 244 to "Château" stop.`,
+          location: {
+            address:
+              'Rueil-Malmaison RER Station, 92500 Rueil-Malmaison, France',
+            link: 'https://maps.google.com/?q=Rueil-Malmaison+RER+Station',
+          },
+        },
+        {
+          type: 'car rental' as const,
+          information: `**BY TAXI/UBER**: Approximately 30-45 minutes from central Paris, depending on traffic.
 
-🚕 **BY TAXI/UBER**: Approximately 30-45 minutes from central Paris, depending on traffic.
+**CAR RENTAL**: Several car rental agencies are available at Charles de Gaulle Airport and Orly Airport. The drive takes about 45 minutes from CDG and 35 minutes from Orly.
 
-📍 The ceremony will begin promptly at 3:00 PM in the beautiful château gardens. Please arrive 15 minutes early for seating.`;
+📍 The ceremony will begin promptly at 3:00 PM in the beautiful château gardens. Please arrive 15 minutes early for seating.`,
+          location: {
+            address:
+              'Château de Malmaison, Avenue du Château, 92500 Rueil-Malmaison, France',
+            link: 'https://maps.google.com/?q=Château+de+Malmaison+Rueil-Malmaison',
+          },
+        },
+      ];
 
       await weddingInfoRepository.save(existingWeddingInfo);
       console.log('💒 Updated wedding information');

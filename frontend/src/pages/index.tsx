@@ -205,16 +205,59 @@ export default function HomePage({
                   </div>
                 </div>
 
-                {weddingInfo.locationDirections && (
-                  <div className="mt-6 pt-6 border-t">
-                    <h4 className="font-semibold text-responsive text-foreground mb-2">
-                      Comment venir ?
-                    </h4>
-                    <p className="text-responsive text-muted-foreground whitespace-pre-line">
-                      {weddingInfo.locationDirections}
-                    </p>
-                  </div>
-                )}
+                {weddingInfo.locationDirections &&
+                  weddingInfo.locationDirections.length > 0 && (
+                    <div className="mt-6 pt-6 border-t">
+                      <h4 className="font-semibold text-responsive text-foreground mb-4">
+                        Comment venir ?
+                      </h4>
+                      <div className="space-y-4">
+                        {weddingInfo.locationDirections.map(
+                          (direction, index) => (
+                            <div
+                              key={index}
+                              className="bg-muted/30 rounded-lg p-4"
+                            >
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                <h5 className="font-medium text-foreground capitalize">
+                                  {direction.type === 'car'
+                                    ? 'En voiture'
+                                    : direction.type === 'train'
+                                      ? 'En train'
+                                      : 'Location de voiture'}
+                                </h5>
+                              </div>
+                              <div className="ml-4 space-y-2">
+                                <p className="text-muted-foreground text-sm whitespace-pre-line">
+                                  {direction.information}
+                                </p>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-muted-foreground">
+                                    📍
+                                  </span>
+                                  {direction.location.link ? (
+                                    <a
+                                      href={direction.location.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-primary hover:underline text-sm"
+                                    >
+                                      {direction.location.address}
+                                    </a>
+                                  ) : (
+                                    <span className="text-muted-foreground text-sm">
+                                      {direction.location.address}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  )}
               </div>
             </div>
           </Section>

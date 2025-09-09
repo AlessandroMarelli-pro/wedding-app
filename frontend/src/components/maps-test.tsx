@@ -42,7 +42,17 @@ const testWeddingInfo = {
     'Château de Malmaison, Avenue du Château, 92500 Rueil-Malmaison, France',
   weddingDate: '2024-06-15T14:00:00Z',
   coupleNames: 'Ariane & Timothe',
-  locationDirections: 'Take the A86 highway and exit at Rueil-Malmaison.',
+  locationDirections: [
+    {
+      type: 'car' as const,
+      information: 'Take the A86 highway and exit at Rueil-Malmaison.',
+      location: {
+        address:
+          'Château de Malmaison, Avenue du Château, 92500 Rueil-Malmaison, France',
+        link: 'https://maps.google.com/?q=Château+de+Malmaison',
+      },
+    },
+  ],
   latitude: 48.8706,
   longitude: 2.1676,
 };
