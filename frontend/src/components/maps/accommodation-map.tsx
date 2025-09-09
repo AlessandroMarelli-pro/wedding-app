@@ -343,7 +343,7 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`${className}`}>
       {/* Map Container */}
       <Card className="overflow-hidden">
         <div className="relative">

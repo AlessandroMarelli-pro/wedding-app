@@ -8,7 +8,7 @@ export {
 export { DefaultErrorFallback, ErrorBoundary } from './error-boundary';
 export { GuestDetailsModal } from './guest-details-modal';
 export { ImageUpload } from './image-upload';
-export { AccommodationMap, VenueMap } from './maps';
+export { AccommodationMap } from './maps';
 export { NavbarLayout } from './navbar-layout';
 export { RSVPForm } from './rsvp-form';
 export { Section, SectionHeader } from './section-components';

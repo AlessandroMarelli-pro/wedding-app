@@ -29,7 +29,7 @@ export function Section({
         className,
       )}
     >
-      <div className="max-w-6xl mx-auto">{children}</div>
+      <div className="mx-auto">{children}</div>
     </section>
   );
 }

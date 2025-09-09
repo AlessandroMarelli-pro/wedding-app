@@ -7,6 +7,7 @@ import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import { useState } from 'react';
 import {
+  AccommodationMap,
   AccommodationsList,
   NavbarLayout,
   RSVPForm,
@@ -176,9 +177,10 @@ export default function HomePage({
             />
 
             {/* Additional Details Card */}
-            <div className="container-responsive">
-              <div className="bg-card/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg border text-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-left">
+            <div className="">
+              <div className=" rounded-xl sm:rounded-2xl p-6 sm:p- text-center grid grid-cols-4 gap-6 sm:gap-8 ">
+                <div className=" gap-6 sm:gap-8 text-left flex flex-col space-between col-span-2">
+                  <h4 className="font-semibold text-responsive text-foreground mb-4"></h4>
                   <div>
                     <h4 className="font-semibold text-responsive text-foreground mb-2">
                       Date
@@ -203,23 +205,44 @@ export default function HomePage({
                       {weddingInfo.weddingAddress}
                     </p>
                   </div>
+                  <AccommodationMap
+                    accommodations={[]}
+                    weddingInfo={weddingInfo}
+                    height="300px"
+                    showDirections={false}
+                    showDetails={false}
+                    className="mb-6 sm:mb-8"
+                  />
                 </div>
 
                 {weddingInfo.locationDirections &&
                   weddingInfo.locationDirections.length > 0 && (
-                    <div className="mt-6 pt-6 border-t">
-                      <h4 className="font-semibold text-responsive text-foreground mb-4">
+                    <div className=" col-span-2 ">
+                      <h4 className="font-semibold text-responsive text-foreground mb-4 ">
                         Comment venir ?
                       </h4>
-                      <div className="space-y-4">
+                      <div className="space-y-4 flex flex-col space-between ">
                         {weddingInfo.locationDirections.map(
                           (direction, index) => (
                             <div
                               key={index}
-                              className="bg-muted/30 rounded-lg p-4"
+                              className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg  p-3"
                             >
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                              <div className="flex items-center mb-1">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  className="h-6 w-6 text-slate-600"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
+                                  />
+                                </svg>
                                 <h5 className="font-medium text-foreground capitalize">
                                   {direction.type === 'car'
                                     ? 'En voiture'
@@ -228,29 +251,27 @@ export default function HomePage({
                                       : 'Location de voiture'}
                                 </h5>
                               </div>
-                              <div className="ml-4 space-y-2">
-                                <p className="text-muted-foreground text-sm whitespace-pre-line">
-                                  {direction.information}
-                                </p>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-muted-foreground">
-                                    📍
+                              <p className="block text-slate-600 leading-normal font-light mb-1 text-sm text-left">
+                                {direction.information}
+                              </p>
+                              <div className="text-left">
+                                <span className="text-xs text-muted-foreground ">
+                                  📍
+                                </span>
+                                {direction.location.link ? (
+                                  <a
+                                    href={direction.location.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary hover:underline text-xs"
+                                  >
+                                    {direction.location.address}
+                                  </a>
+                                ) : (
+                                  <span className="text-muted-foreground text-sm">
+                                    {direction.location.address}
                                   </span>
-                                  {direction.location.link ? (
-                                    <a
-                                      href={direction.location.link}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-primary hover:underline text-sm"
-                                    >
-                                      {direction.location.address}
-                                    </a>
-                                  ) : (
-                                    <span className="text-muted-foreground text-sm">
-                                      {direction.location.address}
-                                    </span>
-                                  )}
-                                </div>
+                                )}
                               </div>
                             </div>
                           ),

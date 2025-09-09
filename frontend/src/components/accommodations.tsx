@@ -8,6 +8,7 @@ import {
 } from '@/components/ui';
 import { DollarSign, ExternalLink, MapPin, Phone, Star } from 'lucide-react';
 import { Accommodation, Direction } from '../types/api';
+import ExpandableCardDemo from './expandable-card-demo-standard';
 import { AccommodationMap } from './maps';
 
 interface AccommodationsListProps {
@@ -29,8 +30,6 @@ export function AccommodationsList({
   const sortedAccommodations = [...accommodations].sort(
     (a, b) => a.displayOrder - b.displayOrder,
   );
-  const recommended = sortedAccommodations.filter((acc) => acc.isRecommended);
-  const others = sortedAccommodations.filter((acc) => !acc.isRecommended);
 
   if (accommodations.length === 0) {
     return (
@@ -130,63 +129,81 @@ export function AccommodationsList({
       </Card>
     );
   };
-
-  return (
-    <div className="space-y-8 sm:space-y-12">
-      {/* Interactive Map */}
-      {accommodations.length > 0 && (
-        <div className="container-responsive">
-          <AccommodationMap
-            accommodations={accommodations}
-            weddingInfo={weddingInfo}
-            height="300px"
-            showDirections={false}
-            showDetails={false}
-            className="mb-6 sm:mb-8"
-          />
-        </div>
-      )}
-
-      {recommended.length > 0 && (
-        <div className="container-responsive">
-          <div className="text-center mb-6 sm:mb-8">
-            <h3 className="heading-responsive  text-foreground mb-2">
-              Nos recommandations
-            </h3>
-            <p className="text-responsive text-muted-foreground">
-              Ces sont nos top picks pour votre séjour
+  const cards = accommodations.map((accommodation) => {
+    return {
+      description: accommodation.name,
+      title: accommodation.address,
+      src: 'https://assets.aceternity.com/demos/lana-del-rey.jpeg',
+      ctaText: accommodation.isRecommended ? 'Recommandé' : "Plus d'options",
+      ctaLink: 'https://ui.aceternity.com/templates',
+      content: () => {
+        return (
+          <div>
+            {' '}
+            <p className="text-muted-foreground leading-relaxed">
+              {accommodation.description}
             </p>
-          </div>
-          <div className="grid-responsive">
-            {recommended.map((accommodation) => (
-              <AccommodationCard
-                key={accommodation.id}
-                accommodation={accommodation}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <MapPin className="w-4 h-4 text-rose-500 mt-1 flex-shrink-0" />
+                <p className="text-sm text-muted-foreground">
+                  {accommodation.address}
+                </p>
+              </div>
 
-      {others.length > 0 && (
-        <div className="container-responsive">
-          {recommended.length > 0 && (
-            <div className="text-center mb-6 sm:mb-8">
-              <h3 className="heading-responsive  text-foreground mb-2">
-                Plus d'options
-              </h3>
+              {accommodation.contactInfo && (
+                <div className="flex items-center space-x-3">
+                  <Phone className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground">
+                    {accommodation.contactInfo}
+                  </p>
+                </div>
+              )}
+
+              {accommodation.priceRange && (
+                <div className="flex items-center space-x-3">
+                  <DollarSign className="w-4 h-4 text-rose-500 flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground font-medium">
+                    {accommodation.priceRange}
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-          <div className="grid-responsive">
-            {others.map((accommodation) => (
-              <AccommodationCard
-                key={accommodation.id}
-                accommodation={accommodation}
-              />
-            ))}
+            <div className="pt-4 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                //onClick={openMaps}
+                className="touch-target w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Voir sur Maps
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      },
+    };
+  });
+  return (
+    <div className="p-4 grid grid-cols-2 gap-4 items-center">
+      {/* Interactive Map */}
+      <div className="col-span-1">
+        {accommodations.length > 0 && (
+          <div className="">
+            <AccommodationMap
+              accommodations={accommodations}
+              weddingInfo={weddingInfo}
+              showDirections={false}
+              showDetails={false}
+              className="mb-6 sm:mb-8"
+            />
+          </div>
+        )}
+      </div>
+      <div className="col-span-1">
+        <ExpandableCardDemo cards={cards} />
+      </div>
     </div>
   );
 }
