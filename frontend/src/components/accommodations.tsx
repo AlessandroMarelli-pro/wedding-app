@@ -74,7 +74,7 @@ export function AccommodationsList({
     };
   });
   return (
-    <div className="p-4 grid grid-cols-2 gap-4 items-center">
+    <div className="p-4 grid grid-cols-2 gap-4 items-start h-full">
       {/* Interactive Map */}
       <div className="col-span-1">
         {accommodations.length > 0 && (
