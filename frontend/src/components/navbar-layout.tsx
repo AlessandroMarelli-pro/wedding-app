@@ -68,24 +68,20 @@ const adminNavigation = [
 // Public navigation configuration
 const publicNavigation = [
   {
-    name: 'Our Story',
+    name: 'Un petit mot',
     link: '#our-story',
   },
   {
-    name: 'Details',
+    name: 'Informations',
     link: '#details',
   },
   {
-    name: 'Accommodations',
+    name: 'Où dormir ?',
     link: '#accommodations',
   },
   {
-    name: 'Program',
+    name: 'Programme',
     link: '#program',
-  },
-  {
-    name: 'RSVP',
-    link: '#rsvp',
   },
 ];
 

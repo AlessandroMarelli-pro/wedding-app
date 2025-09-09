@@ -60,12 +60,7 @@ export function WeddingPresentation({
             Merci de nous faire savoir si vous vous joindrez à nous pour cette
             journée spéciale. Votre présence rendra notre célébration parfaite.
           </p>
-          <ParticleButton
-            onClick={onRSVPClick}
-            className="bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-          >
-            Confirmer votre présence
-          </ParticleButton>
+          <RSVPFormModal />
         </div>
         <Image
           src={'/images/lauziers-aqua.webp'}
@@ -152,4 +147,4 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
 
 // Fix React import for countdown component
 import * as React from 'react';
-import ParticleButton from './kokonutui/particle-button';
+import { RSVPFormModal } from './rsvp-form-modal';

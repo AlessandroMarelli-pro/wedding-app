@@ -10,7 +10,6 @@ import {
   AccommodationMap,
   AccommodationsList,
   NavbarLayout,
-  RSVPForm,
   Section,
   SectionHeader,
   WeddingCountdown,
@@ -313,17 +312,6 @@ export default function HomePage({
               subtitle="Voici comment notre jour se déroulera"
             />
             <WeddingProgram />
-          </Section>
-
-          {/* RSVP Section */}
-          <Section id="rsvp" background="accent" className="h-screen">
-            <SectionHeader
-              title="RSVP"
-              subtitle="We can't wait to celebrate with you! Please confirm your attendance"
-            />
-            <div className="mx-auto">
-              <RSVPForm />
-            </div>
           </Section>
         </div>
       </NavbarLayout>

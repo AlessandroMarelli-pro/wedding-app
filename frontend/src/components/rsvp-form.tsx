@@ -1,6 +1,12 @@
-import { CheckCircle, MessageSquare, Users, Utensils } from 'lucide-react';
+import { IconMoodSmileBeam } from '@tabler/icons-react';
+import {
+  CheckCircle,
+  MessageSquare,
+  MousePointerClick,
+  Users,
+  Utensils,
+} from 'lucide-react';
 import { useState } from 'react';
-import { Badge } from './ui/badge';
 import { Button } from './ui/button-pers';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
@@ -49,14 +55,17 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
     e.preventDefault();
 
     if (!hashCode.trim()) {
-      setMessage({ type: 'error', text: 'Please enter your invitation code.' });
+      setMessage({
+        type: 'error',
+        text: "Merci d'entrer votre code d'invitation.",
+      });
       return;
     }
 
     if (hashCode.length !== 8) {
       setMessage({
         type: 'error',
-        text: 'Invitation code must be exactly 8 characters.',
+        text: "Le code d'invitation doit être exactement de 8 caractères.",
       });
       return;
     }
@@ -75,7 +84,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
         if (data.confirmed) {
           setMessage({
             type: 'error',
-            text: 'This invitation has already been used to confirm attendance.',
+            text: "Ce code d'invitation a déjà été utilisé pour confirmer la présence.",
           });
         } else {
           setGuestInfo(data);
@@ -90,13 +99,13 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
           type: 'error',
           text:
             data.error ||
-            'Invalid invitation code. Please check and try again.',
+            "Code d'invitation invalide. Veuillez vérifier et réessayer.",
         });
       }
     } catch (error) {
       setMessage({
         type: 'error',
-        text: 'Network error. Please check your connection and try again.',
+        text: 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.',
       });
     } finally {
       setIsSubmitting(false);
@@ -139,13 +148,13 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
       } else {
         setMessage({
           type: 'error',
-          text: data.message || 'Failed to confirm RSVP. Please try again.',
+          text: data.message || 'Échec de la confirmation. Veuillez réessayer.',
         });
       }
     } catch (error) {
       setMessage({
         type: 'error',
-        text: 'Network error. Please check your connection and try again.',
+        text: 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.',
       });
     } finally {
       setIsSubmitting(false);
@@ -168,17 +177,15 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
   // Step 3: Confirmation Screen
   if (currentStep === 'confirmation' && confirmedGuest) {
     return (
-      <div
-        className={`bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-rose-100 ${className}`}
-      >
+      <div className={` rounded-2xl p-8  ${className}`}>
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-2xl  text-gray-800 mb-4">RSVP Confirmed!</h3>
+          <h3 className="text-2xl  text-gray-800 mb-4 flex items-center justify-center">
+            Votre venue est confirmée <IconMoodSmileBeam className="w-8 h-8" />
+          </h3>
           <p className="text-lg text-gray-700 mb-6">
-            Thank you,{' '}
-            <span className="font-medium text-rose-700">{confirmedGuest}</span>!
+            Merci{' '}
+            <span className="font-medium text-rose-700">{confirmedGuest}</span>{' '}
+            {rsvpData.confirmedPartySize === 1 ? '' : 'et vous tous'} !
           </p>
           {message && (
             <div className="bg-green-50 border border-green-200 text-green-800 p-4 rounded-lg mb-6">
@@ -186,15 +193,15 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
             </div>
           )}
           <p className="text-gray-600 mb-8">
-            We're so excited to celebrate with you. You'll receive more details
-            closer to the date.
+            Nous sommes si heureux de fêter ça avec vous ! Vous recevrez plus de
+            détails proche de la date.
           </p>
           <Button
             onClick={resetForm}
             variant="outline"
             className="text-rose-600 hover:text-rose-700 border-rose-200 hover:border-rose-300"
           >
-            RSVP for another guest
+            Confirmer pour un autre invité
           </Button>
         </div>
       </div>
@@ -204,21 +211,19 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
   // Step 1: Hash Code Entry
   if (currentStep === 'hash-entry') {
     return (
-      <div
-        className={`bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-rose-100 ${className}`}
-      >
+      <div className={` p-8   ${className} `}>
         <div className="text-center mb-6">
           <h2 className="text-2xl  text-gray-800 mb-2">RSVP</h2>
-          <p className="text-gray-600">Please confirm your attendance</p>
+          <p className="text-gray-600">Veuillez confirmer votre présence</p>
         </div>
 
-        <form onSubmit={handleHashSubmit} className="space-y-6">
+        <form onSubmit={handleHashSubmit} className="space-y-6 ">
           <div>
             <Label
               htmlFor="hashCode"
               className="text-lg font-medium text-gray-700"
             >
-              Invitation Code
+              Code d'invitation
             </Label>
             <Input
               type="text"
@@ -232,13 +237,13 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                   setHashCode(value);
                 }
               }}
-              placeholder="Enter your 8-character code"
+              placeholder="Entrez votre code à 8 caractères"
               className="text-lg text-center tracking-widest font-mono mt-2"
               maxLength={8}
               disabled={isSubmitting}
             />
             <p className="mt-2 text-sm text-gray-600 text-center">
-              Find this code on your invitation
+              Ce code figure sur votre invitation
             </p>
           </div>
 
@@ -257,20 +262,21 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
           <Button
             type="submit"
             disabled={isSubmitting || hashCode.length !== 8}
-            className="w-full bg-gradient-to-r from-rose-400 to-pink-400 text-white py-4 text-lg font-medium hover:from-rose-500 hover:to-pink-500"
+            className="bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
           >
-            {isSubmitting ? 'Checking...' : 'Continue'}
+            {isSubmitting ? 'Vérification...' : 'Continuer'}{' '}
+            <MousePointerClick className="h-4 w-4" />
           </Button>
         </form>
 
         <div className="mt-8 pt-6 border-t border-rose-100">
           <p className="text-sm text-gray-600 text-center">
-            Having trouble? Contact us at{' '}
+            Un problème ? Contactez-nous à{' '}
             <a
               href="mailto:wedding@example.com"
               className="text-rose-600 hover:text-rose-700 font-medium"
             >
-              wedding@example.com
+              wedding@exemple.com
             </a>
           </p>
         </div>
@@ -281,54 +287,152 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
   // Step 2: RSVP Details Form
   if (currentStep === 'rsvp-details' && guestInfo) {
     return (
-      <div
-        className={`bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-rose-100 ${className}`}
-      >
+      <div className={` p-8  ${className}`}>
         <div className="text-center mb-6">
           <h2 className="text-2xl  text-gray-800 mb-2">
             Welcome, {guestInfo.firstName}!
           </h2>
           <p className="text-gray-600">
-            Please confirm your attendance details
+            Veuillez confirmer les détails de votre présence
           </p>
         </div>
 
         <form onSubmit={handleRSVPSubmit} className="space-y-6">
           {/* Guest Information Display */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center">
-                <Users className="w-5 h-5 mr-2 text-rose-500" />
-                Invitation Details
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Name:</span>
-                <span className="font-medium">
-                  {guestInfo.firstName} {guestInfo.lastName}
-                </span>
-              </div>
-              {guestInfo.email && (
+          <div className="grid grid-cols-2 gap-4">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center">
+                  <Users className="w-5 h-5 mr-2 text-rose-500" />
+                  Détails de l'invitation
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Email:</span>
-                  <span className="font-medium">{guestInfo.email}</span>
+                  <div className="flex flex-col justify-start items-start">
+                    <Label className="text-sm font-medium text-gray-600">
+                      Nom:
+                    </Label>
+                    <p className="text-gray-800 bg-gray-50  rounded">
+                      {guestInfo.firstName} {guestInfo.lastName}
+                    </p>
+                  </div>
+                  {guestInfo.email && (
+                    <div className="flex justify-start items-start">
+                      <div className="flex flex-col justify-start items-start">
+                        <Label className="text-sm font-medium text-gray-600">
+                          Email:
+                        </Label>
+                        <p className="text-gray-800 bg-gray-50  rounded">
+                          {guestInfo.email}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex flex-col justify-start items-start">
+                    <div className="flex flex-col justify-start items-start">
+                      <Label className="text-sm font-medium text-gray-600">
+                        Taille du groupe:
+                      </Label>
+                      <p className="text-gray-800 bg-gray-50  rounded ">
+                        {guestInfo.partySize}{' '}
+                        {guestInfo.partySize === 1 ? 'invité' : 'invités'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              )}
-              <div className="flex justify-between">
-                <span className="text-gray-600">Party Size:</span>
-                <Badge variant="secondary">
-                  {guestInfo.partySize}{' '}
-                  {guestInfo.partySize === 1 ? 'guest' : 'guests'}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+            {(guestInfo.dietaryRestrictions || guestInfo.specialRequests) && (
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center">
+                    <Utensils className="w-5 h-5 mr-2 text-rose-500" />
+                    Vos informations
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex flex-row justify-between items-start">
+                    {guestInfo.dietaryRestrictions && (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-600">
+                          Restrictions alimentaires:
+                        </Label>
+                        <p className="text-gray-800 bg-gray-50 p-2 rounded">
+                          {guestInfo.dietaryRestrictions}
+                        </p>
+                      </div>
+                    )}{' '}
+                    {guestInfo.specialRequests && (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-600">
+                          Requêtes spéciales:
+                        </Label>
+                        <p className="text-gray-800 bg-gray-50 p-2 rounded">
+                          {guestInfo.specialRequests}
+                        </p>
+                      </div>
+                    )}{' '}
+                    <div>
+                      <div className="flex items-center space-x-4">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setRSVPData((prev) => ({
+                              ...prev,
+                              confirmedPartySize: Math.max(
+                                0,
+                                prev.confirmedPartySize - 1,
+                              ),
+                            }))
+                          }
+                          disabled={rsvpData.confirmedPartySize <= 0}
+                        >
+                          -
+                        </Button>
+                        <div className="flex items-center space-x-2">
+                          <Users className="w-5 h-5 text-rose-500" />
+                          <span className="text-2xl font-bold text-gray-800 w-12 text-center">
+                            {rsvpData.confirmedPartySize}
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setRSVPData((prev) => ({
+                              ...prev,
+                              confirmedPartySize: Math.min(
+                                guestInfo.partySize,
+                                prev.confirmedPartySize + 1,
+                              ),
+                            }))
+                          }
+                          disabled={
+                            rsvpData.confirmedPartySize >= guestInfo.partySize
+                          }
+                        >
+                          +
+                        </Button>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Maximum: {guestInfo.partySize}{' '}
+                        {guestInfo.partySize === 1 ? 'invité' : 'invités'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
 
           {/* Attendance Selection */}
           <div className="space-y-4">
             <Label className="text-lg font-medium text-gray-700">
-              Will you be attending?
+              Seriez-vous présent?
             </Label>
             <div className="flex space-x-4">
               <Button
@@ -340,7 +444,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                 className={`flex-1 py-3 ${rsvpData.isAttending ? 'bg-green-600 hover:bg-green-700' : ''}`}
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
-                Yes, I'll be there!
+                Oui, je serai là!
               </Button>
               <Button
                 type="button"
@@ -354,100 +458,10 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                 }
                 className={`flex-1 py-3 ${!rsvpData.isAttending ? 'bg-red-600 hover:bg-red-700' : ''}`}
               >
-                Sorry, can't make it
+                Désolé, je ne peux pas y aller
               </Button>
             </div>
           </div>
-
-          {/* Party Size Selection (only if attending) */}
-          {rsvpData.isAttending && (
-            <div className="space-y-3">
-              <Label className="text-lg font-medium text-gray-700">
-                How many people will attend?
-              </Label>
-              <div className="flex items-center space-x-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setRSVPData((prev) => ({
-                      ...prev,
-                      confirmedPartySize: Math.max(
-                        0,
-                        prev.confirmedPartySize - 1,
-                      ),
-                    }))
-                  }
-                  disabled={rsvpData.confirmedPartySize <= 0}
-                >
-                  -
-                </Button>
-                <div className="flex items-center space-x-2">
-                  <Users className="w-5 h-5 text-rose-500" />
-                  <span className="text-2xl font-bold text-gray-800 w-12 text-center">
-                    {rsvpData.confirmedPartySize}
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setRSVPData((prev) => ({
-                      ...prev,
-                      confirmedPartySize: Math.min(
-                        guestInfo.partySize,
-                        prev.confirmedPartySize + 1,
-                      ),
-                    }))
-                  }
-                  disabled={rsvpData.confirmedPartySize >= guestInfo.partySize}
-                >
-                  +
-                </Button>
-              </div>
-              <p className="text-sm text-gray-600">
-                Maximum: {guestInfo.partySize}{' '}
-                {guestInfo.partySize === 1 ? 'guest' : 'guests'}
-              </p>
-            </div>
-          )}
-
-          {/* Pre-filled dietary restrictions and special requests */}
-          {rsvpData.isAttending &&
-            (guestInfo.dietaryRestrictions || guestInfo.specialRequests) && (
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center">
-                    <Utensils className="w-5 h-5 mr-2 text-rose-500" />
-                    Your Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {guestInfo.dietaryRestrictions && (
-                    <div>
-                      <Label className="text-sm font-medium text-gray-600">
-                        Dietary Restrictions:
-                      </Label>
-                      <p className="text-gray-800 bg-gray-50 p-2 rounded">
-                        {guestInfo.dietaryRestrictions}
-                      </p>
-                    </div>
-                  )}
-                  {guestInfo.specialRequests && (
-                    <div>
-                      <Label className="text-sm font-medium text-gray-600">
-                        Special Requests:
-                      </Label>
-                      <p className="text-gray-800 bg-gray-50 p-2 rounded">
-                        {guestInfo.specialRequests}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
 
           {/* Message/Notes */}
           <div className="space-y-3">
@@ -456,7 +470,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
               className="text-lg font-medium text-gray-700 flex items-center"
             >
               <MessageSquare className="w-5 h-5 mr-2 text-rose-500" />
-              Message (Optional)
+              Message (Optionnel)
             </Label>
             <textarea
               id="message"
@@ -466,8 +480,8 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
               }
               placeholder={
                 rsvpData.isAttending
-                  ? 'Any special notes or requests?'
-                  : "We'll miss you! Let us know if anything changes."
+                  ? 'Toute note ou requête spéciale?'
+                  : "Vous nous manquerez! Faites-nous savoir si vous changez d'avis."
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent resize-none"
               rows={3}
@@ -495,14 +509,14 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
               disabled={isSubmitting}
               className="flex-1"
             >
-              Back
+              Retour
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-rose-400 to-pink-400 text-white hover:from-rose-500 hover:to-pink-500"
+              className="flex-1 bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
-              {isSubmitting ? 'Submitting...' : 'Confirm RSVP'}
+              {isSubmitting ? 'Soumission...' : 'Confirmer'}
             </Button>
           </div>
         </form>

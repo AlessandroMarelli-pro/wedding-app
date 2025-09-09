@@ -129,7 +129,7 @@ export function WeddingProgram() {
     <div className="w-full ">
       <StickyScroll content={content} />
       <div className="flex justify-center pt-10">
-        <QuickCalendarDownload className="bg-card/60 backdrop-blur-sm border-rose-200 text-rose-700 hover:bg-rose-50 hover:border-rose-300 shadow-md hover:shadow-lg" />
+        <QuickCalendarDownload className="bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" />
       </div>
     </div>
   );

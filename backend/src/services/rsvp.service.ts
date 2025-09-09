@@ -95,8 +95,8 @@ export class RSVPService {
     const savedConfirmation = await this.rsvpRepository.save(confirmation);
 
     const responseMessage = isAttending
-      ? `Thank you for confirming your attendance! We look forward to celebrating with ${confirmedPartySize === 1 ? 'you' : `all ${confirmedPartySize} of you`}!`
-      : 'Thank you for letting us know. We will miss you at the celebration!';
+      ? `Merci d'avoir confirmé votre venue ! Nous avons hâte de fêter ça avec  ${confirmedPartySize === 1 ? 'toi' : `vous tous`}!`
+      : 'Merci de nous avoir prévenu. Vous nous manquerez !';
 
     return {
       success: true,
