@@ -74,7 +74,6 @@ export class AccommodationService {
     if (createDto.latitude !== undefined || createDto.longitude !== undefined) {
       this.validateCoordinates(createDto.latitude, createDto.longitude);
     }
-    console.info('createDto', createDto);
     const accommodation = this.accommodationRepository.create({
       ...createDto,
       isRecommended: createDto.isRecommended ?? false,

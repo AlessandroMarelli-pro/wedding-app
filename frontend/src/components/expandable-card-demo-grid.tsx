@@ -97,17 +97,19 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     </motion.p>
                   </div>
 
-                  <motion.a
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    href={active.ctaLink}
-                    target="_blank"
-                    className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
-                  >
-                    {active.ctaText}
-                  </motion.a>
+                  {active.ctaText && (
+                    <motion.a
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      href={active.ctaLink}
+                      target="_blank"
+                      className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
+                    >
+                      {active.ctaText}
+                    </motion.a>
+                  )}
                 </div>
                 <div className="pt-4 relative px-4">
                   <motion.div

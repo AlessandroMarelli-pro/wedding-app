@@ -34,6 +34,8 @@ export interface Accommodation {
   displayOrder: number;
   createdAt: string;
   updatedAt: string;
+  sourceUrl?: string;
+  imagesUrl?: string;
 }
 
 // RSVP

@@ -68,21 +68,41 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
             <motion.div
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
-              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              className="w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
             >
-              <motion.div layoutId={`image-${active.title}-${id}`}>
-                <img
-                  width={200}
-                  height={200}
-                  src={active.src}
-                  alt={active.title}
-                  className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
-                />
-              </motion.div>
-
+              <div className="flex justify-center items-center">
+                {active.imagesUrl?.map((image, idx) => (
+                  <motion.div
+                    layoutId={`image-${image}-${id}`}
+                    key={'images' + idx}
+                    style={{
+                      rotate: idx * 5 - 10,
+                    }}
+                    whileHover={{
+                      scale: 1.1,
+                      rotate: 0,
+                      zIndex: 100,
+                    }}
+                    whileTap={{
+                      scale: 1.1,
+                      rotate: 0,
+                      zIndex: 100,
+                    }}
+                    className="rounded-xl -mr-4 mt-4 p-1 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-100 shrink-0 overflow-hidden"
+                  >
+                    <img
+                      src={image}
+                      alt={image}
+                      width="500"
+                      height="500"
+                      className="rounded-lg h-20 w-20 md:h-50 md:w-50 object-cover shrink-0"
+                    />
+                  </motion.div>
+                ))}
+              </div>
               <div>
-                <div className="flex justify-between items-start p-4">
-                  <div className="">
+                <div className="flex justify-between items-start p-4 pb-0">
+                  <div className="p-4">
                     <motion.h3
                       layoutId={`title-${active.title}-${id}`}
                       className="font-bold text-neutral-700 dark:text-neutral-200"
@@ -101,18 +121,18 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     layoutId={`button-${active.title}-${id}`}
                     href={active.ctaLink}
                     target="_blank"
-                    className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
+                    className="px-4 py-3 text-sm rounded-full font-bold  text-white"
                   >
-                    {active.ctaText}
+                    Voir l'annonce
                   </motion.a>
                 </div>
-                <div className="pt-4 relative px-4">
+                <div className="relative px-4 h-full">
                   <motion.div
                     layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-scroll dark:text-neutral-400 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
                     {typeof active.content === 'function'
                       ? active.content()
@@ -157,12 +177,14 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                 </motion.p>
               </div>
             </div>
-            <motion.button
-              layoutId={`button-${card.title}-${id}`}
-              className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
-            >
-              {card.ctaText}
-            </motion.button>
+            {card.ctaText && (
+              <motion.button
+                layoutId={`button-${card.title}-${id}`}
+                className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
+              >
+                {card.ctaText}
+              </motion.button>
+            )}
           </motion.div>
         ))}
       </ul>

@@ -1,12 +1,5 @@
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui';
-import { DollarSign, ExternalLink, MapPin, Phone, Star } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui';
+import { IconCurrencyEuro, IconMapPin } from '@tabler/icons-react';
 import { Accommodation, Direction } from '../types/api';
 import ExpandableCardDemo from './expandable-card-demo-standard';
 import { AccommodationMap } from './maps';
@@ -35,7 +28,7 @@ export function AccommodationsList({
     return (
       <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
         <CardContent className="text-center py-12">
-          <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <IconMapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground">
             Accommodation recommendations will be available soon.
           </p>
@@ -44,141 +37,36 @@ export function AccommodationsList({
     );
   }
 
-  const AccommodationCard = ({
-    accommodation,
-  }: {
-    accommodation: Accommodation;
-  }) => {
-    const openMaps = () => {
-      if (accommodation.latitude && accommodation.longitude) {
-        window.open(
-          `https://maps.google.com/?q=${accommodation.latitude},${accommodation.longitude}`,
-          '_blank',
-        );
-      } else {
-        window.open(
-          `https://maps.google.com/?q=${encodeURIComponent(accommodation.address)}`,
-          '_blank',
-        );
-      }
-    };
-
-    return (
-      <Card className="bg-card/60 backdrop-blur-sm border shadow-lg hover:shadow-xl transition-all duration-300 group">
-        <CardHeader className="pb-4">
-          <div className="flex items-start justify-between">
-            <CardTitle className="text-xl  text-foreground group-hover:text-primary transition-colors">
-              {accommodation.name}
-            </CardTitle>
-            {accommodation.isRecommended && (
-              <Badge
-                variant="default"
-                className="bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500"
-              >
-                <Star className="w-3 h-3 mr-1" />
-                Recommandé
-              </Badge>
-            )}
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          <p className="text-muted-foreground leading-relaxed">
-            {accommodation.description}
-          </p>
-
-          <div className="space-y-3">
-            <div className="flex items-start space-x-3">
-              <MapPin className="w-4 h-4 text-rose-500 mt-1 flex-shrink-0" />
-              <p className="text-sm text-muted-foreground">
-                {accommodation.address}
-              </p>
-            </div>
-
-            {accommodation.contactInfo && (
-              <div className="flex items-center space-x-3">
-                <Phone className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                <p className="text-sm text-muted-foreground">
-                  {accommodation.contactInfo}
-                </p>
-              </div>
-            )}
-
-            {accommodation.priceRange && (
-              <div className="flex items-center space-x-3">
-                <DollarSign className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                <p className="text-sm text-muted-foreground font-medium">
-                  {accommodation.priceRange}
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="pt-4 border-t">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={openMaps}
-              className="touch-target w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Voir sur Maps
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
   const cards = accommodations.map((accommodation) => {
     return {
-      description: accommodation.name,
-      title: accommodation.address,
-      src: 'https://assets.aceternity.com/demos/lana-del-rey.jpeg',
-      ctaText: accommodation.isRecommended ? 'Recommandé' : "Plus d'options",
-      ctaLink: 'https://ui.aceternity.com/templates',
+      title: accommodation.name,
+      description: accommodation.address,
+      src:
+        accommodation?.imagesUrl?.split(',')[0] ||
+        'https://assets.aceternity.com/demos/lana-del-rey.jpeg',
+      ctaText: accommodation.isRecommended ? 'Recommandé' : '',
+      ctaLink: accommodation.sourceUrl || 'https://ui.aceternity.com/templates',
+      imagesUrl: accommodation.imagesUrl?.split(',') || [],
       content: () => {
         return (
-          <div>
-            {' '}
-            <p className="text-muted-foreground leading-relaxed">
+          <div className="p-4 flex flex-col gap-4">
+            <p className=" leading-relaxed text-sm  pt-4">
               {accommodation.description}
             </p>
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-4 h-4 text-rose-500 mt-1 flex-shrink-0" />
-                <p className="text-sm text-muted-foreground">
-                  {accommodation.address}
-                </p>
+            <div className=" flex flex-row gap-4 items-center">
+              <div className="flex items-center space-x-3">
+                <IconMapPin className="w-8 h-8 text-white  flex-shrink-0" />
+                <p className="text-sm font-medium">{accommodation.address}</p>
               </div>
-
-              {accommodation.contactInfo && (
-                <div className="flex items-center space-x-3">
-                  <Phone className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                  <p className="text-sm text-muted-foreground">
-                    {accommodation.contactInfo}
-                  </p>
-                </div>
-              )}
 
               {accommodation.priceRange && (
                 <div className="flex items-center space-x-3">
-                  <DollarSign className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                  <p className="text-sm text-muted-foreground font-medium">
-                    {accommodation.priceRange}
+                  <IconCurrencyEuro className="w-8 h-8 text-white flex-shrink-0" />
+                  <p className="text-sm  font-medium">
+                    {accommodation.priceRange?.replace('€', '').replace('', '')}
                   </p>
                 </div>
               )}
-            </div>
-            <div className="pt-4 border-t">
-              <Button
-                variant="outline"
-                size="sm"
-                //onClick={openMaps}
-                className="touch-target w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Voir sur Maps
-              </Button>
             </div>
           </div>
         );
