@@ -112,7 +112,7 @@ export function WeddingProgram() {
                     <Card className="bg-card/80 border shadow-md">
                       <CardContent className="p-6">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                          <h3 className="text-xl font-serif text-foreground">
+                          <h3 className="text-xl  text-foreground">
                             {event.title}
                           </h3>
                           <div className="text-rose-600 font-medium text-sm sm:text-base flex items-center">

@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AdminStats } from '../../components/admin-stats';
-import { FloatingNavbarLayout } from '../../components/floating-navbar-layout';
+import { NavbarLayout } from '../../components/navbar-layout';
 import { Card, CardContent } from '../../components/ui/card';
 
 interface RSVPStats {
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
           <title>Dashboard - Wedding Admin</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <FloatingNavbarLayout type="admin" currentPath="/admin/dashboard">
+        <NavbarLayout type="admin" currentPath="/admin/dashboard">
           <div className="p-6">
             <div className="animate-pulse space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -163,7 +163,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        </FloatingNavbarLayout>
+        </NavbarLayout>
       </>
     );
   }
@@ -175,12 +175,10 @@ export default function AdminDashboard() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <FloatingNavbarLayout type="admin" currentPath="/admin/dashboard">
+      <NavbarLayout type="admin" currentPath="/admin/dashboard">
         <div className="p-6 space-y-8">
           <div>
-            <h1 className="text-3xl font-serif text-gray-800 mb-2">
-              Dashboard
-            </h1>
+            <h1 className="text-3xl  text-gray-800 mb-2">Dashboard</h1>
             <p className="text-gray-600">Overview of your wedding website</p>
           </div>
 
@@ -275,18 +273,14 @@ export default function AdminDashboard() {
 
           {/* Advanced Analytics */}
           <div className="mt-8">
-            <h2 className="text-2xl font-serif text-gray-800 mb-4">
-              Advanced Analytics
-            </h2>
+            <h2 className="text-2xl  text-gray-800 mb-4">Advanced Analytics</h2>
             <AdminStats />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* CSV Upload */}
             <div className="bg-white rounded-lg p-6 shadow-md border border-gray-100">
-              <h2 className="text-xl font-serif text-gray-800 mb-4">
-                Upload Guest List
-              </h2>
+              <h2 className="text-xl  text-gray-800 mb-4">Upload Guest List</h2>
 
               <form onSubmit={handleFileUpload} className="space-y-4">
                 <div>
@@ -326,9 +320,7 @@ export default function AdminDashboard() {
 
             {/* Recent Confirmations */}
             <div className="bg-white rounded-lg p-6 shadow-md border border-gray-100">
-              <h2 className="text-xl font-serif text-gray-800 mb-4">
-                Recent RSVPs
-              </h2>
+              <h2 className="text-xl  text-gray-800 mb-4">Recent RSVPs</h2>
 
               {recentConfirmations.length > 0 ? (
                 <div className="space-y-3">
@@ -356,9 +348,7 @@ export default function AdminDashboard() {
 
           {/* Quick Actions */}
           <div className="bg-white rounded-lg p-6 shadow-md border border-gray-100">
-            <h2 className="text-xl font-serif text-gray-800 mb-4">
-              Quick Actions
-            </h2>
+            <h2 className="text-xl  text-gray-800 mb-4">Quick Actions</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <button
                 onClick={() => router.push('/admin/wedding')}
@@ -444,7 +434,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     </>
   );
 }

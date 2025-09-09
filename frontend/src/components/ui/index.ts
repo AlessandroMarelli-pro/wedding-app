@@ -1,5 +1,5 @@
 export * from './badge';
-export * from './button';
+export * from './button-pers';
 export * from './card';
 export * from './dialog';
 export * from './input';

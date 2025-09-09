@@ -1,6 +1,6 @@
 import { AlertCircle, Image as ImageIcon, Upload, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { Button } from './ui/button';
+import { Button } from './ui/button-pers';
 import {
   Card,
   CardContent,

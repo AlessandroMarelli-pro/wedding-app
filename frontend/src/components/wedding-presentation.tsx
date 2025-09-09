@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 interface WeddingInfo {
   id: string;
@@ -29,80 +29,50 @@ export function WeddingPresentation({
   const isValidDate = !isNaN(weddingDate.getTime());
 
   return (
-    <div className={cn('space-y-8 sm:space-y-12', className)}>
+    <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
-      <div className="text-center container-responsive">
-        <div className="bg-card/60 backdrop-blur-sm  p-6 sm:p-8 md:p-12 shadow-lg border">
-          <Icon className="absolute h-6 w-6 -top-3 -left-3  text-black" />
-          <Icon className="absolute h-6 w-6 -bottom-3 -left-3  text-black" />
-          <Icon className="absolute h-6 w-6 -top-3 -right-3  text-black" />
-          <Icon className="absolute h-6 w-6 -bottom-3 -right-3  text-black" />
-          <p className="text-responsive text-muted-foreground leading-relaxed font-light italic">
+      <div className="text-center container-responsive flex flex-row items-center justify-center gap-10">
+        <Image
+          src={'/images/couple-landscape.jpeg'}
+          alt={weddingInfo.coupleNames}
+          width={450}
+          height={100}
+          className="object-cover  rounded-xl"
+        />
+        <div className="">
+          <p className=" text-muted-foreground leading-relaxed font-light italic font-small text-justify">
             "{weddingInfo.presentationMessage}"
           </p>
           <div className="mt-6 sm:mt-8">
-            <p className="text-xl sm:text-2xl md:text-3xl font-serif text-foreground mt-2">
+            <p className="text-xl sm:text-2xl md:text-3xl  text-foreground mt-2">
               {weddingInfo.coupleNames}
             </p>
           </div>
         </div>
       </div>
-
-      {/* Additional Information */}
-      {/* {(weddingInfo.dressCode || weddingInfo.specialInstructions) && (
-        <div className="container-responsive">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {weddingInfo.dressCode && (
-              <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-                <CardHeader className="text-center pb-4">
-                  <CardTitle className="heading-responsive font-serif">
-                    Dress Code
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-responsive text-muted-foreground">
-                    {weddingInfo.dressCode}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {weddingInfo.specialInstructions && (
-              <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-                <CardHeader className="text-center pb-4">
-                  <CardTitle className="heading-responsive font-serif">
-                    Special Notes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-responsive text-muted-foreground whitespace-pre-line">
-                    {weddingInfo.specialInstructions}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-      )} */}
-
-      {/* RSVP Call to Action */}
-      <div className="text-center container-responsive">
-        <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 border">
-          <h3 className="heading-responsive font-serif text-foreground mb-4">
+      <div className="text-center container-responsive flex flex-row items-center justify-center gap-10">
+        <div className="">
+          <p className="text-xl sm:text-2xl md:text-3xl  text-foreground mb-2">
             Hâte de fêter ça avec vous!
-          </h3>
-          <p className="text-responsive text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
+          </p>
+          <p className=" text-muted-foreground leading-relaxed font-light  font-small text-justify">
             Merci de nous faire savoir si vous vous joindrez à nous pour cette
             journée spéciale. Votre présence rendra notre célébration parfaite.
           </p>
-          <Button
-            size="lg"
+          <ParticleButton
             onClick={onRSVPClick}
-            className="touch-target bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white px-6 sm:px-8 py-3 text-responsive font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            className="bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
           >
-            RSVP Now
-          </Button>
+            RSVP
+          </ParticleButton>
         </div>
+        <Image
+          src={'/images/lauziers-aqua.webp'}
+          alt={weddingInfo.coupleNames}
+          width={550}
+          height={100}
+          className="object-cover  rounded-xl"
+        />
       </div>
     </div>
   );
@@ -149,9 +119,7 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
   if (!timeLeft) {
     return (
       <div className={cn('text-center', className)}>
-        <p className="text-2xl font-serif text-foreground">
-          The big day is here! 🎉
-        </p>
+        <p className="text-2xl  text-foreground">The big day is here! 🎉</p>
       </div>
     );
   }
@@ -181,4 +149,4 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
 
 // Fix React import for countdown component
 import * as React from 'react';
-import { Icon } from './ui/evervault-card';
+import ParticleButton from './kokonutui/particle-button';

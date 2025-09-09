@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FloatingNavbarLayout } from '../../components/floating-navbar-layout';
+import { NavbarLayout } from '../../components/navbar-layout';
 
 interface WeddingInfo {
   id: string;
@@ -103,7 +103,7 @@ export default function AdminWedding() {
           <title>Wedding Info - Wedding Admin</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <FloatingNavbarLayout type="admin" currentPath="/admin/wedding">
+        <NavbarLayout type="admin" currentPath="/admin/wedding">
           <div className="p-6">
             <div className="animate-pulse space-y-6">
               <div className="h-8 bg-gray-200 rounded w-1/3"></div>
@@ -113,7 +113,7 @@ export default function AdminWedding() {
               </div>
             </div>
           </div>
-        </FloatingNavbarLayout>
+        </NavbarLayout>
       </>
     );
   }
@@ -125,10 +125,10 @@ export default function AdminWedding() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <FloatingNavbarLayout type="admin" currentPath="/admin/wedding">
+      <NavbarLayout type="admin" currentPath="/admin/wedding">
         <div className="p-6 max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-serif text-gray-800 mb-2">
+            <h1 className="text-3xl  text-gray-800 mb-2">
               Wedding Information
             </h1>
             <p className="text-gray-600">
@@ -366,7 +366,7 @@ export default function AdminWedding() {
             </div>
           )}
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     </>
   );
 }

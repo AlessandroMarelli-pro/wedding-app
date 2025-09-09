@@ -68,7 +68,7 @@ export function AccommodationsList({
       <Card className="bg-card/60 backdrop-blur-sm border shadow-lg hover:shadow-xl transition-all duration-300 group">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
-            <CardTitle className="text-xl font-serif text-foreground group-hover:text-primary transition-colors">
+            <CardTitle className="text-xl  text-foreground group-hover:text-primary transition-colors">
               {accommodation.name}
             </CardTitle>
             {accommodation.isRecommended && (
@@ -150,7 +150,7 @@ export function AccommodationsList({
       {recommended.length > 0 && (
         <div className="container-responsive">
           <div className="text-center mb-6 sm:mb-8">
-            <h3 className="heading-responsive font-serif text-foreground mb-2">
+            <h3 className="heading-responsive  text-foreground mb-2">
               Nos recommandations
             </h3>
             <p className="text-responsive text-muted-foreground">
@@ -172,7 +172,7 @@ export function AccommodationsList({
         <div className="container-responsive">
           {recommended.length > 0 && (
             <div className="text-center mb-6 sm:mb-8">
-              <h3 className="heading-responsive font-serif text-foreground mb-2">
+              <h3 className="heading-responsive  text-foreground mb-2">
                 Plus d'options
               </h3>
             </div>

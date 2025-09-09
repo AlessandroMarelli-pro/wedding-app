@@ -1,5 +1,5 @@
-import { FloatingNavbarLayout } from '@/components/floating-navbar-layout';
 import { GuestDetailsModal } from '@/components/guest-details-modal';
+import { NavbarLayout } from '@/components/navbar-layout';
 import {
   Badge,
   Button,
@@ -279,9 +279,9 @@ export default function GuestsPage() {
 
   if (isLoading) {
     return (
-      <FloatingNavbarLayout type="admin" currentPath="/admin/guests">
+      <NavbarLayout type="admin" currentPath="/admin/guests">
         <LoadingSpinner />
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     );
   }
 
@@ -292,12 +292,10 @@ export default function GuestsPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <FloatingNavbarLayout type="admin" currentPath="/admin/guests">
+      <NavbarLayout type="admin" currentPath="/admin/guests">
         <div className="space-y-8">
           <div>
-            <h1 className="text-3xl font-serif text-gray-800 mb-2">
-              Guest Management
-            </h1>
+            <h1 className="text-3xl  text-gray-800 mb-2">Guest Management</h1>
             <p className="text-gray-600">
               Manage your wedding guest list and RSVP responses
             </p>
@@ -593,7 +591,7 @@ export default function GuestsPage() {
           onClose={handleCloseModal}
           onDelete={handleDeleteGuest}
         />
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     </>
   );
 }

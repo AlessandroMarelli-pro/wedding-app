@@ -26,9 +26,9 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FloatingNavbarLayout } from '../../components/floating-navbar-layout';
+import { NavbarLayout } from '../../components/navbar-layout';
 import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../components/ui/button-pers';
 import {
   Card,
   CardContent,
@@ -264,7 +264,7 @@ export default function AdminProgram() {
 
   if (isLoading) {
     return (
-      <FloatingNavbarLayout type="admin" currentPath="/admin/program">
+      <NavbarLayout type="admin" currentPath="/admin/program">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-muted rounded w-64"></div>
           <div className="space-y-4">
@@ -278,7 +278,7 @@ export default function AdminProgram() {
             ))}
           </div>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     );
   }
 
@@ -289,11 +289,11 @@ export default function AdminProgram() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <FloatingNavbarLayout type="admin" currentPath="/admin/program">
+      <NavbarLayout type="admin" currentPath="/admin/program">
         <div className="space-y-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-serif text-foreground mb-2">
+              <h1 className="text-3xl  text-foreground mb-2">
                 Wedding Program
               </h1>
               <p className="text-muted-foreground">
@@ -492,9 +492,7 @@ export default function AdminProgram() {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-serif text-foreground">
-                Current Events
-              </h2>
+              <h2 className="text-xl  text-foreground">Current Events</h2>
               <Button
                 variant="outline"
                 size="sm"
@@ -534,7 +532,7 @@ export default function AdminProgram() {
                                 })()}
                               </div>
                             )}
-                            <h3 className="text-lg font-serif text-foreground">
+                            <h3 className="text-lg  text-foreground">
                               {event.title}
                             </h3>
                             {event.includeInCalendar && (
@@ -594,7 +592,7 @@ export default function AdminProgram() {
             )}
           </div>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AccommodationMap, VenueMap, mapsService } from './maps';
-import { Button } from './ui/button';
+import { Button } from './ui/button-pers';
 import { Card } from './ui/card';
 
 // Test data

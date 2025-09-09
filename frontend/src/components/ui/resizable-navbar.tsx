@@ -55,7 +55,7 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     <motion.div
       ref={ref}
       // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
-      className={cn('fixed inset-x-0  z-40 w-full', className)}
+      className={cn('absolute inset-x-0  z-40 w-full', className)}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
@@ -220,15 +220,8 @@ export const NavbarLogo = () => {
   return (
     <a
       href="#"
-      className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
-    >
-      <img
-        src="https://assets.aceternity.com/logo-dark.png"
-        alt="logo"
-        width={30}
-        height={30}
-      />
-    </a>
+      className="w-30 h-10 relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
+    ></a>
   );
 };
 

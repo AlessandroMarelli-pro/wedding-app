@@ -10,9 +10,9 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FloatingNavbarLayout } from '../../components/floating-navbar-layout';
+import { NavbarLayout } from '../../components/navbar-layout';
 import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../components/ui/button-pers';
 import {
   Card,
   CardContent,
@@ -227,7 +227,7 @@ export default function AdminAccommodations() {
 
   if (isLoading) {
     return (
-      <FloatingNavbarLayout type="admin" currentPath="/admin/accommodations">
+      <NavbarLayout type="admin" currentPath="/admin/accommodations">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
           <div className="space-y-4">
@@ -241,7 +241,7 @@ export default function AdminAccommodations() {
             ))}
           </div>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     );
   }
 
@@ -252,14 +252,12 @@ export default function AdminAccommodations() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <FloatingNavbarLayout type="admin" currentPath="/admin/accommodations">
+      <NavbarLayout type="admin" currentPath="/admin/accommodations">
         <div className="space-y-6">
           {/* Header */}
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-serif text-gray-800 mb-2">
-                Accommodations
-              </h1>
+              <h1 className="text-3xl  text-gray-800 mb-2">Accommodations</h1>
               <p className="text-gray-600">
                 Manage accommodation recommendations for your guests
               </p>
@@ -548,7 +546,7 @@ export default function AdminAccommodations() {
             )}
           </div>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     </>
   );
 }

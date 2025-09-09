@@ -1,14 +1,14 @@
-import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
+import { Button } from '@/components/ui';
 import { Vortex } from '@/components/ui/vortex';
 import { cn } from '@/lib/utils';
 import { IconArrowDown } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
-import { Pacifico } from 'next/font/google';
+import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import { useState } from 'react';
 import {
   AccommodationsList,
-  FloatingNavbarLayout,
+  NavbarLayout,
   RSVPForm,
   Section,
   SectionHeader,
@@ -17,10 +17,10 @@ import {
   WeddingProgram,
 } from '../components';
 import { WeddingInfo } from '../types/api';
-const pacifico = Pacifico({
+const bilbo = Parisienne({
   subsets: ['latin'],
   weight: ['400'],
-  variable: '--font-pacifico',
+  variable: '--font-bilbo',
 });
 
 interface HomePageProps {
@@ -46,14 +46,14 @@ export default function HomePage({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <FloatingNavbarLayout
+        <NavbarLayout
           type="public"
           currentSection={currentSection}
           onSectionChange={setCurrentSection}
         >
           <div className="min-h-screen flex items-center justify-center bg-background">
             <div className="text-center">
-              <h1 className="text-4xl font-serif text-foreground mb-4">
+              <h1 className="text-4xl  text-foreground mb-4">
                 Wedding Information Coming Soon
               </h1>
               <p className="text-muted-foreground">
@@ -61,18 +61,18 @@ export default function HomePage({
               </p>
             </div>
           </div>
-        </FloatingNavbarLayout>
+        </NavbarLayout>
       </>
     );
   }
 
   const sections = [
     { id: 'home', label: 'Home' },
-    { id: 'our-story', label: 'Our Story' },
-    { id: 'details', label: 'Details' },
-    { id: 'accommodations', label: 'Stay' },
-    { id: 'program', label: 'Schedule' },
-    { id: 'rsvp', label: 'RSVP' },
+    { id: 'our-story', label: 'Un petit mot' },
+    { id: 'details', label: 'Informations' },
+    { id: 'accommodations', label: 'Où dormir ?' },
+    { id: 'program', label: 'Programme' },
+    { id: 'rsvp', label: 'Réponse' },
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -105,7 +105,7 @@ export default function HomePage({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <FloatingNavbarLayout
+      <NavbarLayout
         type="public"
         currentSection={currentSection}
         onSectionChange={scrollToSection}
@@ -116,7 +116,7 @@ export default function HomePage({
             {/* Hero Content Overlay */}
             <Section id="home">
               <Vortex
-                backgroundColor="red"
+                backgroundColor="black"
                 rangeY={800}
                 baseHue={120}
                 particleCount={50}
@@ -126,18 +126,18 @@ export default function HomePage({
                   <div className="text-center text-white max-w-4xl mx-auto color-black ">
                     <h1
                       className={cn(
-                        'text-5xl md:text-7xl lg:text-8xl font-serif mb-6 leading-tight color-black',
-                        pacifico.className,
+                        'text-5xl md:text-7xl lg:text-8xl  mb-6 leading-tight color-black',
+                        bilbo.className,
                       )}
                     >
                       Ariane & Timothé
                     </h1>
                     <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
-                    <p className="text-xl md:text-2xl mb-2 font-light opacity-90">
+                    <p className="text-md md:text-md mb-2 font-light opacity-90">
                       Nous avons hâte de vous accueillir aux Lauziers pour
                       célébrer notre mariage le
                     </p>{' '}
-                    <p className="text-xl md:text-2xl mb-12 font-light opacity-90">
+                    <p className="text-md md:text-md mb-2 font-light opacity-90">
                       13 Juillet 2026
                     </p>
                     <div className="mb-16">
@@ -145,15 +145,13 @@ export default function HomePage({
                     </div>
                     {/* Scroll indicator */}
                     <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-                      <HoverBorderGradient
-                        containerClassName="rounded-full"
-                        as="button"
-                        className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2 cursor-pointer"
+                      <Button
+                        className="bg-transparent text-white flex items-center space-x-2 cursor-pointer"
                         onClick={() => scrollToSection('our-story')}
                       >
                         <IconArrowDown />
                         <span>Détails</span>
-                      </HoverBorderGradient>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -162,7 +160,7 @@ export default function HomePage({
           </div>
 
           {/* Our Story Section */}
-          <Section id="our-story" background="default" className="pt-20">
+          <Section id="our-story" background="default">
             <SectionHeader title="Un petit mot" subtitle="" />
             <WeddingPresentation
               weddingInfo={weddingInfo}
@@ -219,28 +217,6 @@ export default function HomePage({
                 )}
               </div>
             </div>
-
-            {/* Venue Map */}
-            {/*  <div className="mt-8 sm:mt-12">
-              <div className="text-center mb-6 sm:mb-8">
-                <h3 className="heading-responsive font-serif text-foreground mb-2">
-                  Lieu du mariage
-                </h3>
-              </div>
-              <VenueMap
-                weddingInfo={{
-                  weddingAddress: weddingInfo.weddingAddress,
-                  weddingDate: weddingInfo.weddingDate,
-                  coupleNames: weddingInfo.coupleNames,
-                  locationDirections: weddingInfo.locationDirections,
-                  latitude: undefined, // We'll need to add this to the wedding info entity
-                  longitude: undefined, // We'll need to add this to the wedding info entity
-                }}
-                height="300px"
-                showDirections={true}
-                showDetails={false}
-              />
-            </div> */}
           </Section>
 
           {/* Accommodations Section */}
@@ -283,7 +259,7 @@ export default function HomePage({
             </div>
           </Section>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     </>
   );
 }

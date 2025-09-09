@@ -1,7 +1,7 @@
 import { CheckCircle, MessageSquare, Users, Utensils } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from './ui/badge';
-import { Button } from './ui/button';
+import { Button } from './ui/button-pers';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -175,9 +175,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
           <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-2xl font-serif text-gray-800 mb-4">
-            RSVP Confirmed!
-          </h3>
+          <h3 className="text-2xl  text-gray-800 mb-4">RSVP Confirmed!</h3>
           <p className="text-lg text-gray-700 mb-6">
             Thank you,{' '}
             <span className="font-medium text-rose-700">{confirmedGuest}</span>!
@@ -210,7 +208,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
         className={`bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-rose-100 ${className}`}
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-serif text-gray-800 mb-2">RSVP</h2>
+          <h2 className="text-2xl  text-gray-800 mb-2">RSVP</h2>
           <p className="text-gray-600">Please confirm your attendance</p>
         </div>
 
@@ -287,7 +285,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
         className={`bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-rose-100 ${className}`}
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-serif text-gray-800 mb-2">
+          <h2 className="text-2xl  text-gray-800 mb-2">
             Welcome, {guestInfo.firstName}!
           </h2>
           <p className="text-gray-600">

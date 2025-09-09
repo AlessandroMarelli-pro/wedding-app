@@ -73,9 +73,7 @@ export default function AdminLogin() {
                   />
                 </svg>
               </div>
-              <h1 className="text-2xl font-serif text-gray-800 mb-2">
-                Admin Login
-              </h1>
+              <h1 className="text-2xl  text-gray-800 mb-2">Admin Login</h1>
               <p className="text-gray-600">Manage your wedding website</p>
             </div>
 

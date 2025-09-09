@@ -6,6 +6,36 @@
   font-style: normal;
 }
 
+.arvo-regular {
+  font-family: 'Arvo', serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.arvo-bold {
+  font-family: 'Arvo', serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.arvo-regular-italic {
+  font-family: 'Arvo', serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.arvo-bold-italic {
+  font-family: 'Arvo', serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.bilbo-regular {
+  font-family: 'Bilbo', cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 @source './pages/**/*.{ts,tsx}';
 @source './components/**/*.{ts,tsx}';
 @source './app/**/*.{ts,tsx}';
@@ -157,7 +187,7 @@
   /* Smooth scrolling for mobile */
   html {
     scroll-behavior: smooth;
-    font-family: 'Geist Mono', monospace;
+    font-family: 'Arvo', serif;
   }
 
   /* Prevent zoom on input focus (iOS) */

@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { mapsService } from '../../services/maps.service';
 import { Accommodation } from '../../types/api';
 import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
+import { Button } from '../ui/button-pers';
 import { Card } from '../ui/card';
 
 interface AccommodationMapProps {

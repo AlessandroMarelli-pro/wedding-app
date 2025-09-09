@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FloatingNavbarLayout } from '../../components/floating-navbar-layout';
 import { ImageUpload } from '../../components/image-upload';
+import { NavbarLayout } from '../../components/navbar-layout';
 import { ApiService } from '../../services/api';
 
 interface UploadedImage {
@@ -94,12 +94,12 @@ export default function AdminImages() {
 
   if (loading) {
     return (
-      <FloatingNavbarLayout type="admin" currentPath="/admin/images">
+      <NavbarLayout type="admin" currentPath="/admin/images">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/3"></div>
           <div className="h-64 bg-gray-200 rounded"></div>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     );
   }
 
@@ -110,12 +110,10 @@ export default function AdminImages() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <FloatingNavbarLayout type="admin" currentPath="/admin/images">
+      <NavbarLayout type="admin" currentPath="/admin/images">
         <div className="space-y-8">
           <div>
-            <h1 className="text-3xl font-serif text-gray-800 mb-2">
-              Image Management
-            </h1>
+            <h1 className="text-3xl  text-gray-800 mb-2">Image Management</h1>
             <p className="text-gray-600">
               Upload and manage images for your wedding website
             </p>
@@ -126,9 +124,7 @@ export default function AdminImages() {
 
           {/* Images Grid */}
           <div>
-            <h2 className="text-2xl font-serif text-gray-800 mb-4">
-              Uploaded Images
-            </h2>
+            <h2 className="text-2xl  text-gray-800 mb-4">Uploaded Images</h2>
 
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
@@ -227,7 +223,7 @@ export default function AdminImages() {
             )}
           </div>
         </div>
-      </FloatingNavbarLayout>
+      </NavbarLayout>
     </>
   );
 }
