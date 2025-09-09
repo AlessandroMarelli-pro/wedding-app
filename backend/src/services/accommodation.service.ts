@@ -13,6 +13,8 @@ export interface CreateAccommodationDto {
   priceRange?: string;
   isRecommended?: boolean;
   displayOrder: number;
+  sourceUrl?: string;
+  imagesUrl?: string;
 }
 
 export interface UpdateAccommodationDto {
@@ -25,6 +27,8 @@ export interface UpdateAccommodationDto {
   priceRange?: string;
   isRecommended?: boolean;
   displayOrder?: number;
+  sourceUrl?: string;
+  imagesUrl?: string;
 }
 
 @Injectable()
@@ -63,21 +67,14 @@ export class AccommodationService {
     createDto: CreateAccommodationDto,
   ): Promise<Accommodation> {
     // Check if display order is already taken
-    const existingWithOrder = await this.accommodationRepository.findOne({
-      where: { displayOrder: createDto.displayOrder },
-    });
-
-    if (existingWithOrder) {
-      throw new Error(
-        `Display order ${createDto.displayOrder} is already taken`,
-      );
-    }
+    const count = await this.accommodationRepository.count({});
+    createDto.displayOrder = count + 1;
 
     // Validate coordinates if provided
     if (createDto.latitude !== undefined || createDto.longitude !== undefined) {
       this.validateCoordinates(createDto.latitude, createDto.longitude);
     }
-
+    console.info('createDto', createDto);
     const accommodation = this.accommodationRepository.create({
       ...createDto,
       isRecommended: createDto.isRecommended ?? false,

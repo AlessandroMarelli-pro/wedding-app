@@ -38,6 +38,12 @@ export class Accommodation {
   @Column({ name: 'display_order', unique: true })
   displayOrder!: number;
 
+  @Column({ name: 'source_url', type: 'text', nullable: true })
+  sourceUrl?: string;
+
+  @Column({ name: 'images_url', type: 'text', nullable: true })
+  imagesUrl?: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

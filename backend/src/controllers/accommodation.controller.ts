@@ -21,6 +21,10 @@ import {
   CreateAccommodationDto,
   UpdateAccommodationDto,
 } from '../services/accommodation.service';
+import {
+  ParsedAccommodationData,
+  UrlParserService,
+} from '../services/url-parser.service';
 
 @ApiTags('Public')
 @Controller('accommodations')
@@ -55,7 +59,10 @@ export class AccommodationController {
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class AdminAccommodationController {
-  constructor(private readonly accommodationService: AccommodationService) {}
+  constructor(
+    private readonly accommodationService: AccommodationService,
+    private readonly urlParserService: UrlParserService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create new accommodation' })
@@ -106,5 +113,18 @@ export class AdminAccommodationController {
     return this.accommodationService.reorderAccommodations(
       body.accommodationIds,
     );
+  }
+
+  @Post('parse-url')
+  @ApiOperation({ summary: 'Parse accommodation URL and extract data' })
+  @ApiResponse({
+    status: 200,
+    description: 'URL parsed successfully',
+    type: Object,
+  })
+  async parseAccommodationUrl(
+    @Body() body: { url: string },
+  ): Promise<ParsedAccommodationData> {
+    return this.urlParserService.parseAccommodationUrl(body.url);
   }
 }

@@ -5,8 +5,10 @@ export { CalendarService } from './calendar.service';
 export { GuestService } from './guest.service';
 export { ImageService } from './image.service';
 export { ProgramService } from './program.service';
+export { PythonScraperService } from './python-scraper.service';
 export { RSVPService } from './rsvp.service';
 export { UploadMaintenanceService } from './upload-maintenance.service';
+export { UrlParserService } from './url-parser.service';
 export { WeddingService } from './wedding.service';
 
 export type { JwtPayload, LoginRequest, LoginResponse } from './auth.service';
@@ -39,3 +41,5 @@ export type {
   ImageUploadDto,
   ProcessedImageResult,
 } from './image.service';
+
+export type { ParsedAccommodationData } from './url-parser.service';

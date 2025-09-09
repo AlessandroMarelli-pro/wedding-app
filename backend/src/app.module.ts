@@ -29,8 +29,10 @@ import {
   GuestService,
   ImageService,
   ProgramService,
+  PythonScraperService,
   RSVPService,
   UploadMaintenanceService,
+  UrlParserService,
   WeddingService,
 } from './services';
 
@@ -100,8 +102,10 @@ import {
     GuestService,
     ImageService,
     ProgramService,
+    PythonScraperService,
     RSVPService,
     UploadMaintenanceService,
+    UrlParserService,
   ],
 })
 export class AppModule {}
