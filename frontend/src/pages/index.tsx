@@ -177,9 +177,9 @@ export default function HomePage({
             />
 
             {/* Additional Details Card */}
-            <div className="">
-              <div className=" rounded-xl sm:rounded-2xl p-6 sm:p- text-center grid grid-cols-4 gap-6 sm:gap-8 ">
-                <div className=" gap-6 sm:gap-8 text-left flex flex-col space-between col-span-2">
+            <div className=" ">
+              <div className=" rounded-xl sm:rounded-2xl p-6 sm:p- text-center grid grid-cols-4 gap-6 sm:gap-8  ">
+                <div className=" gap-6 sm:gap-8 text-left flex flex-col space-between col-span-2 flex justify-evenly">
                   <h4 className="font-semibold text-responsive text-foreground mb-4"></h4>
                   <div>
                     <h4 className="font-semibold text-responsive text-foreground mb-2">

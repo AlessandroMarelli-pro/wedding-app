@@ -40,6 +40,8 @@ interface Accommodation {
   priceRange?: string;
   isRecommended: boolean;
   displayOrder: number;
+  sourceUrl?: string;
+  imagesUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -53,6 +55,8 @@ interface AccommodationFormData {
   longitude: string;
   priceRange: string;
   isRecommended: boolean;
+  sourceUrl: string;
+  imagesUrl: string;
 }
 
 const initialFormData: AccommodationFormData = {
@@ -64,6 +68,8 @@ const initialFormData: AccommodationFormData = {
   longitude: '',
   priceRange: '',
   isRecommended: false,
+  sourceUrl: '',
+  imagesUrl: '',
 };
 
 export default function AdminAccommodations() {
@@ -79,6 +85,8 @@ export default function AdminAccommodations() {
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+  const [urlInput, setUrlInput] = useState('');
+  const [isParsingUrl, setIsParsingUrl] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -180,6 +188,8 @@ export default function AdminAccommodations() {
       longitude: accommodation.longitude?.toString() || '',
       priceRange: accommodation.priceRange || '',
       isRecommended: accommodation.isRecommended,
+      sourceUrl: accommodation.sourceUrl || '',
+      imagesUrl: accommodation.imagesUrl || '',
     });
     setIsDialogOpen(true);
   };
@@ -225,6 +235,81 @@ export default function AdminAccommodations() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const getSourceName = (url: string): string => {
+    try {
+      const urlObj = new URL(url);
+      const domain = urlObj.hostname.toLowerCase();
+
+      if (domain.includes('airbnb.com')) return 'Airbnb';
+      if (domain.includes('booking.com')) return 'Booking.com';
+      if (domain.includes('hostelworld.com')) return 'Hostelworld';
+      if (domain.includes('hotels.com')) return 'Hotels.com';
+      if (domain.includes('expedia.com')) return 'Expedia';
+      if (domain.includes('tripadvisor.com')) return 'TripAdvisor';
+      if (domain.includes('agoda.com')) return 'Agoda';
+      if (domain.includes('trivago.com')) return 'Trivago';
+      if (domain.includes('kayak.com')) return 'Kayak';
+      if (domain.includes('priceline.com')) return 'Priceline';
+      if (domain.includes('orbitz.com')) return 'Orbitz';
+      if (domain.includes('hotwire.com')) return 'Hotwire';
+      if (domain.includes('vrbo.com')) return 'VRBO';
+      if (domain.includes('homeaway.com')) return 'HomeAway';
+
+      return urlObj.hostname.replace('www.', '');
+    } catch {
+      return 'External Site';
+    }
+  };
+
+  const handleParseUrl = async () => {
+    if (!urlInput.trim()) {
+      setMessage({ type: 'error', text: 'Please enter a URL' });
+      return;
+    }
+
+    setIsParsingUrl(true);
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/accommodations/parse-url`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ url: urlInput }),
+        },
+      );
+
+      if (response.ok) {
+        const parsedData = await response.json();
+        setFormData((prev) => ({
+          ...prev,
+          name: parsedData.name,
+          description: parsedData.description,
+          address: parsedData.address,
+          contactInfo: parsedData.contactInfo || '',
+          priceRange: parsedData.priceRange || '',
+          sourceUrl: parsedData.sourceUrl,
+          imagesUrl: parsedData.imagesUrl || '',
+        }));
+        setMessage({
+          type: 'success',
+          text: 'URL parsed successfully! Please review and complete the form.',
+        });
+        setUrlInput('');
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to parse URL');
+      }
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message });
+    } finally {
+      setIsParsingUrl(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <NavbarLayout type="admin" currentPath="/admin/accommodations">
@@ -255,7 +340,7 @@ export default function AdminAccommodations() {
       <NavbarLayout type="admin" currentPath="/admin/accommodations">
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center pt-10">
             <div>
               <h1 className="text-3xl  text-gray-800 mb-2">Accommodations</h1>
               <p className="text-gray-600">
@@ -264,7 +349,7 @@ export default function AdminAccommodations() {
             </div>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
+              <DialogTrigger asChild className="space-y-2">
                 <Button
                   onClick={() => resetForm()}
                   className="bg-rose-600 hover:bg-rose-700"
@@ -281,6 +366,40 @@ export default function AdminAccommodations() {
                       : 'Add New Accommodation'}
                   </DialogTitle>
                 </DialogHeader>
+
+                {/* URL Parser Section */}
+                {!editingAccommodation && (
+                  <div className="space-y-4 p-4 bg-gray-50 rounded-lg border">
+                    <div>
+                      <Label htmlFor="urlInput" className="text-sm font-medium">
+                        Quick Add from URL
+                      </Label>
+                      <p className="text-xs text-gray-600 mb-2">
+                        Paste a URL from Airbnb, Booking.com, or other
+                        accommodation sites to auto-fill the form
+                      </p>
+                      <div className="flex space-x-2">
+                        <Input
+                          id="urlInput"
+                          type="url"
+                          value={urlInput}
+                          onChange={(e) => setUrlInput(e.target.value)}
+                          placeholder="https://www.airbnb.com/rooms/..."
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          onClick={handleParseUrl}
+                          disabled={isParsingUrl || !urlInput.trim()}
+                          variant="outline"
+                          className="whitespace-nowrap"
+                        >
+                          {isParsingUrl ? 'Parsing...' : 'Parse URL'}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -378,6 +497,32 @@ export default function AdminAccommodations() {
                           handleInputChange('priceRange', e.target.value)
                         }
                         placeholder="e.g., €120-180/night"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <Label htmlFor="sourceUrl">Source URL</Label>
+                      <Input
+                        id="sourceUrl"
+                        type="url"
+                        value={formData.sourceUrl}
+                        onChange={(e) =>
+                          handleInputChange('sourceUrl', e.target.value)
+                        }
+                        placeholder="https://www.airbnb.com/rooms/..."
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <Label htmlFor="imagesUrl">Images URL</Label>
+                      <Input
+                        id="imagesUrl"
+                        type="url"
+                        value={formData.imagesUrl}
+                        onChange={(e) =>
+                          handleInputChange('imagesUrl', e.target.value)
+                        }
+                        placeholder="https://example.com/images/..."
                       />
                     </div>
 
@@ -537,6 +682,20 @@ export default function AdminAccommodations() {
                             Coordinates: {accommodation.latitude},{' '}
                             {accommodation.longitude}
                           </span>
+                        </div>
+                      )}
+
+                      {accommodation.sourceUrl && (
+                        <div className="flex items-start space-x-2">
+                          <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                          <a
+                            href={accommodation.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            View on {getSourceName(accommodation.sourceUrl)}
+                          </a>
                         </div>
                       )}
                     </div>

@@ -32,7 +32,7 @@ export function WeddingPresentation({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
-      <div className="text-center container-responsive flex flex-row items-center justify-center gap-10">
+      <div className="text-center container-responsive flex flex-row items-center justify-center gap-10 ">
         <Image
           src={'/images/couple-landscape.jpeg'}
           alt={weddingInfo.coupleNames}
@@ -52,11 +52,11 @@ export function WeddingPresentation({
         </div>
       </div>
       <div className="text-center container-responsive flex flex-row items-center justify-center gap-10">
-        <div className="">
+        <div className="gap-5 flex flex-col justify-evenly">
           <p className="text-xl sm:text-2xl md:text-3xl  text-foreground mb-2">
             Hâte de fêter ça avec vous!
           </p>
-          <p className=" text-muted-foreground leading-relaxed font-light  font-small text-justify">
+          <p className=" text-muted-foreground leading-relaxed font-light  font-small text-justify mb-2">
             Merci de nous faire savoir si vous vous joindrez à nous pour cette
             journée spéciale. Votre présence rendra notre célébration parfaite.
           </p>
@@ -64,7 +64,7 @@ export function WeddingPresentation({
             onClick={onRSVPClick}
             className="bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
           >
-            RSVP
+            Confirmer votre présence
           </ParticleButton>
         </div>
         <Image

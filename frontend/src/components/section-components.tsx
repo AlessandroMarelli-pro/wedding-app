@@ -47,7 +47,7 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div className={cn('text-center ', className)}>
-      <h2 className="text-4xl md:text-5xl lg:text-5xl  text-foreground mt-4 ">
+      <h2 className="text-4xl md:text-5xl lg:text-5xl  text-foreground mt-6 ">
         {title}
       </h2>
       <div className="w-24 h-px  mx-auto mb-6" />
