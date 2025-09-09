@@ -34,7 +34,6 @@ export default function HomePage({
   accommodations,
 }: HomePageProps) {
   const [currentSection, setCurrentSection] = useState('home');
-
   if (!weddingInfo) {
     return (
       <>

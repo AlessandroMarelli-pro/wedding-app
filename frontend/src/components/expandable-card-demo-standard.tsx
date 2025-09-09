@@ -178,12 +178,12 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
               </div>
             </div>
             {card.ctaText && (
-              <motion.button
-                layoutId={`button-${card.title}-${id}`}
-                className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
+              <motion.span
+                layoutId={`span-${card.title}-${id}`}
+                className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100   text-black mt-4 md:mt-0"
               >
                 {card.ctaText}
-              </motion.button>
+              </motion.span>
             )}
           </motion.div>
         ))}

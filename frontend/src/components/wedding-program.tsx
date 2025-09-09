@@ -1,7 +1,8 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import TimelineComponent from './timeline-layout';
+import { QuickCalendarDownload } from './calendar-download';
+import { StickyScroll } from './ui/sticky-scroll-reveal';
 
 interface ProgramEvent {
   id: string;
@@ -85,23 +86,51 @@ export function WeddingProgram() {
       </Card>
     );
   }
-  const items = events.map((event) => ({
-    id: event.id,
-    date: new Date(event.startTime).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: false,
-    }),
-    title: event.title,
-    description: event.description,
-    location: event.location,
+  events.sort(
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
+  );
+  const images = [
+    '/images/program/4.jpeg',
+    '/images/program/3.jpeg',
+    '/images/program/2.jpeg',
+    '/images/program/1.jpg',
+  ];
+  const content = events.map((item, i) => ({
+    description: (
+      <>
+        <div className="flex flex-row space-x-4">
+          <time className="font-medium ">
+            {new Date(item.startTime).toLocaleDateString('fr-FR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: false,
+            })}
+          </time>
+        </div>
+        <p>{item.description}</p>
+        <div className="text-left">
+          <span className="text-sm  pr-1">📍</span>
+          <span className=" text-sm">{item.location}</span>
+        </div>
+      </>
+    ),
+    title: item.title,
+    image: images[i],
+    content: (
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] text-white">
+        {item.description}
+      </div>
+    ),
   }));
   return (
-    <div className="flex flex-col items-center justify-center p-10">
-      <TimelineComponent items={items} />
+    <div className="w-full ">
+      <StickyScroll content={content} />
+      <div className="flex justify-center pt-10">
+        <QuickCalendarDownload className="bg-card/60 backdrop-blur-sm border-rose-200 text-rose-700 hover:bg-rose-50 hover:border-rose-300 shadow-md hover:shadow-lg" />
+      </div>
     </div>
   );
 }
