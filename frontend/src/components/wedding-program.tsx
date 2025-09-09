@@ -1,8 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Calendar as CalendarIcon, Clock, MapPin } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { QuickCalendarDownload } from './calendar-download';
+import TimelineComponent from './timeline-layout';
 
 interface ProgramEvent {
   id: string;
@@ -86,66 +85,23 @@ export function WeddingProgram() {
       </Card>
     );
   }
-
+  const items = events.map((event) => ({
+    id: event.id,
+    date: new Date(event.startTime).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: false,
+    }),
+    title: event.title,
+    description: event.description,
+    location: event.location,
+  }));
   return (
-    <div className="max-h-screen overflow-y-auto">
-      <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-        <CardContent className="p-8">
-          <div className="space-y-8">
-            {events.map((event, index) => (
-              <div key={event.id} className="relative">
-                {/* Timeline line */}
-                {index < events.length - 1 && (
-                  <div className="absolute left-8 top-16 w-px h-16 bg-gradient-to-b from-rose-300 to-pink-300"></div>
-                )}
-
-                <div className="flex items-start space-x-6">
-                  {/* Time indicator */}
-                  <div className="flex-shrink-0">
-                    <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-pink-400 rounded-full flex items-center justify-center shadow-lg">
-                      <Clock className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
-
-                  {/* Event details */}
-                  <div className="flex-grow">
-                    <Card className="bg-card/80 border shadow-md">
-                      <CardContent className="p-6">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
-                          <h3 className="text-xl  text-foreground">
-                            {event.title}
-                          </h3>
-                          <div className="text-rose-600 font-medium text-sm sm:text-base flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {formatTime(event.startTime)} -{' '}
-                            {formatTime(event.endTime)}
-                          </div>
-                        </div>
-
-                        <p className="text-muted-foreground mb-4 leading-relaxed">
-                          {event.description}
-                        </p>
-
-                        <Separator className="mb-4" />
-
-                        <div className="flex items-center text-muted-foreground">
-                          <MapPin className="w-4 h-4 mr-2 text-rose-500" />
-                          <span className="text-sm">{event.location}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Enhanced calendar download */}
-      <div className="flex justify-center">
-        <QuickCalendarDownload className="bg-card/60 backdrop-blur-sm border-rose-200 text-rose-700 hover:bg-rose-50 hover:border-rose-300 shadow-md hover:shadow-lg" />
-      </div>
+    <div className="flex flex-col items-center justify-center p-10">
+      <TimelineComponent items={items} />
     </div>
   );
 }

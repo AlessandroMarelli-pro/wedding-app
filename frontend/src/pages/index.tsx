@@ -307,7 +307,7 @@ export default function HomePage({
           <Section
             id="program"
             background="default"
-            className="h-screen max-h-screen overflow-y-auto"
+            className="h-screen max-h-screen "
           >
             <SectionHeader
               title="Programme"
