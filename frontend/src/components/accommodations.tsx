@@ -2,7 +2,6 @@ import { Card, CardContent } from '@/components/ui';
 import { IconCurrencyEuro, IconMapPin } from '@tabler/icons-react';
 import { Accommodation, Direction } from '../types/api';
 import ExpandableCardDemo from './expandable-card-demo-standard';
-import { AccommodationMap } from './maps';
 
 interface AccommodationsListProps {
   accommodations: Accommodation[];
@@ -41,9 +40,8 @@ export function AccommodationsList({
     return {
       title: accommodation.name,
       description: accommodation.address,
-      src:
-        accommodation?.imagesUrl?.split(',')[0] ||
-        'https://assets.aceternity.com/demos/lana-del-rey.jpeg',
+      src: accommodation?.imagesUrl?.split(',')[0],
+      image2: accommodation?.imagesUrl?.split(',')[1],
       ctaText: accommodation.isRecommended ? 'Recommandé' : '',
       ctaLink: accommodation.sourceUrl || 'https://ui.aceternity.com/templates',
       imagesUrl: accommodation.imagesUrl?.split(',') || [],
@@ -76,20 +74,8 @@ export function AccommodationsList({
   return (
     <div className="p-4 grid grid-cols-2 gap-4 items-start h-full">
       {/* Interactive Map */}
-      <div className="col-span-1">
-        {accommodations.length > 0 && (
-          <div className="">
-            <AccommodationMap
-              accommodations={accommodations}
-              weddingInfo={weddingInfo}
-              showDirections={false}
-              showDetails={false}
-              className="mb-6 sm:mb-8"
-            />
-          </div>
-        )}
-      </div>
-      <div className="col-span-1">
+
+      <div className="col-span-2">
         <ExpandableCardDemo cards={cards} />
       </div>
     </div>

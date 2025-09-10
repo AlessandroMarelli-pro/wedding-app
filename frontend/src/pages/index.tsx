@@ -13,7 +13,6 @@ import {
   NavbarLayout,
   RSVPFormModal,
   Section,
-  SectionHeader,
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
@@ -114,14 +113,14 @@ export default function HomePage({
         currentSection={currentSection}
         onSectionChange={scrollToSection}
       >
-        <div className="min-h-screen bg-[#72ba7f]">
+        <div className="min-h-screen bg-white">
           {/* Hero Section */}
           <Section id="home">
             <Vortex
               backgroundColor="black"
               rangeY={800}
-              baseHue={120}
-              particleCount={50}
+              baseHue={520}
+              particleCount={250}
               className="flex items-center flex-col justify-center px-2 md:px-10  w-full h-screen"
             >
               <div className="relative grid grid-cols-6  items-center justify-center h-full w-full ">
@@ -184,17 +183,22 @@ export default function HomePage({
                         alt={weddingInfo.coupleNames}
                         width={600}
                         height={600}
-                        className="object-cover w-full "
+                        className="object-cover w-full max-w-[50rem]"
                       />
                     </div>
                   </div>
-                  <div className="row-span-1 justify-items-start flex flex-col">
-                    <h1 className={cn('  text-8xl my-4', bilbo.className)}>
+                  <div className="row-span-1  flex flex-col h-[40%] justify-around">
+                    <h1
+                      className={cn(
+                        'text-[#EAFFD0]  text-8xl my-4',
+                        bilbo.className,
+                      )}
+                    >
                       Le lieu
                     </h1>
                     <div>
                       {weddingInfo.weddingAddress.split(',').map((chunk) => (
-                        <p className="text-xl text-black">{chunk}</p>
+                        <p className="text-xl text-[#EAFFD0] ">{chunk}</p>
                       ))}
                     </div>
                   </div>
@@ -205,7 +209,10 @@ export default function HomePage({
                       <div className="row-span-1 flex flex-col justify-around ">
                         <div className="h-full ">
                           <h1
-                            className={cn('pt-10 text-8xl ', bilbo.className)}
+                            className={cn(
+                              'py-5  text-8xl text-[#EAFFD0]',
+                              bilbo.className,
+                            )}
                           >
                             Comment venir ?
                           </h1>
@@ -235,17 +242,17 @@ export default function HomePage({
                               key={index}
                               className="relative flex flex-col   rounded-lg  p-3"
                             >
-                              <div className="flex items-center mb-1 gap-2">
+                              <div className="flex items-center mb-1 gap-2 text-[#EAFFD0]">
                                 {WeddingHowToArriveIcons[direction.type]}
-                                <h5 className="font-medium text-foreground capitalize">
+                                <h5 className="font-medium text-[#EAFFD0] capitalize">
                                   {getDirectionName(direction.type)}
                                 </h5>
                               </div>
-                              <p className="block text-slate-600 leading-normal font-light mb-1 text-sm text-left">
+                              <p className="block text-[#EAFFD0]  leading-normal  mb-1 text-sm text-left">
                                 {direction.information}
                               </p>
                               <div className="text-left">
-                                <span className="text-xs text-muted-foreground ">
+                                <span className="text-sm text-[#EAFFD0] ">
                                   📍
                                 </span>
                                 {direction.location.link ? (
@@ -253,7 +260,7 @@ export default function HomePage({
                                     href={direction.location.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary hover:underline text-xs"
+                                    className="text-[#EAFFD0] hover:underline text-sm"
                                   >
                                     {direction.location.address}
                                   </a>
@@ -274,29 +281,67 @@ export default function HomePage({
           </Section>
 
           {/* Accommodations Section */}
-          <Section id="accommodations" background="muted">
-            <SectionHeader
-              title="Où dormir ?"
-              subtitle="Nous avons sélectionné quelques endroits pour vous pour votre séjour"
-            />
-
-            <AccommodationsList
-              accommodations={accommodations}
-              weddingInfo={{
-                weddingAddress: weddingInfo.weddingAddress,
-                weddingDate: weddingInfo.weddingDate,
-                coupleNames: weddingInfo.coupleNames,
-                locationDirections: weddingInfo.locationDirections,
-                latitude: undefined, // We'll need to add this to the wedding info entity
-                longitude: undefined, // We'll need to add this to the wedding info entity
-              }}
-            />
+          <Section id="accommodations" background="default">
+            <div className="space-y-4 ">
+              <div className=" rounded-xl sm:rounded-2xl   text-center grid  grid-cols-2 grid-rows-2  max-h-screen h-screen">
+                <div className="row-span-2">
+                  <div className="row-span-1 flex flex-col justify-around ">
+                    <div className="h-full ">
+                      <h1
+                        className={cn(
+                          'py-5  text-8xl text-[#F38181]',
+                          bilbo.className,
+                        )}
+                      >
+                        Ou dormir ?
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="row-span-1 justify-items-start flex flex-col max-h-[50%]">
+                    <AccommodationsList
+                      accommodations={accommodations}
+                      weddingInfo={{
+                        weddingAddress: weddingInfo.weddingAddress,
+                        weddingDate: weddingInfo.weddingDate,
+                        coupleNames: weddingInfo.coupleNames,
+                        locationDirections: weddingInfo.locationDirections,
+                        latitude: undefined, // We'll need to add this to the wedding info entity
+                        longitude: undefined, // We'll need to add this to the wedding info entity
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className=" row-span-2 flex flex-col justify-evenly">
+                  <div className="row-span-1  flex flex-col ">
+                    <div className="text-center  flex flex-row items-center justify-around ">
+                      <Image
+                        src={'/images/program/1.jpg'}
+                        alt={weddingInfo.coupleNames}
+                        width={600}
+                        height={600}
+                        className="object-cover w-full max-w-[50rem] rounded-l-[60%]"
+                      />
+                    </div>
+                  </div>
+                  {/*   <div className="row-span-1  flex flex-col  ">
+                    <AccommodationMap
+                      accommodations={accommodations}
+                      weddingInfo={weddingInfo}
+                      height="250px"
+                      showDirections={false}
+                      showDetails={false}
+                      className=" h-[15rem]"
+                    />
+                  </div> */}
+                </div>
+              </div>
+            </div>
           </Section>
 
           {/* Wedding Program Section */}
           <Section
             id="program"
-            background="default"
+            background="muted"
             className="h-screen max-h-screen "
           >
             <WeddingProgram />

@@ -102,10 +102,11 @@ export const Vortex = (props: VortexProps) => {
     tick++;
 
     // Clear and set background color
-    ctx.fillStyle = '#72ba7f';
+    ctx.fillStyle = '#95E1D3';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawParticles(ctx);
+
     renderToScreen(canvas, ctx);
 
     animationFrameId.current = window.requestAnimationFrame(() =>

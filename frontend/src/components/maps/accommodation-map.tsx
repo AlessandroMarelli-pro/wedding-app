@@ -343,11 +343,11 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({
   }
 
   return (
-    <div className={`${className}`}>
+    <div className={`${className}`} style={{ height }}>
       {/* Map Container */}
-      <Card className="overflow-hidden">
-        <div className="relative">
-          <div ref={mapRef} className="w-full" style={{ height }} />
+      <Card className="overflow-hidden h-full">
+        <div className="relative h-full">
+          <div ref={mapRef} className="w-full h-full" />
           {isLoading && (
             <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
               <div className="text-center">

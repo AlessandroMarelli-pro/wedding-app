@@ -144,25 +144,34 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
           </div>
         ) : null}
       </AnimatePresence>
-      <ul className="mx-auto w-full gap-4">
+      <div className="mx-auto w-full gap-4 grid grid-cols-2">
         {cards.map((card, index) => (
           <motion.div
             layoutId={`card-${card.title}-${id}`}
             key={`card-${card.title}-${id}`}
             onClick={() => setActive(card)}
-            className="p-4 flex flex-col md:flex-row justify-between items-center  hover:bg-neutral-200  rounded-xl cursor-pointer"
+            className="p-1 flex flex-col md:flex-row justify-between   hover:bg-neutral-200   cursor-pointer"
           >
-            <div className="flex gap-4 flex-col md:flex-row ">
+            <div className="flex gap-4 flex-col  justify-items-start">
               <motion.div layoutId={`image-${card.title}-${id}`}>
-                <img
-                  width={200}
-                  height={200}
-                  src={card.src}
-                  alt={card.title}
-                  className="h-60 w-60 md:h-25 md:w-25 rounded-lg object-cover object-top"
-                />
+                <div className="flex flex-row  justify-around">
+                  <img
+                    width={300}
+                    height={300}
+                    src={card.src}
+                    alt={card.title}
+                    className="h-60 w-60 md:h-35 md:w-35  object-cover object-top"
+                  />
+                  <img
+                    width={300}
+                    height={300}
+                    src={card.image2}
+                    alt={card.title}
+                    className="h-60 w-60 md:h-35 md:w-35  object-cover object-top"
+                  />
+                </div>
               </motion.div>
-              <div className="">
+              <div className="p-4">
                 <motion.h3
                   layoutId={`title-${card.title}-${id}`}
                   className="font-medium text-neutral-800  text-center md:text-left"
@@ -177,17 +186,9 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                 </motion.p>
               </div>
             </div>
-            {card.ctaText && (
-              <motion.span
-                layoutId={`span-${card.title}-${id}`}
-                className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100   text-black mt-4 md:mt-0"
-              >
-                {card.ctaText}
-              </motion.span>
-            )}
           </motion.div>
         ))}
-      </ul>
+      </div>
     </>
   );
 }
