@@ -328,7 +328,7 @@ export default function HomePage({
                         alt={weddingInfo.coupleNames}
                         width={600}
                         height={600}
-                        className="object-cover w-full max-w-[50rem] rounded-l-[60%]"
+                        className="object-cover w-full max-w-[50rem] "
                       />
                     </div>
                   </div>
