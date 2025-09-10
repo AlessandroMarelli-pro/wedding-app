@@ -29,15 +29,17 @@ export function WeddingPresentation({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
-      <div className="container-responsive text-center  flex flex-row items-center justify-center p-10 ">
-        <div className="">
-          <p className=" text-[#F38181]  leading-relaxed font-light italic font-small text-justify text-lg">
-            "{weddingInfo.presentationMessage}" -{' '}
-            <span className="text-[#F38181] font-bold">
-              {weddingInfo.coupleNames}
-            </span>
-          </p>
+      <div className="text-[#F38181] container-responsive text-center  flex flex-col items-center justify-center p-10 ">
+        <div className="py-4">
+          <IconGalaxy className="w-5 h-5 " />
         </div>
+        <p className="  leading-relaxed font-light italic font-small text-justify text-lg">
+          "{weddingInfo.presentationMessage}"
+        </p>
+        <div className="py-4">
+          <IconGalaxy className="w-5 h-5 " />
+        </div>
+        <span className=" font-bold">{weddingInfo.coupleNames}</span>
       </div>
     </div>
   );
@@ -115,4 +117,5 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
 }
 
 // Fix React import for countdown component
+import { IconGalaxy } from '@tabler/icons-react';
 import * as React from 'react';

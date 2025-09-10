@@ -179,11 +179,10 @@ export default function HomePage({
   };
   let maxCanvasHeight = 500;
   try {
-    maxCanvasHeight = document?.body?.clientHeight || 500;
+    maxCanvasHeight = window?.screen?.height;
   } catch (error) {
     console.error('Error getting max canvas height:', error);
   }
-
   return (
     <>
       <Head>
@@ -206,7 +205,8 @@ export default function HomePage({
             scrollToSection={scrollToSection}
             maxCanvasHeight={maxCanvasHeight}
           />
-          {/* <OurStorySection weddingInfo={weddingInfo} />
+          <OurStorySection weddingInfo={weddingInfo} />
+          {/* 
           <WeddingDetailsSection
             weddingInfo={weddingInfo}
             getDirectionName={getDirectionName}
