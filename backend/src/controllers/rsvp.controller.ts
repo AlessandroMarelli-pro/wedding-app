@@ -103,7 +103,7 @@ export class RSVPController {
     const guest = await this.rsvpService.getGuestByHashCode(hashCode);
 
     if (!guest) {
-      return { error: 'Guest not found or invalid hash code' };
+      return { error: 'Code invalide' };
     }
 
     const confirmed = await this.rsvpService.isGuestConfirmed(hashCode);

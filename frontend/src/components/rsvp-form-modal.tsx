@@ -50,7 +50,7 @@ export function RSVPFormModal({
         >
           Confirmer votre présence
         </ModalTrigger>
-        <ModalBody>
+        <ModalBody className="w-auto max-w-[70vw] z-[1000000]">
           <ModalContent className="bg-white border-none">
             <RSVPForm />
           </ModalContent>
