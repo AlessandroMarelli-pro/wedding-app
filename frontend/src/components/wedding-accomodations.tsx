@@ -15,7 +15,7 @@ export const WeddingAccomodations = ({
   font: NextFontWithVariable;
 }) => (
   <div className="space-y-4 ">
-    <div className=" rounded-xl sm:rounded-2xl   text-center grid  grid-cols-2 grid-rows-2  max-h-screen h-screen">
+    <div className=" rounded-xl sm:rounded-2xl   text-center grid  grid-cols-2 grid-rows-2  lg:max-h-screen h-screen">
       <div className="row-span-2">
         <div className="row-span-1 flex flex-col justify-around ">
           <div className="h-full ">

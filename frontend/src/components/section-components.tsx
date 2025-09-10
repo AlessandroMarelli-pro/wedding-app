@@ -24,7 +24,7 @@ export function Section({
     <section
       id={id}
       className={cn(
-        'sm:max-h-screen ',
+        'lg:max-h-screen ',
         backgroundClasses[background],
         className,
       )}
