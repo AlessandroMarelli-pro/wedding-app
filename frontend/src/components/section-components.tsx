@@ -24,12 +24,12 @@ export function Section({
     <section
       id={id}
       className={cn(
-        'sm:max-h-screen sm:h-screen',
+        'sm:max-h-screen ',
         backgroundClasses[background],
         className,
       )}
     >
-      <div className="mx-auto sm:h-full">{children}</div>
+      <div className="mx-auto">{children}</div>
     </section>
   );
 }

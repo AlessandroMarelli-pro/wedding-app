@@ -206,11 +206,12 @@ export default function HomePage({
             maxCanvasHeight={maxCanvasHeight}
           />
           <OurStorySection weddingInfo={weddingInfo} />
-          {/* 
           <WeddingDetailsSection
             weddingInfo={weddingInfo}
             getDirectionName={getDirectionName}
           />
+          {/* 
+         
           <AccommodationsSection
             accommodations={accommodations}
             weddingInfo={weddingInfo}
