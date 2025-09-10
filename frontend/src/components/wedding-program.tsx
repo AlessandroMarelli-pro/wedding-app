@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib';
 import { IconCarambolaFilled } from '@tabler/icons-react';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { Parisienne } from 'next/font/google';
+import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import { useEffect, useState } from 'react';
 
 interface ProgramEvent {
@@ -15,13 +15,8 @@ interface ProgramEvent {
   displayOrder: number;
   includeInCalendar: boolean;
 }
-const bilbo = Parisienne({
-  subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-bilbo',
-});
 
-export function WeddingProgram() {
+export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
   const [events, setEvents] = useState<ProgramEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -139,7 +134,7 @@ export function WeddingProgram() {
             id={item.id}
             className="flex flex-col justify-center items-center text-center space-y-4"
           >
-            <div className={cn('text-6xl ', bilbo.className)}>{item.title}</div>
+            <div className={cn('text-6xl ', font.className)}>{item.title}</div>
             <div className={cn('text-2xl fraunces-regular')}>
               {new Date(item.startTime).toLocaleDateString('fr-FR', {
                 year: 'numeric',

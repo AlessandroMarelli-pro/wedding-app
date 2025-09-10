@@ -1,0 +1,108 @@
+import { LinkPreview } from '@/components/ui/link-preview';
+import { cn } from '@/lib/utils';
+import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
+import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
+import Image from 'next/image';
+import { WeddingInfo } from '../types/api';
+
+const WeddingHowToArriveIcons = {
+  car: <IconCar className="w-10 h-10" />,
+  train: <IconTrain className="w-10 h-10" />,
+  'car rental': <IconCar className="w-10 h-10" />,
+};
+
+export const WeddingInformation = ({
+  weddingInfo,
+  getDirectionName,
+  font,
+}: {
+  weddingInfo: WeddingInfo;
+  getDirectionName: (directionType: string) => string;
+  font: NextFontWithVariable;
+}) => {
+  return (
+    <div className="space-y-4 ">
+      <div className=" rounded-xl sm:rounded-2xl   text-center grid  grid-cols-2 grid-rows-2 gap-6 max-h-screen h-screen">
+        <div className=" row-span-2">
+          <div className="row-span-1 justify-items-start flex flex-col">
+            <div className="text-center  flex flex-row items-center justify-around gap-10">
+              <Image
+                src={'/images/lauziers-aqua.webp'}
+                alt={weddingInfo.coupleNames}
+                width={600}
+                height={600}
+                className="object-cover w-full max-w-[50rem]"
+              />
+            </div>
+          </div>
+          <div className="row-span-1  flex flex-col h-[40%] justify-around">
+            <h1 className={cn('text-[#EAFFD0]  text-8xl my-4', font.className)}>
+              Le lieu
+            </h1>
+            <div>
+              {weddingInfo.weddingAddress.split(',').map((chunk) => (
+                <p className="text-xl text-[#EAFFD0] fraunces-light">{chunk}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+        {weddingInfo.locationDirections &&
+          weddingInfo.locationDirections.length > 0 && (
+            <div className="row-span-2 flex flex-col justify-around">
+              <div className="row-span-1 flex flex-col  ">
+                <div className="h-full ">
+                  <h1
+                    className={cn(
+                      'py-5  text-8xl text-[#EAFFD0]',
+                      font.className,
+                    )}
+                  >
+                    Comment venir ?
+                  </h1>
+                </div>
+              </div>
+              <div className="row-span-1  flex flex-col  gap-4">
+                {weddingInfo.locationDirections.map((direction, index) => (
+                  <div
+                    key={index}
+                    className="relative flex flex-col   items-center rounded-lg   p-3"
+                  >
+                    <div className="flex items-center mb-1 gap-2 text-[#EAFFD0]">
+                      {WeddingHowToArriveIcons[direction.type]}
+                      <h5 className="font-medium text-[#EAFFD0] capitalize text-3xl  ">
+                        {getDirectionName(direction.type)}
+                      </h5>
+                    </div>
+                    <p className="block text-[#EAFFD0]  leading-normal  mb-1 text-md text-left">
+                      {direction.information
+                        .split('.')
+                        .filter((line) => line.trim() !== '')
+                        .map((line, index) => (
+                          <span key={index}>
+                            {line + '.'}
+                            <br />
+                          </span>
+                        ))}
+                    </p>
+                    <div className="text-left flex flex-row items-center gap-2">
+                      <span className="text-sm text-[#EAFFD0] ">
+                        <IconMapPinFilled className="w-4 h-4" />
+                      </span>
+                      <LinkPreview
+                        width={300}
+                        height={200}
+                        url={direction.location.link || ''}
+                        className="text-[#EAFFD0] hover:underline text-sm target:blank"
+                      >
+                        {direction.location.address}
+                      </LinkPreview>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+      </div>
+    </div>
+  );
+};
