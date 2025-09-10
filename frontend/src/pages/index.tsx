@@ -39,7 +39,7 @@ const HeroSection = ({
 
 const OurStorySection = ({ weddingInfo }: { weddingInfo: WeddingInfo }) => {
   return (
-    <Section id="our-story" background="default" className="h-auto">
+    <Section id="nous" background="default" className="h-auto">
       <WeddingPresentation weddingInfo={weddingInfo} />
     </Section>
   );
@@ -53,7 +53,7 @@ const WeddingDetailsSection = ({
   getDirectionName: (directionType: string) => string;
 }) => {
   return (
-    <Section id="details" background="accent">
+    <Section id="informations" background="accent">
       <WeddingInformation
         weddingInfo={weddingInfo}
         getDirectionName={getDirectionName}
@@ -71,7 +71,7 @@ const AccommodationsSection = ({
   weddingInfo: WeddingInfo;
 }) => {
   return (
-    <Section id="accommodations" background="default">
+    <Section id="logements" background="default">
       <WeddingAccomodations
         accommodations={accommodations}
         weddingInfo={weddingInfo}
@@ -83,7 +83,11 @@ const AccommodationsSection = ({
 
 const WeddingProgramSection = () => {
   return (
-    <Section id="program" background="muted" className="h-[50vh] max-h-screen ">
+    <Section
+      id="programme"
+      background="muted"
+      className="h-[50vh] max-h-screen "
+    >
       <WeddingProgram font={bilbo} />
     </Section>
   );

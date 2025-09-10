@@ -70,19 +70,19 @@ const adminNavigation = [
 const publicNavigation = [
   {
     name: 'Un petit mot',
-    link: '#our-story',
+    link: '#nous',
   },
   {
     name: 'Informations',
-    link: '#details',
+    link: '#informations',
   },
   {
     name: 'Où dormir ?',
-    link: '#accommodations',
+    link: '#logements',
   },
   {
     name: 'Programme',
-    link: '#program',
+    link: '#programme',
   },
 ];
 
@@ -145,7 +145,7 @@ export function NavbarLayout({
         }
       >
         {/* Desktop Navigation */}
-        <NavBody>
+        <NavBody className="">
           <NavItems items={navItems} className="font-bold text-[#F38181] " />
           <RSVPFormModal
             shadowCls="shadow-none"
