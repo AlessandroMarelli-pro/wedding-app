@@ -92,7 +92,7 @@ const WeddingProgramSection = () => {
     <Section
       id="programme"
       background="muted"
-      className="h-[50vh] max-h-screen "
+      className="lg:h-[50vh] xl:max-h-screen "
     >
       <WeddingProgram font={bilbo} />
     </Section>
@@ -101,9 +101,13 @@ const WeddingProgramSection = () => {
 
 const RSVPSection = () => {
   return (
-    <Section id="rsvp" background="accent" className="h-[50vh] max-h-screen ">
-      <div className="w-full h-full flex flex-col justify-center items-center  gap-10">
-        <p className="text-5xl  fraunces-regula text-[#EAFFD0]">
+    <Section
+      id="rsvp"
+      background="accent"
+      className="h-[30vh] lg:h-[50vh] max-h-screen "
+    >
+      <div className="w-full h-full flex flex-col text-center justify-center items-center  gap-10">
+        <p className=" text-3xl lg:text-5xl  fraunces-regular text-[#EAFFD0]">
           Nous espérons vous voir en ce jour spécial !
         </p>
         <RSVPFormModal
@@ -214,11 +218,8 @@ export default function HomePage({
             accommodations={accommodations}
             weddingInfo={weddingInfo}
           />
-          {/* 
-         
-         
           <WeddingProgramSection />
-          <RSVPSection /> */}
+          <RSVPSection />
         </div>
       </NavbarLayout>
     </>

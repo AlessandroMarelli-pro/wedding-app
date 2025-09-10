@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib';
-import { IconCarambolaFilled } from '@tabler/icons-react';
+import { IconGalaxy } from '@tabler/icons-react';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import { useEffect, useState } from 'react';
@@ -45,14 +45,6 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
     }
   };
 
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-  };
-
   // Calendar download is now handled by the QuickCalendarDownload component
 
   if (isLoading) {
@@ -90,52 +82,26 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
   events.sort(
     (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
   );
-  const images = [
-    '/images/program/4.jpeg',
-    '/images/program/3.jpeg',
-    '/images/program/2.jpeg',
-    '/images/program/1.jpg',
-  ];
-  const content = events.map((item, i) => ({
-    description: (
-      <>
-        <div className="flex flex-row space-x-4">
-          <time className="font-medium ">
-            {new Date(item.startTime).toLocaleDateString('fr-FR', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: false,
-            })}
-          </time>
-        </div>
-        <p>{item.description}</p>
-        <div className="text-left">
-          <span className="text-sm  pr-1">📍</span>
-          <span className=" text-sm">{item.location}</span>
-        </div>
-      </>
-    ),
-    title: item.title,
-    image: images[i],
-    content: (
-      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] text-white">
-        {item.description}
-      </div>
-    ),
-  }));
+
   return (
-    <div className="w-full h-full flex flex-row justify-center items-center text-[#F38181] gap-10">
+    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-[#F38181] xl:gap-10 lg:gap-0 gap-10 py-10 lg:py-0">
       {events.map((item, index) => (
         <>
           <div
             id={item.id}
-            className="flex flex-col justify-center items-center text-center space-y-4"
+            className="flex flex-col justify-center items-center text-center space-y-4 pt-4 lg:pt-0"
           >
-            <div className={cn('text-6xl ', font.className)}>{item.title}</div>
-            <div className={cn('text-2xl fraunces-regular')}>
+            <div
+              className={cn(
+                'text-3xl lg:text-4xl xl:text-6xl ',
+                font.className,
+              )}
+            >
+              {item.title}
+            </div>
+            <div
+              className={cn('text-md lg:text-2xl xl:text-2xl fraunces-regular')}
+            >
               {new Date(item.startTime).toLocaleDateString('fr-FR', {
                 year: 'numeric',
                 month: 'long',
@@ -146,10 +112,14 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
               })}
             </div>
             {item.location.split(',').map((loc) => (
-              <div className={cn('text-xl ')}>{loc}</div>
+              <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
+                {loc}
+              </div>
             ))}
           </div>
-          {index !== events.length - 1 && <IconCarambolaFilled />}
+          {index !== events.length - 1 && (
+            <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5" />
+          )}
         </>
       ))}
     </div>

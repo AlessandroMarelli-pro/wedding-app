@@ -72,9 +72,7 @@ export function AccommodationsList({
     };
   });
   return (
-    <div className="p-4 grid grid-cols-2 gap-4 items-start h-full">
-      {/* Interactive Map */}
-
+    <div className="p-4 grid grid-cols-2 gap-4 items-start lg:h-full">
       <div className="col-span-2">
         <ExpandableCardDemo cards={cards} />
       </div>

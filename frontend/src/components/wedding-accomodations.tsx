@@ -15,10 +15,10 @@ export const WeddingAccomodations = ({
   font: NextFontWithVariable;
 }) => (
   <div className="space-y-4 ">
-    <div className="text-center grid  xl:grid-cols-2 xl:grid-rows-2 lg:grid-rows-4  lg:max-h-screen h-screen">
+    <div className="text-center grid  xl:grid-cols-2 xl:grid-rows-2 lg:grid-rows-4  lg:max-h-screen lg:h-screen">
       <div className="row-span-2">
         <div className="row-span-1 flex flex-col justify-around ">
-          <div className="h-full ">
+          <div className="lg:h-full ">
             <h1
               className={cn(
                 'py-5  text-5xl lg:text-8xl text-[#F38181]',
