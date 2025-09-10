@@ -119,7 +119,7 @@ export default function HomePage({
             <Vortex
               backgroundColor="black"
               rangeY={800}
-              baseHue={520}
+              baseHue={120}
               particleCount={250}
               className="flex items-center flex-col justify-center px-2 md:px-10  w-full h-screen"
             >

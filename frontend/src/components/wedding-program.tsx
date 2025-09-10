@@ -1,8 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib';
+import { IconCarambolaFilled } from '@tabler/icons-react';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import { Parisienne } from 'next/font/google';
 import { useEffect, useState } from 'react';
-import { QuickCalendarDownload } from './calendar-download';
-import { StickyScroll } from './ui/sticky-scroll-reveal';
 
 interface ProgramEvent {
   id: string;
@@ -14,6 +15,11 @@ interface ProgramEvent {
   displayOrder: number;
   includeInCalendar: boolean;
 }
+const bilbo = Parisienne({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-bilbo',
+});
 
 export function WeddingProgram() {
   const [events, setEvents] = useState<ProgramEvent[]>([]);
@@ -126,11 +132,31 @@ export function WeddingProgram() {
     ),
   }));
   return (
-    <div className="w-full ">
-      <StickyScroll content={content} />
-      <div className="flex justify-center pt-10">
-        <QuickCalendarDownload className="bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" />
-      </div>
+    <div className="w-full h-full flex flex-row justify-center items-center text-[#F38181] gap-10">
+      {events.map((item, index) => (
+        <>
+          <div
+            id={item.id}
+            className="flex flex-col justify-center items-center text-center space-y-4"
+          >
+            <div className={cn('text-6xl ', bilbo.className)}>{item.title}</div>
+            <div className={cn('text-2xl fraunces-regular')}>
+              {new Date(item.startTime).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: false,
+              })}
+            </div>
+            {item.location.split(',').map((loc) => (
+              <div className={cn('text-xl ')}>{loc}</div>
+            ))}
+          </div>
+          {index !== events.length - 1 && <IconCarambolaFilled />}
+        </>
+      ))}
     </div>
   );
 }

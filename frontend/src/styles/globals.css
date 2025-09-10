@@ -43,6 +43,26 @@
   font-style: normal;
 }
 
+.fraunces-regular {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    'SOFT' 0,
+    'WONK' 0;
+}
+
+.fraunces-bold {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-variation-settings:
+    'SOFT' 0,
+    'WONK' 0;
+}
+
 @source './pages/**/*.{ts,tsx}';
 @source './components/**/*.{ts,tsx}';
 @source './app/**/*.{ts,tsx}';
