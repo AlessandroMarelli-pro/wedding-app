@@ -248,11 +248,9 @@ export default function AdminWedding() {
       <NavbarLayout type="admin" currentPath="/admin/wedding">
         <div className="p-6 max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl  text-gray-800 mb-2">
-              Wedding Information
-            </h1>
             <p className="text-gray-600">
-              Update the details that appear on your wedding website
+              Mettre à jour les détails qui apparaissent sur votre site de
+              mariage
             </p>
           </div>
 
@@ -302,47 +300,6 @@ export default function AdminWedding() {
                   <p className="mt-1 text-sm text-gray-500">
                     {weddingInfo.presentationMessage.length}/2000 characters
                   </p>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="heroImageId"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Hero Image
-                  </label>
-                  <input
-                    type="text"
-                    id="heroImageId"
-                    value={weddingInfo.heroImageId || ''}
-                    onChange={(e) =>
-                      handleInputChange('heroImageId', e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-                    placeholder="Enter image ID from the Images section"
-                  />
-                  <p className="mt-1 text-sm text-gray-500">
-                    Enter the ID of an image uploaded in the Images section to
-                    use as the hero image for your wedding website.
-                  </p>
-                  {weddingInfo.heroImageId && (
-                    <div className="mt-3">
-                      <p className="text-sm font-medium text-gray-700 mb-2">
-                        Preview:
-                      </p>
-                      <img
-                        src={`${
-                          process.env.NEXT_PUBLIC_API_URL ||
-                          'http://localhost:3001/api'
-                        }/images/${weddingInfo.heroImageId}`}
-                        alt="Hero image preview"
-                        className="w-full h-48 object-cover rounded-lg border border-gray-200"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

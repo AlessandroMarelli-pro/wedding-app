@@ -101,13 +101,11 @@ export const Vortex = (props: VortexProps) => {
   const draw = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     tick++;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = backgroundColor;
+    // Clear and set background color
+    ctx.fillStyle = '#72ba7f';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawParticles(ctx);
-    renderGlow(canvas, ctx);
     renderToScreen(canvas, ctx);
 
     animationFrameId.current = window.requestAnimationFrame(() =>
@@ -207,13 +205,11 @@ export const Vortex = (props: VortexProps) => {
   ) => {
     ctx.save();
     ctx.filter = 'blur(8px) brightness(200%)';
-    ctx.globalCompositeOperation = 'lighter';
     ctx.drawImage(canvas, 0, 0);
     ctx.restore();
 
     ctx.save();
     ctx.filter = 'blur(4px) brightness(200%)';
-    ctx.globalCompositeOperation = 'lighter';
     ctx.drawImage(canvas, 0, 0);
     ctx.restore();
   };
@@ -223,7 +219,6 @@ export const Vortex = (props: VortexProps) => {
     ctx: CanvasRenderingContext2D,
   ) => {
     ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
     ctx.drawImage(canvas, 0, 0);
     ctx.restore();
   };

@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 import { Direction } from '../types/api';
 
 interface WeddingInfo {
@@ -17,13 +16,11 @@ interface WeddingInfo {
 
 interface WeddingPresentationProps {
   weddingInfo: WeddingInfo;
-  onRSVPClick?: () => void;
   className?: string;
 }
 
 export function WeddingPresentation({
   weddingInfo,
-  onRSVPClick,
   className,
 }: WeddingPresentationProps) {
   const weddingDate = new Date(weddingInfo.weddingDate);
@@ -32,43 +29,15 @@ export function WeddingPresentation({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
-      <div className="text-center container-responsive flex flex-row items-center justify-center gap-10 ">
-        <Image
-          src={'/images/couple-landscape.jpeg'}
-          alt={weddingInfo.coupleNames}
-          width={450}
-          height={100}
-          className="object-cover  rounded-xl"
-        />
+      <div className="container-responsive text-center  flex flex-row items-center justify-center p-10 ">
         <div className="">
-          <p className=" text-muted-foreground leading-relaxed font-light italic font-small text-justify">
-            "{weddingInfo.presentationMessage}"
-          </p>
-          <div className="mt-6 sm:mt-8">
-            <p className="text-xl sm:text-2xl md:text-3xl  text-foreground mt-2">
+          <p className=" text-muted-foreground leading-relaxed font-light italic font-small text-justify text-lg">
+            "{weddingInfo.presentationMessage}" -{' '}
+            <span className="text-black font-bold">
               {weddingInfo.coupleNames}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="text-center container-responsive flex flex-row items-center justify-center gap-10">
-        <div className="gap-5 flex flex-col justify-evenly">
-          <p className="text-xl sm:text-2xl md:text-3xl  text-foreground mb-2">
-            Hâte de fêter ça avec vous!
+            </span>
           </p>
-          <p className=" text-muted-foreground leading-relaxed font-light  font-small text-justify mb-2">
-            Merci de nous faire savoir si vous vous joindrez à nous pour cette
-            journée spéciale. Votre présence rendra notre célébration parfaite.
-          </p>
-          <RSVPFormModal />
         </div>
-        <Image
-          src={'/images/lauziers-aqua.webp'}
-          alt={weddingInfo.coupleNames}
-          width={550}
-          height={100}
-          className="object-cover  rounded-xl"
-        />
       </div>
     </div>
   );
@@ -147,4 +116,3 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
 
 // Fix React import for countdown component
 import * as React from 'react';
-import { RSVPFormModal } from './rsvp-form-modal';

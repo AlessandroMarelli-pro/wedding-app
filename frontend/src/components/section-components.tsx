@@ -23,11 +23,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn(
-        'border p-4 pt-0 h-screen',
-        backgroundClasses[background],
-        className,
-      )}
+      className={cn('h-screen', backgroundClasses[background], className)}
     >
       <div className="mx-auto h-full">{children}</div>
     </section>
@@ -50,7 +46,7 @@ export function SectionHeader({
       <h2 className="text-4xl md:text-5xl lg:text-5xl  text-foreground mt-6 ">
         {title}
       </h2>
-      <div className="w-24 h-px  mx-auto mb-6" />
+      <div className="w-24  mx-auto mb-6" />
       {subtitle && (
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           {subtitle}

@@ -1,22 +1,24 @@
-import { Button } from '@/components/ui';
+import { Button } from '@/components/ui/button';
 import { Vortex } from '@/components/ui/vortex';
 import { cn } from '@/lib/utils';
 import { IconArrowDown, IconCar, IconTrain } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useState } from 'react';
 import {
   AccommodationMap,
   AccommodationsList,
   NavbarLayout,
+  RSVPFormModal,
   Section,
   SectionHeader,
-  WeddingCountdown,
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
 import { WeddingInfo } from '../types/api';
+
 const bilbo = Parisienne({
   subsets: ['latin'],
   weight: ['400'],
@@ -70,15 +72,6 @@ export default function HomePage({
     );
   }
 
-  const sections = [
-    { id: 'home', label: 'Home' },
-    { id: 'our-story', label: 'Un petit mot' },
-    { id: 'details', label: 'Informations' },
-    { id: 'accommodations', label: 'Où dormir ?' },
-    { id: 'program', label: 'Programme' },
-    { id: 'rsvp', label: 'Réponse' },
-  ];
-
   const scrollToSection = (sectionId: string) => {
     setCurrentSection(sectionId);
     const element = document.getElementById(sectionId);
@@ -97,6 +90,13 @@ export default function HomePage({
     return '/images/hero-wedding.jpg'; // Fallback to default image
   };
 
+  const getDirectionName = (directionType: string) => {
+    return directionType === 'car'
+      ? 'En voiture'
+      : directionType === 'train'
+        ? 'En train'
+        : 'Location de voiture';
+  };
   return (
     <>
       <Head>
@@ -114,40 +114,41 @@ export default function HomePage({
         currentSection={currentSection}
         onSectionChange={scrollToSection}
       >
-        <div className="min-h-screen ">
+        <div className="min-h-screen bg-[#72ba7f]">
           {/* Hero Section */}
-          <div className="relative h-screen w-full overflow-hidden bg-black">
-            {/* Hero Content Overlay */}
-            <Section id="home">
-              <Vortex
-                backgroundColor="black"
-                rangeY={800}
-                baseHue={120}
-                particleCount={50}
-                className="flex items-center flex-col justify-center px-2 md:px-10  w-full h-screen"
-              >
-                <div className="relative z-10 flex items-center justify-center h-full w-full px-4 color-black">
-                  <div className="text-center text-white max-w-4xl mx-auto color-black ">
+          <Section id="home">
+            <Vortex
+              backgroundColor="black"
+              rangeY={800}
+              baseHue={120}
+              particleCount={50}
+              className="flex items-center flex-col justify-center px-2 md:px-10  w-full h-screen"
+            >
+              <div className="relative grid grid-cols-6  items-center justify-center h-full w-full ">
+                <p className="text-white col-span-1  text-2xl mb-2 font-light opacity-90 h-full w-full flex flex-col justify-end pb-10">
+                  Nous avons le plaisir de vous inviter à notre mariage le 13
+                  Juillet 2026
+                </p>{' '}
+                <div className=" z-10 col-span-4  h-full w-full flex flex-col justify-center ">
+                  <div className="text-center text-white    flex flex-col items-center justify-center">
                     <h1
                       className={cn(
-                        'text-5xl md:text-7xl lg:text-8xl  mb-6 leading-tight color-black',
+                        'text-5xl md:text-7xl lg:text-9xl  mb-6 leading-tight color-black',
                         bilbo.className,
                       )}
                     >
                       Ariane & Timothé
                     </h1>
-                    <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
-                    <p className="text-md md:text-md mb-2 font-light opacity-90">
-                      Nous avons hâte de vous accueillir aux Lauziers pour
-                      célébrer notre mariage le
-                    </p>{' '}
-                    <p className="text-md md:text-md mb-2 font-light opacity-90">
-                      13 Juillet 2026
-                    </p>
-                    <div className="mb-16">
-                      <WeddingCountdown targetDate={weddingInfo.weddingDate} />
-                    </div>
+
+                    {/*  <div className="mb-16">
+                    <WeddingCountdown targetDate={weddingInfo.weddingDate} />
+                  </div> */}
                     {/* Scroll indicator */}
+                    <img
+                      src="/images/couple.jpeg"
+                      alt="Ariane and Timothé"
+                      className="h-180 w-auto absolute bottom-0  z-[-1] rounded-t-[90%]"
+                    />
                     <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
                       <Button
                         className="bg-transparent text-white flex items-center space-x-2 cursor-pointer"
@@ -159,86 +160,76 @@ export default function HomePage({
                     </div>
                   </div>
                 </div>
-              </Vortex>
-            </Section>
-          </div>
-
+                <p className=" text-white col-span-1 text-2xl mb-2 font-light opacity-90 h-full w-full flex flex-col justify-end pb-10">
+                  Lauziers, Condillac
+                </p>
+              </div>
+            </Vortex>
+          </Section>
           {/* Our Story Section */}
-          <Section id="our-story" background="default">
-            <SectionHeader title="Un petit mot" subtitle="" />
-            <WeddingPresentation
-              weddingInfo={weddingInfo}
-              onRSVPClick={() => scrollToSection('rsvp')}
-            />
+          <Section id="our-story" background="default" className="h-auto">
+            <WeddingPresentation weddingInfo={weddingInfo} />
           </Section>
 
           {/* Wedding Details Section */}
-          <Section id="details" background="default">
-            <SectionHeader
-              title="Informations"
-              subtitle="Toutes les informations importantes sur notre mariage"
-            />
-
+          <Section id="details" background="accent">
             {/* Additional Details Card */}
-            <div className=" ">
-              <div className=" rounded-xl sm:rounded-2xl p-6 sm:p- text-center grid grid-cols-4 gap-6 sm:gap-8  ">
-                <div className=" gap-6 sm:gap-8 text-left flex flex-col space-between col-span-2 flex justify-evenly">
-                  <h4 className="font-semibold text-responsive text-foreground mb-4"></h4>
-                  <div>
-                    <h4 className="font-semibold text-responsive text-foreground mb-2">
-                      Date
-                    </h4>
-                    <p className="text-responsive text-muted-foreground">
-                      {new Date(weddingInfo.weddingDate).toLocaleDateString(
-                        'fr-FR',
-                        {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        },
-                      )}
-                    </p>
+            <div className="space-y-4 ">
+              <div className=" rounded-xl sm:rounded-2xl   text-center grid grid-cols-4 gap-6 sm:gap-8  ">
+                <div className=" col-span-2 justify-around flex flex-col">
+                  <div className="text-center  flex flex-row items-center justify-center gap-10">
+                    <Image
+                      src={'/images/lauziers-aqua.webp'}
+                      alt={weddingInfo.coupleNames}
+                      width={550}
+                      height={100}
+                      className="object-cover w-200 "
+                    />
                   </div>
+                  <h1 className={cn('  text-8xl my-4', bilbo.className)}>
+                    Le lieu
+                  </h1>
                   <div>
-                    <h4 className="font-semibold text-responsive text-foreground mb-2">
-                      Lieu
-                    </h4>
-                    <p className="text-responsive text-muted-foreground">
-                      {weddingInfo.weddingAddress}
-                    </p>
+                    {weddingInfo.weddingAddress.split(',').map((chunk) => (
+                      <p className="text-xl text-black">{chunk}</p>
+                    ))}
                   </div>
-                  <AccommodationMap
-                    accommodations={[]}
-                    weddingInfo={weddingInfo}
-                    height="300px"
-                    showDirections={false}
-                    showDetails={false}
-                    className="mb-6 sm:mb-8"
-                  />
                 </div>
 
                 {weddingInfo.locationDirections &&
                   weddingInfo.locationDirections.length > 0 && (
-                    <div className=" col-span-2 ">
-                      <h4 className="font-semibold text-responsive text-foreground mb-4 ">
+                    <div className=" col-span-2 justify-around flex flex-col">
+                      <h1 className={cn('  text-4xl ', bilbo.className)}>
                         Comment venir ?
-                      </h4>
+                      </h1>
+                      <AccommodationMap
+                        accommodations={weddingInfo.locationDirections.map(
+                          (direction, index) => ({
+                            id: direction.type,
+                            name: getDirectionName(direction.type),
+                            address: direction.location.address,
+                            description: direction.information,
+                            isRecommended: true,
+                            displayOrder: index,
+                          }),
+                        )}
+                        weddingInfo={weddingInfo}
+                        height="300px"
+                        showDirections={false}
+                        showDetails={false}
+                        className="mb-6 sm:mb-8 mx-4"
+                      />
                       <div className="space-y-4 flex flex-col space-between ">
                         {weddingInfo.locationDirections.map(
                           (direction, index) => (
                             <div
                               key={index}
-                              className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg  p-3"
+                              className="relative flex flex-col my-6 bg-white  border-slate-200 rounded-lg  p-3"
                             >
                               <div className="flex items-center mb-1 gap-2">
                                 {WeddingHowToArriveIcons[direction.type]}
                                 <h5 className="font-medium text-foreground capitalize">
-                                  {direction.type === 'car'
-                                    ? 'En voiture'
-                                    : direction.type === 'train'
-                                      ? 'En train'
-                                      : 'Location de voiture'}
+                                  {getDirectionName(direction.type)}
                                 </h5>
                               </div>
                               <p className="block text-slate-600 leading-normal font-light mb-1 text-sm text-left">
@@ -299,12 +290,19 @@ export default function HomePage({
             background="default"
             className="h-screen max-h-screen "
           >
-            <SectionHeader
-              title="Programme"
-              subtitle="Voici comment notre jour se déroulera"
-            />
             <WeddingProgram />
           </Section>
+          <div className="gap-5 flex flex-col justify-evenly">
+            <p className="text-xl sm:text-2xl md:text-3xl  text-foreground mb-2">
+              Hâte de fêter ça avec vous !
+            </p>
+            <p className=" text-muted-foreground leading-relaxed font-light  font-small text-justify mb-2">
+              Merci de nous faire savoir si vous vous joindrez à nous pour cette
+              journée spéciale. Votre présence rendra notre célébration
+              parfaite.
+            </p>
+            <RSVPFormModal />
+          </div>
         </div>
       </NavbarLayout>
     </>

@@ -338,7 +338,7 @@ export default function AdminAccommodations() {
       </Head>
 
       <NavbarLayout type="admin" currentPath="/admin/accommodations">
-        <div className="space-y-6">
+        <div className="p-6 max-w-4xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center pt-10">
             <div>

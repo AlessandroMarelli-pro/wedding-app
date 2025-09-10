@@ -32,8 +32,8 @@ export interface Accommodation {
   priceRange?: string;
   isRecommended: boolean;
   displayOrder: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   sourceUrl?: string;
   imagesUrl?: string;
 }

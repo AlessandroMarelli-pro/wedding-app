@@ -39,22 +39,22 @@ const adminNavigation = [
     icon: <LayoutDashboard className="w-4 h-4" />,
   },
   {
-    name: 'Wedding Info',
+    name: 'Informations',
     link: '/admin/wedding',
     icon: <Edit3 className="w-4 h-4" />,
   },
   {
-    name: 'Accommodations',
+    name: 'Logements',
     link: '/admin/accommodations',
     icon: <MapPin className="w-4 h-4" />,
   },
   {
-    name: 'Program',
+    name: 'Programme',
     link: '/admin/program',
     icon: <Calendar className="w-4 h-4" />,
   },
   {
-    name: 'Guest List',
+    name: 'Liste des invités',
     link: '/admin/guests',
     icon: <Users className="w-4 h-4" />,
   },
@@ -138,7 +138,11 @@ export function NavbarLayout({
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar className="absolute">
+      <Navbar
+        className={
+          type === 'public' ? 'absolute' : 'relative bg-black text-white'
+        }
+      >
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
@@ -164,7 +168,7 @@ export function NavbarLayout({
                 key={`mobile-link-${idx}`}
                 href={item.link}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-neutral-600 dark:text-neutral-300"
+                className="relative text-white"
               >
                 <span className="block">{item.name}</span>
               </a>

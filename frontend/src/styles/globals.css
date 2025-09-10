@@ -36,6 +36,13 @@
   font-style: normal;
 }
 
+.nunito-regular {
+  font-family: 'Nunito', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
 @source './pages/**/*.{ts,tsx}';
 @source './components/**/*.{ts,tsx}';
 @source './app/**/*.{ts,tsx}';
@@ -187,7 +194,7 @@
   /* Smooth scrolling for mobile */
   html {
     scroll-behavior: smooth;
-    font-family: 'Arvo', serif;
+    font-family: 'Nunito', sans-serif;
   }
 
   /* Prevent zoom on input focus (iOS) */
