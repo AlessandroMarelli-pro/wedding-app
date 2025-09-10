@@ -124,7 +124,7 @@ export default function HomePage({
               className="flex items-center flex-col justify-center px-2 md:px-10  w-full h-screen"
             >
               <div className="relative grid grid-cols-6  items-center justify-center h-full w-full ">
-                <p className="text-white col-span-1  text-2xl mb-2 font-light opacity-90 h-full w-full flex flex-col justify-end pb-10">
+                <p className="text-[#F38181] fraunces-regular col-span-1  text-2xl mb-2 font-light opacity-90 h-full w-full flex flex-col justify-end pb-10">
                   Nous avons le plaisir de vous inviter à notre mariage le 13
                   Juillet 2026
                 </p>{' '}
@@ -159,7 +159,7 @@ export default function HomePage({
                     </div>
                   </div>
                 </div>
-                <p className=" text-white col-span-1 text-2xl mb-2 font-light opacity-90 h-full w-full flex flex-col justify-end pb-10">
+                <p className=" text-[#F38181] fraunces-bold col-span-1 text-2xl mb-2 font-light opacity-90 h-full w-full flex flex-col justify-end pb-10">
                   Lauziers, Condillac
                 </p>
               </div>
@@ -342,21 +342,25 @@ export default function HomePage({
           <Section
             id="program"
             background="muted"
-            className="h-screen max-h-screen "
+            className="h-[50vh] max-h-screen "
           >
             <WeddingProgram />
           </Section>
-          <div className="gap-5 flex flex-col justify-evenly">
-            <p className="text-xl sm:text-2xl md:text-3xl  text-foreground mb-2">
-              Hâte de fêter ça avec vous !
-            </p>
-            <p className=" text-muted-foreground leading-relaxed font-light  font-small text-justify mb-2">
-              Merci de nous faire savoir si vous vous joindrez à nous pour cette
-              journée spéciale. Votre présence rendra notre célébration
-              parfaite.
-            </p>
-            <RSVPFormModal />
-          </div>
+          <Section
+            id="rsvp"
+            background="accent"
+            className="h-[50vh] max-h-screen "
+          >
+            <div className="w-full h-full flex flex-col justify-center items-center  gap-10">
+              <p className="text-5xl  fraunces-regula text-[#EAFFD0]">
+                Nous espérons vous voir en ce jour spécial !
+              </p>
+              <RSVPFormModal
+                btnColor="bg-[#EAFFD0]"
+                btnTextColor="text-[#F38181] fraunces-bold"
+              />
+            </div>
+          </Section>
         </div>
       </NavbarLayout>
     </>

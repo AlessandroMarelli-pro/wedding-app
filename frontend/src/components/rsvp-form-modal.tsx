@@ -4,10 +4,12 @@ import {
   ModalContent,
   ModalTrigger,
 } from '@/components/ui/animated-modal';
+import { cn } from '@/lib';
 import { RSVPForm } from './rsvp-form';
 
 interface RSVPFormProps {
-  className?: string;
+  btnColor?: string;
+  btnTextColor?: string;
 }
 
 interface GuestInfo {
@@ -29,11 +31,17 @@ interface RSVPFormData {
 
 type FormStep = 'hash-entry' | 'rsvp-details' | 'confirmation';
 
-export function RSVPFormModal() {
+export function RSVPFormModal({ btnColor, btnTextColor }: RSVPFormProps) {
   return (
     <div className=" flex items-center justify-center">
       <Modal>
-        <ModalTrigger className="bg-black text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+        <ModalTrigger
+          className={cn(
+            ' px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300',
+            btnColor,
+            btnTextColor,
+          )}
+        >
           Confirmer votre présence
         </ModalTrigger>
         <ModalBody>
