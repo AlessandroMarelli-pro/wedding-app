@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
+import { RSVPFormModal } from './rsvp-form-modal';
 import {
   MobileNav,
   MobileNavHeader,
@@ -145,8 +146,12 @@ export function NavbarLayout({
       >
         {/* Desktop Navigation */}
         <NavBody>
-          <NavbarLogo />
-          <NavItems items={navItems} />
+          <NavItems items={navItems} className="font-bold text-[#F38181]" />
+          <RSVPFormModal
+            shadowCls="shadow-none"
+            btnColor="bg-[#F38181]"
+            btnTextColor="text-[#95E1D3] font-bold"
+          />
         </NavBody>
 
         {/* Mobile Navigation */}

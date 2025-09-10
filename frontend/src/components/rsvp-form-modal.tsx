@@ -10,6 +10,7 @@ import { RSVPForm } from './rsvp-form';
 interface RSVPFormProps {
   btnColor?: string;
   btnTextColor?: string;
+  shadowCls?: string;
 }
 
 interface GuestInfo {
@@ -31,15 +32,20 @@ interface RSVPFormData {
 
 type FormStep = 'hash-entry' | 'rsvp-details' | 'confirmation';
 
-export function RSVPFormModal({ btnColor, btnTextColor }: RSVPFormProps) {
+export function RSVPFormModal({
+  btnColor,
+  btnTextColor,
+  shadowCls = 'shadow-lg',
+}: RSVPFormProps) {
   return (
-    <div className=" flex items-center justify-center">
+    <div className=" flex items-center justify-center z-10">
       <Modal>
         <ModalTrigger
           className={cn(
-            ' px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300',
+            ' px-6 sm:px-8 py-3  font-medium  hover:shadow-xl transform hover:scale-105 transition-all duration-300',
             btnColor,
             btnTextColor,
+            shadowCls,
           )}
         >
           Confirmer votre présence

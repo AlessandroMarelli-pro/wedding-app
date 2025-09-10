@@ -31,9 +31,9 @@ export function WeddingPresentation({
       {/* Couple's Message */}
       <div className="container-responsive text-center  flex flex-row items-center justify-center p-10 ">
         <div className="">
-          <p className=" text-muted-foreground leading-relaxed font-light italic font-small text-justify text-lg">
+          <p className=" text-[#F38181]  leading-relaxed font-light italic font-small text-justify text-lg">
             "{weddingInfo.presentationMessage}" -{' '}
-            <span className="text-black font-bold">
+            <span className="text-[#F38181] font-bold">
               {weddingInfo.coupleNames}
             </span>
           </p>

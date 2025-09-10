@@ -151,7 +151,7 @@ export default function HomePage({
                     <img
                       src="/images/couple.jpeg"
                       alt="Ariane and Timothé"
-                      className="h-180 w-auto absolute bottom-0  z-[-1] rounded-t-[90%]"
+                      className="h-180 w-auto absolute   z-[-1] rounded-t-[90%]  -bottom-5"
                     />
                     <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
                       <Button
@@ -182,7 +182,7 @@ export default function HomePage({
               <div className=" rounded-xl sm:rounded-2xl   text-center grid  grid-cols-2 grid-rows-2 gap-6 max-h-screen h-screen">
                 <div className=" row-span-2">
                   <div className="row-span-1 justify-items-start flex flex-col">
-                    <div className="text-center  flex flex-row items-center justify-around gap-10 ">
+                    <div className="text-center  flex flex-row items-center justify-around gap-10">
                       <Image
                         src={'/images/lauziers-aqua.webp'}
                         alt={weddingInfo.coupleNames}
