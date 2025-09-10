@@ -55,7 +55,7 @@ export const WeddingHero = ({
           </div>
         </div>
       </div>
-      <p className=" text-[#F38181] xl:translate-y-0 translate-y-10 fraunces-bold row-span-1 xl:col-span-1 text-2xl  font-light opacity-90 h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end xl:pb-10 pt-10 xl:pt-0">
+      <p className=" text-[#F38181]  translate-y-10 lg:translate-y-0 fraunces-bold row-span-1 xl:col-span-1 text-2xl  font-light opacity-90 h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end xl:pb-10 pt-10 xl:pt-0">
         Lauziers, Condillac
       </p>
     </div>
