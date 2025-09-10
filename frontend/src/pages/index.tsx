@@ -175,56 +175,65 @@ export default function HomePage({
           <Section id="details" background="accent">
             {/* Additional Details Card */}
             <div className="space-y-4 ">
-              <div className=" rounded-xl sm:rounded-2xl   text-center grid grid-cols-4 gap-6 sm:gap-8  ">
-                <div className=" col-span-2 justify-around flex flex-col">
-                  <div className="text-center  flex flex-row items-center justify-center gap-10">
-                    <Image
-                      src={'/images/lauziers-aqua.webp'}
-                      alt={weddingInfo.coupleNames}
-                      width={550}
-                      height={100}
-                      className="object-cover w-200 "
-                    />
+              <div className=" rounded-xl sm:rounded-2xl   text-center grid  grid-cols-2 grid-rows-2 gap-6 max-h-screen h-screen">
+                <div className=" row-span-2">
+                  <div className="row-span-1 justify-items-start flex flex-col">
+                    <div className="text-center  flex flex-row items-center justify-around gap-10 ">
+                      <Image
+                        src={'/images/lauziers-aqua.webp'}
+                        alt={weddingInfo.coupleNames}
+                        width={600}
+                        height={600}
+                        className="object-cover w-full "
+                      />
+                    </div>
                   </div>
-                  <h1 className={cn('  text-8xl my-4', bilbo.className)}>
-                    Le lieu
-                  </h1>
-                  <div>
-                    {weddingInfo.weddingAddress.split(',').map((chunk) => (
-                      <p className="text-xl text-black">{chunk}</p>
-                    ))}
+                  <div className="row-span-1 justify-items-start flex flex-col">
+                    <h1 className={cn('  text-8xl my-4', bilbo.className)}>
+                      Le lieu
+                    </h1>
+                    <div>
+                      {weddingInfo.weddingAddress.split(',').map((chunk) => (
+                        <p className="text-xl text-black">{chunk}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
-
                 {weddingInfo.locationDirections &&
                   weddingInfo.locationDirections.length > 0 && (
-                    <div className=" col-span-2 justify-around flex flex-col">
-                      <h1 className={cn('  text-4xl ', bilbo.className)}>
-                        Comment venir ?
-                      </h1>
-                      <AccommodationMap
-                        accommodations={weddingInfo.locationDirections.map(
-                          (direction, index) => ({
-                            id: direction.type,
-                            name: getDirectionName(direction.type),
-                            address: direction.location.address,
-                            description: direction.information,
-                            isRecommended: true,
-                            displayOrder: index,
-                          }),
-                        )}
-                        weddingInfo={weddingInfo}
-                        height="300px"
-                        showDirections={false}
-                        showDetails={false}
-                        className="mb-6 sm:mb-8 mx-4"
-                      />
-                      <div className="space-y-4 flex flex-col space-between ">
+                    <div className="row-span-2">
+                      <div className="row-span-1 flex flex-col justify-around ">
+                        <div className="h-full ">
+                          <h1
+                            className={cn('pt-10 text-8xl ', bilbo.className)}
+                          >
+                            Comment venir ?
+                          </h1>
+                          <AccommodationMap
+                            accommodations={weddingInfo.locationDirections.map(
+                              (direction, index) => ({
+                                id: direction.type,
+                                name: getDirectionName(direction.type),
+                                address: direction.location.address,
+                                description: direction.information,
+                                isRecommended: true,
+                                displayOrder: index,
+                              }),
+                            )}
+                            weddingInfo={weddingInfo}
+                            height="300px"
+                            showDirections={false}
+                            showDetails={false}
+                            className="mb-6 sm:mb-8  w-full"
+                          />
+                        </div>
+                      </div>
+                      <div className="row-span-1 justify-items-start flex flex-col max-h-[50%]">
                         {weddingInfo.locationDirections.map(
                           (direction, index) => (
                             <div
                               key={index}
-                              className="relative flex flex-col my-6 bg-white  border-slate-200 rounded-lg  p-3"
+                              className="relative flex flex-col   rounded-lg  p-3"
                             >
                               <div className="flex items-center mb-1 gap-2">
                                 {WeddingHowToArriveIcons[direction.type]}
