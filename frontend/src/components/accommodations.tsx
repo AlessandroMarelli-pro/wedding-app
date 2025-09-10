@@ -47,19 +47,19 @@ export function AccommodationsList({
       imagesUrl: accommodation.imagesUrl?.split(',') || [],
       content: () => {
         return (
-          <div className="p-4 flex flex-col gap-4">
-            <p className=" leading-relaxed text-sm  pt-4">
+          <div className="p-4 flex flex-col gap-4 pt-0">
+            <p className=" leading-relaxed text-base  pt-4 text-justify">
               {accommodation.description}
             </p>
             <div className=" flex flex-row gap-4 items-center">
               <div className="flex items-center space-x-3">
-                <IconMapPin className="w-8 h-8 text-white  flex-shrink-0" />
+                <IconMapPin className="w-8 h-8   flex-shrink-0" />
                 <p className="text-sm font-medium">{accommodation.address}</p>
               </div>
 
               {accommodation.priceRange && (
                 <div className="flex items-center space-x-3">
-                  <IconCurrencyEuro className="w-8 h-8 text-white flex-shrink-0" />
+                  <IconCurrencyEuro className="w-8 h-8  flex-shrink-0" />
                   <p className="text-sm  font-medium">
                     {accommodation.priceRange?.replace('€', '').replace('', '')}
                   </p>
