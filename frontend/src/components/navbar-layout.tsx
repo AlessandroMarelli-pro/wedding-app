@@ -146,7 +146,7 @@ export function NavbarLayout({
       >
         {/* Desktop Navigation */}
         <NavBody>
-          <NavItems items={navItems} className="font-bold text-[#F38181]" />
+          <NavItems items={navItems} className="font-bold text-[#F38181] " />
           <RSVPFormModal
             shadowCls="shadow-none"
             btnColor="bg-[#F38181]"
