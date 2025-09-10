@@ -15,16 +15,21 @@ export const WeddingAccomodations = ({
   font: NextFontWithVariable;
 }) => (
   <div className="space-y-4 ">
-    <div className=" rounded-xl sm:rounded-2xl   text-center grid  grid-cols-2 grid-rows-2  lg:max-h-screen h-screen">
+    <div className="text-center grid  xl:grid-cols-2 xl:grid-rows-2 lg:grid-rows-4  lg:max-h-screen h-screen">
       <div className="row-span-2">
         <div className="row-span-1 flex flex-col justify-around ">
           <div className="h-full ">
-            <h1 className={cn('py-5  text-8xl text-[#F38181]', font.className)}>
-              Ou dormir ?
+            <h1
+              className={cn(
+                'py-5  text-5xl lg:text-8xl text-[#F38181]',
+                font.className,
+              )}
+            >
+              Où dormir ?
             </h1>
           </div>
         </div>
-        <div className="row-span-1 justify-items-start flex flex-col max-h-[50%]">
+        <div className="row-span-1  flex flex-col max-h-[50%]">
           <AccommodationsList
             accommodations={accommodations}
             weddingInfo={{
@@ -38,7 +43,7 @@ export const WeddingAccomodations = ({
           />
         </div>
       </div>
-      <div className=" row-span-2 flex flex-col justify-evenly">
+      <div className=" row-span-2 xl:flex xl:flex-col justify-evenly">
         <div className="row-span-1  flex flex-col ">
           <div className="text-center  flex flex-row items-center justify-around ">
             <Image

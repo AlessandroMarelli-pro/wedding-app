@@ -70,7 +70,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
               ref={ref}
               className="w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0] sm:rounded-3xl overflow-hidden"
             >
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center ">
                 {active.imagesUrl?.map((image, idx) => (
                   <motion.div
                     layoutId={`image-${image}-${id}`}
@@ -88,14 +88,14 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                       rotate: 0,
                       zIndex: 100,
                     }}
-                    className="rounded-xl -mr-4 mt-4 p-1 bg-[#F38181] border-[#F38181] border  shrink-0 overflow-hidden"
+                    className="rounded-xl -mr-4 mt-4 p-1 bg-[#F38181] border-[#F38181] border  shrink-0 overflow-hidden "
                   >
                     <img
                       src={image}
                       alt={image}
                       width="500"
                       height="500"
-                      className="rounded-lg h-20 w-20 md:h-50 md:w-50 object-cover shrink-0"
+                      className="rounded-lg h-20 w-20 md:h-50 md:w-50 object-cover shrink-0 "
                     />
                   </motion.div>
                 ))}
@@ -143,13 +143,13 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
           </div>
         ) : null}
       </AnimatePresence>
-      <div className="mx-auto w-full gap-4 grid grid-cols-2">
+      <div className="mx-auto w-full gap-4 grid grid-cols-2  ">
         {cards.map((card, index) => (
           <motion.div
             layoutId={`card-${card.title}-${id}`}
             key={`card-${card.title}-${id}`}
             onClick={() => setActive(card)}
-            className="p-1 flex flex-col md:flex-row justify-between   hover:bg-neutral-200   cursor-pointer"
+            className="p-1 flex flex-col md:flex-row lg:justify-around   hover:bg-neutral-200   cursor-pointer"
           >
             <div className="flex gap-4 flex-col  justify-items-start">
               <motion.div layoutId={`image-${card.title}-${id}`}>
@@ -166,7 +166,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     height={300}
                     src={card.image2}
                     alt={card.title}
-                    className="h-60 w-60 md:h-35 md:w-35  object-cover object-top"
+                    className="h-60 w-60 md:h-35 md:w-35  object-cover object-top hidden lg:block"
                   />
                 </div>
               </motion.div>

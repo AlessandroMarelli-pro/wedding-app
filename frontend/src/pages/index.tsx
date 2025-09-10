@@ -209,13 +209,14 @@ export default function HomePage({
           <WeddingDetailsSection
             weddingInfo={weddingInfo}
             getDirectionName={getDirectionName}
-          />
-          {/* 
-         
+          />{' '}
           <AccommodationsSection
             accommodations={accommodations}
             weddingInfo={weddingInfo}
           />
+          {/* 
+         
+         
           <WeddingProgramSection />
           <RSVPSection /> */}
         </div>
