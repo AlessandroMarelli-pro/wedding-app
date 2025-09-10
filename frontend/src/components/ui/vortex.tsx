@@ -15,6 +15,7 @@ interface VortexProps {
   baseRadius?: number;
   rangeRadius?: number;
   backgroundColor?: string;
+  height?: number;
 }
 
 export const Vortex = (props: VortexProps) => {
@@ -25,6 +26,7 @@ export const Vortex = (props: VortexProps) => {
   const particlePropCount = 9;
   const particlePropsLength = particleCount * particlePropCount;
   const rangeY = props.rangeY || 100;
+  const height = props.height || 1000;
   const baseTTL = 50;
   const rangeTTL = 150;
   const baseSpeed = props.baseSpeed || 0.0;
@@ -62,7 +64,7 @@ export const Vortex = (props: VortexProps) => {
       const ctx = canvas.getContext('2d');
 
       if (ctx) {
-        resize(canvas, ctx);
+        resize(canvas, ctx, height);
         initParticles();
         draw(canvas, ctx);
       }
@@ -191,10 +193,10 @@ export const Vortex = (props: VortexProps) => {
     canvas: HTMLCanvasElement,
     ctx?: CanvasRenderingContext2D,
   ) => {
-    const { innerWidth, innerHeight } = window;
+    const { innerWidth } = window;
 
     canvas.width = innerWidth;
-    canvas.height = innerHeight;
+    canvas.height = height;
 
     center[0] = 0.5 * canvas.width;
     center[1] = 0.5 * canvas.height;

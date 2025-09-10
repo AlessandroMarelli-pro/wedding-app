@@ -27,12 +27,18 @@ interface HomePageProps {
 
 const HeroSection = ({
   scrollToSection,
+  maxCanvasHeight,
 }: {
   scrollToSection: (sectionId: string) => void;
+  maxCanvasHeight: number;
 }) => {
   return (
     <Section id="home">
-      <WeddingHero scrollToSection={scrollToSection} font={bilbo} />
+      <WeddingHero
+        scrollToSection={scrollToSection}
+        font={bilbo}
+        maxCanvasHeight={maxCanvasHeight}
+      />
     </Section>
   );
 };
@@ -171,6 +177,13 @@ export default function HomePage({
         ? 'En train'
         : 'Location de voiture';
   };
+  let maxCanvasHeight = 500;
+  try {
+    maxCanvasHeight = document?.body?.clientHeight || 500;
+  } catch (error) {
+    console.error('Error getting max canvas height:', error);
+  }
+
   return (
     <>
       <Head>
@@ -189,8 +202,11 @@ export default function HomePage({
         onSectionChange={scrollToSection}
       >
         <div className="min-h-screen bg-white">
-          <HeroSection scrollToSection={scrollToSection} />
-          <OurStorySection weddingInfo={weddingInfo} />
+          <HeroSection
+            scrollToSection={scrollToSection}
+            maxCanvasHeight={maxCanvasHeight}
+          />
+          {/* <OurStorySection weddingInfo={weddingInfo} />
           <WeddingDetailsSection
             weddingInfo={weddingInfo}
             getDirectionName={getDirectionName}
@@ -200,7 +216,7 @@ export default function HomePage({
             weddingInfo={weddingInfo}
           />
           <WeddingProgramSection />
-          <RSVPSection />
+          <RSVPSection /> */}
         </div>
       </NavbarLayout>
     </>
