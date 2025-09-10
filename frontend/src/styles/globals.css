@@ -43,6 +43,15 @@
   font-style: normal;
 }
 
+.fraunces-light {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings:
+    'SOFT' 0,
+    'WONK' 0;
+}
 .fraunces-regular {
   font-family: 'Fraunces', serif;
   font-optical-sizing: auto;
@@ -214,7 +223,7 @@
   /* Smooth scrolling for mobile */
   html {
     scroll-behavior: smooth;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Fraunces', serif;
   }
 
   /* Prevent zoom on input focus (iOS) */

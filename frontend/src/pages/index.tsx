@@ -1,14 +1,19 @@
 import { Button } from '@/components/ui/button';
+import { LinkPreview } from '@/components/ui/link-preview';
 import { Vortex } from '@/components/ui/vortex';
 import { cn } from '@/lib/utils';
-import { IconArrowDown, IconCar, IconTrain } from '@tabler/icons-react';
+import {
+  IconArrowDown,
+  IconCar,
+  IconMapPinFilled,
+  IconTrain,
+} from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useState } from 'react';
 import {
-  AccommodationMap,
   AccommodationsList,
   NavbarLayout,
   RSVPFormModal,
@@ -29,9 +34,9 @@ interface HomePageProps {
   accommodations: any[];
 }
 const WeddingHowToArriveIcons = {
-  car: <IconCar />,
-  train: <IconTrain />,
-  'car rental': <IconCar />,
+  car: <IconCar className="w-10 h-10" />,
+  train: <IconTrain className="w-10 h-10" />,
+  'car rental': <IconCar className="w-10 h-10" />,
 };
 
 export default function HomePage({
@@ -198,15 +203,17 @@ export default function HomePage({
                     </h1>
                     <div>
                       {weddingInfo.weddingAddress.split(',').map((chunk) => (
-                        <p className="text-xl text-[#EAFFD0] ">{chunk}</p>
+                        <p className="text-xl text-[#EAFFD0] fraunces-light">
+                          {chunk}
+                        </p>
                       ))}
                     </div>
                   </div>
                 </div>
                 {weddingInfo.locationDirections &&
                   weddingInfo.locationDirections.length > 0 && (
-                    <div className="row-span-2">
-                      <div className="row-span-1 flex flex-col justify-around ">
+                    <div className="row-span-2 flex flex-col justify-around">
+                      <div className="row-span-1 flex flex-col  ">
                         <div className="h-full ">
                           <h1
                             className={cn(
@@ -216,7 +223,7 @@ export default function HomePage({
                           >
                             Comment venir ?
                           </h1>
-                          <AccommodationMap
+                          {/*                           <AccommodationMap
                             accommodations={weddingInfo.locationDirections.map(
                               (direction, index) => ({
                                 id: direction.type,
@@ -231,44 +238,46 @@ export default function HomePage({
                             height="300px"
                             showDirections={false}
                             showDetails={false}
-                            className="mb-6 sm:mb-8  w-full"
-                          />
+                            className="mb-6 sm:mb-4  w-full"
+                          /> */}
                         </div>
                       </div>
-                      <div className="row-span-1 justify-items-start flex flex-col max-h-[50%]">
+                      <div className="row-span-1  flex flex-col  gap-4">
                         {weddingInfo.locationDirections.map(
                           (direction, index) => (
                             <div
                               key={index}
-                              className="relative flex flex-col   rounded-lg  p-3"
+                              className="relative flex flex-col   items-center rounded-lg   p-3"
                             >
                               <div className="flex items-center mb-1 gap-2 text-[#EAFFD0]">
                                 {WeddingHowToArriveIcons[direction.type]}
-                                <h5 className="font-medium text-[#EAFFD0] capitalize">
+                                <h5 className="font-medium text-[#EAFFD0] capitalize text-3xl  ">
                                   {getDirectionName(direction.type)}
                                 </h5>
                               </div>
-                              <p className="block text-[#EAFFD0]  leading-normal  mb-1 text-sm text-left">
-                                {direction.information}
+                              <p className="block text-[#EAFFD0]  leading-normal  mb-1 text-md text-left">
+                                {direction.information
+                                  .split('.')
+                                  .filter((line) => line.trim() !== '')
+                                  .map((line, index) => (
+                                    <span key={index}>
+                                      {line + '.'}
+                                      <br />
+                                    </span>
+                                  ))}
                               </p>
-                              <div className="text-left">
+                              <div className="text-left flex flex-row items-center gap-2">
                                 <span className="text-sm text-[#EAFFD0] ">
-                                  📍
+                                  <IconMapPinFilled className="w-4 h-4" />
                                 </span>
-                                {direction.location.link ? (
-                                  <a
-                                    href={direction.location.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[#EAFFD0] hover:underline text-sm"
-                                  >
-                                    {direction.location.address}
-                                  </a>
-                                ) : (
-                                  <span className="text-muted-foreground text-sm">
-                                    {direction.location.address}
-                                  </span>
-                                )}
+                                <LinkPreview
+                                  width={300}
+                                  height={200}
+                                  url={direction.location.link || ''}
+                                  className="text-[#EAFFD0] hover:underline text-sm target:blank"
+                                >
+                                  {direction.location.address}
+                                </LinkPreview>
                               </div>
                             </div>
                           ),
@@ -323,16 +332,6 @@ export default function HomePage({
                       />
                     </div>
                   </div>
-                  {/*   <div className="row-span-1  flex flex-col  ">
-                    <AccommodationMap
-                      accommodations={accommodations}
-                      weddingInfo={weddingInfo}
-                      height="250px"
-                      showDirections={false}
-                      showDetails={false}
-                      className=" h-[15rem]"
-                    />
-                  </div> */}
                 </div>
               </div>
             </div>
