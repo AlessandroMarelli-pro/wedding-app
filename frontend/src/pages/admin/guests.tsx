@@ -62,6 +62,10 @@ export default function GuestsPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [uploadMessage, setUploadMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
   const [statusFilter, setStatusFilter] = useState<
     'all' | 'confirmed' | 'declined' | 'pending'
   >('all');
@@ -122,58 +126,48 @@ export default function GuestsPage() {
     }
   };
 
-  const handleFileUpload = async () => {
-    if (!selectedFile) {
-      toast({
-        title: 'Error',
-        description: 'Please select a CSV file to upload',
-        variant: 'destructive',
-      });
-      return;
-    }
+  const handleFileUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedFile) return;
+
+    const token = localStorage.getItem('adminToken');
+    if (!token) return;
 
     setIsUploading(true);
+    setUploadMessage(null);
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        throw new Error('No admin token found');
-      }
-
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/uploads`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/upload`,
         {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           body: formData,
         },
       );
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData || 'Upload failed');
+      const data = await response.json();
+
+      if (response.ok) {
+        setUploadMessage({
+          type: 'success',
+          text: `CSV uploaded successfully! Processed ${data.processedRows} guests.`,
+        });
+        setSelectedFile(null);
+        fetchData(); // Refresh stats
+      } else {
+        setUploadMessage({
+          type: 'error',
+          text: data.message || 'Upload failed. Please try again.',
+        });
       }
-
-      const result = await response.json();
-
-      toast({
-        title: 'Success',
-        description: `Uploaded ${result.successfulImports} guests successfully`,
-      });
-
-      setSelectedFile(null);
-      fetchData(); // Refresh the data
     } catch (error) {
-      console.error('Upload error:', error);
-      toast({
-        title: 'Upload Failed',
-        description:
-          error instanceof Error ? error.message : 'Failed to upload CSV file',
-        variant: 'destructive',
+      setUploadMessage({
+        type: 'error',
+        text: 'Network error. Please try again.',
       });
     } finally {
       setIsUploading(false);
@@ -405,7 +399,8 @@ export default function GuestsPage() {
                     onChange={(e) =>
                       setSelectedFile(e.target.files?.[0] || null)
                     }
-                    className="flex-1"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-rose-400 focus:border-transparent"
+                    disabled={isUploading}
                   />
                   <Button
                     onClick={handleFileUpload}
@@ -414,12 +409,29 @@ export default function GuestsPage() {
                     {isUploading ? 'Uploading...' : 'Upload CSV'}
                   </Button>
                 </div>
-
                 <p className="text-sm text-gray-600">
                   CSV format: firstName, lastName, email, phoneNumber,
                   partySize, dietaryRestrictions, specialRequests
                 </p>
-
+                {uploadMessage && (
+                  <div
+                    className={`p-3 rounded-md ${
+                      uploadMessage.type === 'success'
+                        ? 'bg-green-50 border border-green-200 text-green-800'
+                        : 'bg-red-50 border border-red-200 text-red-800'
+                    }`}
+                  >
+                    <p className="text-sm">{uploadMessage.text}</p>
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  disabled={!selectedFile || isUploading}
+                  onClick={handleFileUpload}
+                  className="cursor-pointer w-full bg-rose-600 text-white py-2 px-4 rounded-md hover:bg-rose-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isUploading ? 'Uploading...' : 'Upload CSV'}
+                </button>{' '}
                 {csvUploads.length > 0 && (
                   <div>
                     <h4 className="font-medium mb-2">Recent Uploads:</h4>
