@@ -83,7 +83,7 @@ async function bootstrap() {
   app.use((req: any, res: any, next: any) => {
     const clientIP = req.ip || req.connection.remoteAddress;
     const now = Date.now();
-    const windowMs = 15 * 60 * 1000; // 15 minutes
+    const windowMs = 60 * 1000; // 15 minutes
     const maxRequests = 100; // Max requests per window
 
     if (!rateLimitMap.has(clientIP)) {
@@ -175,7 +175,7 @@ async function bootstrap() {
 
   console.log('🚀 Wedding API Server started successfully!');
   console.log(`📍 Server running on: http://${host}:${port}`);
-  console.log(`🔗 API endpoints: http://${host}:${port}/api`);
+  console.log(`🔗 API endpoints: http://localhost:${port}/api`);
   console.log('💒 Ready to manage your wedding website!');
 }
 

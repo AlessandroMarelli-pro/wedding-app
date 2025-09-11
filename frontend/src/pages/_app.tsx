@@ -12,9 +12,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary>
       {isAdminPage ? (
-        <NavbarLayout type="admin">
-          <Component {...pageProps} />
-        </NavbarLayout>
+        <div className=" font-sans">
+          <NavbarLayout type="admin">
+            <Component {...pageProps} />
+          </NavbarLayout>
+        </div>
       ) : (
         <Component {...pageProps} />
       )}

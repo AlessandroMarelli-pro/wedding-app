@@ -86,7 +86,7 @@ export function NavbarLayout({
   return (
     <div
       className={cn(
-        ' flex w-screen  flex-1 flex-col overflow-hidden  rounded-l-none  border-t-8 border-[#222831] bg-[#222831] md:flex-row ',
+        ' flex w-screen  flex-1 flex-col overflow-hidden  rounded-l-none  border-8 border-[#222831] bg-[#222831] md:flex-row ',
         'h-screen', // for your use case, use `h-screen` instead of `h-[60vh]`
       )}
     >
@@ -120,7 +120,7 @@ export function NavbarLayout({
         </SidebarBody>
       </Sidebar>
       {/* Main Content */}
-      <main className="flex h-full w-full flex-1 flex-col gap-2 rounded-tl-2xl border border-[#222831] bg-white p-2 md:p-10 ">
+      <main className="flex h-full w-full flex-1 flex-col gap-2 rounded-2xl border border-[#222831] bg-white p-2 md:p-10 ">
         {children}
       </main>
     </div>
