@@ -86,7 +86,7 @@ export function NavbarLayout({
   return (
     <div
       className={cn(
-        ' flex w-screen  flex-1 flex-col overflow-hidden rounded-r-md rounded-l-none border border-neutral-200 bg-neutral-200 md:flex-row ',
+        ' flex w-screen  flex-1 flex-col overflow-hidden rounded-r-md rounded-l-none border border-[#222831] bg-[#222831] md:flex-row ',
         'h-screen', // for your use case, use `h-screen` instead of `h-[60vh]`
       )}
     >
@@ -120,7 +120,7 @@ export function NavbarLayout({
         </SidebarBody>
       </Sidebar>
       {/* Main Content */}
-      <main className="flex h-full w-full flex-1 flex-col gap-2 rounded-tl-2xl border border-neutral-200 bg-white p-2 md:p-10 ">
+      <main className="flex h-full w-full flex-1 flex-col gap-2 rounded-tl-2xl border border-[#222831] bg-white p-2 md:p-10 ">
         {children}
       </main>
     </div>
@@ -130,13 +130,13 @@ export const Logo = () => {
   return (
     <a
       href="#"
-      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
+      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-[#EEEEEE] "
     >
-      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
+      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="font-medium whitespace-pre text-black dark:text-white"
+        className="font-medium whitespace-pre text-[#EEEEEE] "
       >
         Acet Labs
       </motion.span>
@@ -149,7 +149,7 @@ export const LogoIcon = () => {
       href="#"
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
     >
-      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
+      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white" />
     </a>
   );
 };

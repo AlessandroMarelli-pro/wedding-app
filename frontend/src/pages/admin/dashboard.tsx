@@ -176,7 +176,7 @@ export default function AdminDashboard() {
       </Head>
 
       <NavbarLayout type="admin" currentPath="/admin/dashboard">
-        <div className="p-6 ">
+        <div className="">
           {/* Advanced Analytics */}
           <div className="">
             <AdminStats />

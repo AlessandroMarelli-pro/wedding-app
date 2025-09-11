@@ -1,5 +1,5 @@
+import { NavbarLayout } from '@/components/admin-navbar-layout';
 import { GuestDetailsModal } from '@/components/guest-details-modal';
-import { NavbarLayout } from '@/components/navbar-layout';
 import {
   Badge,
   Button,

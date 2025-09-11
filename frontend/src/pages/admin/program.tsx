@@ -26,7 +26,7 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { NavbarLayout } from '../../components/navbar-layout';
+import { NavbarLayout } from '../../components/admin-navbar-layout';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button-pers';
 import {
