@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { NavbarLayout } from '../../components/admin-navbar-layout';
 import { AdminStats } from '../../components/admin-stats';
-import { NavbarLayout } from '../../components/navbar-layout';
 import { Card, CardContent } from '../../components/ui/card';
 
 interface RSVPStats {

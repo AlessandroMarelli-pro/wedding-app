@@ -1,0 +1,155 @@
+'use client';
+
+import { cn } from '@/lib/utils';
+import {
+  Calendar,
+  Edit3,
+  Image,
+  LayoutDashboard,
+  MapPin,
+  Users,
+} from 'lucide-react';
+import { motion } from 'motion/react';
+import { useRouter } from 'next/router';
+import { ReactNode, useState } from 'react';
+import { Sidebar, SidebarBody, SidebarLink } from './ui/sidebar';
+
+interface NavbarLayoutProps {
+  children: ReactNode;
+  type: 'public' | 'admin';
+  currentSection?: string;
+  currentPath?: string;
+  onSectionChange?: (section: string) => void;
+}
+
+// Admin navigation configuration
+const adminNavigation = [
+  {
+    label: 'Dashboard',
+    href: '/admin/dashboard',
+    icon: <LayoutDashboard className="w-4 h-4" />,
+  },
+  {
+    label: 'Informations',
+    href: '/admin/wedding',
+    icon: <Edit3 className="w-4 h-4" />,
+  },
+  {
+    label: 'Logements',
+    href: '/admin/accommodations',
+    icon: <MapPin className="w-4 h-4" />,
+  },
+  {
+    label: 'Programme',
+    href: '/admin/program',
+    icon: <Calendar className="w-4 h-4" />,
+  },
+  {
+    label: 'Liste des invités',
+    href: '/admin/guests',
+    icon: <Users className="w-4 h-4" />,
+  },
+  {
+    label: 'Images',
+    href: '/admin/images',
+    icon: <Image className="w-4 h-4" />,
+  },
+];
+
+export function NavbarLayout({
+  children,
+  type,
+  currentSection,
+  currentPath,
+  onSectionChange,
+}: NavbarLayoutProps) {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    router.push('/admin/login');
+  };
+
+  // Configure navbar based on type
+  const navItems = adminNavigation;
+
+  // Handle section changes for public navigation
+  const handleSectionClick = (sectionId: string) => {
+    if (onSectionChange) {
+      onSectionChange(sectionId);
+    }
+  };
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        ' flex w-screen  flex-1 flex-col overflow-hidden rounded-r-md rounded-l-none border border-neutral-200 bg-neutral-200 md:flex-row ',
+        'h-screen', // for your use case, use `h-screen` instead of `h-[60vh]`
+      )}
+    >
+      <Sidebar open={open} setOpen={setOpen}>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+            {open ? <Logo /> : <LogoIcon />}
+            <div className="mt-8 flex flex-col gap-2">
+              {navItems.map((link, idx) => (
+                <SidebarLink key={idx} link={link} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <SidebarLink
+              link={{
+                label: 'Manu Arora',
+                href: '#',
+                icon: (
+                  <img
+                    src="https://assets.aceternity.com/manu.png"
+                    className="h-7 w-7 shrink-0 rounded-full"
+                    width={50}
+                    height={50}
+                    alt="Avatar"
+                  />
+                ),
+              }}
+            />
+          </div>
+        </SidebarBody>
+      </Sidebar>
+      {/* Main Content */}
+      <main className="flex h-full w-full flex-1 flex-col gap-2 rounded-tl-2xl border border-neutral-200 bg-white p-2 md:p-10 ">
+        {children}
+      </main>
+    </div>
+  );
+}
+export const Logo = () => {
+  return (
+    <a
+      href="#"
+      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
+    >
+      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="font-medium whitespace-pre text-black dark:text-white"
+      >
+        Acet Labs
+      </motion.span>
+    </a>
+  );
+};
+export const LogoIcon = () => {
+  return (
+    <a
+      href="#"
+      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
+    >
+      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
+    </a>
+  );
+};

@@ -53,23 +53,6 @@ export function AdminStats({ className }: AdminStatsProps) {
     }
   };
 
-  const handleExportCSV = async () => {
-    try {
-      const blob = await ApiService.exportGuestsCSV();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `guests-export-${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Failed to export CSV:', err);
-      setError('Failed to export guest data');
-    }
-  };
-
   const formatPercentage = (value: number) => `${value.toFixed(1)}%`;
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString();
@@ -111,73 +94,52 @@ export function AdminStats({ className }: AdminStatsProps) {
     );
   }
 
+  const mainStats = [
+    {
+      title: 'Total Guests',
+      value: dashboardSummary?.totalGuests || 0,
+      description: 'Invited to the wedding',
+      icon: Users,
+    },
+    {
+      title: 'Response Rate',
+      value: dashboardSummary?.responseRate || 0,
+      description: 'Have responded to invitation',
+      icon: TrendingUp,
+    },
+    {
+      title: 'Attendance Rate',
+      value: dashboardSummary?.attendanceRate || 0,
+      description: 'Confirmed attendance',
+      icon: UserCheck,
+    },
+    {
+      title: 'Confirmed Attendees',
+      value: dashboardSummary?.confirmedAttendees || 0,
+      description: 'Total people attending',
+      icon: UserCheck,
+    },
+  ];
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Guests</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {dashboardSummary?.totalGuests || 0}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Invited to the wedding
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatPercentage(dashboardSummary?.responseRate || 0)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Have responded to invitation
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Attendance Rate
-            </CardTitle>
-            <UserCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatPercentage(dashboardSummary?.attendanceRate || 0)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Confirmed attendance
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Confirmed Attendees
-            </CardTitle>
-            <UserCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {dashboardSummary?.confirmedAttendees || 0}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Total people attending
-            </p>
-          </CardContent>
-        </Card>
+        {mainStats.map((stat) => (
+          <Card key={stat.title}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {stat.title}
+              </CardTitle>
+              <stat.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">
+                {stat.description}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Detailed Analytics */}

@@ -3,10 +3,8 @@
 import {
   Calendar,
   Edit3,
-  ExternalLink,
   Image,
   LayoutDashboard,
-  LogOut,
   MapPin,
   Users,
 } from 'lucide-react';
@@ -109,31 +107,6 @@ export function NavbarLayout({
     }
   };
 
-  // Add footer actions to navbar items
-  const navbarItems =
-    type === 'public'
-      ? [
-          ...navItems.map((item) => ({
-            ...item,
-            onClick: item.link.startsWith('#')
-              ? () => handleSectionClick(item.link.substring(1))
-              : undefined,
-          })),
-        ]
-      : [
-          ...navItems,
-          {
-            name: 'View Site',
-            link: '/',
-            icon: <ExternalLink className="w-4 h-4" />,
-          },
-          {
-            name: 'Logout',
-            link: '#',
-            icon: <LogOut className="w-4 h-4" />,
-            onClick: handleLogout,
-          },
-        ];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
