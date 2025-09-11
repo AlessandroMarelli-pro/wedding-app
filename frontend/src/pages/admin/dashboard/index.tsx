@@ -147,7 +147,7 @@ export default function AdminDashboard() {
           <title>Dashboard - Wedding Admin</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <div className="p-6">
+        <div className="p-6 ">
           <div className="animate-pulse space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (

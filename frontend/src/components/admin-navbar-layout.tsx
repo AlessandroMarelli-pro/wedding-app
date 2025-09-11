@@ -27,32 +27,32 @@ const adminNavigation = [
   {
     label: 'Dashboard',
     href: '/admin/dashboard',
-    icon: <LayoutDashboard className=" shrink-0 " />,
+    icon: <LayoutDashboard className="h-4 w-4 shrink-0 " />,
   },
   {
     label: 'Informations',
     href: '/admin/information',
-    icon: <Edit3 className=" shrink-0 " />,
+    icon: <Edit3 className="h-4 w-4 shrink-0 " />,
   },
   {
     label: 'Logements',
     href: '/admin/accommodations',
-    icon: <MapPin className=" shrink-0 " />,
+    icon: <MapPin className="h-4 w-4 shrink-0 " />,
   },
   {
     label: 'Programme',
     href: '/admin/program',
-    icon: <Calendar className=" shrink-0 " />,
+    icon: <Calendar className="h-4 w-4 shrink-0 " />,
   },
   {
     label: 'Liste des invités',
     href: '/admin/guests',
-    icon: <Users className=" shrink-0 " />,
+    icon: <Users className="h-4 w-4 shrink-0 " />,
   },
   {
     label: 'Images',
     href: '/admin/images',
-    icon: <Image className=" shrink-0 " />,
+    icon: <Image className="h-4 w-4 shrink-0 " />,
   },
 ];
 
