@@ -83,63 +83,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleFileUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!uploadFile) return;
-
-    const token = localStorage.getItem('adminToken');
-    if (!token) return;
-
-    setIsUploading(true);
-    setUploadMessage(null);
-
-    const formData = new FormData();
-    formData.append('file', uploadFile);
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/upload`,
-        {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        },
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setUploadMessage({
-          type: 'success',
-          text: `CSV uploaded successfully! Processed ${data.processedRows} guests.`,
-        });
-        setUploadFile(null);
-        fetchDashboardData(); // Refresh stats
-      } else {
-        setUploadMessage({
-          type: 'error',
-          text: data.message || 'Upload failed. Please try again.',
-        });
-      }
-    } catch (error) {
-      setUploadMessage({
-        type: 'error',
-        text: 'Network error. Please try again.',
-      });
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    });
-  };
-
   if (isLoading) {
     return (
       <>
