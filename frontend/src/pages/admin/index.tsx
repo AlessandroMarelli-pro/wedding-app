@@ -170,19 +170,12 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <Head>
-        <title>Dashboard - Wedding Admin</title>
-        <meta name="robots" content="noindex, nofollow" />
-      </Head>
-
-      <NavbarLayout type="admin" currentPath="/admin/dashboard">
+      <div className="">
+        {/* Advanced Analytics */}
         <div className="">
-          {/* Advanced Analytics */}
-          <div className="">
-            <AdminStats />
-          </div>
+          <AdminStats />
         </div>
-      </NavbarLayout>
+      </div>
     </>
   );
 }

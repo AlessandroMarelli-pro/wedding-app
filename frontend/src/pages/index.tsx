@@ -200,7 +200,6 @@ export default function HomePage({
       </Head>
 
       <NavbarLayout
-        type="public"
         currentSection={currentSection}
         onSectionChange={scrollToSection}
       >

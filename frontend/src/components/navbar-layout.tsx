@@ -1,13 +1,5 @@
 'use client';
 
-import {
-  Calendar,
-  Edit3,
-  Image,
-  LayoutDashboard,
-  MapPin,
-  Users,
-} from 'lucide-react';
 import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
 import { RSVPFormModal } from './rsvp-form-modal';
@@ -23,48 +15,13 @@ import {
 
 interface NavbarLayoutProps {
   children: ReactNode;
-  type: 'public' | 'admin';
   currentSection?: string;
   currentPath?: string;
   onSectionChange?: (section: string) => void;
 }
 
-// Admin navigation configuration
-const adminNavigation = [
-  {
-    name: 'Dashboard',
-    link: '/admin/dashboard',
-    icon: <LayoutDashboard className="w-4 h-4" />,
-  },
-  {
-    name: 'Informations',
-    link: '/admin/wedding',
-    icon: <Edit3 className="w-4 h-4" />,
-  },
-  {
-    name: 'Logements',
-    link: '/admin/accommodations',
-    icon: <MapPin className="w-4 h-4" />,
-  },
-  {
-    name: 'Programme',
-    link: '/admin/program',
-    icon: <Calendar className="w-4 h-4" />,
-  },
-  {
-    name: 'Liste des invités',
-    link: '/admin/guests',
-    icon: <Users className="w-4 h-4" />,
-  },
-  {
-    name: 'Images',
-    link: '/admin/images',
-    icon: <Image className="w-4 h-4" />,
-  },
-];
-
 // Public navigation configuration
-const publicNavigation = [
+const navItems = [
   {
     name: 'Un petit mot',
     link: '#nous',
@@ -85,7 +42,6 @@ const publicNavigation = [
 
 export function NavbarLayout({
   children,
-  type,
   currentSection,
   currentPath,
   onSectionChange,
@@ -98,36 +54,20 @@ export function NavbarLayout({
   };
 
   // Configure navbar based on type
-  const navItems = type === 'public' ? publicNavigation : adminNavigation;
-
-  // Handle section changes for public navigation
-  const handleSectionClick = (sectionId: string) => {
-    if (onSectionChange) {
-      onSectionChange(sectionId);
-    }
-  };
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar
-        className={
-          type === 'public'
-            ? 'fixed lg:absolute'
-            : 'relative bg-black text-white'
-        }
-      >
+      <Navbar className={'fixed lg:absolute'}>
         {/* Desktop Navigation */}
         <NavBody className="">
           <NavItems items={navItems} className="font-bold text-[#F38181] " />
-          {type === 'public' && (
-            <RSVPFormModal
-              shadowCls="shadow-none"
-              btnColor="bg-[#F38181]"
-              btnTextColor="text-[#95E1D3] font-bold"
-            />
-          )}
+          <RSVPFormModal
+            shadowCls="shadow-none"
+            btnColor="bg-[#F38181]"
+            btnTextColor="text-[#95E1D3] font-bold"
+          />
         </NavBody>
 
         {/* Mobile Navigation */}

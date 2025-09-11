@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { NavbarLayout } from '../../components/admin-navbar-layout';
-import { ImageUpload } from '../../components/image-upload';
-import { ApiService } from '../../services/api';
+import { NavbarLayout } from '../../../components/admin-navbar-layout';
+import { ImageUpload } from '../../../components/image-upload';
+import { ApiService } from '../../../services/api';
 
 interface UploadedImage {
   id: string;

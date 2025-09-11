@@ -31,7 +31,7 @@ const adminNavigation = [
   },
   {
     label: 'Informations',
-    href: '/admin/wedding',
+    href: '/admin/information',
     icon: <Edit3 className="w-4 h-4" />,
   },
   {
@@ -86,7 +86,7 @@ export function NavbarLayout({
   return (
     <div
       className={cn(
-        ' flex w-screen  flex-1 flex-col overflow-hidden rounded-r-md rounded-l-none border border-[#222831] bg-[#222831] md:flex-row ',
+        ' flex w-screen  flex-1 flex-col overflow-hidden  rounded-l-none  border-t-8 border-[#222831] bg-[#222831] md:flex-row ',
         'h-screen', // for your use case, use `h-screen` instead of `h-[60vh]`
       )}
     >

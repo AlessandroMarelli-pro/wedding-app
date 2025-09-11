@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { NavbarLayout } from '../../components/admin-navbar-layout';
-import { Direction } from '../../types/api';
+import { NavbarLayout } from '../../../components/admin-navbar-layout';
+import { Direction } from '../../../types/api';
 
 interface WeddingInfo {
   id: string;
