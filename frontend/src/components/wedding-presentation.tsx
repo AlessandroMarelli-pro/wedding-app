@@ -37,9 +37,11 @@ export function WeddingPresentation({
           "{weddingInfo.presentationMessage}"
         </p>
         <div className="py-4">
-          <IconGalaxy className="w-5 h-5 " />
+          <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5" />
         </div>
-        <span className=" font-bold">{weddingInfo.coupleNames}</span>
+        <span className="text-base lg:text-2xl font-bold">
+          {weddingInfo.coupleNames}
+        </span>
       </div>
     </div>
   );
