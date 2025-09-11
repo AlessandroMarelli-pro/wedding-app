@@ -99,9 +99,7 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
             >
               {item.title}
             </div>
-            <div
-              className={cn('text-md lg:text-2xl xl:text-2xl fraunces-regular')}
-            >
+            <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
               {new Date(item.startTime).toLocaleDateString('fr-FR', {
                 year: 'numeric',
                 month: 'long',

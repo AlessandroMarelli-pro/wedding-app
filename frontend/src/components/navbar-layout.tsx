@@ -148,11 +148,13 @@ export function NavbarLayout({
         {/* Desktop Navigation */}
         <NavBody className="">
           <NavItems items={navItems} className="font-bold text-[#F38181] " />
-          <RSVPFormModal
-            shadowCls="shadow-none"
-            btnColor="bg-[#F38181]"
-            btnTextColor="text-[#95E1D3] font-bold"
-          />
+          {type === 'public' && (
+            <RSVPFormModal
+              shadowCls="shadow-none"
+              btnColor="bg-[#F38181]"
+              btnTextColor="text-[#95E1D3] font-bold"
+            />
+          )}
         </NavBody>
 
         {/* Mobile Navigation */}

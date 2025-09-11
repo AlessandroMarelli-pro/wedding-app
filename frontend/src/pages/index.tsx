@@ -107,12 +107,12 @@ const RSVPSection = () => {
       className="h-[30vh] lg:h-[50vh] max-h-screen "
     >
       <div className="w-full h-full flex flex-col text-center justify-center items-center  gap-10">
-        <p className=" text-3xl lg:text-5xl  fraunces-regular text-[#EAFFD0]">
+        <p className=" text-3xl lg:text-5xl   text-[#EAFFD0]">
           Nous espérons vous voir en ce jour spécial !
         </p>
         <RSVPFormModal
           btnColor="bg-[#EAFFD0]"
-          btnTextColor="text-[#F38181] fraunces-bold"
+          btnTextColor="text-[#F38181] font-bold"
         />
       </div>
     </Section>

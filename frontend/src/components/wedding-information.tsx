@@ -46,7 +46,7 @@ export const WeddingInformation = ({
             </h1>
             <div>
               {weddingInfo.weddingAddress.split(',').map((chunk) => (
-                <p className="text-md lg:text-xl text-[#EAFFD0] fraunces-light">
+                <p className="text-md lg:text-xl text-[#EAFFD0] font-light">
                   {chunk}
                 </p>
               ))}
