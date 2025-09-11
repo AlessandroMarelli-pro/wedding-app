@@ -59,7 +59,7 @@ export function AccommodationsList({
                   </span>
                 ))}
             </p>
-            <div className=" flex flex-row gap-4 items-center">
+            <div className=" flex flex-col lg:flex-row gap-4 items-center">
               <div className="flex items-center lg:space-x-3">
                 <IconMapPin className="w-4 h-4 lg:w-8 lg:h-8   flex-shrink-0" />
                 <p className="lg:text-sm text-xs font-medium">

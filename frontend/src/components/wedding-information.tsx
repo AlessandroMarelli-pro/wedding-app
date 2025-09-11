@@ -99,7 +99,7 @@ export const WeddingInformation = ({
                         width={300}
                         height={200}
                         url={direction.location.link || ''}
-                        className="text-[#EAFFD0] hover:underline text-sm target:blank"
+                        className="text-[#EAFFD0] underline text-sm target:blank"
                       >
                         {direction.location.address}
                       </LinkPreview>

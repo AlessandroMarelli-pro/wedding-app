@@ -19,7 +19,6 @@ import {
   MobileNavMenu,
   MobileNavToggle,
   Navbar,
-  NavbarLogo,
   NavBody,
   NavItems,
 } from './ui/resizable-navbar';
@@ -141,7 +140,9 @@ export function NavbarLayout({
     <div className="min-h-screen bg-background">
       <Navbar
         className={
-          type === 'public' ? 'absolute' : 'relative bg-black text-white'
+          type === 'public'
+            ? 'fixed lg:absolute'
+            : 'relative bg-black text-white'
         }
       >
         {/* Desktop Navigation */}
@@ -157,7 +158,6 @@ export function NavbarLayout({
         {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
-            <NavbarLogo />
             <MobileNavToggle
               isOpen={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -178,6 +178,12 @@ export function NavbarLayout({
                 <span className="block">{item.name}</span>
               </a>
             ))}
+            <RSVPFormModal
+              shadowCls="shadow-none"
+              btnColor="bg-[#F38181]"
+              btnTextColor="text-[#95E1D3] font-bold"
+              containerCls="w-full"
+            />
           </MobileNavMenu>
         </MobileNav>
       </Navbar>

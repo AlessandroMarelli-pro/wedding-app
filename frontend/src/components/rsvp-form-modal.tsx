@@ -11,6 +11,7 @@ interface RSVPFormProps {
   btnColor?: string;
   btnTextColor?: string;
   shadowCls?: string;
+  containerCls?: string;
 }
 
 interface GuestInfo {
@@ -36,9 +37,12 @@ export function RSVPFormModal({
   btnColor,
   btnTextColor,
   shadowCls = 'shadow-lg',
+  containerCls = '',
 }: RSVPFormProps) {
   return (
-    <div className=" flex items-center justify-center z-10">
+    <div
+      className={cn(' flex items-center justify-center z-10 ', containerCls)}
+    >
       <Modal>
         <ModalTrigger
           className={cn(
