@@ -10,7 +10,6 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { NavbarLayout } from '../../../components/admin-navbar-layout';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button-pers';
 import {
@@ -312,21 +311,19 @@ export default function AdminAccommodations() {
 
   if (isLoading) {
     return (
-      <NavbarLayout type="admin" currentPath="/admin/accommodations">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardContent className="p-6">
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+      <div className="animate-pulse space-y-6">
+        <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </NavbarLayout>
+      </div>
     );
   }
 
@@ -337,375 +334,372 @@ export default function AdminAccommodations() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <NavbarLayout type="admin" currentPath="/admin/accommodations">
-        <div className="p-6 max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="flex justify-between items-center pt-10">
-            <div>
-              <h1 className="text-3xl  text-gray-800 mb-2">Accommodations</h1>
-              <p className="text-gray-600">
-                Manage accommodation recommendations for your guests
-              </p>
-            </div>
+      <div className="p-6 max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center pt-10">
+          <div>
+            <h1 className="text-3xl  text-gray-800 mb-2">Accommodations</h1>
+            <p className="text-gray-600">
+              Manage accommodation recommendations for your guests
+            </p>
+          </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild className="space-y-2">
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild className="space-y-2">
+              <Button
+                onClick={() => resetForm()}
+                className="bg-rose-600 hover:bg-rose-700"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Accommodation
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingAccommodation
+                    ? 'Edit Accommodation'
+                    : 'Add New Accommodation'}
+                </DialogTitle>
+              </DialogHeader>
+
+              {/* URL Parser Section */}
+              {!editingAccommodation && (
+                <div className="space-y-4 p-4 bg-gray-50 rounded-lg border">
+                  <div>
+                    <Label htmlFor="urlInput" className="text-sm font-medium">
+                      Quick Add from URL
+                    </Label>
+                    <p className="text-xs text-gray-600 mb-2">
+                      Paste a URL from Airbnb, Booking.com, or other
+                      accommodation sites to auto-fill the form
+                    </p>
+                    <div className="flex space-x-2">
+                      <Input
+                        id="urlInput"
+                        type="url"
+                        value={urlInput}
+                        onChange={(e) => setUrlInput(e.target.value)}
+                        placeholder="https://www.airbnb.com/rooms/..."
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleParseUrl}
+                        disabled={isParsingUrl || !urlInput.trim()}
+                        variant="outline"
+                        className="whitespace-nowrap"
+                      >
+                        {isParsingUrl ? 'Parsing...' : 'Parse URL'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <Label htmlFor="name">Name *</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) =>
+                        handleInputChange('name', e.target.value)
+                      }
+                      required
+                      placeholder="Hotel name"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <Label htmlFor="description">Description *</Label>
+                    <textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) =>
+                        handleInputChange('description', e.target.value)
+                      }
+                      required
+                      placeholder="Brief description of the accommodation"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <Label htmlFor="address">Address *</Label>
+                    <Input
+                      id="address"
+                      type="text"
+                      value={formData.address}
+                      onChange={(e) =>
+                        handleInputChange('address', e.target.value)
+                      }
+                      required
+                      placeholder="Full address"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <Label htmlFor="contactInfo">Contact Information</Label>
+                    <Input
+                      id="contactInfo"
+                      type="text"
+                      value={formData.contactInfo}
+                      onChange={(e) =>
+                        handleInputChange('contactInfo', e.target.value)
+                      }
+                      placeholder="Phone, email, or website"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="latitude">Latitude</Label>
+                    <Input
+                      id="latitude"
+                      type="number"
+                      step="any"
+                      value={formData.latitude}
+                      onChange={(e) =>
+                        handleInputChange('latitude', e.target.value)
+                      }
+                      placeholder="e.g., 48.8566"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="longitude">Longitude</Label>
+                    <Input
+                      id="longitude"
+                      type="number"
+                      step="any"
+                      value={formData.longitude}
+                      onChange={(e) =>
+                        handleInputChange('longitude', e.target.value)
+                      }
+                      placeholder="e.g., 2.3522"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <Label htmlFor="priceRange">Price Range</Label>
+                    <Input
+                      id="priceRange"
+                      type="text"
+                      value={formData.priceRange}
+                      onChange={(e) =>
+                        handleInputChange('priceRange', e.target.value)
+                      }
+                      placeholder="e.g., €120-180/night"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <Label htmlFor="sourceUrl">Source URL</Label>
+                    <Input
+                      id="sourceUrl"
+                      type="url"
+                      value={formData.sourceUrl}
+                      onChange={(e) =>
+                        handleInputChange('sourceUrl', e.target.value)
+                      }
+                      placeholder="https://www.airbnb.com/rooms/..."
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <Label htmlFor="imagesUrl">Images URL</Label>
+                    <Input
+                      id="imagesUrl"
+                      type="url"
+                      value={formData.imagesUrl}
+                      onChange={(e) =>
+                        handleInputChange('imagesUrl', e.target.value)
+                      }
+                      placeholder="https://example.com/images/..."
+                    />
+                  </div>
+
+                  <div className="md:col-span-2 flex items-center space-x-2">
+                    <input
+                      id="isRecommended"
+                      type="checkbox"
+                      checked={formData.isRecommended}
+                      onChange={(e) =>
+                        handleInputChange('isRecommended', e.target.checked)
+                      }
+                      className="rounded border-gray-300 text-rose-600 focus:ring-rose-500"
+                    />
+                    <Label htmlFor="isRecommended">Mark as recommended</Label>
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-2 pt-4 border-t">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      resetForm();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="bg-rose-600 hover:bg-rose-700"
+                  >
+                    {isSubmitting
+                      ? 'Saving...'
+                      : editingAccommodation
+                        ? 'Update'
+                        : 'Create'}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Message Display */}
+        {message && (
+          <div
+            className={`p-4 rounded-md ${
+              message.type === 'success'
+                ? 'bg-green-50 text-green-700 border border-green-200'
+                : 'bg-red-50 text-red-700 border border-red-200'
+            }`}
+          >
+            {message.text}
+          </div>
+        )}
+
+        {/* Accommodations List */}
+        <div className="space-y-4">
+          {accommodations.length === 0 ? (
+            <Card>
+              <CardContent className="p-12 text-center">
+                <div className="text-gray-400 mb-4">
+                  <MapPin className="w-12 h-12 mx-auto" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No accommodations yet
+                </h3>
+                <p className="text-gray-500 mb-4">
+                  Get started by adding your first accommodation recommendation.
+                </p>
                 <Button
-                  onClick={() => resetForm()}
+                  onClick={() => {
+                    resetForm();
+                    setIsDialogOpen(true);
+                  }}
                   className="bg-rose-600 hover:bg-rose-700"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Accommodation
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>
-                    {editingAccommodation
-                      ? 'Edit Accommodation'
-                      : 'Add New Accommodation'}
-                  </DialogTitle>
-                </DialogHeader>
-
-                {/* URL Parser Section */}
-                {!editingAccommodation && (
-                  <div className="space-y-4 p-4 bg-gray-50 rounded-lg border">
-                    <div>
-                      <Label htmlFor="urlInput" className="text-sm font-medium">
-                        Quick Add from URL
-                      </Label>
-                      <p className="text-xs text-gray-600 mb-2">
-                        Paste a URL from Airbnb, Booking.com, or other
-                        accommodation sites to auto-fill the form
-                      </p>
-                      <div className="flex space-x-2">
-                        <Input
-                          id="urlInput"
-                          type="url"
-                          value={urlInput}
-                          onChange={(e) => setUrlInput(e.target.value)}
-                          placeholder="https://www.airbnb.com/rooms/..."
-                          className="flex-1"
-                        />
-                        <Button
-                          type="button"
-                          onClick={handleParseUrl}
-                          disabled={isParsingUrl || !urlInput.trim()}
-                          variant="outline"
-                          className="whitespace-nowrap"
-                        >
-                          {isParsingUrl ? 'Parsing...' : 'Parse URL'}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
-                      <Label htmlFor="name">Name *</Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) =>
-                          handleInputChange('name', e.target.value)
-                        }
-                        required
-                        placeholder="Hotel name"
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <Label htmlFor="description">Description *</Label>
-                      <textarea
-                        id="description"
-                        value={formData.description}
-                        onChange={(e) =>
-                          handleInputChange('description', e.target.value)
-                        }
-                        required
-                        placeholder="Brief description of the accommodation"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <Label htmlFor="address">Address *</Label>
-                      <Input
-                        id="address"
-                        type="text"
-                        value={formData.address}
-                        onChange={(e) =>
-                          handleInputChange('address', e.target.value)
-                        }
-                        required
-                        placeholder="Full address"
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <Label htmlFor="contactInfo">Contact Information</Label>
-                      <Input
-                        id="contactInfo"
-                        type="text"
-                        value={formData.contactInfo}
-                        onChange={(e) =>
-                          handleInputChange('contactInfo', e.target.value)
-                        }
-                        placeholder="Phone, email, or website"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="latitude">Latitude</Label>
-                      <Input
-                        id="latitude"
-                        type="number"
-                        step="any"
-                        value={formData.latitude}
-                        onChange={(e) =>
-                          handleInputChange('latitude', e.target.value)
-                        }
-                        placeholder="e.g., 48.8566"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="longitude">Longitude</Label>
-                      <Input
-                        id="longitude"
-                        type="number"
-                        step="any"
-                        value={formData.longitude}
-                        onChange={(e) =>
-                          handleInputChange('longitude', e.target.value)
-                        }
-                        placeholder="e.g., 2.3522"
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <Label htmlFor="priceRange">Price Range</Label>
-                      <Input
-                        id="priceRange"
-                        type="text"
-                        value={formData.priceRange}
-                        onChange={(e) =>
-                          handleInputChange('priceRange', e.target.value)
-                        }
-                        placeholder="e.g., €120-180/night"
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <Label htmlFor="sourceUrl">Source URL</Label>
-                      <Input
-                        id="sourceUrl"
-                        type="url"
-                        value={formData.sourceUrl}
-                        onChange={(e) =>
-                          handleInputChange('sourceUrl', e.target.value)
-                        }
-                        placeholder="https://www.airbnb.com/rooms/..."
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <Label htmlFor="imagesUrl">Images URL</Label>
-                      <Input
-                        id="imagesUrl"
-                        type="url"
-                        value={formData.imagesUrl}
-                        onChange={(e) =>
-                          handleInputChange('imagesUrl', e.target.value)
-                        }
-                        placeholder="https://example.com/images/..."
-                      />
-                    </div>
-
-                    <div className="md:col-span-2 flex items-center space-x-2">
-                      <input
-                        id="isRecommended"
-                        type="checkbox"
-                        checked={formData.isRecommended}
-                        onChange={(e) =>
-                          handleInputChange('isRecommended', e.target.checked)
-                        }
-                        className="rounded border-gray-300 text-rose-600 focus:ring-rose-500"
-                      />
-                      <Label htmlFor="isRecommended">Mark as recommended</Label>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end space-x-2 pt-4 border-t">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setIsDialogOpen(false);
-                        resetForm();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="bg-rose-600 hover:bg-rose-700"
-                    >
-                      {isSubmitting
-                        ? 'Saving...'
-                        : editingAccommodation
-                          ? 'Update'
-                          : 'Create'}
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Message Display */}
-          {message && (
-            <div
-              className={`p-4 rounded-md ${
-                message.type === 'success'
-                  ? 'bg-green-50 text-green-700 border border-green-200'
-                  : 'bg-red-50 text-red-700 border border-red-200'
-              }`}
-            >
-              {message.text}
-            </div>
-          )}
-
-          {/* Accommodations List */}
-          <div className="space-y-4">
-            {accommodations.length === 0 ? (
-              <Card>
-                <CardContent className="p-12 text-center">
-                  <div className="text-gray-400 mb-4">
-                    <MapPin className="w-12 h-12 mx-auto" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    No accommodations yet
-                  </h3>
-                  <p className="text-gray-500 mb-4">
-                    Get started by adding your first accommodation
-                    recommendation.
-                  </p>
-                  <Button
-                    onClick={() => {
-                      resetForm();
-                      setIsDialogOpen(true);
-                    }}
-                    className="bg-rose-600 hover:bg-rose-700"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Accommodation
-                  </Button>
-                </CardContent>
-              </Card>
-            ) : (
-              accommodations.map((accommodation) => (
-                <Card
-                  key={accommodation.id}
-                  className="hover:shadow-md transition-shadow"
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center space-x-3">
-                        <GripVertical className="w-5 h-5 text-gray-400" />
-                        <div>
-                          <CardTitle className="text-lg flex items-center space-x-2">
-                            <span>{accommodation.name}</span>
-                            {accommodation.isRecommended && (
-                              <Badge
-                                variant="secondary"
-                                className="bg-yellow-100 text-yellow-800"
-                              >
-                                <Star className="w-3 h-3 mr-1" />
-                                Recommended
-                              </Badge>
-                            )}
-                          </CardTitle>
-                          {accommodation.priceRange && (
-                            <p className="text-sm text-gray-600 mt-1">
-                              {accommodation.priceRange}
-                            </p>
+              </CardContent>
+            </Card>
+          ) : (
+            accommodations.map((accommodation) => (
+              <Card
+                key={accommodation.id}
+                className="hover:shadow-md transition-shadow"
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-center space-x-3">
+                      <GripVertical className="w-5 h-5 text-gray-400" />
+                      <div>
+                        <CardTitle className="text-lg flex items-center space-x-2">
+                          <span>{accommodation.name}</span>
+                          {accommodation.isRecommended && (
+                            <Badge
+                              variant="secondary"
+                              className="bg-yellow-100 text-yellow-800"
+                            >
+                              <Star className="w-3 h-3 mr-1" />
+                              Recommended
+                            </Badge>
                           )}
-                        </div>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(accommodation)}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(accommodation.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        </CardTitle>
+                        {accommodation.priceRange && (
+                          <p className="text-sm text-gray-600 mt-1">
+                            {accommodation.priceRange}
+                          </p>
+                        )}
                       </div>
                     </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <p className="text-gray-700 mb-3">
-                      {accommodation.description}
-                    </p>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(accommodation)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(accommodation.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-gray-700 mb-3">
+                    {accommodation.description}
+                  </p>
 
-                    <div className="space-y-2 text-sm text-gray-600">
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <div className="flex items-start space-x-2">
+                      <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                      <span>{accommodation.address}</span>
+                    </div>
+
+                    {accommodation.contactInfo && (
+                      <div className="flex items-start space-x-2">
+                        <Phone className="w-4 h-4 mt-0.5 text-gray-400" />
+                        <span>{accommodation.contactInfo}</span>
+                      </div>
+                    )}
+
+                    {accommodation.latitude && accommodation.longitude && (
                       <div className="flex items-start space-x-2">
                         <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                        <span>{accommodation.address}</span>
+                        <span>
+                          Coordinates: {accommodation.latitude},{' '}
+                          {accommodation.longitude}
+                        </span>
                       </div>
+                    )}
 
-                      {accommodation.contactInfo && (
-                        <div className="flex items-start space-x-2">
-                          <Phone className="w-4 h-4 mt-0.5 text-gray-400" />
-                          <span>{accommodation.contactInfo}</span>
-                        </div>
-                      )}
-
-                      {accommodation.latitude && accommodation.longitude && (
-                        <div className="flex items-start space-x-2">
-                          <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                          <span>
-                            Coordinates: {accommodation.latitude},{' '}
-                            {accommodation.longitude}
-                          </span>
-                        </div>
-                      )}
-
-                      {accommodation.sourceUrl && (
-                        <div className="flex items-start space-x-2">
-                          <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                          <a
-                            href={accommodation.sourceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline"
-                          >
-                            View on {getSourceName(accommodation.sourceUrl)}
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
+                    {accommodation.sourceUrl && (
+                      <div className="flex items-start space-x-2">
+                        <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                        <a
+                          href={accommodation.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          View on {getSourceName(accommodation.sourceUrl)}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
-      </NavbarLayout>
+      </div>
     </>
   );
 }
