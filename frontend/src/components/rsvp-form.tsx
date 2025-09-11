@@ -170,18 +170,20 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
   // Step 3: Confirmation Screen
   if (currentStep === 'confirmation' && confirmedGuest) {
     return (
-      <div className={` rounded-2xl p-8  ${className}`}>
+      <div
+        className={`  p-8  ${className} flex flex-col justify-center items-center`}
+      >
         <div className="text-center">
-          <h3 className="text-2xl  text-[#F38181] mb-4 flex items-center justify-center gap-2">
+          <h3 className="text-xl lg:text-2xl  text-[#F38181] mb-4 flex items-center justify-center gap-2">
             Votre venue est confirmée <IconMoodSmileBeam className="w-8 h-8" />
           </h3>
-          <p className="text-lg text-gray-700 ">
+          <p className="text-base lg:text-lg text-gray-700 ">
             Merci{' '}
             <span className="font-medium text-rose-700">{confirmedGuest}</span>{' '}
             {rsvpData.confirmedPartySize === 1 ? '' : 'et vous tous'} d'avoir
             confirmé votre venue,
           </p>
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-base lg:text-lg text-gray-700 mb-6">
             nous sommes si heureux de fêter ça avec vous !
           </p>
 
@@ -273,12 +275,12 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
   // Step 2: RSVP Details Form
   if (currentStep === 'rsvp-details' && guestInfo) {
     return (
-      <div className={` p-8  ${className}`}>
-        <div className="text-center mb-6">
-          <h2 className="text-3xl  font-bold text-[#F38181] mb-2">
+      <div className={` p-4  ${className}`}>
+        <div className="text-center lg:mb-6">
+          <h2 className="text-2xl lg:text-3xl  font-bold text-[#F38181] mb-2">
             Bonjour {guestInfo.firstName} !
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm lg:text-base">
             Veuillez confirmer les détails de votre présence
           </p>
         </div>
@@ -286,51 +288,58 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
         <form onSubmit={handleRSVPSubmit} className="space-y-6">
           {/* Guest Information Display */}
 
-          <div className="grid grid-cols-5 gap-4">
-            <div className="col-span-2">
+          <div className="flex flex-col lg:flex-row gap-4 justify-around">
+            <div className="flex flex-col lg:justify-left lg:items-left lg:text-left">
               <div>
-                <Label className="text-md font-bold text-[#F38181]">Nom</Label>
-                <p className="text-gray-800  p-2 pl-0 rounded">
+                <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                  Nom
+                </Label>
+                <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
                   {guestInfo.firstName} {guestInfo.lastName}
                 </p>
               </div>
               {guestInfo.email && (
                 <div>
-                  <Label className="text-md font-bold text-[#F38181]">
+                  <Label className="lg:text-md text-sm font-bold text-[#F38181]">
                     Email
                   </Label>
-                  <p className="text-gray-800  p-2 pl-0 rounded">
+                  <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
                     {guestInfo.email}
                   </p>
                 </div>
               )}
             </div>
-            <div className="col-span-2">
-              {guestInfo.specialRequests && (
-                <div>
-                  <Label className="text-md font-bold text-[#F38181]">
-                    Restrictions alimentaires
-                  </Label>
-                  <p className="text-gray-800  p-2 pl-0 rounded">
-                    {guestInfo.specialRequests}
-                  </p>
-                </div>
-              )}
-              {guestInfo.specialRequests && (
-                <div>
-                  <Label className="text-md font-bold text-[#F38181]">
-                    Requêtes spéciales
-                  </Label>
-                  <p className="text-gray-800  p-2 pl-0 rounded">
-                    {guestInfo.specialRequests}
-                  </p>
-                </div>
-              )}
-            </div>
-            <div className="col-span-1">
-              <Label className="text-md font-bold text-[#F38181]">Groupe</Label>{' '}
+            {(guestInfo.specialRequests || guestInfo.dietaryRestrictions) && (
+              <div className="flex flex-col lg:justify-left lg:items-left lg:text-left">
+                {guestInfo.dietaryRestrictions && (
+                  <div>
+                    <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                      Restrictions alimentaires
+                    </Label>
+                    <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
+                      {guestInfo.dietaryRestrictions}
+                    </p>
+                  </div>
+                )}
+                {guestInfo.specialRequests && (
+                  <div>
+                    <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                      Requêtes spéciales
+                    </Label>
+                    <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
+                      {guestInfo.specialRequests}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="flex flex-col justify-center items-center">
+              <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                Groupe
+              </Label>{' '}
               <div>
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-row items-center space-x-4">
                   <Button
                     type="button"
                     variant="outline"
@@ -348,9 +357,9 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                   >
                     -
                   </Button>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center ">
                     <Users className="w-5 h-5 text-[#F38181]" />
-                    <span className="text-2xl font-bold text-gray-800 w-12 text-center">
+                    <span className="text-2xl font-bold text-gray-800 pl-2 text-center">
                       {rsvpData.confirmedPartySize}
                     </span>
                   </div>
@@ -384,10 +393,10 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
 
           {/* Attendance Selection */}
           <div className="space-y-4">
-            <Label className="text-lg font-medium text-gray-700">
+            <Label className="text-base lg:text-lg font-medium text-gray-700 ">
               Serez-vous présent ?
             </Label>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 pt-4">
               <Button
                 type="button"
                 variant={rsvpData.isAttending ? 'default' : 'outline'}
@@ -396,7 +405,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                 }
                 className={`flex-1 py-3 ${rsvpData.isAttending ? 'bg-[#4f8433] ' : ''}`}
               >
-                Oui, je serai là!
+                Oui
               </Button>
               <Button
                 type="button"
@@ -410,7 +419,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                 }
                 className={`flex-1 py-3 ${!rsvpData.isAttending ? 'bg-[#b74c50] ' : ''}`}
               >
-                Désolé, je ne peux pas y aller
+                Non
               </Button>
             </div>
           </div>
@@ -435,7 +444,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                   ? 'Toute note ou requête spéciale?'
                   : "Vous nous manquerez! Faites-nous savoir si vous changez d'avis."
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F38181] focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-[#F38181] focus:border-transparent resize-none"
               rows={3}
               disabled={isSubmitting}
             />
@@ -443,7 +452,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
 
           {message && (
             <div
-              className={`p-4 rounded-lg ${
+              className={`p-4  ${
                 message.type === 'success'
                   ? 'bg-green-50 border border-green-200 text-green-800'
                   : 'bg-red-50 border border-red-200 text-red-800'

@@ -50,7 +50,7 @@ export const ModalTrigger = ({
   return (
     <button
       className={cn(
-        'px-4 py-2 rounded-md  text-white text-center relative overflow-hidden cursor-pointer',
+        'px-4 py-2   text-white text-center relative overflow-hidden cursor-pointer',
         className,
       )}
       onClick={() => setOpen(true)}
@@ -73,7 +73,7 @@ export const ModalBody = ({
     if (open) {
       document.body.style.overflow = 'scroll';
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'scroll';
     }
   }, [open]);
 
@@ -96,14 +96,14 @@ export const ModalBody = ({
             opacity: 0,
             backdropFilter: 'blur(0px)',
           }}
-          className="fixed [] [transform-style:preserve-3d] inset-0 h-full w-full  flex items-center justify-center z-50"
+          className="fixed  [transform-style:preserve-3d] inset-0 h-full w-full  flex items-center justify-center z-50 overflow-y-scroll"
         >
           <Overlay />
 
           <motion.div
             ref={modalRef}
             className={cn(
-              ' bg-white dark:bg-neutral-950   md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-hidden',
+              ' bg-white dark:bg-neutral-950    relative z-50 flex flex-col flex-1 overflow-x-hidden overflow-y-scroll',
               className,
             )}
             initial={{
@@ -146,7 +146,12 @@ export const ModalContent = ({
   className?: string;
 }) => {
   return (
-    <div className={cn('flex flex-col flex-1 p-8 md:p-10', className)}>
+    <div
+      className={cn(
+        'flex flex-col flex-1 lg:p-8 md:p-10 justify-center items-center ',
+        className,
+      )}
+    >
       {children}
     </div>
   );
