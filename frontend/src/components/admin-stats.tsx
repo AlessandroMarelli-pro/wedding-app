@@ -1,4 +1,4 @@
-import { Clock, Download, TrendingUp, UserCheck, Users } from 'lucide-react';
+import { TrendingUp, UserCheck, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ApiService } from '../services/api';
 import { DashboardSummary, RSVPAnalytics, UploadAnalytics } from '../types/api';
@@ -417,33 +417,6 @@ export function AdminStats({ className }: AdminStatsProps) {
           </CardContent>
         </Card>
       </div>
-
-      {/* Export Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Data Export</CardTitle>
-          <CardDescription>Download guest data and reports</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              onClick={handleExportCSV}
-              className="flex items-center space-x-2"
-            >
-              <Download className="h-4 w-4" />
-              <span>Export Guest Data (CSV)</span>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={loadAnalytics}
-              className="flex items-center space-x-2"
-            >
-              <Clock className="h-4 w-4" />
-              <span>Refresh Data</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

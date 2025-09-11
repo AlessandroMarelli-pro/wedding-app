@@ -8,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui';
+import { Download, Users } from 'lucide-react';
+
 import { LoadingSpinner } from '@/components/ui/loading';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -21,11 +23,11 @@ import {
   Phone,
   Trash2,
   Upload,
-  Users,
   X,
 } from 'lucide-react';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { ApiService } from '../../services/api';
 
 interface Guest {
   id: string;
@@ -71,6 +73,8 @@ export default function GuestsPage() {
   >('all');
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -171,6 +175,22 @@ export default function GuestsPage() {
       });
     } finally {
       setIsUploading(false);
+    }
+  };
+  const handleExportCSV = async () => {
+    try {
+      const blob = await ApiService.exportGuestsCSV();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `guests-export-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to export CSV:', err);
+      setError('Failed to export guest data');
     }
   };
 
@@ -495,7 +515,16 @@ export default function GuestsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Guest List ({filteredGuests.length})</span>
+                <span>Guest List ({filteredGuests.length})</span>{' '}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button
+                    onClick={handleExportCSV}
+                    className="flex items-center space-x-2 bg-amber-100"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Export Guest Data (CSV)</span>
+                  </Button>
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
