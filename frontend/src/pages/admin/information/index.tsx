@@ -361,13 +361,20 @@ export default function AdminWedding() {
               mariage
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => window.open('/', '_blank')}
+            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Preview Site
+          </button>
         </div>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="flex flex-row w-full gap-4">
+            <div className="flex flex-col lg:flex-row w-full gap-4">
               <div className="flex flex-col w-full gap-4">
-                <div className="flex flex-row w-full gap-4">
+                <div className="flex flex-col lg:flex-row w-full gap-4">
                   <FormField
                     control={form.control}
                     name="coupleNames"
@@ -413,7 +420,7 @@ export default function AdminWedding() {
                             </FormControl>
                           </PopoverTrigger>
                           <PopoverContent
-                            className="w-[20rem] p-0 font-sans"
+                            className="w-[15rem] lg:w-[20rem] p-0 font-sans"
                             align="start"
                           >
                             <Calendar
@@ -454,10 +461,7 @@ export default function AdminWedding() {
                           <span>
                             Ce message sera affiché après la page d'accueil.
                           </span>
-                          <span>
-                            {weddingInfo?.presentationMessage.length}/2000
-                            characters
-                          </span>
+                          <span>{field.value.length}/2000 characters</span>
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -662,24 +666,6 @@ export default function AdminWedding() {
                   </div>
                 </div>
               )}
-
-              <div className="flex justify-between pt-6 border-t border-gray-200">
-                <button
-                  type="button"
-                  onClick={() => window.open('/', '_blank')}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Preview Site
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isSaving ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
             </form>
           </div>
         ) : (

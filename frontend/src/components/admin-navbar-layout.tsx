@@ -120,7 +120,7 @@ export function NavbarLayout({
         </SidebarBody>
       </Sidebar>
       {/* Main Content */}
-      <main className="flex h-full w-full flex-1 flex-col gap-2 rounded-2xl border border-[#222831] bg-white p-2 md:p-10 ">
+      <main className="overflow-scroll flex h-full w-full flex-1 flex-col gap-2 rounded-2xl border border-[#222831] bg-white p-2 md:p-10 ">
         {children}
       </main>
     </div>
