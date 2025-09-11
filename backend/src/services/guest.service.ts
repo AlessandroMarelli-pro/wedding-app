@@ -188,7 +188,7 @@ export class GuestService {
         header: true,
         skipEmptyLines: true,
         transformHeader: (header: string) => {
-          const cleanHeader = header.toLowerCase().trim();
+          const cleanHeader = header.trim();
           fieldsProcessed.add(cleanHeader);
           return cleanHeader;
         },
@@ -205,7 +205,7 @@ export class GuestService {
             });
             return;
           }
-
+          console.log('row.data', row.data);
           try {
             const validationResult = this.validateCSVRowWithDetails(
               row.data,
@@ -307,7 +307,7 @@ export class GuestService {
     const errors: CSVValidationError[] = [];
     const warnings: CSVWarning[] = [];
     const validatedRow = { ...row };
-
+    console.log('validatedRow', validatedRow);
     // Validate firstName
     if (!validatedRow.firstName || typeof validatedRow.firstName !== 'string') {
       errors.push({
@@ -391,55 +391,6 @@ export class GuestService {
         }
       } else {
         validatedRow.email = undefined;
-      }
-    }
-
-    // Validate phoneNumber (optional)
-    if (
-      validatedRow.phoneNumber &&
-      typeof validatedRow.phoneNumber === 'string'
-    ) {
-      const originalPhone = validatedRow.phoneNumber;
-      validatedRow.phoneNumber = validatedRow.phoneNumber.trim();
-
-      if (validatedRow.phoneNumber.length > 0) {
-        // Remove common phone number formatting characters
-        const cleanPhone = validatedRow.phoneNumber.replace(
-          /[\s\-\(\)\+\.]/g,
-          '',
-        );
-
-        // Basic phone number validation (digits only, 10-15 characters)
-        if (!/^\d{10,15}$/.test(cleanPhone)) {
-          errors.push({
-            row: rowNumber,
-            field: 'phoneNumber',
-            value: originalPhone,
-            message:
-              'phoneNumber must be 10-15 digits (formatting characters like spaces, dashes, parentheses will be removed)',
-            severity: 'error',
-            code: 'INVALID_PHONE',
-          });
-        } else if (validatedRow.phoneNumber.length > 20) {
-          errors.push({
-            row: rowNumber,
-            field: 'phoneNumber',
-            value: originalPhone,
-            message: 'phoneNumber must be 20 characters or less',
-            severity: 'error',
-            code: 'FIELD_TOO_LONG',
-          });
-        } else if (originalPhone !== validatedRow.phoneNumber) {
-          warnings.push({
-            row: rowNumber,
-            field: 'phoneNumber',
-            value: originalPhone,
-            message: `Phone number formatting cleaned: "${originalPhone}" → "${validatedRow.phoneNumber}"`,
-            code: 'PHONE_FORMATTED',
-          });
-        }
-      } else {
-        validatedRow.phoneNumber = undefined;
       }
     }
 
@@ -715,7 +666,7 @@ export class GuestService {
 
     // Generate unique hash code
     const hashCode = await this.generateUniqueHashCode();
-
+    console.log('hashCode', hashCode);
     const guest = this.guestRepository.create({
       firstName: row.firstName,
       lastName: row.lastName,

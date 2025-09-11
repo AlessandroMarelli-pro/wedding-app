@@ -74,34 +74,42 @@ export default function GuestsPage() {
   }, []);
 
   const fetchData = async () => {
+    console.log('fetching data', process.env.NEXT_PUBLIC_API_URL);
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) {
         throw new Error('No admin token found');
       }
 
-      const [guestsResponse, uploadsResponse] = await Promise.all([
-        fetch('/api/admin/guests', {
+      const guestsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests`,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }),
-        fetch('/api/admin/guests/uploads', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-      ]);
+        },
+      );
 
-      if (!guestsResponse.ok || !uploadsResponse.ok) {
-        throw new Error('Failed to fetch data');
+      if (guestsResponse.ok) {
+        const guestsData = await guestsResponse.json();
+
+        setGuests(guestsData);
       }
 
-      const guestsData = await guestsResponse.json();
-      const uploadsData = await uploadsResponse.json();
+      const uploadsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/uploads`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-      setGuests(guestsData);
-      setCsvUploads(uploadsData);
+      if (uploadsResponse.ok) {
+        const uploadsData = await uploadsResponse.json();
+
+        setCsvUploads(uploadsData);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
       toast({
@@ -134,13 +142,16 @@ export default function GuestsPage() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('/api/admin/guests/upload', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/uploads`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
         },
-        body: formData,
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.text();
@@ -176,12 +187,15 @@ export default function GuestsPage() {
         throw new Error('No admin token found');
       }
 
-      const response = await fetch(`/api/admin/guests/${guestId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/${guestId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to delete guest');

@@ -19,7 +19,7 @@ import {
 // Create axios instance with default configuration
 const createApiClient = (): AxiosInstance => {
   const baseURL =
-    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+    (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/api';
   const client = axios.create({
     baseURL,
     timeout: 10000,

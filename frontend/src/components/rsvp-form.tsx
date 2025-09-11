@@ -221,12 +221,17 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                   setHashCode(value);
                 }
               }}
-              placeholder="Entrez votre code à 8 caractères qui figure sur votre invitation"
+              placeholder=""
               className="text-lg text-center  font-mono mt-2"
               maxLength={8}
               disabled={isSubmitting}
             />
-
+            <Label
+              htmlFor="hashCode"
+              className="text-xs text-muted-foreground "
+            >
+              Entrez votre code à 8 caractères qui figure sur votre invitation
+            </Label>
             {message && (
               <div
                 className={`p-4 rounded-lg ${
@@ -251,7 +256,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
         </form>
 
         <div className="mt-8 pt-6 border-t border-rose-100">
-          <p className="text-sm text-gray-600 text-center">
+          <p className="text-xs text-gray-600 text-center">
             Un problème ? Contactez-nous à{' '}
             <a
               href="mailto:wedding@example.com"
