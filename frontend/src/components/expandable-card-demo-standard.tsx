@@ -21,7 +21,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
     if (active && typeof active === 'object') {
       document.body.style.overflow = 'scroll';
     } else {
-      document.body.style.overflow = 'scroll';
+      document.body.style.overflow = 'auto';
     }
 
     window.addEventListener('keydown', onKeyDown);
