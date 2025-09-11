@@ -35,7 +35,20 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
       {/* THE CARD DETAILS */}
       <AnimatePresence>
         {active && typeof active === 'object' ? (
-          <div className="fixed inset-0  grid place-items-center z-[100]">
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+              backdropFilter: 'blur(2px)',
+            }}
+            exit={{
+              opacity: 0,
+              backdropFilter: 'blur(0px)',
+            }}
+            className="fixed inset-0  grid place-items-center z-[100]"
+          >
             <motion.button
               key={`button-${active.title}-${id}`}
               layout
@@ -132,7 +145,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                 </div>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         ) : null}
       </AnimatePresence>
 

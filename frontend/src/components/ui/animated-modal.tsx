@@ -98,8 +98,6 @@ export const ModalBody = ({
           }}
           className="fixed  [transform-style:preserve-3d] inset-0 h-full w-full  flex items-center justify-center z-50 overflow-y-scroll"
         >
-          <Overlay />
-
           <motion.div
             ref={modalRef}
             className={cn(
@@ -173,24 +171,6 @@ export const ModalFooter = ({
     >
       {children}
     </div>
-  );
-};
-
-const Overlay = ({ className }: { className?: string }) => {
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
-      exit={{
-        opacity: 0,
-        backdropFilter: 'blur(0px)',
-      }}
-      className={`fixed inset-0 h-full w-auto  bg-opacity-50 z-50 ${className}`}
-    ></motion.div>
   );
 };
 
