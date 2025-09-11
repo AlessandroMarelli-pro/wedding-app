@@ -232,6 +232,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const weddingResponse = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/wedding`,
     );
+    console.log('weddingResponse', weddingResponse);
     const weddingInfo = weddingResponse.ok
       ? await weddingResponse.json()
       : null;

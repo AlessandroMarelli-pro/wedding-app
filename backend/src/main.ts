@@ -23,7 +23,7 @@ async function bootstrap() {
   // Enable CORS for frontend communication
   app.enableCors({
     origin: [
-      'http://localhost:3000', // Next.js development server
+      process.env.CORS_ORIGIN || 'http://localhost:3000', // Next.js development server
       'http://localhost:3001', // Alternative port
       'https://wedding.example.com', // Production domain
     ],
@@ -170,11 +170,12 @@ async function bootstrap() {
   });
 
   const port = process.env.PORT || 3001;
-  await app.listen(port);
+  const host = process.env.HOST || 'localhost';
+  await app.listen(port, host);
 
   console.log('🚀 Wedding API Server started successfully!');
-  console.log(`📍 Server running on: http://localhost:${port}`);
-  console.log(`🔗 API endpoints: http://localhost:${port}/api`);
+  console.log(`📍 Server running on: http://${host}:${port}`);
+  console.log(`🔗 API endpoints: http://${host}:${port}/api`);
   console.log('💒 Ready to manage your wedding website!');
 }
 

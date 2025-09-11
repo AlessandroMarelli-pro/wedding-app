@@ -19,9 +19,9 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
     }
 
     if (active && typeof active === 'object') {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'scroll';
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'scroll';
     }
 
     window.addEventListener('keydown', onKeyDown);
@@ -32,16 +32,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
 
   return (
     <>
-      <AnimatePresence>
-        {active && typeof active === 'object' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/10 h-full w-full z-10"
-          />
-        )}
-      </AnimatePresence>
+      {/* THE CARD DETAILS */}
       <AnimatePresence>
         {active && typeof active === 'object' ? (
           <div className="fixed inset-0  grid place-items-center z-[100]">
@@ -60,7 +51,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                   duration: 0.05,
                 },
               }}
-              className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+              className="z-10 flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
               onClick={() => setActive(null)}
             >
               <CloseIcon />
@@ -68,9 +59,9 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
             <motion.div
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
-              className="w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0] sm:rounded-3xl overflow-hidden"
+              className="w-[90%] lg:w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0]   overflow-x-hidden overflow-y-scroll"
             >
-              <div className="flex justify-center items-center ">
+              <div className="flex justify-center items-center [&>*:nth-child(even)]:hidden lg:[&>*:nth-child(even)]:block">
                 {active.imagesUrl?.map((image, idx) => (
                   <motion.div
                     layoutId={`image-${image}-${id}`}
@@ -95,22 +86,23 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                       alt={image}
                       width="500"
                       height="500"
-                      className="rounded-lg h-20 w-20 md:h-50 md:w-50 object-cover shrink-0 "
+                      className="rounded-lg h-30 w-30 md:h-50 md:w-50 object-cover shrink-0 "
                     />
                   </motion.div>
                 ))}
               </div>
               <div>
                 <div className="flex justify-between items-left p-4 pb-0 text-[#F38181]">
-                  <div className="p-4 text-left ">
+                  <div className="lg:p-4 text-left ">
                     <motion.h3
                       layoutId={`title-${active.title}-${id}`}
-                      className="font-bold "
+                      className="font-bold text-lg lg:text-2xl"
                     >
                       {active.title}
                     </motion.h3>
                     <motion.p
                       layoutId={`description-${active.description}-${id}`}
+                      className="text-xs lg:text-md"
                     >
                       {active.description}
                     </motion.p>
@@ -120,18 +112,18 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     layoutId={`button-${active.title}-${id}`}
                     href={active.ctaLink}
                     target="_blank"
-                    className="px-4 py-3  rounded-full font-bold  "
+                    className="px-4 py-3  rounded-full font-bold text-sm lg:text-2xl"
                   >
                     Voir l'annonce
                   </motion.a>
                 </div>
-                <div className="relative px-4 h-full text-[#F38181]">
+                <div className="relative lg:px-4 h-full text-[#F38181]">
                   <motion.div
                     layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className=" text-xs md:text-md  h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-scroll  [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                    className=" h-fit lg:pb-10 flex flex-col items-start gap-4 overflow-scroll  [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
                     {typeof active.content === 'function'
                       ? active.content()
@@ -143,6 +135,8 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
           </div>
         ) : null}
       </AnimatePresence>
+
+      {/* THE GRID OF CARDS */}
       <div className="mx-auto w-full gap-4 grid grid-cols-2  ">
         {cards.map((card, index) => (
           <motion.div
