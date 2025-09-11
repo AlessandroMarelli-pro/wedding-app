@@ -1,14 +1,56 @@
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Direction } from '../../../types/api';
+
+const formSchema = z.object({
+  coupleNames: z.string().min(2).max(50),
+  presentationMessage: z.string().min(2).max(2000),
+  weddingAddress: z.string().min(2).max(300),
+  weddingDate: z.date(),
+  locationDirections: z.array(
+    z.object({
+      type: z.string().min(2).max(300),
+      information: z.string().min(2).max(300),
+      location: z.object({
+        address: z.string().min(2).max(300),
+        link: z.string().min(2).max(300),
+      }),
+    }),
+  ),
+  heroImageId: z.string().min(2).max(300),
+});
 
 interface WeddingInfo {
   id: string;
   coupleNames: string;
   presentationMessage: string;
   weddingAddress: string;
-  weddingDate: string;
+  weddingDate: Date;
   locationDirections: Direction[];
   heroImageId?: string;
 }
@@ -30,6 +72,28 @@ export default function AdminWedding() {
     location: { address: '', link: '' },
   });
   const router = useRouter();
+
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      coupleNames: weddingInfo?.coupleNames || '',
+      presentationMessage: weddingInfo?.presentationMessage || '',
+      weddingAddress: weddingInfo?.weddingAddress || '',
+      weddingDate:
+        (weddingInfo?.weddingDate && new Date(weddingInfo?.weddingDate)) ||
+        undefined,
+      locationDirections: weddingInfo?.locationDirections || [],
+      heroImageId: weddingInfo?.heroImageId || '',
+    },
+  });
+  console.log(form.formState.errors);
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.info(values);
+  }
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
@@ -83,6 +147,7 @@ export default function AdminWedding() {
           data.locationDirections = [];
         }
         setWeddingInfo(data);
+        form.reset(data);
         setOriginalWeddingInfo(JSON.parse(JSON.stringify(data))); // Deep copy for comparison
       }
     } catch (error) {
@@ -234,7 +299,9 @@ export default function AdminWedding() {
       </>
     );
   }
-
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const endMonth = new Date(currentYear + 2, currentMonth + 2);
   return (
     <>
       <Head>
@@ -242,105 +309,137 @@ export default function AdminWedding() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="p-6 max-w-4xl mx-auto">
-        <div className="mb-8">
-          <p className="text-gray-600">
-            Mettre à jour les détails qui apparaissent sur votre site de mariage
-          </p>
+      <div className="p-6 space-y-8">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl  text-foreground mb-2">Informations</h1>
+            <p className="text-muted-foreground">
+              Mettre à jour les détails qui apparaissent sur votre site de
+              mariage
+            </p>
+          </div>
         </div>
 
-        {weddingInfo ? (
-          <div className="bg-white rounded-lg shadow-md border border-gray-100">
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              <div>
-                <label
-                  htmlFor="coupleNames"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Couple Names
-                </label>
-                <input
-                  type="text"
-                  id="coupleNames"
-                  value={weddingInfo.coupleNames}
-                  onChange={(e) =>
-                    handleInputChange('coupleNames', e.target.value)
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-                  placeholder="e.g., Ariane & Timothe"
-                  maxLength={100}
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="presentationMessage"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Presentation Message
-                </label>
-                <textarea
-                  id="presentationMessage"
-                  value={weddingInfo.presentationMessage}
-                  onChange={(e) =>
-                    handleInputChange('presentationMessage', e.target.value)
-                  }
-                  rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-                  placeholder="A personal message from the couple to their guests..."
-                  maxLength={2000}
-                  required
-                />
-                <p className="mt-1 text-sm text-gray-500">
-                  {weddingInfo.presentationMessage.length}/2000 characters
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    htmlFor="weddingDate"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Wedding Date & Time
-                  </label>
-                  <input
-                    type="datetime-local"
-                    id="weddingDate"
-                    value={
-                      weddingInfo.weddingDate
-                        ? new Date(weddingInfo.weddingDate)
-                            .toISOString()
-                            .slice(0, 16)
-                        : ''
-                    }
-                    onChange={(e) =>
-                      handleInputChange('weddingDate', e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-                    required
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex flex-row w-full gap-4">
+              <div className="flex flex-col w-full gap-4">
+                <div className="flex flex-row w-full gap-4">
+                  <FormField
+                    control={form.control}
+                    name="coupleNames"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Couple Names</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="e.g., Ariane & Timothe"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Ce nom sera affiché sur la page d'accueil.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="weddingDate"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col w-full">
+                        <FormLabel>Date of birth</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={'outline'}
+                                className={cn(
+                                  'w-full pl-3 text-left font-normal',
+                                  !field.value && 'text-muted-foreground',
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, 'PPP')
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-[20rem] p-0 font-sans"
+                            align="start"
+                          >
+                            <Calendar
+                              showOutsideDays
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              captionLayout="dropdown"
+                              className="rounded-md border shadow-sm w-full"
+                              endMonth={endMonth}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormDescription>
+                          Your date of birth is used to calculate your age.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
-
                 <div>
-                  <label
-                    htmlFor="weddingAddress"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Wedding Address
-                  </label>
-                  <input
-                    type="text"
-                    id="weddingAddress"
-                    value={weddingInfo.weddingAddress}
-                    onChange={(e) =>
-                      handleInputChange('weddingAddress', e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-                    placeholder="Venue name and address"
-                    maxLength={300}
-                    required
+                  <FormField
+                    control={form.control}
+                    name="presentationMessage"
+                    defaultValue={weddingInfo?.presentationMessage || ''}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Presentation Message</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            className="h-40"
+                            placeholder="Un message personnalisé à adresser à vos invités"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="flex flex-row justify-between">
+                          <span>
+                            Ce message sera affiché après la page d'accueil.
+                          </span>
+                          <span>
+                            {weddingInfo?.presentationMessage.length}/2000
+                            characters
+                          </span>
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="weddingAddress"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Adresse du lieu</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Veuillez entrer l'adresse du lieu"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Ce nom sera affiché sur la page d'accueil.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
               </div>
@@ -470,7 +569,15 @@ export default function AdminWedding() {
                   </div>
                 )}
               </div>
+            </div>
 
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+
+        {weddingInfo ? (
+          <div className="bg-white rounded-lg shadow-md border border-gray-100">
+            <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {message && (
                 <div
                   className={`p-4 rounded-lg ${

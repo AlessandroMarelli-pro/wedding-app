@@ -296,9 +296,9 @@ export default function AdminProgram() {
           </div>
           <Button
             onClick={startCreate}
-            className="flex items-center gap-2 bg-blue-500 text-white hover:bg-blue-600"
+            className="flex items-center gap-2 bg-primary text-white "
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 bg-primary" />
             Add Event
           </Button>
         </div>
