@@ -28,13 +28,14 @@ import { z } from 'zod';
 import { Direction } from '../../../types/api';
 
 const formSchema = z.object({
+  id: z.string().min(2).max(300),
   coupleNames: z.string().min(2).max(50),
   presentationMessage: z.string().min(2).max(2000),
   weddingAddress: z.string().min(2).max(300),
   weddingDate: z.date(),
   locationDirections: z.array(
     z.object({
-      type: z.string().min(2).max(300),
+      type: z.enum(['car', 'train', 'car rental']),
       information: z.string().min(2).max(300),
       location: z.object({
         address: z.string().min(2).max(300),
@@ -42,7 +43,6 @@ const formSchema = z.object({
       }),
     }),
   ),
-  heroImageId: z.string().min(2).max(300),
 });
 
 interface WeddingInfo {
@@ -52,7 +52,6 @@ interface WeddingInfo {
   weddingAddress: string;
   weddingDate: Date;
   locationDirections: Direction[];
-  heroImageId?: string;
 }
 
 export default function AdminWedding() {
@@ -77,6 +76,7 @@ export default function AdminWedding() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: weddingInfo?.id || '',
       coupleNames: weddingInfo?.coupleNames || '',
       presentationMessage: weddingInfo?.presentationMessage || '',
       weddingAddress: weddingInfo?.weddingAddress || '',
@@ -84,15 +84,50 @@ export default function AdminWedding() {
         (weddingInfo?.weddingDate && new Date(weddingInfo?.weddingDate)) ||
         undefined,
       locationDirections: weddingInfo?.locationDirections || [],
-      heroImageId: weddingInfo?.heroImageId || '',
     },
   });
-  console.log(form.formState.errors);
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.info(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const token = localStorage.getItem('adminToken');
+    if (!token) return;
+
+    setIsSaving(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/wedding`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(values),
+        },
+      );
+
+      if (response.ok) {
+        setMessage({
+          type: 'success',
+          text: 'Wedding information updated successfully!',
+        });
+        // Update original data to reflect saved state
+        setOriginalWeddingInfo(values);
+      } else {
+        const data = await response.json();
+        setMessage({
+          type: 'error',
+          text: data.message || 'Failed to update wedding information.',
+        });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Network error. Please try again.' });
+    } finally {
+      setIsSaving(false);
+      console.info('values', values);
+    }
+    console.info('values', isSaving);
   }
 
   useEffect(() => {
@@ -147,7 +182,7 @@ export default function AdminWedding() {
           data.locationDirections = [];
         }
         setWeddingInfo(data);
-        form.reset(data);
+        form.reset({ ...data, weddingDate: new Date(data.weddingDate) });
         setOriginalWeddingInfo(JSON.parse(JSON.stringify(data))); // Deep copy for comparison
       }
     } catch (error) {
@@ -158,8 +193,19 @@ export default function AdminWedding() {
   };
 
   const hasUnsavedChanges = () => {
-    if (!weddingInfo || !originalWeddingInfo) return false;
-    return JSON.stringify(weddingInfo) !== JSON.stringify(originalWeddingInfo);
+    if (!form.getValues() || !originalWeddingInfo) return false;
+    // compare each field
+    const formValues = form.getValues();
+    const originalValues = originalWeddingInfo;
+    for (const key in originalValues) {
+      if (
+        formValues[key as keyof typeof formValues]?.toString() !==
+        originalValues[key as keyof typeof originalValues]?.toString()
+      ) {
+        return true;
+      }
+    }
+    return false;
   };
 
   const hasAllDirectionTypes = () => {
@@ -177,9 +223,6 @@ export default function AdminWedding() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!weddingInfo) return;
-
     const token = localStorage.getItem('adminToken');
     if (!token) return;
 
@@ -348,15 +391,15 @@ export default function AdminWedding() {
                     control={form.control}
                     name="weddingDate"
                     render={({ field }) => (
-                      <FormItem className="flex flex-col w-full">
-                        <FormLabel>Date of birth</FormLabel>
+                      <FormItem className=" w-full">
+                        <FormLabel>Date du mariage</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
                                 variant={'outline'}
                                 className={cn(
-                                  'w-full pl-3 text-left font-normal',
+                                  'w-full  text-left font-normal h-10',
                                   !field.value && 'text-muted-foreground',
                                 )}
                               >
@@ -385,7 +428,7 @@ export default function AdminWedding() {
                           </PopoverContent>
                         </Popover>
                         <FormDescription>
-                          Your date of birth is used to calculate your age.
+                          Cette date sera affichée sur la page d'accueil.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -435,7 +478,7 @@ export default function AdminWedding() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Ce nom sera affiché sur la page d'accueil.
+                          Cette adresse sera affichée après la page d'accueil.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -444,14 +487,11 @@ export default function AdminWedding() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Directions & Additional Info
-                </label>
-
+              <div className="flex flex-col w-full gap-4">
                 {/* Existing Directions */}
-                <div className="space-y-4 mb-6">
-                  {weddingInfo.locationDirections.map((direction, index) => (
+                <div className="space-y-4 ">
+                  <FormLabel>Directions & Additional Info</FormLabel>
+                  {weddingInfo?.locationDirections.map((direction, index) => (
                     <div
                       key={index}
                       className="bg-gray-50 rounded-lg p-4 border"
@@ -571,7 +611,9 @@ export default function AdminWedding() {
               </div>
             </div>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" className="cursor-pointer">
+              Submit
+            </Button>
           </form>
         </Form>
 
