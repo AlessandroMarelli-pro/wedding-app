@@ -1,15 +1,15 @@
 import { AlertCircle, Image as ImageIcon, Upload, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { Button } from './ui/button-pers';
+import { Button } from '../ui/button-pers';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from './ui/card';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+} from '../ui/card';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 interface ImageUploadProps {
   onUpload?: (file: File, options: ImageUploadOptions) => Promise<void>;

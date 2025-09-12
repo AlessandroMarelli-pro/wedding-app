@@ -1,4 +1,4 @@
-import { GuestDetailsModal } from '@/components/guest-details-modal';
+import { GuestDetailsModal } from '@/components/admin/guest-details-modal';
 import {
   Badge,
   Button,

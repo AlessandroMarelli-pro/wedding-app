@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AdminStats } from '../../../components/admin-stats';
+import { AdminStats } from '../../../components/admin/admin-stats';
 import { Card, CardContent } from '../../../components/ui/card';
 
 interface RSVPStats {

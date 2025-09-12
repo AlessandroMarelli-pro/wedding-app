@@ -1,16 +1,20 @@
 import { TrendingUp, UserCheck, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { ApiService } from '../services/api';
-import { DashboardSummary, RSVPAnalytics, UploadAnalytics } from '../types/api';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button-pers';
+import { ApiService } from '../../services/api';
+import {
+  DashboardSummary,
+  RSVPAnalytics,
+  UploadAnalytics,
+} from '../../types/api';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button-pers';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from './ui/card';
+} from '../ui/card';
 
 interface AdminStatsProps {
   className?: string;

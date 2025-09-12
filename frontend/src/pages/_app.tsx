@@ -1,4 +1,4 @@
-import { NavbarLayout } from '@/components/admin-navbar-layout';
+import { NavbarLayout } from '@/components/admin/admin-navbar-layout';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import '@/styles/globals.css';

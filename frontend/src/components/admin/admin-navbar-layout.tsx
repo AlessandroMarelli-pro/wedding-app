@@ -12,7 +12,7 @@ import {
 import { motion } from 'motion/react';
 import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
-import { Sidebar, SidebarBody, SidebarLink } from './ui/sidebar';
+import { Sidebar, SidebarBody, SidebarLink } from '../ui/sidebar';
 
 interface NavbarLayoutProps {
   children: ReactNode;

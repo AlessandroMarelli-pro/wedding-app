@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ImageUpload } from '../../../components/image-upload';
+import { ImageUpload } from '../../../components/admin/image-upload';
 import { ApiService } from '../../../services/api';
 
 interface UploadedImage {
