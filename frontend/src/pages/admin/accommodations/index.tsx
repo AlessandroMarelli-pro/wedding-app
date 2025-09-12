@@ -1,5 +1,4 @@
 import {
-  AccommodationFormData,
   AccomodationFormDialog,
   initialFormData,
 } from '@/components/admin/accomodation-form-dialog';
@@ -9,19 +8,37 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LinkPreview } from '@/components/ui/link-preview';
 import { cn } from '@/lib';
 import { Accommodation } from '@/types/api';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Dot, Edit, MapPin, Star, Trash2 } from 'lucide-react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+
+export const formSchema = z.object({
+  id: z.string().min(2).max(300),
+  name: z.string().min(2).max(50),
+  description: z.string().min(2).max(2000),
+  address: z.string().min(2).max(300),
+  priceRange: z.string().min(2).max(50),
+  isRecommended: z.boolean(),
+  sourceUrl: z.string().min(2),
+  imagesUrl: z.string().min(2),
+});
 
 export default function AdminAccommodations() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialFormData,
+  });
+
   const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingAccommodation, setEditingAccommodation] =
     useState<Accommodation | null>(null);
-  const [formData, setFormData] =
-    useState<AccommodationFormData>(initialFormData);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [message, setMessage] = useState<{
     type: 'success' | 'error';
@@ -69,13 +86,11 @@ export default function AdminAccommodations() {
 
   const handleEdit = (accommodation: Accommodation) => {
     setEditingAccommodation(accommodation);
-    setFormData({
+
+    form.reset({
       name: accommodation.name,
       description: accommodation.description,
       address: accommodation.address,
-      contactInfo: accommodation.contactInfo || '',
-      latitude: accommodation.latitude?.toString() || '',
-      longitude: accommodation.longitude?.toString() || '',
       priceRange: accommodation.priceRange || '',
       isRecommended: accommodation.isRecommended,
       sourceUrl: accommodation.sourceUrl || '',
@@ -182,8 +197,7 @@ export default function AdminAccommodations() {
               isDialogOpen={isDialogOpen}
               setIsDialogOpen={setIsDialogOpen}
               accommodationsCount={accommodations.length}
-              formData={formData}
-              setFormData={setFormData}
+              formData={form}
             />
           </div>
         </div>
@@ -206,7 +220,9 @@ export default function AdminAccommodations() {
                             {accommodation.priceRange && (
                               <>
                                 <Dot />
-                                <Badge>{accommodation.priceRange}</Badge>
+                                <Badge variant="outline">
+                                  {accommodation.priceRange}
+                                </Badge>
                               </>
                             )}
                             {accommodation.isRecommended && (
@@ -248,14 +264,14 @@ export default function AdminAccommodations() {
                           alt={accommodation.name}
                           width={1000}
                           height={1000}
-                          className="w-70 rounded-lg max-h-50"
+                          className="w-[50%] rounded-lg max-h-50"
                         />
                         <Image
                           src={getImageUrlByIndex(accommodation.imagesUrl, 1)}
                           alt={accommodation.name}
                           width={1000}
                           height={1000}
-                          className="w-70 rounded-lg "
+                          className="w-[50%]  rounded-lg max-h-50"
                         />
                       </div>
                     )}

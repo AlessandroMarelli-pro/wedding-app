@@ -26,9 +26,6 @@ export interface Accommodation {
   name: string;
   description: string;
   address: string;
-  contactInfo?: string;
-  latitude?: number;
-  longitude?: number;
   priceRange?: string;
   isRecommended: boolean;
   displayOrder: number;
