@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { ProgramEvent } from '../entities/program-event.entity';
 
 export interface CreateProgramEventDto {
@@ -51,6 +51,15 @@ export class ProgramService {
   }
 
   async createEvent(createDto: CreateProgramEventDto): Promise<ProgramEvent> {
+    // Get the highest display order
+    const highestDisplayOrder = await this.programEventRepository.findOne({
+      where: { id: Not(IsNull()) },
+      order: { displayOrder: 'DESC' },
+    });
+    if (highestDisplayOrder) {
+      createDto.displayOrder = highestDisplayOrder.displayOrder + 1;
+    }
+
     const event = this.programEventRepository.create({
       ...createDto,
       startTime: new Date(createDto.startTime),
