@@ -236,7 +236,9 @@ export default function AdminProgram() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  {editingEvent ? 'Edit Event' : 'Create New Event'}
+                  {editingEvent
+                    ? "Mettre à jour l'événement"
+                    : 'Créer un nouvel événement'}
                   <Button variant="ghost" size="sm" onClick={resetForm}>
                     <X className="w-4 h-4" />
                   </Button>
@@ -246,7 +248,7 @@ export default function AdminProgram() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="title">Event Title</Label>
+                      <Label htmlFor="title">Titre de l'événement</Label>
                       <Input
                         id="title"
                         value={formData.title}
@@ -257,7 +259,7 @@ export default function AdminProgram() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="location">Location</Label>
+                      <Label htmlFor="location">Lieu</Label>
                       <Input
                         id="location"
                         value={formData.location}
@@ -271,7 +273,7 @@ export default function AdminProgram() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="startTime">Start Time</Label>
+                      <Label htmlFor="startTime">Date et heure</Label>
                       <Input
                         id="startTime"
                         type="datetime-local"
@@ -289,10 +291,10 @@ export default function AdminProgram() {
 
                   <div className="flex gap-2">
                     <Button type="button" variant="outline" onClick={resetForm}>
-                      Cancel
+                      Annuler
                     </Button>
                     <Button type="submit" variant="success">
-                      {editingEvent ? 'Update Event' : 'Create Event'} <Save />
+                      {editingEvent ? 'Mettre à jour' : 'Créer'} <Save />
                     </Button>
                   </div>
                 </form>
@@ -306,8 +308,8 @@ export default function AdminProgram() {
                 <CardContent className="text-center py-12">
                   <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-muted-foreground">
-                    No events scheduled yet. Create your first event to get
-                    started.
+                    Pas d'événements programmés pour le moment. Créez votre
+                    premier événement pour commencer.
                   </p>
                 </CardContent>
               </Card>

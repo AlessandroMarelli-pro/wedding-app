@@ -73,6 +73,8 @@ export class AccommodationService {
     });
     if (highestDisplayOrder) {
       createDto.displayOrder = highestDisplayOrder.displayOrder + 1;
+    } else {
+      createDto.displayOrder = 0;
     }
 
     const accommodation = this.accommodationRepository.create({

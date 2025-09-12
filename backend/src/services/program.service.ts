@@ -58,6 +58,8 @@ export class ProgramService {
     });
     if (highestDisplayOrder) {
       createDto.displayOrder = highestDisplayOrder.displayOrder + 1;
+    } else {
+      createDto.displayOrder = 0;
     }
 
     const event = this.programEventRepository.create({
