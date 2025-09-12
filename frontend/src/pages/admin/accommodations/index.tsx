@@ -141,24 +141,6 @@ export default function AdminAccommodations() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="animate-pulse space-y-6">
-        <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i}>
-              <CardContent className="p-6">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <Head>
@@ -166,162 +148,170 @@ export default function AdminAccommodations() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="p-6 space-y-8">
         {/* Header */}
-        <div className="flex justify-between items-center pt-10">
-          <div>
-            <h1 className="text-3xl  text-gray-800 mb-2">Accommodations</h1>
-            <p className="text-gray-600">
-              Manage accommodation recommendations for your guests
-            </p>
-          </div>
-          <AccomodationFormDialog
-            editingAccommodation={editingAccommodation}
-            setEditingAccommodation={setEditingAccommodation}
-            setMessage={setMessage}
-            isDialogOpen={isDialogOpen}
-            setIsDialogOpen={setIsDialogOpen}
-            accommodationsCount={accommodations.length}
-            formData={formData}
-            setFormData={setFormData}
-          />
-        </div>
+        <div className="space-y-8">
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
+                Logements
+              </h1>
 
-        {/* Message Display */}
-        {message && (
-          <div
-            className={`p-4 rounded-md ${
-              message.type === 'success'
-                ? 'bg-green-50 text-green-700 border border-green-200'
-                : 'bg-red-50 text-red-700 border border-red-200'
-            }`}
-          >
-            {message.text}
+              <p className="text-muted-foreground">
+                Gérez les logements recommandés pour vos invités
+              </p>
+            </div>
+            {message && (
+              <div
+                className={`p-4 rounded-lg ${
+                  message.type === 'success'
+                    ? 'bg-green-50 border border-green-200 text-green-800'
+                    : 'bg-red-50 border border-red-200 text-red-800'
+                }`}
+              >
+                <div className="flex items-center">
+                  <p className="font-medium">{message.text}</p>
+                </div>
+              </div>
+            )}
+            <AccomodationFormDialog
+              editingAccommodation={editingAccommodation}
+              setEditingAccommodation={setEditingAccommodation}
+              setMessage={setMessage}
+              isDialogOpen={isDialogOpen}
+              setIsDialogOpen={setIsDialogOpen}
+              accommodationsCount={accommodations.length}
+              formData={formData}
+              setFormData={setFormData}
+            />
           </div>
-        )}
+        </div>
 
         {/* Accommodations List */}
-        <div className="space-y-4">
-          {accommodations.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <div className="text-gray-400 mb-4">
-                  <MapPin className="w-12 h-12 mx-auto" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No accommodations yet
-                </h3>
-                <p className="text-gray-500 mb-4">
-                  Get started by adding your first accommodation recommendation.
-                </p>
-                <AccomodationFormDialog
-                  editingAccommodation={editingAccommodation}
-                  setEditingAccommodation={setEditingAccommodation}
-                  setMessage={setMessage}
-                  isDialogOpen={isDialogOpen}
-                  setIsDialogOpen={setIsDialogOpen}
-                  accommodationsCount={accommodations.length}
-                  formData={formData}
-                  setFormData={setFormData}
-                />
-              </CardContent>
-            </Card>
-          ) : (
-            accommodations.map((accommodation) => (
-              <Card
-                key={accommodation.id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center space-x-3">
-                      <GripVertical className="w-5 h-5 text-gray-400" />
-                      <div>
-                        <CardTitle className="text-lg flex items-center space-x-2">
-                          <span>{accommodation.name}</span>
-                          {accommodation.isRecommended && (
-                            <Badge
-                              variant="secondary"
-                              className="bg-yellow-100 text-yellow-800"
-                            >
-                              <Star className="w-3 h-3 mr-1" />
-                              Recommended
-                            </Badge>
-                          )}
-                        </CardTitle>
-                        {accommodation.priceRange && (
-                          <p className="text-sm text-gray-600 mt-1">
-                            {accommodation.priceRange}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(accommodation)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(accommodation.id)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+        {!isLoading && (
+          <div className="space-y-4">
+            {accommodations.length === 0 ? (
+              <Card>
+                <CardContent className="p-12 text-center">
+                  <div className="text-gray-400 mb-4">
+                    <MapPin className="w-12 h-12 mx-auto" />
                   </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-gray-700 mb-3">
-                    {accommodation.description}
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No accommodations yet
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Get started by adding your first accommodation
+                    recommendation.
                   </p>
-
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <div className="flex items-start space-x-2">
-                      <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                      <span>{accommodation.address}</span>
-                    </div>
-
-                    {accommodation.contactInfo && (
-                      <div className="flex items-start space-x-2">
-                        <Phone className="w-4 h-4 mt-0.5 text-gray-400" />
-                        <span>{accommodation.contactInfo}</span>
-                      </div>
-                    )}
-
-                    {accommodation.latitude && accommodation.longitude && (
-                      <div className="flex items-start space-x-2">
-                        <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                        <span>
-                          Coordinates: {accommodation.latitude},{' '}
-                          {accommodation.longitude}
-                        </span>
-                      </div>
-                    )}
-
-                    {accommodation.sourceUrl && (
-                      <div className="flex items-start space-x-2">
-                        <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                        <a
-                          href={accommodation.sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 underline"
-                        >
-                          View on {getSourceName(accommodation.sourceUrl)}
-                        </a>
-                      </div>
-                    )}
-                  </div>
+                  <AccomodationFormDialog
+                    editingAccommodation={editingAccommodation}
+                    setEditingAccommodation={setEditingAccommodation}
+                    setMessage={setMessage}
+                    isDialogOpen={isDialogOpen}
+                    setIsDialogOpen={setIsDialogOpen}
+                    accommodationsCount={accommodations.length}
+                    formData={formData}
+                    setFormData={setFormData}
+                  />
                 </CardContent>
               </Card>
-            ))
-          )}
-        </div>
+            ) : (
+              accommodations.map((accommodation) => (
+                <Card
+                  key={accommodation.id}
+                  className="hover:shadow-md transition-shadow"
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center space-x-3">
+                        <GripVertical className="w-5 h-5 text-gray-400" />
+                        <div>
+                          <CardTitle className="text-lg flex items-center space-x-2">
+                            <span>{accommodation.name}</span>
+                            {accommodation.isRecommended && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-yellow-100 text-yellow-800"
+                              >
+                                <Star className="w-3 h-3 mr-1" />
+                                Recommended
+                              </Badge>
+                            )}
+                          </CardTitle>
+                          {accommodation.priceRange && (
+                            <p className="text-sm text-gray-600 mt-1">
+                              {accommodation.priceRange}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(accommodation)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDelete(accommodation.id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-gray-700 mb-3">
+                      {accommodation.description}
+                    </p>
+
+                    <div className="space-y-2 text-sm text-gray-600">
+                      <div className="flex items-start space-x-2">
+                        <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                        <span>{accommodation.address}</span>
+                      </div>
+
+                      {accommodation.contactInfo && (
+                        <div className="flex items-start space-x-2">
+                          <Phone className="w-4 h-4 mt-0.5 text-gray-400" />
+                          <span>{accommodation.contactInfo}</span>
+                        </div>
+                      )}
+
+                      {accommodation.latitude && accommodation.longitude && (
+                        <div className="flex items-start space-x-2">
+                          <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                          <span>
+                            Coordinates: {accommodation.latitude},{' '}
+                            {accommodation.longitude}
+                          </span>
+                        </div>
+                      )}
+
+                      {accommodation.sourceUrl && (
+                        <div className="flex items-start space-x-2">
+                          <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                          <a
+                            href={accommodation.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            View on {getSourceName(accommodation.sourceUrl)}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </>
   );
