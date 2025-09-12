@@ -73,7 +73,7 @@ export const DirectionsForm = ({
     const updatedDirections = form
       .getValues()
       .locationDirections.filter((_, i) => i !== index);
-
+    console.log(updatedDirections);
     form.setValue('locationDirections', updatedDirections);
   };
 

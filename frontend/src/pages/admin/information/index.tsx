@@ -1,4 +1,5 @@
 import { DirectionsForm } from '@/components/admin/directions-form';
+import { Badge } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -60,17 +61,14 @@ export default function AdminWedding() {
   const [originalWeddingInfo, setOriginalWeddingInfo] =
     useState<WeddingInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+
+  // 0: no changes, 1: changes, 2: changes and unsaved
+  const [changesStatus, setChangesStatus] = useState('0');
   const [message, setMessage] = useState<{
     type: 'success' | 'error';
     text: string;
   } | null>(null);
-  const [editingDirection, setEditingDirection] = useState<number | null>(null);
-  const [newDirection, setNewDirection] = useState<Direction>({
-    type: 'car',
-    information: '',
-    location: { address: '', link: '' },
-  });
+
   const router = useRouter();
 
   // 1. Define your form.
@@ -93,7 +91,6 @@ export default function AdminWedding() {
     const token = localStorage.getItem('adminToken');
     if (!token) return;
 
-    setIsSaving(true);
     setMessage(null);
 
     try {
@@ -110,15 +107,12 @@ export default function AdminWedding() {
       );
 
       if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: 'Wedding information updated successfully!',
-        });
         // Update original data to reflect saved state
         setOriginalWeddingInfo({
           ...values,
           weddingDate: new Date(values.weddingDate),
         });
+        setChangesStatus('2');
       } else {
         const data = await response.json();
         setMessage({
@@ -128,8 +122,6 @@ export default function AdminWedding() {
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Network error. Please try again.' });
-    } finally {
-      setIsSaving(false);
     }
   }
 
@@ -145,15 +137,16 @@ export default function AdminWedding() {
 
   // Check for unsaved changes before leaving the page
   useEffect(() => {
+    verifyHasUnsavedChanges();
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges()) {
+      if (verifyHasUnsavedChanges()) {
         e.preventDefault();
         e.returnValue = '';
       }
     };
 
     const handleRouteChange = (url: string) => {
-      if (hasUnsavedChanges()) {
+      if (verifyHasUnsavedChanges()) {
         const shouldLeave = window.confirm(
           'You have unsaved changes. Are you sure you want to leave this page?',
         );
@@ -171,7 +164,7 @@ export default function AdminWedding() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       router.events.off('routeChangeStart', handleRouteChange);
     };
-  }, [router, weddingInfo, originalWeddingInfo]);
+  }, [router, form.getValues()]);
 
   const fetchWeddingInfo = async () => {
     try {
@@ -198,7 +191,7 @@ export default function AdminWedding() {
     }
   };
 
-  const hasUnsavedChanges = () => {
+  const verifyHasUnsavedChanges = () => {
     if (!form.getValues() || !originalWeddingInfo) return false;
     // compare each field
     const formValues = form.getValues();
@@ -208,51 +201,11 @@ export default function AdminWedding() {
         formValues[key as keyof typeof formValues]?.toString() !==
         originalValues[key as keyof typeof originalValues]?.toString()
       ) {
+        setChangesStatus('1');
         return true;
       }
     }
     return false;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) return;
-
-    setIsSaving(true);
-    setMessage(null);
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/wedding`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(weddingInfo),
-        },
-      );
-
-      if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: 'Wedding information updated successfully!',
-        });
-        // Update original data to reflect saved state
-        setOriginalWeddingInfo(form.getValues());
-      } else {
-        const data = await response.json();
-        setMessage({
-          type: 'error',
-          text: data.message || 'Failed to update wedding information.',
-        });
-      }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Network error. Please try again.' });
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   if (isLoading) {
@@ -285,21 +238,46 @@ export default function AdminWedding() {
       </Head>
 
       <div className="p-6 space-y-8">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl  text-foreground mb-2">Informations</h1>
+            <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
+              Informations
+              {changesStatus === '0' && (
+                <Badge variant="default">Aucune modifications en cours</Badge>
+              )}
+              {changesStatus === '1' && (
+                <Badge variant="warning">Modifications en cours</Badge>
+              )}
+              {changesStatus === '2' && (
+                <Badge variant="success">Modifications sauvegardées</Badge>
+              )}
+            </h1>
+
             <p className="text-muted-foreground">
-              Mettre à jour les détails qui apparaissent sur votre site de
+              Mettez à jour les détails qui apparaissent sur votre site de
               mariage
             </p>
           </div>
-          <button
+          {message && (
+            <div
+              className={`p-4 rounded-lg ${
+                message.type === 'success'
+                  ? 'bg-green-50 border border-green-200 text-green-800'
+                  : 'bg-red-50 border border-red-200 text-red-800'
+              }`}
+            >
+              <div className="flex items-center">
+                <p className="font-medium">{message.text}</p>
+              </div>
+            </div>
+          )}
+          <Button
             type="button"
             onClick={() => window.open('/', '_blank')}
-            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            variant="default"
           >
             Preview Site
-          </button>
+          </Button>
         </div>
 
         <Form {...form}>
@@ -312,7 +290,7 @@ export default function AdminWedding() {
                     name="coupleNames"
                     render={({ field }) => (
                       <FormItem className="w-full">
-                        <FormLabel>Couple Names</FormLabel>
+                        <FormLabel>Nom du couple</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="e.g., Ariane & Timothe"
@@ -381,7 +359,7 @@ export default function AdminWedding() {
                     defaultValue={weddingInfo?.presentationMessage || ''}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Presentation Message</FormLabel>
+                        <FormLabel>Message de présentation</FormLabel>
                         <FormControl>
                           <Textarea
                             className="h-40"
@@ -393,7 +371,7 @@ export default function AdminWedding() {
                           <span>
                             Ce message sera affiché après la page d'accueil.
                           </span>
-                          <span>{field.value.length}/2000 characters</span>
+                          <span>{field.value.length}/2000 caractères</span>
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -431,62 +409,6 @@ export default function AdminWedding() {
             </Button>
           </form>
         </Form>
-
-        {weddingInfo ? (
-          <div className="bg-white rounded-lg shadow-md border border-gray-100">
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              {message && (
-                <div
-                  className={`p-4 rounded-lg ${
-                    message.type === 'success'
-                      ? 'bg-green-50 border border-green-200 text-green-800'
-                      : 'bg-red-50 border border-red-200 text-red-800'
-                  }`}
-                >
-                  <div className="flex items-center">
-                    {message.type === 'success' ? (
-                      <svg
-                        className="w-5 h-5 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        className="w-5 h-5 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    )}
-                    <p className="font-medium">{message.text}</p>
-                  </div>
-                </div>
-              )}
-            </form>
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg p-8 shadow-md border border-gray-100 text-center">
-            <p className="text-gray-600 mb-4">No wedding information found.</p>
-            <p className="text-sm text-gray-500">
-              Please contact support to set up your wedding information.
-            </p>
-          </div>
-        )}
       </div>
     </>
   );

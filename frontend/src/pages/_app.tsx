@@ -8,10 +8,11 @@ import { useRouter } from 'next/router';
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isAdminPage = router.pathname.startsWith('/admin');
+  const isAdminLoginPage = router.pathname.startsWith('/admin/login');
 
   return (
     <ErrorBoundary>
-      {isAdminPage ? (
+      {isAdminPage && !isAdminLoginPage ? (
         <div className=" font-sans">
           <NavbarLayout type="admin">
             <Component {...pageProps} />
