@@ -113,7 +113,10 @@ export default function AdminWedding() {
           text: 'Wedding information updated successfully!',
         });
         // Update original data to reflect saved state
-        setOriginalWeddingInfo(values);
+        setOriginalWeddingInfo({
+          ...values,
+          weddingDate: new Date(values.weddingDate),
+        });
       } else {
         const data = await response.json();
         setMessage({
@@ -125,9 +128,7 @@ export default function AdminWedding() {
       setMessage({ type: 'error', text: 'Network error. Please try again.' });
     } finally {
       setIsSaving(false);
-      console.info('values', values);
     }
-    console.info('values', isSaving);
   }
 
   useEffect(() => {
@@ -183,7 +184,10 @@ export default function AdminWedding() {
         }
         setWeddingInfo(data);
         form.reset({ ...data, weddingDate: new Date(data.weddingDate) });
-        setOriginalWeddingInfo(JSON.parse(JSON.stringify(data))); // Deep copy for comparison
+        setOriginalWeddingInfo({
+          ...data,
+          weddingDate: new Date(data.weddingDate),
+        }); // Deep copy for comparison
       }
     } catch (error) {
       console.error('Error fetching wedding info:', error);
@@ -248,7 +252,7 @@ export default function AdminWedding() {
           text: 'Wedding information updated successfully!',
         });
         // Update original data to reflect saved state
-        setOriginalWeddingInfo(JSON.parse(JSON.stringify(weddingInfo)));
+        setOriginalWeddingInfo(form.getValues());
       } else {
         const data = await response.json();
         setMessage({
