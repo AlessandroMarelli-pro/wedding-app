@@ -21,7 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Eye, Save } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -280,7 +280,7 @@ export default function AdminWedding() {
                   className={cn('cursor-pointer')}
                   disabled={changesStatus !== '1'}
                 >
-                  Enregistrer les modifications
+                  Enregistrer les modifications <Save />
                 </Button>
                 <Button
                   type="button"
@@ -288,6 +288,7 @@ export default function AdminWedding() {
                   variant="default"
                 >
                   Prévisualiser le site
+                  <Eye />
                 </Button>
               </div>
             </div>

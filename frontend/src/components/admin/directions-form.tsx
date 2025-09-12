@@ -1,13 +1,34 @@
-import { FormLabel } from '@/components/ui/form';
+import {
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { formSchema } from '@/pages/admin/information';
-import { CheckCircle2Icon, Edit, Plus, Trash } from 'lucide-react';
+import { Car, CheckCircle2Icon, Edit, Plus, Train, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import z from 'zod';
 import { Direction } from '../../types/api';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { Textarea } from '../ui/textarea';
 
+const DirectionsIcons = {
+  car: <Car className="size-4" />,
+  train: <Train className="size-4" />,
+  'car rental': <Car className="size-4" />,
+};
 export const DirectionsForm = ({
   form,
   setChangesStatus,
@@ -15,23 +36,6 @@ export const DirectionsForm = ({
   form: UseFormReturn<z.infer<typeof formSchema>>;
   setChangesStatus: (status: string) => void;
 }) => {
-  let initialLocationDirections =
-    form.formState.defaultValues?.locationDirections;
-  useEffect(() => {
-    console.log(form.getValues().locationDirections, initialLocationDirections);
-    if (
-      JSON.stringify(form.getValues().locationDirections) !==
-      JSON.stringify(initialLocationDirections)
-    ) {
-      setChangesStatus('1');
-    } else {
-      setChangesStatus('0');
-      initialLocationDirections = [
-        ...(form.formState.defaultValues?.locationDirections || []),
-      ];
-    }
-  }, [form.getValues().locationDirections]);
-
   const [editingDirection, setEditingDirection] = useState<number | null>(null);
   const [newDirection, setNewDirection] = useState<Direction>({
     type: 'car',
@@ -79,6 +83,7 @@ export const DirectionsForm = ({
       location: { address: '', link: '' },
     });
     setShouldDisplayAddForm(false);
+    setChangesStatus('1');
   };
 
   const updateDirection = (index: number, direction: Direction) => {
@@ -90,6 +95,7 @@ export const DirectionsForm = ({
     form.setValue('locationDirections', updatedDirections);
     form.trigger('locationDirections');
     setEditingDirection(null);
+    setChangesStatus('1');
   };
 
   const removeDirection = (index: number) => {
@@ -100,6 +106,7 @@ export const DirectionsForm = ({
     ];
     form.setValue('locationDirections', updatedDirections);
     form.trigger('locationDirections');
+    setChangesStatus('1');
   };
 
   const startEditingDirection = (index: number) => {
@@ -115,19 +122,8 @@ export const DirectionsForm = ({
     <div className="flex flex-col w-full gap-4">
       {/* Existing Directions */}
       <div className="space-y-4 ">
-        <div className="flex flex-row gap-2 justify-between w-full">
-          <FormLabel className="mb-2">Informations de navigation</FormLabel>
-          {!hasAllDirectionTypes() && !shouldDisplayAddForm && (
-            <div className=" flex justify-center">
-              <Button
-                variant="default"
-                className=""
-                onClick={() => setShouldDisplayAddForm(true)}
-              >
-                Ajouter une information de navigation <Plus />
-              </Button>
-            </div>
-          )}
+        <div className="flex flex-row  justify-between w-full mb-0">
+          <FormLabel className="mb-2">Indications du lieu de mariage</FormLabel>
         </div>
         {form.getValues().locationDirections?.map((direction, index) => (
           <div key={index} className=" rounded-lg p-4 border">
@@ -144,13 +140,17 @@ export const DirectionsForm = ({
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-1 bg-primary  text-white text-xs rounded-full">
+                    <Badge
+                      variant="default"
+                      className="flex items-center gap-2"
+                    >
+                      {DirectionsIcons[direction.type]}{' '}
                       {direction.type === 'car'
                         ? 'En voiture'
                         : direction.type === 'train'
                           ? 'En train'
                           : 'Location de voiture'}
-                    </span>
+                    </Badge>
                   </div>
                   <p className="text-sm  mb-2 whitespace-pre-line">
                     {direction.information}
@@ -184,7 +184,7 @@ export const DirectionsForm = ({
                     variant="destructive"
                     onClick={() => removeDirection(index)}
                     size="icon"
-                    className="bg-destructive/90 "
+                    className="bg-destructive"
                   >
                     <Trash />
                   </Button>
@@ -197,7 +197,9 @@ export const DirectionsForm = ({
 
       {shouldDisplayAddForm && (
         <div className="bg-gray-50 rounded-lg p-4 border">
-          <h4 className="font-medium text-gray-700 mb-3">Add New Direction</h4>
+          <h4 className="font-medium text-gray-700 mb-3">
+            Ajouter de nouvelles indications
+          </h4>
           <DirectionEditForm
             direction={newDirection}
             onSave={addDirection}
@@ -216,7 +218,17 @@ export const DirectionsForm = ({
         </div>
       )}
       {/* Add New Direction */}
-
+      {!hasAllDirectionTypes() && !shouldDisplayAddForm && (
+        <div className=" flex justify-center">
+          <Button
+            variant="default"
+            className=""
+            onClick={() => setShouldDisplayAddForm(true)}
+          >
+            Ajouter une information de navigation <Plus />
+          </Button>
+        </div>
+      )}
       {/* Show message when all types are present */}
       {hasAllDirectionTypes() && (
         <div className=" w-full  items-start gap-4 h-[10rem]">
@@ -284,86 +296,100 @@ function DirectionEditForm({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 font-sans">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Type
-        </label>
-        <select
-          value={formData.type}
-          onChange={(e) =>
-            handleChange('type', e.target.value as Direction['type'])
-          }
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-        >
-          {availableTypes.map((type) => (
-            <option key={type} value={type}>
-              {type === 'car'
-                ? 'En voiture'
-                : type === 'train'
-                  ? 'En train'
-                  : 'Location de voiture'}
-            </option>
-          ))}
-        </select>
+        <FormItem className="font-sans">
+          <FormLabel>Type</FormLabel>
+          <Select
+            onValueChange={(e) => handleChange('type', e as Direction['type'])}
+            defaultValue={formData.type}
+          >
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a verified email to display" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className="font-sans">
+              {availableTypes.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type === 'car'
+                    ? 'En voiture'
+                    : type === 'train'
+                      ? 'En train'
+                      : 'Location de voiture'}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FormDescription>Sélectionnez le type de navigation.</FormDescription>
+          <FormMessage />
+        </FormItem>
       </div>
+      <FormItem>
+        <FormLabel>Informations</FormLabel>
+        <FormControl>
+          <Textarea
+            className="h-20"
+            onChange={(e) => handleChange('information', e.target.value)}
+            required
+            value={formData.information}
+          />
+        </FormControl>
+        <FormDescription className="flex flex-row justify-between">
+          <span>Indications, parkings, gares ou autres détails utiles...</span>
+        </FormDescription>
+        <FormMessage />
+      </FormItem>
+      <FormItem className="w-full">
+        <FormLabel>Adresse</FormLabel>
+        <FormControl>
+          <Input
+            placeholder="Adresse complète"
+            value={formData.location.address}
+            onChange={(e) => handleLocationChange('address', e.target.value)}
+            required
+          />
+        </FormControl>
+        <FormDescription>
+          Indiquez l'adresse concernant l'indication (parking, gare, etc.)
+        </FormDescription>
+        <FormMessage />
+      </FormItem>
+      <FormItem className="w-full">
+        <FormLabel>Lien de l'adresse</FormLabel>
+        <FormControl>
+          <Input
+            type="url"
+            value={formData.location.link || ''}
+            onChange={(e) => handleLocationChange('link', e.target.value)}
+            required
+            placeholder="https://maps.google.com/..."
+          />
+        </FormControl>
+        <FormDescription>
+          Ce lien permettra d'ouvrir la carte Google Maps directement.
+        </FormDescription>
+        <FormMessage />
+      </FormItem>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Information
-        </label>
-        <textarea
-          value={formData.information}
-          onChange={(e) => handleChange('information', e.target.value)}
-          rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-          placeholder="Directions, parking info, or other helpful details..."
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Address
-        </label>
-        <input
-          type="text"
-          value={formData.location.address}
-          onChange={(e) => handleLocationChange('address', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-          placeholder="Full address"
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Link (optional)
-        </label>
-        <input
-          type="url"
-          value={formData.location.link || ''}
-          onChange={(e) => handleLocationChange('link', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-          placeholder="https://maps.google.com/..."
-        />
-      </div>
-
-      <div className="flex gap-2">
-        <button
+      <div className="flex gap-2 justify-between">
+        <Button variant="default" onClick={onCancel}>
+          Annuler
+        </Button>{' '}
+        <Button
           type="button"
           onClick={handleSave}
-          className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
+          variant="success"
+          disabled={
+            !formData.information.trim() ||
+            !formData.location.address.trim() ||
+            !formData.location?.link?.trim()
+          }
         >
-          {isNew ? 'Add Direction' : 'Save Changes'}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Cancel
-        </button>
+          {isNew
+            ? 'Ajouter la nouvelle indication'
+            : 'Sauvegarder les modifications'}
+        </Button>
       </div>
     </div>
   );
