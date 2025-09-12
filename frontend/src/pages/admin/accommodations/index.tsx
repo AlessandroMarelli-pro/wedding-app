@@ -3,19 +3,17 @@ import {
   AccomodationFormDialog,
   initialFormData,
 } from '@/components/admin/accomodation-form-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LinkPreview } from '@/components/ui/link-preview';
+import { cn } from '@/lib';
 import { Accommodation } from '@/types/api';
-import { Edit, GripVertical, MapPin, Phone, Star, Trash2 } from 'lucide-react';
+import { Dot, Edit, MapPin, Star, Trash2 } from 'lucide-react';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button-pers';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '../../../components/ui/card';
 
 export default function AdminAccommodations() {
   const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
@@ -140,6 +138,9 @@ export default function AdminAccommodations() {
       return 'External Site';
     }
   };
+  const getImageUrlByIndex = (imageUrl: string, index: number) => {
+    return imageUrl.split(',')?.[index] || '';
+  };
 
   return (
     <>
@@ -148,7 +149,7 @@ export default function AdminAccommodations() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-8 flex flex-col">
         {/* Header */}
         <div className="space-y-8">
           <div className="flex justify-between items-start">
@@ -189,127 +190,103 @@ export default function AdminAccommodations() {
 
         {/* Accommodations List */}
         {!isLoading && (
-          <div className="space-y-4">
-            {accommodations.length === 0 ? (
-              <Card>
-                <CardContent className="p-12 text-center">
-                  <div className="text-gray-400 mb-4">
-                    <MapPin className="w-12 h-12 mx-auto" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    No accommodations yet
-                  </h3>
-                  <p className="text-gray-500 mb-4">
-                    Get started by adding your first accommodation
-                    recommendation.
-                  </p>
-                  <AccomodationFormDialog
-                    editingAccommodation={editingAccommodation}
-                    setEditingAccommodation={setEditingAccommodation}
-                    setMessage={setMessage}
-                    isDialogOpen={isDialogOpen}
-                    setIsDialogOpen={setIsDialogOpen}
-                    accommodationsCount={accommodations.length}
-                    formData={formData}
-                    setFormData={setFormData}
-                  />
-                </CardContent>
-              </Card>
-            ) : (
-              accommodations.map((accommodation) => (
-                <Card
-                  key={accommodation.id}
-                  className="hover:shadow-md transition-shadow"
-                >
-                  <CardHeader className="pb-3">
+          <div className="space-y-4 flex flex-row  flex-wrap">
+            {accommodations.map((accommodation, index) => (
+              <div
+                className={cn(' max-w-1/2', index % 2 === 0 && 'pr-4')}
+                key={accommodation.id}
+              >
+                <Card className="h-full">
+                  <CardHeader className="pb-1">
                     <div className="flex justify-between items-start">
                       <div className="flex items-center space-x-3">
-                        <GripVertical className="w-5 h-5 text-gray-400" />
                         <div>
                           <CardTitle className="text-lg flex items-center space-x-2">
                             <span>{accommodation.name}</span>
+                            {accommodation.priceRange && (
+                              <>
+                                <Dot />
+                                <Badge>{accommodation.priceRange}</Badge>
+                              </>
+                            )}
                             {accommodation.isRecommended && (
-                              <Badge
-                                variant="secondary"
-                                className="bg-yellow-100 text-yellow-800"
-                              >
-                                <Star className="w-3 h-3 mr-1" />
-                                Recommended
-                              </Badge>
+                              <>
+                                <Dot />
+                                <Badge variant="warning">
+                                  <Star className="w-3 h-3 mr-1" />
+                                  Recommended
+                                </Badge>
+                              </>
                             )}
                           </CardTitle>
-                          {accommodation.priceRange && (
-                            <p className="text-sm text-gray-600 mt-1">
-                              {accommodation.priceRange}
-                            </p>
-                          )}
                         </div>
                       </div>
                       <div className="flex space-x-2">
                         <Button
-                          variant="outline"
-                          size="sm"
+                          variant="ghost"
+                          size="icon"
                           onClick={() => handleEdit(accommodation)}
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button
-                          variant="outline"
-                          size="sm"
+                          variant="ghost"
                           onClick={() => handleDelete(accommodation.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          size="icon"
+                          className="text-destructive "
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-0">
-                    <p className="text-gray-700 mb-3">
-                      {accommodation.description}
-                    </p>
-
-                    <div className="space-y-2 text-sm text-gray-600">
-                      <div className="flex items-start space-x-2">
-                        <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                        <span>{accommodation.address}</span>
+                  <CardContent className=" flex flex-col gap-4">
+                    {accommodation.imagesUrl && (
+                      <div className="flex flex-row  justify-center gap-4">
+                        <Image
+                          src={getImageUrlByIndex(accommodation.imagesUrl, 0)}
+                          alt={accommodation.name}
+                          width={1000}
+                          height={1000}
+                          className="w-70 rounded-lg max-h-50"
+                        />
+                        <Image
+                          src={getImageUrlByIndex(accommodation.imagesUrl, 1)}
+                          alt={accommodation.name}
+                          width={1000}
+                          height={1000}
+                          className="w-70 rounded-lg "
+                        />
                       </div>
-
-                      {accommodation.contactInfo && (
-                        <div className="flex items-start space-x-2">
-                          <Phone className="w-4 h-4 mt-0.5 text-gray-400" />
-                          <span>{accommodation.contactInfo}</span>
-                        </div>
-                      )}
-
-                      {accommodation.latitude && accommodation.longitude && (
+                    )}
+                    <div className="flex flex-col text-xs">
+                      <div className="space-y-2 text-sm ">
+                        <p className="text-sm text-justify">
+                          {accommodation.description}
+                        </p>
                         <div className="flex items-start space-x-2">
                           <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                          <span>
-                            Coordinates: {accommodation.latitude},{' '}
-                            {accommodation.longitude}
-                          </span>
+                          <span>{accommodation.address}</span>
                         </div>
-                      )}
-
-                      {accommodation.sourceUrl && (
-                        <div className="flex items-start space-x-2">
-                          <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                          <a
-                            href={accommodation.sourceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline"
-                          >
-                            View on {getSourceName(accommodation.sourceUrl)}
-                          </a>
-                        </div>
-                      )}
+                        {accommodation.sourceUrl && (
+                          <div className="flex items-start space-x-2">
+                            <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                            <LinkPreview
+                              width={400}
+                              height={300}
+                              url={accommodation.sourceUrl || ''}
+                              className=" hover:text-blue-800 underline text-black dark:text-black"
+                            >
+                              View on {getSourceName(accommodation.sourceUrl)}
+                            </LinkPreview>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))
-            )}
+              </div>
+            ))}
           </div>
         )}
       </div>
