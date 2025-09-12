@@ -1,5 +1,24 @@
+import { Calendar } from '@/components/ui/calendar';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Input } from '@/components/ui';
 import {
-  Calendar,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { cn, formatDateTime } from '@/lib';
+import {
+  CalendarIcon,
   Clock,
   Edit,
   MapPin,
@@ -11,7 +30,9 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import z from 'zod';
 import { Button } from '../../../components/ui/button';
 import {
   Card,
@@ -19,8 +40,6 @@ import {
   CardHeader,
   CardTitle,
 } from '../../../components/ui/card';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
 
 interface ProgramEvent {
   id: string;
@@ -34,21 +53,33 @@ interface ProgramEvent {
 }
 
 interface EventFormData {
+  id?: string;
   title: string;
-  startTime: string;
+  startTime: Date;
   location: string;
 }
 
+export const formSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(2).max(300),
+  startTime: z.date(),
+  location: z.string().min(2).max(300),
+});
+
 export default function AdminProgram() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      id: '',
+      title: '',
+      startTime: new Date(),
+      location: '',
+    },
+  });
   const [events, setEvents] = useState<ProgramEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [editingEvent, setEditingEvent] = useState<ProgramEvent | null>(null);
+  const [editingEvent, setEditingEvent] = useState<EventFormData | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [formData, setFormData] = useState<EventFormData>({
-    title: '',
-    startTime: '',
-    location: '',
-  });
 
   const router = useRouter();
 
@@ -88,9 +119,8 @@ export default function AdminProgram() {
       setIsLoading(false);
     }
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // 2. Define a submit handler.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const token = localStorage.getItem('adminToken');
     if (!token) return;
 
@@ -102,11 +132,11 @@ export default function AdminProgram() {
       const method = editingEvent ? 'PUT' : 'POST';
 
       const payload = {
-        ...formData,
+        ...values,
         includeInCalendar: true,
         description: '',
         icon: '',
-        endTime: formData.startTime,
+        endTime: values.startTime,
       };
 
       const response = await fetch(url, {
@@ -139,7 +169,7 @@ export default function AdminProgram() {
         description: error as string,
       });
     }
-  };
+  }
 
   const handleDelete = async (eventId: string) => {
     const token = localStorage.getItem('adminToken');
@@ -168,12 +198,16 @@ export default function AdminProgram() {
   };
 
   const startEdit = (event: ProgramEvent) => {
-    setEditingEvent(event);
-    setFormData({
+    const startTime = new Date(event.startTime);
+    const editingEvent: EventFormData = {
+      id: event.id,
       title: event.title,
-      startTime: event.startTime.slice(0, 16), // Format for datetime-local input
+      startTime: startTime,
       location: event.location,
-    });
+    };
+    setEditingEvent(editingEvent);
+    form.reset(editingEvent);
+
     setIsCreating(false);
   };
 
@@ -190,24 +224,17 @@ export default function AdminProgram() {
   };
 
   const resetFormData = () => {
-    setFormData({
+    form.reset({
+      id: '',
       title: '',
-      startTime: '',
+      startTime: new Date(),
       location: '',
     });
   };
 
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('fr-FR', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: false,
-    });
-  };
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const endMonth = new Date(currentYear + 2, currentMonth + 2);
 
   return (
     <>
@@ -245,59 +272,112 @@ export default function AdminProgram() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="title">Titre de l'événement</Label>
-                      <Input
-                        id="title"
-                        value={formData.title}
-                        onChange={(e) =>
-                          setFormData({ ...formData, title: e.target.value })
-                        }
-                        required
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-8"
+                  >
+                    <div className="flex justify-between items-start gap-4">
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormLabel>Nom de l'événement</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Cérémonie de mariage"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Ex: Cérémonie de mariage, Repas, Soirée, etc.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="location"
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormLabel>Lieu de l'événement</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Nom et ville du lieu"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Ex: Eglise, Condillac
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="startTime"
+                        render={({ field }) => (
+                          <FormItem className=" w-full">
+                            <FormLabel>Date de l'événement</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant={'outline'}
+                                    className={cn(
+                                      'w-full  text-left font-normal h-10',
+                                      !field.value && 'text-muted-foreground',
+                                    )}
+                                  >
+                                    {field.value ? (
+                                      formatDateTime(field.value.toISOString())
+                                    ) : (
+                                      <span>Pick a date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-[15rem] lg:w-[20rem] p-0 font-sans"
+                                align="start"
+                              >
+                                <Calendar
+                                  showOutsideDays={true}
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  captionLayout="dropdown"
+                                  className="rounded-md border shadow-sm w-full"
+                                  endMonth={endMonth}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                            <FormDescription>
+                              Date à laquelle l'événement aura lieu.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="location">Lieu</Label>
-                      <Input
-                        id="location"
-                        value={formData.location}
-                        onChange={(e) =>
-                          setFormData({ ...formData, location: e.target.value })
-                        }
-                        required
-                      />
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={resetForm}
+                      >
+                        Annuler
+                      </Button>
+                      <Button type="submit" variant="success">
+                        {editingEvent ? 'Mettre à jour' : 'Créer'} <Save />
+                      </Button>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="startTime">Date et heure</Label>
-                      <Input
-                        id="startTime"
-                        type="datetime-local"
-                        value={formData.startTime}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            startTime: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button type="button" variant="outline" onClick={resetForm}>
-                      Annuler
-                    </Button>
-                    <Button type="submit" variant="success">
-                      {editingEvent ? 'Mettre à jour' : 'Créer'} <Save />
-                    </Button>
-                  </div>
-                </form>
+                  </form>
+                </Form>
               </CardContent>
             </Card>
           )}
