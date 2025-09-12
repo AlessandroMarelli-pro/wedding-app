@@ -13,6 +13,7 @@ import { IconAnalyzeFilled } from '@tabler/icons-react';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { toast } from 'sonner';
 import z from 'zod';
 import { Checkbox } from '../ui/checkbox';
 import {
@@ -51,17 +52,17 @@ export const AccomodationFormDialog = ({
   setIsDialogOpen,
   accommodationsCount,
   formData,
-  setMessage,
   editingAccommodation,
   setEditingAccommodation,
+  fetchAccommodations,
 }: {
   isDialogOpen: boolean;
   setIsDialogOpen: (isDialogOpen: boolean) => void;
   accommodationsCount: number;
   formData: UseFormReturn<z.infer<typeof formSchema>>;
-  setMessage: (message: { type: 'success' | 'error'; text: string }) => void;
   editingAccommodation: Accommodation | null;
   setEditingAccommodation: (editingAccommodation: Accommodation | null) => void;
+  fetchAccommodations: () => void;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -70,6 +71,7 @@ export const AccomodationFormDialog = ({
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
     setIsSubmitting(true);
 
     try {
@@ -96,18 +98,24 @@ export const AccomodationFormDialog = ({
       });
 
       if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: `Accommodation ${editingAccommodation ? 'updated' : 'created'} successfully`,
-        });
+        toast.success(
+          `Success in ${editingAccommodation ? 'update' : 'creation'} !`,
+          {
+            description: `Accommodation ${editingAccommodation ? 'updated' : 'created'} successfully`,
+          },
+        );
         setIsDialogOpen(false);
         resetForm();
+
+        fetchAccommodations();
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to save accommodation');
       }
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message });
+      toast.error('Failed to save accommodation', {
+        description: error as string,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -119,11 +127,6 @@ export const AccomodationFormDialog = ({
   };
 
   const handleParseUrl = async () => {
-    if (!urlInput.trim()) {
-      setMessage({ type: 'error', text: 'Please enter a URL' });
-      return;
-    }
-
     setIsParsingUrl(true);
     try {
       const token = localStorage.getItem('adminToken');
@@ -150,9 +153,8 @@ export const AccomodationFormDialog = ({
           imagesUrl: parsedData.imagesUrl || '',
         });
 
-        setMessage({
-          type: 'success',
-          text: 'URL parsed successfully! Please review and complete the form.',
+        toast.success('URL parsed successfully! ', {
+          description: 'Please review and complete the form.',
         });
         setUrlInput('');
       } else {
@@ -160,15 +162,14 @@ export const AccomodationFormDialog = ({
         throw new Error(errorData.message || 'Failed to parse URL');
       }
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message });
+      toast.error('Failed to parse URL', {
+        description: error as string,
+      });
     } finally {
       setIsParsingUrl(false);
     }
   };
-  const handleInputChange = (
-    field: keyof AccommodationFormData,
-    value: string | boolean,
-  ) => {};
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild className="space-y-2">

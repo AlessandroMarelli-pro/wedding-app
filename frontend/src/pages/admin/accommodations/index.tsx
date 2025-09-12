@@ -15,17 +15,17 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import z from 'zod';
 
 export const formSchema = z.object({
-  id: z.string().min(2).max(300),
   name: z.string().min(2).max(50),
   description: z.string().min(2).max(2000),
   address: z.string().min(2).max(300),
   priceRange: z.string().min(2).max(50),
-  isRecommended: z.boolean(),
-  sourceUrl: z.string().min(2),
-  imagesUrl: z.string().min(2),
+  isRecommended: z.boolean().optional().default(false),
+  sourceUrl: z.string().min(2).url(),
+  imagesUrl: z.string().min(2).startsWith('https'),
 });
 
 export default function AdminAccommodations() {
@@ -40,10 +40,7 @@ export default function AdminAccommodations() {
     useState<Accommodation | null>(null);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [message, setMessage] = useState<{
-    type: 'success' | 'error';
-    text: string;
-  } | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -78,7 +75,9 @@ export default function AdminAccommodations() {
       }
     } catch (error) {
       console.error('Error fetching accommodations:', error);
-      setMessage({ type: 'error', text: 'Failed to load accommodations' });
+      toast.error('Failed to load accommodations', {
+        description: error as string,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +98,7 @@ export default function AdminAccommodations() {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (!confirm('Are you sure you want to delete this accommodation?')) {
       return;
     }
@@ -115,16 +114,18 @@ export default function AdminAccommodations() {
       );
 
       if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: 'Accommodation deleted successfully',
+        toast.warning('Accommodation deleted successfully', {
+          description: `${name} has been deleted`,
         });
+
         fetchAccommodations();
       } else {
         throw new Error('Failed to delete accommodation');
       }
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message });
+      toast.error('Failed to delete accommodation', {
+        description: error as string,
+      });
     }
   };
 
@@ -154,7 +155,11 @@ export default function AdminAccommodations() {
     }
   };
   const getImageUrlByIndex = (imageUrl: string, index: number) => {
-    return imageUrl.split(',')?.[index] || '';
+    const url = imageUrl.split(',')?.[index] || '';
+    if (url.includes('http')) {
+      return url;
+    }
+    return '';
   };
 
   return (
@@ -177,23 +182,10 @@ export default function AdminAccommodations() {
                 Gérez les logements recommandés pour vos invités
               </p>
             </div>
-            {message && (
-              <div
-                className={`p-4 rounded-lg ${
-                  message.type === 'success'
-                    ? 'bg-green-50 border border-green-200 text-green-800'
-                    : 'bg-red-50 border border-red-200 text-red-800'
-                }`}
-              >
-                <div className="flex items-center">
-                  <p className="font-medium">{message.text}</p>
-                </div>
-              </div>
-            )}
             <AccomodationFormDialog
+              fetchAccommodations={fetchAccommodations}
               editingAccommodation={editingAccommodation}
               setEditingAccommodation={setEditingAccommodation}
-              setMessage={setMessage}
               isDialogOpen={isDialogOpen}
               setIsDialogOpen={setIsDialogOpen}
               accommodationsCount={accommodations.length}
@@ -221,7 +213,7 @@ export default function AdminAccommodations() {
                               <>
                                 <Dot />
                                 <Badge variant="outline">
-                                  {accommodation.priceRange}
+                                  {`${accommodation.priceRange?.replace('€', '')} € `}
                                 </Badge>
                               </>
                             )}
@@ -247,7 +239,9 @@ export default function AdminAccommodations() {
                         </Button>
                         <Button
                           variant="ghost"
-                          onClick={() => handleDelete(accommodation.id)}
+                          onClick={() =>
+                            handleDelete(accommodation.id, accommodation.name)
+                          }
                           size="icon"
                           className="text-destructive "
                         >

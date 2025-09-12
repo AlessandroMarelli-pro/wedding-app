@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { Accommodation } from '../entities/accommodation.entity';
 
 export interface CreateAccommodationDto {
@@ -66,14 +66,15 @@ export class AccommodationService {
   async createAccommodation(
     createDto: CreateAccommodationDto,
   ): Promise<Accommodation> {
-    // Check if display order is already taken
-    const count = await this.accommodationRepository.count({});
-    createDto.displayOrder = count + 1;
-
-    // Validate coordinates if provided
-    if (createDto.latitude !== undefined || createDto.longitude !== undefined) {
-      this.validateCoordinates(createDto.latitude, createDto.longitude);
+    // Get the highest display order
+    const highestDisplayOrder = await this.accommodationRepository.findOne({
+      where: { id: Not(IsNull()) },
+      order: { displayOrder: 'DESC' },
+    });
+    if (highestDisplayOrder) {
+      createDto.displayOrder = highestDisplayOrder.displayOrder + 1;
     }
+
     const accommodation = this.accommodationRepository.create({
       ...createDto,
       isRecommended: createDto.isRecommended ?? false,
