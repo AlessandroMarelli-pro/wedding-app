@@ -1,4 +1,3 @@
-import { Card, CardContent } from '@/components/ui';
 import { IconCurrencyEuro, IconMapPin } from '@tabler/icons-react';
 import { Accommodation, Direction } from '../types/api';
 import ExpandableCardDemo from './expandable-card-demo-standard';
@@ -19,22 +18,7 @@ export function AccommodationsList({
   accommodations,
   weddingInfo,
 }: AccommodationsListProps) {
-  const sortedAccommodations = [...accommodations].sort(
-    (a, b) => a.displayOrder - b.displayOrder,
-  );
-
-  if (accommodations.length === 0) {
-    return (
-      <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-        <CardContent className="text-center py-12">
-          <IconMapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">
-            Accommodation recommendations will be available soon.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  [...accommodations].sort((a, b) => a.displayOrder - b.displayOrder);
 
   const cards = accommodations.map((accommodation) => {
     return {

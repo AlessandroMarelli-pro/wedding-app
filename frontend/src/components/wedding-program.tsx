@@ -1,7 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib';
 import { IconGalaxy } from '@tabler/icons-react';
-import { Calendar as CalendarIcon } from 'lucide-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import { useEffect, useState } from 'react';
 
@@ -64,21 +63,6 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
     );
   }
 
-  if (events.length === 0) {
-    return (
-      <Card className="bg-card/60 backdrop-blur-sm border shadow-lg">
-        <CardContent className="text-center py-12">
-          <CalendarIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground mb-6">
-            The wedding program will be available soon.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Check back closer to the date for the detailed schedule of events.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
   events.sort(
     (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
   );
