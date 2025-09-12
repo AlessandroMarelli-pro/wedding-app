@@ -177,7 +177,7 @@ export const SidebarLink = ({
 
       <motion.span
         animate={{
-          display: animate ? (open ? 'inline-block' : 'none') : 'inline-block',
+          display: animate ? (open ? 'inline-block' : 'block') : 'inline-block',
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
         className="text-[#EEEEEE]  text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
