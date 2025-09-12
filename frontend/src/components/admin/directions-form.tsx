@@ -1,23 +1,44 @@
 import { FormLabel } from '@/components/ui/form';
-import { formSchema, WeddingInfo } from '@/pages/admin/information';
+import { formSchema } from '@/pages/admin/information';
+import { CheckCircle2Icon, Edit, Plus, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import z from 'zod';
 import { Direction } from '../../types/api';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Button } from '../ui/button';
 
 export const DirectionsForm = ({
   form,
-  setWeddingInfo,
+  setChangesStatus,
 }: {
   form: UseFormReturn<z.infer<typeof formSchema>>;
-  setWeddingInfo: (form: WeddingInfo) => void;
+  setChangesStatus: (status: string) => void;
 }) => {
+  let initialLocationDirections =
+    form.formState.defaultValues?.locationDirections;
+  useEffect(() => {
+    console.log(form.getValues().locationDirections, initialLocationDirections);
+    if (
+      JSON.stringify(form.getValues().locationDirections) !==
+      JSON.stringify(initialLocationDirections)
+    ) {
+      setChangesStatus('1');
+    } else {
+      setChangesStatus('0');
+      initialLocationDirections = [
+        ...(form.formState.defaultValues?.locationDirections || []),
+      ];
+    }
+  }, [form.getValues().locationDirections]);
+
   const [editingDirection, setEditingDirection] = useState<number | null>(null);
   const [newDirection, setNewDirection] = useState<Direction>({
     type: 'car',
     information: '',
     location: { address: '' },
   });
+  const [shouldDisplayAddForm, setShouldDisplayAddForm] = useState(false);
 
   const hasAllDirectionTypes = () => {
     const existingTypes = form
@@ -48,6 +69,8 @@ export const DirectionsForm = ({
       ...form.getValues().locationDirections,
       { ...direction },
     ]);
+    form.trigger('locationDirections');
+
     // Set the next available type for the new direction
     const availableTypes = getAvailableTypes();
     setNewDirection({
@@ -55,6 +78,7 @@ export const DirectionsForm = ({
       information: '',
       location: { address: '', link: '' },
     });
+    setShouldDisplayAddForm(false);
   };
 
   const updateDirection = (index: number, direction: Direction) => {
@@ -64,17 +88,18 @@ export const DirectionsForm = ({
     updatedDirections[index] = direction;
 
     form.setValue('locationDirections', updatedDirections);
+    form.trigger('locationDirections');
     setEditingDirection(null);
   };
 
   const removeDirection = (index: number) => {
     if (!form) return;
 
-    const updatedDirections = form
-      .getValues()
-      .locationDirections.filter((_, i) => i !== index);
-    console.log(updatedDirections);
+    const updatedDirections = [
+      ...form.getValues().locationDirections.filter((_, i) => i !== index),
+    ];
     form.setValue('locationDirections', updatedDirections);
+    form.trigger('locationDirections');
   };
 
   const startEditingDirection = (index: number) => {
@@ -90,9 +115,22 @@ export const DirectionsForm = ({
     <div className="flex flex-col w-full gap-4">
       {/* Existing Directions */}
       <div className="space-y-4 ">
-        <FormLabel>Directions & Additional Info</FormLabel>
-        {form.getValues().locationDirections.map((direction, index) => (
-          <div key={index} className="bg-gray-50 rounded-lg p-4 border">
+        <div className="flex flex-row gap-2 justify-between w-full">
+          <FormLabel className="mb-2">Informations de navigation</FormLabel>
+          {!hasAllDirectionTypes() && !shouldDisplayAddForm && (
+            <div className=" flex justify-center">
+              <Button
+                variant="default"
+                className=""
+                onClick={() => setShouldDisplayAddForm(true)}
+              >
+                Ajouter une information de navigation <Plus />
+              </Button>
+            </div>
+          )}
+        </div>
+        {form.getValues().locationDirections?.map((direction, index) => (
+          <div key={index} className=" rounded-lg p-4 border">
             {editingDirection === index ? (
               <DirectionEditForm
                 direction={direction}
@@ -106,7 +144,7 @@ export const DirectionsForm = ({
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-1 bg-rose-100 text-rose-800 text-xs rounded-full">
+                    <span className="px-2 py-1 bg-primary  text-white text-xs rounded-full">
                       {direction.type === 'car'
                         ? 'En voiture'
                         : direction.type === 'train'
@@ -114,17 +152,16 @@ export const DirectionsForm = ({
                           : 'Location de voiture'}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2 whitespace-pre-line">
+                  <p className="text-sm  mb-2 whitespace-pre-line">
                     {direction.information}
                   </p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500">📍</span>
+                  <div className="flex items-center gap-2 text-gray-700">
                     {direction.location.link ? (
                       <a
                         href={direction.location.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline text-sm"
+                        className="hover:underline text-sm"
                       >
                         {direction.location.address}
                       </a>
@@ -136,20 +173,21 @@ export const DirectionsForm = ({
                   </div>
                 </div>
                 <div className="flex gap-2 ml-4">
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
                     onClick={() => startEditingDirection(index)}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    size="icon"
                   >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
+                    <Edit />
+                  </Button>
+                  <Button
+                    variant="destructive"
                     onClick={() => removeDirection(index)}
-                    className="text-red-600 hover:text-red-800 text-sm"
+                    size="icon"
+                    className="bg-destructive/90 "
                   >
-                    Remove
-                  </button>
+                    <Trash />
+                  </Button>
                 </div>
               </div>
             )}
@@ -157,8 +195,7 @@ export const DirectionsForm = ({
         ))}
       </div>
 
-      {/* Add New Direction */}
-      {!hasAllDirectionTypes() && (
+      {shouldDisplayAddForm && (
         <div className="bg-gray-50 rounded-lg p-4 border">
           <h4 className="font-medium text-gray-700 mb-3">Add New Direction</h4>
           <DirectionEditForm
@@ -171,35 +208,28 @@ export const DirectionsForm = ({
                 information: '',
                 location: { address: '', link: '' },
               });
+              setShouldDisplayAddForm(false);
             }}
             isNew={true}
             availableTypes={getAvailableTypes()}
           />
         </div>
       )}
+      {/* Add New Direction */}
 
       {/* Show message when all types are present */}
       {hasAllDirectionTypes() && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <div className="flex items-center">
-            <svg
-              className="w-5 h-5 text-green-600 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <p className="text-green-800 font-medium">
-              All direction types have been added! You can edit or remove
-              existing directions above.
-            </p>
-          </div>
+        <div className=" w-full  items-start gap-4 h-[10rem]">
+          <Alert variant="success">
+            <CheckCircle2Icon className="size-6" />
+            <AlertTitle>
+              Toutes les informations de navigation ont été ajoutées !{' '}
+            </AlertTitle>
+            <AlertDescription>
+              Vous pouvez modifier ou supprimer les informations de navigation
+              ci-dessus.
+            </AlertDescription>
+          </Alert>
         </div>
       )}
     </div>
@@ -280,7 +310,7 @@ function DirectionEditForm({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Information (Markdown supported)
+          Information
         </label>
         <textarea
           value={formData.information}
