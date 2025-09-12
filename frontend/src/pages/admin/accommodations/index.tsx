@@ -75,7 +75,7 @@ export default function AdminAccommodations() {
       }
     } catch (error) {
       console.error('Error fetching accommodations:', error);
-      toast.error('Failed to load accommodations', {
+      toast.error('Erreur lors de la récupération des logements !', {
         description: error as string,
       });
     } finally {
@@ -114,8 +114,8 @@ export default function AdminAccommodations() {
       );
 
       if (response.ok) {
-        toast.warning('Accommodation deleted successfully', {
-          description: `${name} has been deleted`,
+        toast.warning('Logement supprimé avec succès !', {
+          description: `${name} a été supprimé.`,
         });
 
         fetchAccommodations();
@@ -123,7 +123,7 @@ export default function AdminAccommodations() {
         throw new Error('Failed to delete accommodation');
       }
     } catch (error: any) {
-      toast.error('Failed to delete accommodation', {
+      toast.error('Erreur lors de la suppression du logement !', {
         description: error as string,
       });
     }

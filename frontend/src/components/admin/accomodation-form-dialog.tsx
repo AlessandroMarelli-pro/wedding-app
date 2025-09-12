@@ -99,9 +99,9 @@ export const AccomodationFormDialog = ({
 
       if (response.ok) {
         toast.success(
-          `Success in ${editingAccommodation ? 'update' : 'creation'} !`,
+          `${editingAccommodation ? 'Misé à jour' : 'Création'}  réussi !`,
           {
-            description: `Accommodation ${editingAccommodation ? 'updated' : 'created'} successfully`,
+            description: `Le logement a été ${editingAccommodation ? 'mis à jour' : 'créé'}.`,
           },
         );
         setIsDialogOpen(false);
@@ -113,7 +113,7 @@ export const AccomodationFormDialog = ({
         throw new Error(errorData.message || 'Failed to save accommodation');
       }
     } catch (error: any) {
-      toast.error('Failed to save accommodation', {
+      toast.error('Erreur lors de la sauvegarde du logement', {
         description: error as string,
       });
     } finally {
@@ -153,8 +153,8 @@ export const AccomodationFormDialog = ({
           imagesUrl: parsedData.imagesUrl || '',
         });
 
-        toast.success('URL parsed successfully! ', {
-          description: 'Please review and complete the form.',
+        toast.success('URL analysée avec succès ! ', {
+          description: 'Veuillez vérifier et compléter le formulaire.',
         });
         setUrlInput('');
       } else {
@@ -162,7 +162,7 @@ export const AccomodationFormDialog = ({
         throw new Error(errorData.message || 'Failed to parse URL');
       }
     } catch (error: any) {
-      toast.error('Failed to parse URL', {
+      toast.error("Erreur lors de l'analyse de l'URL", {
         description: error as string,
       });
     } finally {
