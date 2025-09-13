@@ -145,7 +145,7 @@ export const GuestsCsvUpload = ({
 
       {csvUploads.length > 0 && (
         <div>
-          <h4 className="font-medium mb-2">Recent Uploads:</h4>
+          <h4 className="font-medium mb-2">Derniers dépôts:</h4>
           <div className="space-y-2">
             {csvUploads.slice(0, 3).map((upload) => (
               <div

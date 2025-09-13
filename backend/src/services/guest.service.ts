@@ -731,9 +731,12 @@ export class GuestService {
   }
 
   async getCSVUploads(): Promise<CSVUpload[]> {
-    return this.csvUploadRepository.find({
+    const guests = await this.csvUploadRepository.find({
       order: { createdAt: 'DESC' },
+      relations: ['guests'],
     });
+    console.log('guests', guests);
+    return guests;
   }
 
   async getCSVUpload(id: string): Promise<CSVUpload | null> {
