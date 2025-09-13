@@ -17,7 +17,7 @@ export const WeddingHero = ({
   <Vortex
     backgroundColor="black"
     rangeY={800}
-    baseHue={250}
+    baseHue={300}
     particleCount={250}
     height={maxCanvasHeight}
     className="flex items-center flex-col justify-center px-2 xl:px-10  w-full h-screen"
@@ -46,7 +46,7 @@ export const WeddingHero = ({
           />
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce   ">
             <Button
-              className="bg-transparent text-white  items-center space-x-2 cursor-pointer xl:flex hidden"
+              className="hover:bg-transparent bg-transparent text-white  items-center space-x-2 cursor-pointer xl:flex hidden"
               onClick={() => scrollToSection('nous')}
             >
               <IconArrowDown />
