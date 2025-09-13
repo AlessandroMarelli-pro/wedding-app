@@ -384,64 +384,52 @@ export default function AdminProgram() {
           )}
 
           <div className="space-y-4">
-            {events.length === 0 ? (
-              <Card>
-                <CardContent className="text-center py-12">
-                  <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">
-                    Pas d'événements programmés pour le moment. Créez votre
-                    premier événement pour commencer.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-4">
-                {events.map((event) => (
-                  <Card key={event.id}>
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg  text-foreground">
-                              {event.title}
-                            </h3>
-                          </div>
-
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {formatDateTime(event.startTime)}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              {event.location}
-                            </div>
-                          </div>
+            <div className="space-y-4">
+              {events.map((event) => (
+                <Card key={event.id}>
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-lg  text-foreground">
+                            {event.title}
+                          </h3>
                         </div>
 
-                        <div className="flex gap-2 ml-4">
-                          <Button
-                            variant="ghost"
-                            onClick={() => startEdit(event)}
-                            size="icon"
-                          >
-                            <Edit />
-                          </Button>
-                          <Button
-                            variant="destructive"
-                            onClick={() => handleDelete(event.id)}
-                            size="icon"
-                            className="bg-destructive"
-                          >
-                            <Trash />
-                          </Button>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {formatDateTime(event.startTime)}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {event.location}
+                          </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
+
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          variant="ghost"
+                          onClick={() => startEdit(event)}
+                          size="icon"
+                        >
+                          <Edit />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          onClick={() => handleDelete(event.id)}
+                          size="icon"
+                          className="bg-destructive"
+                        >
+                          <Trash />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -68,36 +68,44 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
   );
 
   return (
-    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-[#F38181] xl:gap-10 lg:gap-0 gap-10 py-10 lg:py-0">
+    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-[#F38181] xl:gap-5 lg:gap-0 gap-5 py-10 lg:py-0 lg:pb-5">
       {events.map((item, index) => (
         <>
           <div
             id={item.id}
-            className="flex flex-col justify-center items-center text-center space-y-4 pt-4 lg:pt-0"
+            className="flex flex-col flex-[1_1_20%] justify-center items-center text-center  pt-4 lg:pt-0 h-full"
           >
             <div
               className={cn(
-                'text-3xl lg:text-4xl xl:text-6xl ',
+                'text-3xl lg:text-4xl xl:text-6xl h-full flex items-center justify-center',
                 font.className,
               )}
             >
               {item.title}
             </div>
-            <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
-              {new Date(item.startTime).toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: false,
-              })}
-            </div>
-            {item.location.split(',').map((loc) => (
+            <div className="flex flex-col gap-5">
               <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
-                {loc}
+                {new Date(item.startTime).toLocaleDateString('fr-FR', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+
+                  hour12: false,
+                })}
               </div>
-            ))}
+              <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
+                {new Date(item.startTime).toLocaleTimeString('fr-FR', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: false,
+                })}
+              </div>
+              {item.location.split(',').map((loc) => (
+                <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
+                  {loc}
+                </div>
+              ))}
+            </div>
           </div>
           {index !== events.length - 1 && (
             <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5" />
