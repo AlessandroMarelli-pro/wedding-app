@@ -9,6 +9,7 @@ import { LinkPreview } from '@/components/ui/link-preview';
 import { cn } from '@/lib';
 import { Accommodation } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconWorldWww } from '@tabler/icons-react';
 import { Dot, Edit, MapPin, Star, Trash2 } from 'lucide-react';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -280,7 +281,7 @@ export default function AdminAccommodations() {
                         </div>
                         {accommodation.sourceUrl && (
                           <div className="flex items-start space-x-2">
-                            <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                            <IconWorldWww className="w-4 h-4 mt-0.5 text-gray-400" />
                             <LinkPreview
                               width={400}
                               height={300}

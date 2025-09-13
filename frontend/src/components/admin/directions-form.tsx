@@ -6,6 +6,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { formSchema } from '@/pages/admin/information';
+import { IconMapPinFilled } from '@tabler/icons-react';
 import { Car, CheckCircle2Icon, Edit, Plus, Train, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
@@ -15,6 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { LinkPreview } from '../ui/link-preview';
 import {
   Select,
   SelectContent,
@@ -155,16 +157,20 @@ export const DirectionsForm = ({
                   <p className="text-sm  mb-2 whitespace-pre-line">
                     {direction.information}
                   </p>
-                  <div className="flex items-center gap-2 text-gray-700">
+                  <div className="flex flex-row items-center gap-2 text-gray-700">
                     {direction.location.link ? (
-                      <a
-                        href={direction.location.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline text-sm"
-                      >
-                        {direction.location.address}
-                      </a>
+                      <>
+                        <IconMapPinFilled className="w-4 h-4 mt-0.5 text-gray-400" />
+
+                        <LinkPreview
+                          url={direction.location.link}
+                          width={400}
+                          height={300}
+                          className=" hover:text-blue-800 underline text-black dark:text-black"
+                        >
+                          {direction.location.address}
+                        </LinkPreview>
+                      </>
                     ) : (
                       <span className="text-gray-600 text-sm">
                         {direction.location.address}
