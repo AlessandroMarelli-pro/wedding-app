@@ -55,7 +55,7 @@ const getStatusBadge = (guest: Guest) => {
     return (
       <Badge
         variant="outline"
-        className="bg-yellow-50 text-yellow-700 border-yellow-200"
+        className="bg-yellow-50 text-yellow-700 border-yellow-200 pointer-events-none"
       >
         <Clock className="w-3 h-3 mr-1" />
         En attente
@@ -65,7 +65,7 @@ const getStatusBadge = (guest: Guest) => {
 
   if (guest.rsvpConfirmation.isAttending) {
     return (
-      <Badge className="bg-green-100 text-green-800 border-green-200">
+      <Badge className="bg-green-100 text-green-800 border-green-200 pointer-events-none">
         <CheckCircle className="w-3 h-3 mr-1" />
         Confirmé ({guest.rsvpConfirmation.confirmedPartySize})
       </Badge>
@@ -73,7 +73,10 @@ const getStatusBadge = (guest: Guest) => {
   }
 
   return (
-    <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+    <Badge
+      variant="outline"
+      className="bg-red-50 text-red-700 border-red-200 pointer-events-none"
+    >
       <X className="w-3 h-3 mr-1" />
       Décliné
     </Badge>
