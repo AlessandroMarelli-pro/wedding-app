@@ -1,13 +1,8 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 
 import { FileText, Upload } from 'lucide-react';
 import { useState } from 'react';
+import FileUpload from '../kokonutui/file-upload';
 
 interface CSVUpload {
   id: string;
@@ -89,21 +84,14 @@ export const GuestsCsvUpload = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="flex items-center space-x-4">
-            <input
-              type="file"
-              accept=".csv"
-              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-rose-400 focus:border-transparent"
-              disabled={isUploading}
-            />
-            <Button
-              onClick={handleFileUpload}
-              disabled={!selectedFile || isUploading}
-            >
-              {isUploading ? 'Uploading...' : 'Upload CSV'}
-            </Button>
-          </div>
+          <FileUpload
+            className="w-full"
+            currentFile={selectedFile}
+            onUploadSuccess={(file) => setSelectedFile(file)}
+            onUploadError={() => console.log('error')}
+            acceptedFileTypes={['.csv']}
+            maxFileSize={10 * 1024 * 1024} // 10MB
+          />
           <p className="text-sm text-gray-600">
             CSV format: firstName, lastName, email, phoneNumber, partySize,
             dietaryRestrictions, specialRequests

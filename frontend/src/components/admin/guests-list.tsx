@@ -9,6 +9,7 @@ import {
 import { Download, Users } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
+import { Guest } from '@/types/api';
 import {
   AlertCircle,
   Calendar,
@@ -23,26 +24,6 @@ import {
 import { useState } from 'react';
 import { ApiService } from '../../services/api';
 import { GuestDetailsModal } from './guest-details-modal';
-
-interface Guest {
-  id: string;
-  hashCode: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  partySize: number;
-  dietaryRestrictions: string;
-  specialRequests: string;
-  createdAt: string;
-  rsvpConfirmation?: {
-    id: string;
-    isAttending: boolean;
-    confirmedPartySize: number;
-    message: string;
-    confirmedAt: string;
-  };
-}
 
 export const GuestsList = ({
   fetchData,

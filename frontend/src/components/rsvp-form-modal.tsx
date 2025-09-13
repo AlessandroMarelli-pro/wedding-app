@@ -14,25 +14,6 @@ interface RSVPFormProps {
   containerCls?: string;
 }
 
-interface GuestInfo {
-  firstName: string;
-  lastName: string;
-  email?: string;
-  phoneNumber?: string;
-  partySize: number;
-  dietaryRestrictions?: string;
-  specialRequests?: string;
-  confirmed: boolean;
-}
-
-interface RSVPFormData {
-  isAttending: boolean;
-  confirmedPartySize: number;
-  message?: string;
-}
-
-type FormStep = 'hash-entry' | 'rsvp-details' | 'confirmation';
-
 export function RSVPFormModal({
   btnColor,
   btnTextColor,

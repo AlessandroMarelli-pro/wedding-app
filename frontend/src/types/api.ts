@@ -82,13 +82,22 @@ export interface LoginResponse {
 // Admin
 export interface Guest {
   id: string;
+  hashCode: string;
   firstName: string;
   lastName: string;
-  email?: string;
-  hashCode: string;
-  csvUploadId: string;
+  email: string;
+  phoneNumber: string;
+  partySize: number;
+  dietaryRestrictions: string;
+  specialRequests: string;
   createdAt: string;
-  updatedAt: string;
+  rsvpConfirmation?: {
+    id: string;
+    isAttending: boolean;
+    confirmedPartySize: number;
+    message: string;
+    confirmedAt: string;
+  };
 }
 
 export interface CSVUpload {
