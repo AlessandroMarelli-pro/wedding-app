@@ -1,7 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-
-import { FileText, Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { File, FileText } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import FileUpload from '../kokonutui/file-upload';
 
 interface CSVUpload {
@@ -52,10 +59,11 @@ export const GuestsCsvUpload = ({
       const data = await response.json();
 
       if (response.ok) {
-        setUploadMessage({
-          type: 'success',
-          text: `CSV uploaded successfully! Processed ${data.processedRows} guests.`,
+        toast.success(`CSV uploaded successfully! `, {
+          duration: 10000,
+          description: `Processed ${data.processedRows} guests.`,
         });
+
         setSelectedFile(null);
         fetchData(); // Refresh stats
       } else {
@@ -75,15 +83,9 @@ export const GuestsCsvUpload = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Upload className="w-5 h-5 mr-2" />
-          Upload Guest List
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
+    <div className="space-y-4">
+      {!selectedFile && (
+        <>
           <FileUpload
             className="w-full"
             currentFile={selectedFile}
@@ -96,48 +98,99 @@ export const GuestsCsvUpload = ({
             CSV format: firstName, lastName, email, phoneNumber, partySize,
             dietaryRestrictions, specialRequests
           </p>
-          {uploadMessage && (
-            <div
-              className={`p-3 rounded-md ${
-                uploadMessage.type === 'success'
-                  ? 'bg-green-50 border border-green-200 text-green-800'
-                  : 'bg-red-50 border border-red-200 text-red-800'
-              }`}
-            >
-              <p className="text-sm">{uploadMessage.text}</p>
-            </div>
-          )}
-          <button
+        </>
+      )}
+      {selectedFile && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-600">
+            Validez pour déposer le fichier <strong>{selectedFile.name}</strong>
+          </p>
+        </div>
+      )}
+      {uploadMessage && (
+        <div
+          className={`p-3 rounded-md ${
+            uploadMessage.type === 'success'
+              ? 'bg-green-50 border border-green-200 text-green-800'
+              : 'bg-red-50 border border-red-200 text-red-800'
+          }`}
+        >
+          <p className="text-sm">{uploadMessage.text}</p>
+        </div>
+      )}
+      {selectedFile && (
+        <div className="flex items-center justify-between gap-6">
+          <Button
+            type="button"
+            onClick={() => {
+              setSelectedFile(null);
+              setUploadMessage(null);
+            }}
+            disabled={isUploading}
+            variant="outline"
+          >
+            Annuler
+          </Button>
+
+          <Button
             type="submit"
             disabled={!selectedFile || isUploading}
             onClick={handleFileUpload}
-            className="cursor-pointer w-full bg-rose-600 text-white py-2 px-4 rounded-md hover:bg-rose-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            variant="success"
           >
-            {isUploading ? 'Uploading...' : 'Upload CSV'}
-          </button>{' '}
-          {csvUploads.length > 0 && (
-            <div>
-              <h4 className="font-medium mb-2">Recent Uploads:</h4>
-              <div className="space-y-2">
-                {csvUploads.slice(0, 3).map((upload) => (
-                  <div
-                    key={upload.id}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded"
-                  >
-                    <div className="flex items-center">
-                      <FileText className="w-4 h-4 mr-2" />
-                      <span className="text-sm">{upload.filename}</span>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {upload.successfulImports}/{upload.totalGuests} imported
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+            {isUploading ? 'En cours de dépôt...' : 'Valider le dépôt'}
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+      )}
+
+      {csvUploads.length > 0 && (
+        <div>
+          <h4 className="font-medium mb-2">Recent Uploads:</h4>
+          <div className="space-y-2">
+            {csvUploads.slice(0, 3).map((upload) => (
+              <div
+                key={upload.id}
+                className="flex items-center justify-between p-2 bg-gray-50 rounded"
+              >
+                <div className="flex items-center">
+                  <FileText className="w-4 h-4 mr-2" />
+                  <span className="text-sm">{upload.filename}</span>
+                </div>
+                <div className="text-sm text-gray-600">
+                  {upload.successfulImports}/{upload.totalGuests} imported
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const GuestsCsvUploadDialog = ({
+  fetchData,
+  csvUploads,
+}: {
+  fetchData: () => void;
+  csvUploads: CSVUpload[];
+}) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  return (
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        <Button variant="default">
+          Déposer un fichier <File />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto font-sans">
+        {' '}
+        <DialogHeader>
+          <DialogTitle>Déposer un fichier</DialogTitle>
+        </DialogHeader>
+        <GuestsCsvUpload fetchData={fetchData} csvUploads={csvUploads} />
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -1,4 +1,4 @@
-import { GuestsCsvUpload } from '@/components/admin/guests-csv-upload';
+import { GuestsCsvUploadDialog } from '@/components/admin/guests-csv-upload';
 import { GuestsList } from '@/components/admin/guests-list';
 import { GuestsStats } from '@/components/admin/guests-stats';
 import { LoadingSpinner } from '@/components/ui/loading';
@@ -106,20 +106,23 @@ export default function GuestsPage() {
       </Head>
 
       <div className="p-6 space-y-8">
-        <div>
-          <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
-            Guest Management
-          </h1>
-          <p className="text-gray-600">
-            Manage your wedding guest list and RSVP responses
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
+              Guest Management
+            </h1>
+            <p className="text-gray-600">
+              Manage your wedding guest list and RSVP responses
+            </p>
+          </div>
+          <GuestsCsvUploadDialog
+            fetchData={fetchData}
+            csvUploads={csvUploads}
+          />
         </div>
 
         {/* Stats Cards */}
         <GuestsStats guests={guests} />
-
-        {/* CSV Upload Section */}
-        <GuestsCsvUpload fetchData={fetchData} csvUploads={csvUploads} />
 
         {/* Guest Details Modal */}
         <GuestsList fetchData={fetchData} guests={guests} />
