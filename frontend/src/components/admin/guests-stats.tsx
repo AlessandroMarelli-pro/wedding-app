@@ -52,25 +52,25 @@ export const GuestsStats = ({ guests }: { guests: Guest[] }) => {
 
   const data = [
     {
-      title: 'Total Guests',
+      title: 'Invités',
       value: stats.total,
       icon: Users,
       color: 'blue',
     },
     {
-      title: 'Confirmed',
+      title: 'Confirmés',
       value: stats.confirmed,
       icon: CheckCircle,
       color: 'green',
     },
     {
-      title: 'Declined',
+      title: 'Déclinés',
       value: stats.declined,
       icon: X,
       color: 'red',
     },
     {
-      title: 'Pending',
+      title: 'En attente',
       value: stats.pending,
       icon: Clock,
       color: 'yellow',

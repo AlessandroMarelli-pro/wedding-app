@@ -35,25 +35,25 @@ interface Guest {
   };
 }
 
-interface GuestDetailsModalProps {
+interface GuestsDetailsModalProps {
   guest: Guest | null;
   isOpen: boolean;
   onClose: () => void;
   onDelete: (guestId: string) => void;
 }
 
-export function GuestDetailsModal({
+export function GuestsDetailsModal({
   guest,
   isOpen,
   onClose,
   onDelete,
-}: GuestDetailsModalProps) {
+}: GuestsDetailsModalProps) {
   if (!guest) return null;
 
   const getStatusInfo = () => {
     if (!guest.rsvpConfirmation) {
       return {
-        status: 'Pending Response',
+        status: 'En attente',
         color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
         icon: <Clock className="w-4 h-4" />,
       };
@@ -61,14 +61,14 @@ export function GuestDetailsModal({
 
     if (guest.rsvpConfirmation.isAttending) {
       return {
-        status: `Confirmed (${guest.rsvpConfirmation.confirmedPartySize} attending)`,
+        status: `Confirmé (${guest.rsvpConfirmation.confirmedPartySize} attending)`,
         color: 'bg-green-100 text-green-800 border-green-200',
         icon: <CheckCircle className="w-4 h-4" />,
       };
     }
 
     return {
-      status: 'Declined',
+      status: 'Décliné',
       color: 'bg-red-100 text-red-800 border-red-200',
       icon: <X className="w-4 h-4" />,
     };
@@ -94,7 +94,7 @@ export function GuestDetailsModal({
           {/* Status */}
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-2">
-              RSVP Status
+              Statut RSVP
             </h3>
             <Badge className={statusInfo.color}>
               {statusInfo.icon}
@@ -105,7 +105,7 @@ export function GuestDetailsModal({
           {/* Contact Information */}
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-3">
-              Contact Information
+              Informations de contact
             </h3>
             <div className="space-y-2">
               <div className="flex items-center">
@@ -124,21 +124,20 @@ export function GuestDetailsModal({
           {/* Party Information */}
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-3">
-              Party Information
+              Informations du groupe
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center">
                 <Users className="w-4 h-4 mr-2 text-gray-400" />
                 <span className="text-sm">
-                  Original party size: {guest.partySize}
+                  Taille du groupe original: {guest.partySize}
                 </span>
               </div>
               {guest.rsvpConfirmation && (
                 <div className="flex items-center">
                   <CheckCircle className="w-4 h-4 mr-2 text-gray-400" />
                   <span className="text-sm">
-                    Confirmed attendees:{' '}
-                    {guest.rsvpConfirmation.confirmedPartySize}
+                    Confirmés: {guest.rsvpConfirmation.confirmedPartySize}
                   </span>
                 </div>
               )}
@@ -149,13 +148,13 @@ export function GuestDetailsModal({
           {(guest.dietaryRestrictions || guest.specialRequests) && (
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-3">
-                Special Requirements
+                Besoins spéciaux
               </h3>
               <div className="space-y-2">
                 {guest.dietaryRestrictions && (
                   <div className="p-3 bg-gray-50 rounded-md">
                     <span className="text-sm font-medium text-gray-700">
-                      Dietary Restrictions:{' '}
+                      Restrictions alimentaires:{' '}
                     </span>
                     <span className="text-sm text-gray-600">
                       {guest.dietaryRestrictions}
@@ -165,7 +164,7 @@ export function GuestDetailsModal({
                 {guest.specialRequests && (
                   <div className="p-3 bg-gray-50 rounded-md">
                     <span className="text-sm font-medium text-gray-700">
-                      Special Requests:{' '}
+                      Requêtes spéciales:{' '}
                     </span>
                     <span className="text-sm text-gray-600">
                       {guest.specialRequests}
@@ -180,14 +179,14 @@ export function GuestDetailsModal({
           {guest.rsvpConfirmation?.message && (
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-3">
-                RSVP Message
+                Message RSVP
               </h3>
               <div className="p-4 bg-blue-50 rounded-md border-l-4 border-blue-200">
                 <p className="text-sm text-gray-700 italic">
                   "{guest.rsvpConfirmation.message}"
                 </p>
                 <p className="text-xs text-gray-500 mt-2">
-                  Submitted on{' '}
+                  Soumis le{' '}
                   {new Date(
                     guest.rsvpConfirmation.confirmedAt,
                   ).toLocaleString()}
@@ -198,12 +197,14 @@ export function GuestDetailsModal({
 
           {/* Timeline */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Timeline</h3>
+            <h3 className="text-sm font-medium text-gray-700 mb-3">
+              Chronologie
+            </h3>
             <div className="space-y-2">
               <div className="flex items-center text-sm">
                 <Calendar className="w-4 h-4 mr-2 text-gray-400" />
                 <span className="text-gray-600">
-                  Added to guest list:{' '}
+                  Ajouté à la liste d'invités:{' '}
                   {new Date(guest.createdAt).toLocaleString()}
                 </span>
               </div>
@@ -211,7 +212,7 @@ export function GuestDetailsModal({
                 <div className="flex items-center text-sm">
                   <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
                   <span className="text-gray-600">
-                    RSVP submitted:{' '}
+                    RSVP soumis:{' '}
                     {new Date(
                       guest.rsvpConfirmation.confirmedAt,
                     ).toLocaleString()}
@@ -224,14 +225,14 @@ export function GuestDetailsModal({
           {/* Actions */}
           <div className="flex justify-between pt-4 border-t">
             <Button variant="outline" onClick={onClose}>
-              Close
+              Fermer
             </Button>
             <Button
               variant="destructive"
               onClick={() => {
                 if (
                   confirm(
-                    `Are you sure you want to delete ${guest.firstName} ${guest.lastName}?`,
+                    `Êtes-vous sûr de vouloir supprimer ${guest.firstName} ${guest.lastName} de la liste d'invités ?`,
                   )
                 ) {
                   onDelete(guest.id);
@@ -239,7 +240,7 @@ export function GuestDetailsModal({
                 }
               }}
             >
-              Delete Guest
+              Supprimer l'invité
             </Button>
           </div>
         </div>

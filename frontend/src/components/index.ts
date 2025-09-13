@@ -1,6 +1,6 @@
 export { AccommodationsList } from './accommodations';
 export { AdminStats } from './admin/admin-stats';
-export { GuestDetailsModal } from './admin/guest-details-modal';
+export { GuestDetailsModal } from './admin/guests-details-modal';
 export { ImageUpload } from './admin/image-upload';
 export {
   CalendarDownload,

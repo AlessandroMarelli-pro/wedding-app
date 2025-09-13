@@ -20,6 +20,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconCheck, IconLoader } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { CalendarIcon, Eye, Save } from 'lucide-react';
 import Head from 'next/head';
@@ -224,15 +225,20 @@ export default function AdminWedding() {
                 <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
                   Informations
                   {changesStatus === '0' && (
-                    <Badge variant="default">
+                    <Badge variant="secondary">
                       Aucune modifications en cours
                     </Badge>
                   )}
                   {changesStatus === '1' && (
-                    <Badge variant="warning">Modifications en cours</Badge>
+                    <Badge variant="warning">
+                      <IconLoader size={16} /> Modifications en cours (non
+                      sauvegardées)
+                    </Badge>
                   )}
                   {changesStatus === '2' && (
-                    <Badge variant="success">Modifications sauvegardées</Badge>
+                    <Badge variant="success">
+                      <IconCheck size={16} /> Modifications sauvegardées
+                    </Badge>
                   )}
                 </h1>
 

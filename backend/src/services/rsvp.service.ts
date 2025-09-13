@@ -88,7 +88,7 @@ export class RSVPService {
     confirmation.confirmedAt = new Date();
     confirmation.ipAddress = ipAddress;
     confirmation.userAgent = userAgent || undefined;
-    confirmation.isAttending = isAttending || true;
+    confirmation.isAttending = isAttending;
     confirmation.confirmedPartySize = isAttending ? confirmedPartySize : 0;
     confirmation.message = message || undefined;
 

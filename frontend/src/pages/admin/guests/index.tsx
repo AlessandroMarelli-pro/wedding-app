@@ -109,10 +109,10 @@ export default function GuestsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
-              Guest Management
+              Gestion des invités
             </h1>
             <p className="text-gray-600">
-              Manage your wedding guest list and RSVP responses
+              Gérez votre liste d'invités et vos réponses de confirmation
             </p>
           </div>
           <GuestsCsvUploadDialog
