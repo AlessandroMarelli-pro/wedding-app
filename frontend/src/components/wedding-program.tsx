@@ -108,7 +108,7 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
             </div>
           </div>
           {index !== events.length - 1 && (
-            <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5" />
+            <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
           )}
         </>
       ))}
