@@ -61,7 +61,7 @@ export class ProgramService {
     } else {
       createDto.displayOrder = 0;
     }
-
+    console.log(createDto);
     const event = this.programEventRepository.create({
       ...createDto,
       startTime: new Date(createDto.startTime),

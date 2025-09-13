@@ -107,6 +107,7 @@ export default function AdminProgram() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setEvents(data);
       } else {
         toast.error('Erreur lors de la récupération des événements !');
@@ -123,7 +124,7 @@ export default function AdminProgram() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const token = localStorage.getItem('adminToken');
     if (!token) return;
-
+    console.log(values);
     try {
       const url = editingEvent
         ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/program/${editingEvent.id}`
@@ -138,7 +139,7 @@ export default function AdminProgram() {
         icon: '',
         endTime: values.startTime,
       };
-
+      delete payload.id;
       const response = await fetch(url, {
         method,
         headers: {
