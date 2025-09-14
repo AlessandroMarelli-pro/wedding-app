@@ -9,6 +9,8 @@ export interface CreateWeddingInfoDto {
   presentationMessage: string;
   weddingAddress: string;
   weddingDate: Date;
+  heroMessage: string;
+  heroAddress: string;
   locationDirections: Direction[];
   heroImageId?: string;
 }
@@ -18,6 +20,8 @@ export interface UpdateWeddingInfoDto {
   presentationMessage?: string;
   weddingAddress?: string;
   weddingDate?: Date;
+  heroMessage?: string;
+  heroAddress?: string;
   locationDirections?: Direction[];
   heroImageId?: string;
 }

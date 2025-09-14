@@ -36,6 +36,8 @@ export const formSchema = z.object({
   presentationMessage: z.string().min(2).max(2000),
   weddingAddress: z.string().min(2).max(300),
   weddingDate: z.date(),
+  heroMessage: z.string().min(2).max(500),
+  heroAddress: z.string().min(2).max(200),
   locationDirections: z.array(
     z.object({
       type: z.enum(['car', 'train', 'car rental']),
@@ -54,6 +56,8 @@ export interface WeddingInfo {
   presentationMessage: string;
   weddingAddress: string;
   weddingDate: Date;
+  heroMessage: string;
+  heroAddress: string;
   locationDirections: Direction[];
 }
 
@@ -78,6 +82,9 @@ export default function AdminWedding() {
       presentationMessage: '',
       weddingAddress: '',
       weddingDate: new Date(),
+      heroMessage:
+        'Nous avons le plaisir de vous inviter à notre mariage le 13 Juillet 2026',
+      heroAddress: 'Lauziers, Condillac',
       locationDirections: [
         { type: 'car', information: '', location: { address: '', link: '' } },
       ],
@@ -214,7 +221,11 @@ export default function AdminWedding() {
 
       <div className="p-6 space-y-8">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8"
+            id="information-form"
+          >
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
@@ -276,7 +287,10 @@ export default function AdminWedding() {
             </div>
             <div className="flex flex-col lg:flex-row w-full gap-4">
               <div className="flex flex-col w-full gap-4">
-                <div className="flex flex-col lg:flex-row w-full gap-4">
+                <div
+                  className="flex flex-col lg:flex-row w-full gap-4"
+                  id="information-form-names"
+                >
                   <FormField
                     control={form.control}
                     name="coupleNames"
@@ -344,6 +358,46 @@ export default function AdminWedding() {
                     )}
                   />
                 </div>
+                <div className="flex flex-col lg:flex-row w-full gap-4">
+                  <FormField
+                    control={form.control}
+                    name="heroMessage"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Message d'invitation</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Message d'invitation affiché sur la page d'accueil"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="flex flex-row justify-between">
+                          Ce message sera affiché sur la page d'accueil.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="heroAddress"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Adresse du lieu (page d'accueil)</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="e.g., Lauziers, Condillac"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Cette adresse sera affichée sur la page d'accueil.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <div>
                   <FormField
                     control={form.control}
@@ -353,7 +407,7 @@ export default function AdminWedding() {
                         <FormLabel>Message de présentation</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="h-40"
+                            className="h-30"
                             placeholder="Un message personnalisé à adresser à vos invités"
                             {...field}
                           />
@@ -375,7 +429,7 @@ export default function AdminWedding() {
                     name="weddingAddress"
                     render={({ field }) => (
                       <FormItem className="w-full">
-                        <FormLabel>Adresse du lieu</FormLabel>
+                        <FormLabel>Adresse complète du lieu</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Veuillez entrer l'adresse du lieu"

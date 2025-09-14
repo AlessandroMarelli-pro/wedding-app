@@ -29,7 +29,7 @@ export const WeddingHero = ({
   >
     <div className="relative grid grid-rows-3  grid-cols-1 xl:grid-rows-1 xl:grid-cols-6  items-center justify-center h-full w-full ">
       <p className="text-[#F38181]  row-span-1 xl:col-span-1  text-2xl xl:mb-2 font-light  h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end pb-10">
-        Nous avons le plaisir de vous inviter à notre mariage le 13 Juillet 2026
+        {weddingInfo.heroMessage}
       </p>{' '}
       <div className=" z-10 row-span-1 xl:col-span-4  h-full w-full flex flex-col items-center justify-center">
         <div className="text-center text-white    flex flex-col items-center justify-center">
@@ -64,7 +64,7 @@ export const WeddingHero = ({
         </div>
       </div>
       <p className=" text-[#F38181]  translate-y-10 lg:translate-y-0 font-bold row-span-1 xl:col-span-1 text-2xl   opacity-90 h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end xl:pb-10 pt-10 xl:pt-0">
-        Lauziers, Condillac
+        {weddingInfo.heroAddress}
       </p>
     </div>
   </Vortex>

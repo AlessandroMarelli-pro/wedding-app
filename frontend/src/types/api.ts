@@ -24,6 +24,8 @@ export interface WeddingInfo {
   presentationMessage: string;
   weddingAddress: string;
   weddingDate: string;
+  heroMessage: string;
+  heroAddress: string;
   locationDirections: Direction[];
   heroImageId?: string;
   createdAt: string;

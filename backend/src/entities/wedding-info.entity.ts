@@ -38,6 +38,12 @@ export class WeddingInfo {
   @Column({ name: 'hero_image_id', nullable: true })
   heroImageId!: string;
 
+  @Column({ name: 'hero_message', type: 'text', length: 500 })
+  heroMessage!: string;
+
+  @Column({ name: 'hero_address', length: 200 })
+  heroAddress!: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
