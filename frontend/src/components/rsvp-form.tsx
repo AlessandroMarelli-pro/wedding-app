@@ -288,7 +288,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
         <form onSubmit={handleRSVPSubmit} className="space-y-6">
           {/* Guest Information Display */}
 
-          <div className="flex flex-col lg:flex-row gap-4 justify-around">
+          <div className="flex flex-col lg:flex-row gap-4 lg:justify-between justify-around">
             <div className="flex flex-col lg:justify-left lg:items-left lg:text-left">
               <div>
                 <Label className="lg:text-md text-sm font-bold text-[#F38181]">

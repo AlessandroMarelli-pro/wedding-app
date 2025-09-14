@@ -22,8 +22,8 @@ export const WeddingHero = ({
   <Vortex
     backgroundColor="black"
     rangeY={800}
-    baseHue={300}
-    particleCount={250}
+    baseHue={150}
+    particleCount={150}
     height={maxCanvasHeight}
     className="flex items-center flex-col justify-center px-2 xl:px-10  w-full h-screen"
   >
