@@ -346,7 +346,7 @@ export class AdminController {
         usageLocation: {
           type: 'string',
           description:
-            'Where the image will be used (e.g., "gallery", "hero", "accommodation")',
+            'Where the image will be used (e.g., "hero", "information", "accommodation")',
         },
         altText: {
           type: 'string',

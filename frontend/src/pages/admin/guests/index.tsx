@@ -1,7 +1,6 @@
 import { GuestsCsvUploadDialog } from '@/components/admin/guests-csv-upload';
 import { GuestsList } from '@/components/admin/guests-list';
 import { GuestsStats } from '@/components/admin/guests-stats';
-import { LoadingSpinner } from '@/components/ui/loading';
 import { useToast } from '@/hooks/use-toast';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -93,10 +92,6 @@ export default function GuestsPage() {
       setIsLoading(false);
     }
   };
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <>

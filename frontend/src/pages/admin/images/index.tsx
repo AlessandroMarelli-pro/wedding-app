@@ -1,7 +1,22 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ImageUpload } from '../../../components/admin/image-upload';
+import {
+  defaultUsageLocationOptions,
+  ImageUpload,
+} from '../../../components/admin/image-upload';
 import { ApiService } from '../../../services/api';
 
 interface UploadedImage {
@@ -20,7 +35,9 @@ export default function AdminImages() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
+  const [useLocationOptions, setUseLocationOptions] = useState<
+    { id: string; name: string }[]
+  >(defaultUsageLocationOptions);
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
@@ -37,6 +54,10 @@ export default function AdminImages() {
       setError(null);
       const fetchedImages = await ApiService.getImages();
       setImages(fetchedImages);
+      const filteredUsageLocationOptions = useLocationOptions.filter(
+        (a) => !fetchedImages.some((image) => image.usageLocation === a.id),
+      );
+      setUseLocationOptions([...filteredUsageLocationOptions]);
     } catch (err) {
       console.error('Error fetching images:', err);
       setError('Failed to load images');
@@ -49,6 +70,7 @@ export default function AdminImages() {
     try {
       await ApiService.uploadImage(file, options);
       await fetchImages(); // Refresh the list
+      console.log('Image uploaded successfully');
     } catch (error) {
       throw error; // Re-throw to let ImageUpload component handle it
     }
@@ -63,7 +85,7 @@ export default function AdminImages() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -76,29 +98,28 @@ export default function AdminImages() {
   const getImageUrl = (imageId: string): string => {
     const baseUrl =
       process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-    return `${baseUrl}/images/${imageId}`;
-  };
-
-  const getThumbnailUrl = (imageId: string): string => {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-    return `${baseUrl}/images/${imageId}/thumbnail`;
+    return `${baseUrl}/api/images/${imageId}`;
   };
 
   const getOptimizedUrl = (imageId: string): string => {
     const baseUrl =
       process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-    return `${baseUrl}/images/${imageId}/optimized`;
+    return `${baseUrl}/api/images/${imageId}/optimized`;
   };
 
-  if (loading) {
-    return (
-      <div className="animate-pulse space-y-6">
-        <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-        <div className="h-64 bg-gray-200 rounded"></div>
-      </div>
-    );
-  }
+  const handleDelete = (id: string, name: string) => {
+    return async () => {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette image?')) {
+        try {
+          await ApiService.deleteImage(id);
+          await fetchImages(); // Refresh the list
+        } catch (error) {
+          console.error('Error deleting image:', error);
+          setError('Failed to delete image');
+        }
+      }
+    };
+  };
 
   return (
     <>
@@ -107,16 +128,21 @@ export default function AdminImages() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="space-y-8">
+      <div className="p-6 space-y-8">
         <div>
-          <h1 className="text-3xl  text-gray-800 mb-2">Image Management</h1>
+          <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
+            Gestion des images
+          </h1>
           <p className="text-gray-600">
-            Upload and manage images for your wedding website
+            Gérez vos images pour votre site de mariage
           </p>
         </div>
 
         {/* Image Upload Component */}
-        <ImageUpload onUpload={handleImageUpload} />
+        <ImageUpload
+          onUpload={handleImageUpload}
+          usageLocationOptions={useLocationOptions}
+        />
 
         {/* Images Grid */}
         <div>
@@ -156,7 +182,7 @@ export default function AdminImages() {
                 >
                   <div className="aspect-w-16 aspect-h-9 bg-gray-100">
                     <img
-                      src={getThumbnailUrl(image.id)}
+                      src={getOptimizedUrl(image.id)}
                       alt={image.altText || image.originalName}
                       className="w-full h-48 object-cover"
                       loading="lazy"
@@ -167,50 +193,53 @@ export default function AdminImages() {
                       {image.originalName}
                     </h3>
                     <div className="mt-2 space-y-1 text-sm text-gray-500">
-                      <p>Size: {formatFileSize(image.size)}</p>
-                      <p>Usage: {image.usageLocation}</p>
-                      <p>Uploaded: {formatDate(image.createdAt)}</p>
+                      <p>Taille : {formatFileSize(image.size)}</p>
+                      <p>
+                        Emplacement :{' '}
+                        {
+                          defaultUsageLocationOptions.find(
+                            (a) => a.id === image.usageLocation,
+                          )?.name
+                        }
+                      </p>
+                      <p>Uploadé le : {formatDate(image.createdAt)}</p>
                       {image.altText && (
                         <p className="truncate">Alt: {image.altText}</p>
                       )}
                     </div>
-                    <div className="mt-3 flex space-x-2">
-                      <button
-                        onClick={() =>
-                          window.open(getImageUrl(image.id), '_blank')
-                        }
-                        className="flex-1 bg-blue-600 text-white py-1 px-3 rounded text-sm hover:bg-blue-700 transition-colors"
-                      >
-                        View Original
-                      </button>
-                      <button
+                    <div className="gap-2 space-x-2 flex flex-row justify-between">
+                      <Button
                         onClick={() =>
                           window.open(getOptimizedUrl(image.id), '_blank')
                         }
-                        className="flex-1 bg-green-600 text-white py-1 px-3 rounded text-sm hover:bg-green-700 transition-colors"
                       >
                         View Optimized
-                      </button>
-                      <button
-                        onClick={async () => {
-                          if (
-                            confirm(
-                              'Are you sure you want to delete this image?',
-                            )
-                          ) {
-                            try {
-                              await ApiService.deleteImage(image.id);
-                              await fetchImages(); // Refresh the list
-                            } catch (error) {
-                              console.error('Error deleting image:', error);
-                              setError('Failed to delete image');
-                            }
-                          }
-                        }}
-                        className="flex-1 bg-red-600 text-white py-1 px-3 rounded text-sm hover:bg-red-700 transition-colors"
-                      >
-                        Delete
-                      </button>
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger>Supprimer</AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Êtes-vous sûr de vouloir supprimer cette image{' '}
+                              {image.originalName} ?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Cette action ne peut pas être annulée. Elle
+                              supprimera définitivement l'image de nos serveurs.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleDelete(image.id, image.originalName)
+                              }
+                            >
+                              Supprimer
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>

@@ -94,11 +94,15 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
                 })}
               </div>
               <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
-                {new Date(item.startTime).toLocaleTimeString('fr-FR', {
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  hour12: false,
-                })}
+                {new Date(item.startTime)
+                  .toLocaleTimeString('fr-FR', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: false,
+                  })
+                  .split(':')
+                  .join('h ')
+                  .replace('h 00', 'h')}
               </div>
               {item.location.split(',').map((loc) => (
                 <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>

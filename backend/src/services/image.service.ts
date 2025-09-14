@@ -37,6 +37,7 @@ export interface ProcessedImageResult {
   width: number;
   height: number;
   path: string;
+  mimeType: string;
 }
 
 @Injectable()
@@ -84,7 +85,7 @@ export class ImageService {
     }
 
     // Generate unique filename
-    const fileExtension = this.getFileExtension(imageData.mimeType);
+    const fileExtension = 'webp';
     const filename = this.generateUniqueFilename(fileExtension);
     const filePath = path.join(this.uploadDir, filename);
 
@@ -95,17 +96,13 @@ export class ImageService {
         filePath,
         processingOptions,
       );
-
+      console.log('processedImage', processedImage);
       // Get image metadata
-      const metadata = await sharp(imageData.buffer).metadata();
-
       // Create database record
       const uploadedImage = this.uploadedImageRepository.create({
         originalName: imageData.originalName,
         filename,
-        mimeType: processingOptions?.format
-          ? `image/${processingOptions.format}`
-          : imageData.mimeType,
+        mimeType: `image/webp`,
         size: processedImage.size,
         width: processedImage.width,
         height: processedImage.height,
@@ -200,8 +197,6 @@ export class ImageService {
     options?: ImageProcessingOptions,
   ): Promise<ProcessedImageResult> {
     let sharpInstance = sharp(buffer);
-
-    // Apply resizing if specified
     if (options?.maxWidth || options?.maxHeight) {
       sharpInstance = sharpInstance.resize(
         options.maxWidth,
@@ -212,39 +207,12 @@ export class ImageService {
         },
       );
     }
-
-    // Apply format conversion and quality
-    if (options?.format) {
-      switch (options.format) {
-        case 'jpeg':
-          sharpInstance = sharpInstance.jpeg({
-            quality: options.quality || 85,
-            progressive: true,
-          });
-          break;
-        case 'png':
-          sharpInstance = sharpInstance.png({
-            quality: options.quality || 85,
-            progressive: true,
-          });
-          break;
-        case 'webp':
-          sharpInstance = sharpInstance.webp({
-            quality: options.quality || 85,
-          });
-          break;
-      }
-    } else if (options?.quality) {
-      // Apply quality without format conversion
-      const metadata = await sharp(buffer).metadata();
-      if (metadata.format === 'jpeg') {
-        sharpInstance = sharpInstance.jpeg({ quality: options.quality });
-      } else if (metadata.format === 'png') {
-        sharpInstance = sharpInstance.png({ quality: options.quality });
-      }
-    }
+    sharpInstance = sharpInstance.webp({
+      quality: 100,
+    });
 
     // Save processed image
+
     await sharpInstance.toFile(outputPath);
 
     // Get final image info
@@ -257,6 +225,7 @@ export class ImageService {
       width: finalMetadata.width || 0,
       height: finalMetadata.height || 0,
       path: outputPath,
+      mimeType: finalMetadata.format,
     };
   }
 
