@@ -59,3 +59,16 @@ function TooltipContent({
 }
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+
+export const CustomTooltip = ({ Icon, text }: { Icon: any; text: string }) => {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Icon className="w-4 h-4 text-muted-foreground" />
+      </TooltipTrigger>
+      <TooltipContent className="font-sans">
+        <p>{text}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+};

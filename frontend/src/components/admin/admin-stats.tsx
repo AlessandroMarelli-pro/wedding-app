@@ -1,3 +1,4 @@
+import { IconMessage } from '@tabler/icons-react';
 import { TrendingUp, UserCheck, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ApiService } from '../../services/api';
@@ -15,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
+import { CustomTooltip } from '../ui/tooltip';
 
 interface AdminStatsProps {
   className?: string;
@@ -100,27 +102,27 @@ export function AdminStats({ className }: AdminStatsProps) {
 
   const mainStats = [
     {
-      title: 'Total Guests',
+      title: 'Invités',
       value: dashboardSummary?.totalGuests || 0,
-      description: 'Invited to the wedding',
+      description: 'Invité au mariage',
       icon: Users,
     },
     {
-      title: 'Response Rate',
-      value: dashboardSummary?.responseRate || 0,
-      description: 'Have responded to invitation',
+      title: 'Taux de réponse',
+      value: `${dashboardSummary?.responseRate || 0} %`,
+      description: "Répondu à l'invitation",
       icon: TrendingUp,
     },
     {
-      title: 'Attendance Rate',
-      value: dashboardSummary?.attendanceRate || 0,
-      description: 'Confirmed attendance',
+      title: 'Taux de présence',
+      value: `${dashboardSummary?.attendanceRate || 0} %`,
+      description: 'Présence confirmée',
       icon: UserCheck,
     },
     {
-      title: 'Confirmed Attendees',
+      title: 'Confirmés',
       value: dashboardSummary?.confirmedAttendees || 0,
-      description: 'Total people attending',
+      description: 'Total de personnes présentes',
       icon: UserCheck,
     },
   ];
@@ -151,14 +153,14 @@ export function AdminStats({ className }: AdminStatsProps) {
         {/* RSVP Overview */}
         <Card>
           <CardHeader>
-            <CardTitle>RSVP Overview</CardTitle>
-            <CardDescription>Detailed response statistics</CardDescription>
+            <CardTitle>Récapitulatif des réponses</CardTitle>
+            <CardDescription>Statistiques des réponses</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {rsvpAnalytics && (
               <>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Confirmed</span>
+                  <span className="text-sm font-medium">Confirmés</span>
                   <div className="flex items-center space-x-2">
                     <Badge variant="success">
                       {rsvpAnalytics.overview.totalConfirmed}
@@ -173,7 +175,7 @@ export function AdminStats({ className }: AdminStatsProps) {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Declined</span>
+                  <span className="text-sm font-medium">Déclinés</span>
                   <div className="flex items-center space-x-2">
                     <Badge variant="destructive">
                       {rsvpAnalytics.overview.totalDeclined}
@@ -188,7 +190,7 @@ export function AdminStats({ className }: AdminStatsProps) {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Pending</span>
+                  <span className="text-sm font-medium">En attente</span>
                   <div className="flex items-center space-x-2">
                     <Badge variant="outline">
                       {rsvpAnalytics.overview.totalPending}
@@ -205,7 +207,7 @@ export function AdminStats({ className }: AdminStatsProps) {
                 <div className="pt-2 border-t">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">
-                      Average Party Size
+                      Taille moyenne des groupes
                     </span>
                     <span className="text-sm font-semibold">
                       {rsvpAnalytics.attendance.averagePartySize.toFixed(1)}
@@ -220,47 +222,53 @@ export function AdminStats({ className }: AdminStatsProps) {
         {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Latest RSVP responses</CardDescription>
+            <CardTitle>Activité récente</CardTitle>
+            <CardDescription>Dernières réponses</CardDescription>
           </CardHeader>
           <CardContent>
             {rsvpAnalytics?.recentActivity.length ? (
-              <div className="space-y-3">
-                {rsvpAnalytics.recentActivity
-                  .slice(0, 5)
-                  .map((activity, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <Badge
-                          variant={
-                            activity.action === 'confirmed'
-                              ? 'success'
-                              : 'destructive'
-                          }
-                        >
-                          {activity.action === 'confirmed' ? '✓' : '✗'}
-                        </Badge>
-                        <span className="text-sm font-medium">
-                          {activity.guestName}
-                        </span>
-                        {activity.confirmedPartySize && (
-                          <span className="text-xs text-muted-foreground">
-                            ({activity.confirmedPartySize} people)
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {formatDate(activity.timestamp)}
+              <div className="space-y-3 h-[10rem] overflow-y-scroll scrollbar">
+                {rsvpAnalytics.recentActivity.map((activity, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Badge
+                        variant={
+                          activity.action === 'confirmed'
+                            ? 'success'
+                            : 'destructive'
+                        }
+                      >
+                        {activity.action === 'confirmed' ? '✓' : '✗'}
+                      </Badge>
+                      <span className="text-sm font-medium">
+                        {activity.guestName}
                       </span>
+                      {activity?.confirmedPartySize > 0 && (
+                        <span className="text-xs text-muted-foreground">
+                          ({activity.confirmedPartySize} personne
+                          {activity.confirmedPartySize > 1 ? 's' : ''})
+                        </span>
+                      )}
                     </div>
-                  ))}
+
+                    <span className="text-xs text-muted-foreground flex flex-row items-center gap-2">
+                      {activity.message && (
+                        <CustomTooltip
+                          Icon={IconMessage}
+                          text={activity.message || ''}
+                        />
+                      )}
+                      {formatDate(activity.timestamp)}
+                    </span>
+                  </div>
+                ))}
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">
-                No recent activity
+                Aucune activité récente
               </p>
             )}
           </CardContent>
@@ -272,16 +280,18 @@ export function AdminStats({ className }: AdminStatsProps) {
         {/* Demographics */}
         <Card>
           <CardHeader>
-            <CardTitle>Guest Demographics</CardTitle>
+            <CardTitle>Demographie des invités</CardTitle>
             <CardDescription>
-              Contact information and preferences
+              Informations de contact et préférences
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {rsvpAnalytics && (
               <>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Phone Numbers</span>
+                  <span className="text-sm font-medium">
+                    Numéros de téléphone
+                  </span>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm font-semibold">
                       {rsvpAnalytics.demographics.phoneNumberProvided.count}
@@ -297,7 +307,7 @@ export function AdminStats({ className }: AdminStatsProps) {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Email Addresses</span>
+                  <span className="text-sm font-medium">Adresses email</span>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm font-semibold">
                       {rsvpAnalytics.demographics.emailProvided.count}
@@ -314,7 +324,7 @@ export function AdminStats({ className }: AdminStatsProps) {
                 {rsvpAnalytics.demographics.dietaryRestrictions.length > 0 && (
                   <div className="pt-2 border-t">
                     <p className="text-sm font-medium mb-2">
-                      Dietary Restrictions
+                      Restrictions alimentaires
                     </p>
                     <div className="space-y-1">
                       {rsvpAnalytics.demographics.dietaryRestrictions
@@ -342,38 +352,38 @@ export function AdminStats({ className }: AdminStatsProps) {
         {/* Upload Statistics */}
         <Card>
           <CardHeader>
-            <CardTitle>Upload Statistics</CardTitle>
-            <CardDescription>CSV upload performance</CardDescription>
+            <CardTitle>Statistiques des dépôts</CardTitle>
+            <CardDescription>Performance des dépôts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {uploadAnalytics && (
               <>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Total Uploads</span>
+                  <span className="text-sm font-medium">Total dépôts</span>
                   <span className="text-sm font-semibold">
                     {uploadAnalytics.totalUploads}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Successful</span>
+                  <span className="text-sm font-medium">Succès</span>
                   <Badge variant="success">
                     {uploadAnalytics.successfulUploads}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Failed</span>
+                  <span className="text-sm font-medium">Échec</span>
                   <Badge variant="destructive">
                     {uploadAnalytics.failedUploads}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Guests Imported</span>
+                  <span className="text-sm font-medium">Invités importés</span>
                   <span className="text-sm font-semibold">
                     {uploadAnalytics.totalGuestsImported}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Avg per Upload</span>
+                  <span className="text-sm font-medium">Moyenne par dépôt</span>
                   <span className="text-sm font-semibold">
                     {uploadAnalytics.averageGuestsPerUpload.toFixed(1)}
                   </span>

@@ -138,24 +138,38 @@ export class AnalyticsService {
     ]);
 
     // Overview statistics
-    const totalGuests = guests.length;
+    const totalGuests = guests.reduce(
+      (sum, guest) => sum + (guest.partySize || 0),
+      0,
+    );
     const confirmedGuests = guests.filter(
       (g) => g.rsvpConfirmation?.isAttending === true,
     );
     const declinedGuests = guests.filter(
       (g) => g.rsvpConfirmation?.isAttending === false,
     );
+    console.log(declinedGuests);
     const pendingGuests = guests.filter((g) => !g.rsvpConfirmation);
 
-    const totalConfirmed = confirmedGuests.length;
-    const totalDeclined = declinedGuests.length;
-    const totalPending = pendingGuests.length;
+    const totalConfirmed = confirmedGuests.reduce(
+      (sum, guest) => sum + (guest.rsvpConfirmation?.confirmedPartySize || 0),
+      0,
+    );
+    const totalDeclined = declinedGuests.reduce(
+      (sum, guest) => sum + (guest.partySize || 0),
+      0,
+    );
+    const totalPending = pendingGuests.reduce(
+      (sum, guest) => sum + (guest.partySize || 0),
+      0,
+    );
     const totalResponded = totalConfirmed + totalDeclined;
 
-    const responseRate =
-      totalGuests > 0 ? (totalResponded / totalGuests) * 100 : 0;
+    const responseRate = Math.round((totalResponded / totalGuests) * 1000) / 10;
     const attendanceRate =
-      totalGuests > 0 ? (totalConfirmed / totalGuests) * 100 : 0;
+      totalGuests > 0
+        ? Math.round((totalConfirmed / totalGuests) * 1000) / 10
+        : 0;
 
     // Attendance statistics
     const confirmedAttendees = confirmedGuests.reduce(
@@ -185,7 +199,7 @@ export class AnalyticsService {
     const demographics = this.analyzeDemographics(guests);
 
     // Recent activity
-    const recentActivity = confirmations.slice(0, 10).map((confirmation) => ({
+    const recentActivity = confirmations.map((confirmation) => ({
       guestName: `${confirmation.guest.firstName} ${confirmation.guest.lastName}`,
       action: confirmation.isAttending
         ? ('confirmed' as const)

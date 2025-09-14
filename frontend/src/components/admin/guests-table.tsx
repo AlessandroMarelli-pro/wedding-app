@@ -29,7 +29,7 @@ import { CheckCircle, Clock, TrashIcon, X } from 'lucide-react';
 import { z } from 'zod';
 import { Badge } from '../ui/badge';
 import { CopyButton } from '../ui/shadcn-io/copy-button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { CustomTooltip } from '../ui/tooltip';
 
 export const schema = z.object({
   firstName: z.string(),
@@ -80,19 +80,6 @@ const getStatusBadge = (guest: Guest) => {
       <X className="w-3 h-3 mr-1" />
       Décliné
     </Badge>
-  );
-};
-
-const CustomTooltip = ({ Icon, text }: { Icon: any; text: string }) => {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Icon className="w-4 h-4 text-muted-foreground" />
-      </TooltipTrigger>
-      <TooltipContent className="font-sans">
-        <p>{text}</p>
-      </TooltipContent>
-    </Tooltip>
   );
 };
 
