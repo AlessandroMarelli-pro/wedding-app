@@ -89,6 +89,11 @@ export interface LoginResponse {
   expiresIn: number;
 }
 
+export interface CurrentUser {
+  sub: string;
+  email: string;
+}
+
 // Admin
 export interface Guest {
   id: string;

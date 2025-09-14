@@ -912,4 +912,9 @@ export class AdminController {
   async getGuestExportData() {
     return this.analyticsService.getGuestExportData();
   }
+
+  @Get('current-user')
+  async getCurrentUser(@CurrentUser() user: JwtPayload) {
+    return user;
+  }
 }

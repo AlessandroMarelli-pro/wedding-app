@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {
   Accommodation,
   CSVUpload,
+  CurrentUser,
   DashboardSummary,
   Guest,
   GuestExportData,
@@ -85,6 +86,11 @@ export class ApiService {
   // Authentication
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await api.post<LoginResponse>('/auth/login', credentials);
+    return response.data;
+  }
+
+  static async getCurrentUser(): Promise<CurrentUser> {
+    const response = await api.get<CurrentUser>('/admin/current-user');
     return response.data;
   }
 

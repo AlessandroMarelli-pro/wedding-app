@@ -1,5 +1,6 @@
 'use client';
 
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { cn } from '@/lib/utils';
 import {
   Calendar,
@@ -69,6 +70,11 @@ export function NavbarLayout({
   const navItems = adminNavigation;
 
   const [open, setOpen] = useState(false);
+  const {
+    currentUser,
+    loading: userLoading,
+    error: userError,
+  } = useCurrentUser();
 
   return (
     <div
@@ -94,16 +100,20 @@ export function NavbarLayout({
           <div>
             <SidebarLink
               link={{
-                label: 'Manu Arora',
+                label: userLoading
+                  ? 'Loading...'
+                  : userError
+                    ? 'Error loading user'
+                    : currentUser?.email || 'Admin User',
                 href: '#',
                 icon: (
-                  <img
-                    src="https://assets.aceternity.com/manu.png"
-                    className="h-7 w-7 shrink-0 rounded-full"
-                    width={50}
-                    height={50}
-                    alt="Avatar"
-                  />
+                  <div className="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
+                    {userLoading
+                      ? '...'
+                      : userError
+                        ? '!'
+                        : currentUser?.email?.charAt(0).toUpperCase() || 'A'}
+                  </div>
                 ),
               }}
             />
