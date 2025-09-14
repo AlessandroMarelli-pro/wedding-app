@@ -2,6 +2,7 @@ import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
 import { WeddingInformation } from '@/components/wedding-information';
 import { cn } from '@/lib/utils';
+import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
@@ -115,11 +116,7 @@ const WeddingProgramSection = () => {
 
 const RSVPSection = () => {
   return (
-    <Section
-      id="rsvp"
-      background="accent"
-      className="h-[30vh] lg:h-[50vh] max-h-screen "
-    >
+    <Section id="rsvp" background="accent" className="h-[50vh] max-h-screen ">
       <div className="w-full h-full flex flex-col text-center justify-center items-center  gap-10">
         <p className=" text-3xl lg:text-5xl   text-[#EAFFD0]">
           Nous espérons vous voir en ce jour spécial !
@@ -137,12 +134,18 @@ const BonusSection = () => {
   return (
     <Section id="bonus" background="muted">
       <div className="w-full h-[50vh] flex flex-col text-center justify-center items-center  gap-5">
-        <span className={cn(bilbo.className, 'text-2xl text-[#F38181]')}>
-          En bonus, l'instant où la demande de mariage a été acceptée
+        <span
+          className={cn(
+            bilbo.className,
+            'text-2xl text-[#F38181] flex lg:flex-row flex-col items-center gap-2 pt-5',
+          )}
+        >
+          En bonus, l'instant où la demande de mariage a été acceptée{' '}
+          <IconHeartHandshake />
         </span>
         <iframe
-          className="w-[75%] h-[75%]"
-          width="50%"
+          className="w-[75%] h-[75%] pb-5"
+          width="30%"
           height="50%"
           src="https://www.youtube.com/embed/Xud6KnnQJec?si=d2TUR0h-j21-a6CN"
           title="YouTube video player"
