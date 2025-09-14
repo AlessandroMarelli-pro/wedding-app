@@ -28,7 +28,7 @@ export default function AdminImages() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const [useLocationOptions, setUseLocationOptions] = useState<
+  const [usageLocationOptions, setUsageLocationOptions] = useState<
     { id: string; name: string }[]
   >(defaultUsageLocationOptions);
   useEffect(() => {
@@ -41,16 +41,20 @@ export default function AdminImages() {
     fetchImages();
   }, [router]);
 
+  useEffect(() => {
+    setUsageLocationOptions(
+      defaultUsageLocationOptions.filter(
+        (a) => !images.some((image) => image.usageLocation === a.id),
+      ),
+    );
+  }, [images]);
+
   const fetchImages = async () => {
     try {
       setLoading(true);
       setError(null);
       const fetchedImages = await ApiService.getImages();
       setImages(fetchedImages);
-      const filteredUsageLocationOptions = useLocationOptions.filter(
-        (a) => !fetchedImages.some((image) => image.usageLocation === a.id),
-      );
-      setUseLocationOptions([...filteredUsageLocationOptions]);
     } catch (err) {
       console.error('Error fetching images:', err);
       setError('Failed to load images');
@@ -63,7 +67,6 @@ export default function AdminImages() {
     try {
       await ApiService.uploadImage(file, options);
       await fetchImages(); // Refresh the list
-      console.log('Image uploaded successfully');
     } catch (error) {
       throw error; // Re-throw to let ImageUpload component handle it
     }
@@ -122,12 +125,12 @@ export default function AdminImages() {
         {/* Image Upload Component */}
         <ImageUpload
           onUpload={handleImageUpload}
-          usageLocationOptions={useLocationOptions}
+          usageLocationOptions={usageLocationOptions}
         />
 
         {/* Images Grid */}
         <div>
-          <h2 className="text-2xl  text-gray-800 mb-4">Uploaded Images</h2>
+          <h2 className="text-2xl  text-gray-800 mb-4">Images déposées</h2>
 
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">

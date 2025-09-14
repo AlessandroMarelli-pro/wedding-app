@@ -46,10 +46,9 @@ export function ImageUpload({
   className,
   usageLocationOptions = defaultUsageLocationOptions,
 }: ImageUploadProps) {
-  console.info('usageLocationOptions', usageLocationOptions);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadOptions, setUploadOptions] = useState<ImageUploadOptions>({
-    usageLocation: usageLocationOptions[0].id,
+    usageLocation: usageLocationOptions[0]?.id,
     altText: '',
     maxWidth: 1920,
     maxHeight: 1080,
@@ -92,7 +91,7 @@ export function ImageUpload({
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
-
+  if (usageLocationOptions.length === 0) return null;
   return (
     <div className={`space-y-6 ${className}`}>
       <Card>

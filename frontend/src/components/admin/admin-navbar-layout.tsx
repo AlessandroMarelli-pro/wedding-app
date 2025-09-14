@@ -65,22 +65,9 @@ export function NavbarLayout({
 }: NavbarLayoutProps) {
   const router = useRouter();
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    router.push('/admin/login');
-  };
-
   // Configure navbar based on type
   const navItems = adminNavigation;
 
-  // Handle section changes for public navigation
-  const handleSectionClick = (sectionId: string) => {
-    if (onSectionChange) {
-      onSectionChange(sectionId);
-    }
-  };
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
   return (
