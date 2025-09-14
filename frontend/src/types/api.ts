@@ -8,6 +8,16 @@ export interface Direction {
   };
 }
 
+export interface UploadedImage {
+  id: string;
+  filename: string;
+  originalName: string;
+  mimeType: string;
+  size: number;
+  usageLocation: string;
+  altText?: string;
+  createdAt: string;
+}
 export interface WeddingInfo {
   id: string;
   coupleNames: string;

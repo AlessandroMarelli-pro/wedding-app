@@ -148,7 +148,7 @@ export class AnalyticsService {
     const declinedGuests = guests.filter(
       (g) => g.rsvpConfirmation?.isAttending === false,
     );
-    console.log(declinedGuests);
+
     const pendingGuests = guests.filter((g) => !g.rsvpConfirmation);
 
     const totalConfirmed = confirmedGuests.reduce(

@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib';
 import { IconGalaxy } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 interface ProgramEvent {
   id: string;
@@ -70,7 +70,7 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
   return (
     <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-[#F38181] xl:gap-5 lg:gap-0 gap-5 py-10 lg:py-0 lg:pb-5">
       {events.map((item, index) => (
-        <>
+        <Fragment key={item.id}>
           <div
             id={item.id}
             className="flex flex-col flex-[1_1_20%] justify-center items-center text-center  pt-4 lg:pt-0 h-full"
@@ -105,7 +105,10 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
                   .replace('h 00', 'h')}
               </div>
               {item.location.split(',').map((loc) => (
-                <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
+                <div
+                  key={loc}
+                  className={cn('text-md lg:text-2xl xl:text-2xl ')}
+                >
                   {loc}
                 </div>
               ))}
@@ -114,7 +117,7 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
           {index !== events.length - 1 && (
             <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
           )}
-        </>
+        </Fragment>
       ))}
     </div>
   );

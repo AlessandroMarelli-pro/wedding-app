@@ -1,15 +1,17 @@
-import { cn } from '@/lib/utils';
-import { WeddingInfo } from '@/types/api';
+import { cn, getOptimizedUrl } from '@/lib/utils';
+import { UploadedImage, WeddingInfo } from '@/types/api';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
 import { AccommodationsList } from '../components';
 import { Accommodation } from '../types/api';
 
 export const WeddingAccomodations = ({
+  accommodationsImage,
   accommodations,
   weddingInfo,
   font,
 }: {
+  accommodationsImage: UploadedImage;
   accommodations: Accommodation[];
   weddingInfo: WeddingInfo;
   font: NextFontWithVariable;
@@ -47,7 +49,11 @@ export const WeddingAccomodations = ({
         <div className="row-span-1  flex flex-col ">
           <div className="text-center  flex flex-row items-center justify-around ">
             <Image
-              src={'/images/program/1.jpg'}
+              src={
+                (accommodationsImage &&
+                  getOptimizedUrl(accommodationsImage.id)) ||
+                '/images/program/1.jpg'
+              }
               alt={weddingInfo.coupleNames}
               width={600}
               height={600}

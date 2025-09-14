@@ -12,7 +12,7 @@ import {
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
-import { Accommodation, WeddingInfo } from '../types/api';
+import { Accommodation, UploadedImage, WeddingInfo } from '../types/api';
 
 const bilbo = Parisienne({
   subsets: ['latin'],
@@ -23,14 +23,17 @@ const bilbo = Parisienne({
 interface HomePageProps {
   weddingInfo: WeddingInfo | null;
   accommodations: any[];
+  images: UploadedImage[];
 }
 
 const HeroSection = ({
   weddingInfo,
+  heroImage,
   scrollToSection,
   maxCanvasHeight,
 }: {
   weddingInfo: WeddingInfo;
+  heroImage: UploadedImage;
   scrollToSection: (sectionId: string) => void;
   maxCanvasHeight: number;
 }) => {
@@ -38,6 +41,7 @@ const HeroSection = ({
     <Section id="home">
       <WeddingHero
         weddingInfo={weddingInfo}
+        heroImage={heroImage}
         scrollToSection={scrollToSection}
         font={bilbo}
         maxCanvasHeight={maxCanvasHeight}
@@ -56,14 +60,17 @@ const OurStorySection = ({ weddingInfo }: { weddingInfo: WeddingInfo }) => {
 
 const WeddingDetailsSection = ({
   weddingInfo,
+  infoImage,
   getDirectionName,
 }: {
   weddingInfo: WeddingInfo;
+  infoImage: UploadedImage;
   getDirectionName: (directionType: string) => string;
 }) => {
   return (
     <Section id="informations" background="accent">
       <WeddingInformation
+        infoImage={infoImage}
         weddingInfo={weddingInfo}
         getDirectionName={getDirectionName}
         font={bilbo}
@@ -75,13 +82,16 @@ const WeddingDetailsSection = ({
 const AccommodationsSection = ({
   accommodations,
   weddingInfo,
+  accommodationsImage,
 }: {
   accommodations: Accommodation[];
   weddingInfo: WeddingInfo;
+  accommodationsImage: UploadedImage;
 }) => {
   return (
     <Section id="logements" background="default">
       <WeddingAccomodations
+        accommodationsImage={accommodationsImage}
         accommodations={accommodations}
         weddingInfo={weddingInfo}
         font={bilbo}
@@ -152,6 +162,7 @@ const MissingDataSection = () => {
 export default function HomePage({
   weddingInfo,
   accommodations,
+  images,
 }: HomePageProps) {
   const [currentSection, setCurrentSection] = useState('home');
 
@@ -167,16 +178,6 @@ export default function HomePage({
     }
   };
 
-  // Helper function to get hero image URL
-  const getHeroImageUrl = (): string => {
-    if (weddingInfo.heroImageId) {
-      const baseUrl =
-        process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-      return `${baseUrl}/images/${weddingInfo.heroImageId}`;
-    }
-    return '/images/hero-wedding.jpg'; // Fallback to default image
-  };
-
   const getDirectionName = (directionType: string) => {
     return directionType === 'car'
       ? 'En voiture'
@@ -190,6 +191,14 @@ export default function HomePage({
   } catch (error) {
     console.error('Error getting max canvas height:', error);
   }
+  const heroImage = images.find((image) => image.usageLocation === 'hero');
+  const accommodationsImage = images.find(
+    (image) => image.usageLocation === 'accommodation',
+  );
+  const weddingDetailsImage = images.find(
+    (image) => image.usageLocation === 'information',
+  );
+
   return (
     <>
       <Head>
@@ -208,18 +217,21 @@ export default function HomePage({
       >
         <div className="min-h-screen bg-white">
           <HeroSection
+            heroImage={heroImage as UploadedImage}
             weddingInfo={weddingInfo}
             scrollToSection={scrollToSection}
             maxCanvasHeight={maxCanvasHeight}
           />
           <OurStorySection weddingInfo={weddingInfo} />
           <WeddingDetailsSection
+            infoImage={weddingDetailsImage as UploadedImage}
             weddingInfo={weddingInfo}
             getDirectionName={getDirectionName}
           />{' '}
           <AccommodationsSection
             accommodations={accommodations}
             weddingInfo={weddingInfo}
+            accommodationsImage={accommodationsImage as UploadedImage}
           />
           <WeddingProgramSection />
           <RSVPSection />
@@ -235,7 +247,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const weddingResponse = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/wedding`,
     );
-    console.log('weddingResponse', weddingResponse);
+
     const weddingInfo = weddingResponse.ok
       ? await weddingResponse.json()
       : null;
@@ -244,14 +256,22 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const accommodationsResponse = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/accommodations`,
     );
-    const accommodations = accommodationsResponse.ok
-      ? await accommodationsResponse.json()
-      : [];
+    const accommodations = (
+      accommodationsResponse.ok ? await accommodationsResponse.json() : []
+    ) as Accommodation[];
 
+    const imagesResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/images`,
+    );
+    const images = (
+      imagesResponse.ok ? await imagesResponse.json() : []
+    ) as UploadedImage[];
+    console.log('images', images);
     return {
       props: {
         weddingInfo,
         accommodations,
+        images,
       },
     };
   } catch (error) {
@@ -260,6 +280,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       props: {
         weddingInfo: null,
         accommodations: [],
+        images: [],
       },
     };
   }

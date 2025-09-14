@@ -1,9 +1,9 @@
 import { LinkPreview } from '@/components/ui/link-preview';
-import { cn } from '@/lib/utils';
+import { cn, getOptimizedUrl } from '@/lib/utils';
 import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
-import { WeddingInfo } from '../types/api';
+import { UploadedImage, WeddingInfo } from '../types/api';
 
 const WeddingHowToArriveIcons = {
   car: <IconCar className="lg:w-10 lg:h-10" />,
@@ -12,10 +12,12 @@ const WeddingHowToArriveIcons = {
 };
 
 export const WeddingInformation = ({
+  infoImage,
   weddingInfo,
   getDirectionName,
   font,
 }: {
+  infoImage: UploadedImage;
   weddingInfo: WeddingInfo;
   getDirectionName: (directionType: string) => string;
   font: NextFontWithVariable;
@@ -27,11 +29,14 @@ export const WeddingInformation = ({
           <div className="row-span-1  flex flex-col">
             <div className="text-center  flex flex-row   gap-10">
               <Image
-                src={'/images/lauziers-aqua.webp'}
+                src={
+                  (infoImage && getOptimizedUrl(infoImage.id)) ||
+                  '/images/lauziers-aqua.webp'
+                }
                 alt={weddingInfo.coupleNames}
                 width={600}
                 height={600}
-                className="object-cover w-full lg:max-w-[50rem]"
+                className="object-cover w-full lg:max-h-[30rem]"
               />
             </div>
           </div>
@@ -46,7 +51,10 @@ export const WeddingInformation = ({
             </h1>
             <div>
               {weddingInfo.weddingAddress.split(',').map((chunk) => (
-                <p className="text-md lg:text-xl text-[#EAFFD0] font-light">
+                <p
+                  key={chunk}
+                  className="text-md lg:text-xl text-[#EAFFD0] font-light"
+                >
                   {chunk}
                 </p>
               ))}

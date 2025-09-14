@@ -1,3 +1,4 @@
+import { UploadedImage } from '@/entities/uploaded-image.entity';
 import {
   BadRequestException,
   Controller,
@@ -15,6 +16,17 @@ import { ImageService } from '../services/image.service';
 @Controller('images')
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Get all uploaded images' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of uploaded images',
+    type: [UploadedImage],
+  })
+  async getImages(): Promise<UploadedImage[]> {
+    return this.imageService.getAllImages();
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Serve image by ID' })

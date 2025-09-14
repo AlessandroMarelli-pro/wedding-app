@@ -45,7 +45,6 @@ export default function GuestsPage() {
   }, []);
 
   const fetchData = async () => {
-    console.log('fetching data', process.env.NEXT_PUBLIC_API_URL);
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) {
