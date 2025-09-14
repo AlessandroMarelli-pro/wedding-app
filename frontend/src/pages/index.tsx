@@ -26,15 +26,18 @@ interface HomePageProps {
 }
 
 const HeroSection = ({
+  weddingInfo,
   scrollToSection,
   maxCanvasHeight,
 }: {
+  weddingInfo: WeddingInfo;
   scrollToSection: (sectionId: string) => void;
   maxCanvasHeight: number;
 }) => {
   return (
     <Section id="home">
       <WeddingHero
+        weddingInfo={weddingInfo}
         scrollToSection={scrollToSection}
         font={bilbo}
         maxCanvasHeight={maxCanvasHeight}
@@ -205,6 +208,7 @@ export default function HomePage({
       >
         <div className="min-h-screen bg-white">
           <HeroSection
+            weddingInfo={weddingInfo}
             scrollToSection={scrollToSection}
             maxCanvasHeight={maxCanvasHeight}
           />

@@ -15,3 +15,8 @@ export const formatDateTime = (dateString: string) => {
     hour12: false,
   });
 };
+export const getOptimizedUrl = (imageId: string): string => {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+  return `${baseUrl}/api/images/${imageId}/optimized`;
+};

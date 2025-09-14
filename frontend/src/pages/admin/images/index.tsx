@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { getOptimizedUrl } from '@/lib';
 import { Eye, Trash } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -84,19 +85,6 @@ export default function AdminImages() {
       hour: 'numeric',
       minute: '2-digit',
     });
-  };
-
-  // Helper functions to generate image URLs using the new API endpoints
-  const getImageUrl = (imageId: string): string => {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-    return `${baseUrl}/api/images/${imageId}`;
-  };
-
-  const getOptimizedUrl = (imageId: string): string => {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-    return `${baseUrl}/api/images/${imageId}/optimized`;
   };
 
   const handleDelete = (id: string, name: string) => {

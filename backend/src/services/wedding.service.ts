@@ -39,10 +39,10 @@ export class WeddingService {
     if (!weddingInfo) {
       throw new NotFoundException('Wedding information not found');
     }
-    /* const heroImages = await this.imageService.getImagesByUsageLocation('hero');
-    if (heroImages.length > 0) {
-      weddingInfo.heroImageId = heroImages[0].id;
-    } */
+    const heroImage = await this.imageService.getImageByUsageLocation('hero');
+    if (heroImage) {
+      weddingInfo.heroImageId = heroImage.id;
+    }
     return weddingInfo;
   }
 

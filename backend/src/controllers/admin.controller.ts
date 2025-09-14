@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   Res,
   UploadedFile,
   UseGuards,
@@ -18,7 +17,6 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -437,22 +435,12 @@ export class AdminController {
 
   @Get('images')
   @ApiOperation({ summary: 'Get all uploaded images' })
-  @ApiQuery({
-    name: 'usageLocation',
-    required: false,
-    description: 'Filter by usage location',
-  })
   @ApiResponse({
     status: 200,
     description: 'List of uploaded images',
     type: [UploadedImage],
   })
-  async getImages(
-    @Query('usageLocation') usageLocation?: string,
-  ): Promise<UploadedImage[]> {
-    if (usageLocation) {
-      return this.imageService.getImagesByUsageLocation(usageLocation);
-    }
+  async getImages(): Promise<UploadedImage[]> {
     return this.imageService.getAllImages();
   }
 

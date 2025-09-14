@@ -136,10 +136,10 @@ export class ImageService {
     return image;
   }
 
-  async getImagesByUsageLocation(
+  async getImageByUsageLocation(
     usageLocation: string,
-  ): Promise<UploadedImage[]> {
-    return this.uploadedImageRepository.find({
+  ): Promise<UploadedImage | null> {
+    return this.uploadedImageRepository.findOne({
       where: { usageLocation },
       order: { createdAt: 'DESC' },
       // relations: ['uploadedByAdmin'],

@@ -1,15 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { Vortex } from '@/components/ui/vortex';
-import { cn } from '@/lib/utils';
+import { cn, getOptimizedUrl } from '@/lib/utils';
+import { WeddingInfo } from '@/types/api';
 import { IconArrowDown } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
 
 export const WeddingHero = ({
+  weddingInfo,
   scrollToSection,
   font,
   maxCanvasHeight,
 }: {
+  weddingInfo: WeddingInfo;
   scrollToSection: (sectionId: string) => void;
   font: NextFontWithVariable;
   maxCanvasHeight: number;
@@ -40,7 +43,11 @@ export const WeddingHero = ({
           <Image
             width={500}
             height={500}
-            src="/images/couple3.jpeg"
+            src={
+              (weddingInfo.heroImageId &&
+                getOptimizedUrl(weddingInfo.heroImageId)) ||
+              '/images/couple3.jpeg'
+            }
             alt="Ariane and Timothé"
             className="xl:h-180  xl:w-auto w-[90%]  xl:absolute  z-[-1] rounded-t-[90%]   xl:-bottom-5 xl:translate-y-0 translate-y-10"
           />
