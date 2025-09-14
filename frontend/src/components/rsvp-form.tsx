@@ -275,7 +275,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
   // Step 2: RSVP Details Form
   if (currentStep === 'rsvp-details' && guestInfo) {
     return (
-      <div className={` p-4  ${className}`}>
+      <div className={` p-4 w-full ${className}`}>
         <div className="text-center lg:mb-6">
           <h2 className="text-2xl lg:text-3xl  font-bold text-[#F38181] mb-2">
             Bonjour {guestInfo.firstName} !
