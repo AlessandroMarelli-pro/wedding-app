@@ -89,9 +89,13 @@ export class ImageService {
     const isPortrait = image.width < image.height;
 
     if (imageData.usageLocation === 'hero' && !isPortrait) {
-      throw new Error("L'image doit être en portrait");
+      throw new BadRequestException(
+        "L'image doit être en paysage pour la section sélectionnée",
+      );
     } else if (imageData.usageLocation !== 'hero' && isPortrait) {
-      throw new Error("L'image doit être en paysage");
+      throw new BadRequestException(
+        "L'image doit être en paysage pour la section sélectionnée",
+      );
     }
 
     // Generate unique filename
@@ -106,7 +110,7 @@ export class ImageService {
         filePath,
         processingOptions,
       );
-      console.log('processedImage', processedImage);
+
       // Get image metadata
       // Create database record
       const uploadedImage = this.uploadedImageRepository.create({

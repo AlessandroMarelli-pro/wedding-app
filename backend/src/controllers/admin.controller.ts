@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -391,15 +392,15 @@ export class AdminController {
     @Body('format') format?: 'jpeg' | 'png' | 'webp',
   ): Promise<UploadedImage> {
     if (!file) {
-      throw new Error('No image file uploaded');
+      throw new BadRequestException('No image file uploaded');
     }
 
     if (!file.buffer) {
-      throw new Error('File buffer is empty or invalid');
+      throw new BadRequestException('File buffer is empty or invalid');
     }
 
     if (!usageLocation) {
-      throw new Error('Usage location is required');
+      throw new BadRequestException('Usage location is required');
     }
 
     const processingOptions: ImageProcessingOptions = {};

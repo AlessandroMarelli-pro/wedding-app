@@ -78,7 +78,7 @@ export function ImageUpload({
     } catch (error: any) {
       toast.error('Erreur!', {
         duration: 10000,
-        description: `${selectedFile.name} n'a pas été déposé: ${error?.message}`,
+        description: `${selectedFile.name} n'a pas été déposé: ${error?.response?.data?.message}`,
       });
     } finally {
       setUploading(false);

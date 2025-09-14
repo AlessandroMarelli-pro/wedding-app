@@ -135,7 +135,6 @@ export default function AdminWedding() {
 
   // Check for unsaved changes before leaving the page
   useEffect(() => {
-    console.log('verifyHasUnsavedChanges');
     verifyHasUnsavedChanges();
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (verifyHasUnsavedChanges()) {
@@ -196,10 +195,6 @@ export default function AdminWedding() {
         formValues[key as keyof typeof formValues]?.toString() !==
         originalValues[key as keyof typeof originalValues]?.toString()
       ) {
-        console.log('changesStatus', '1');
-        console.log(key);
-        console.log(formValues[key as keyof typeof formValues]);
-        console.log(originalValues[key as keyof typeof originalValues]);
         setChangesStatus('1');
         return true;
       }

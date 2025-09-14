@@ -50,6 +50,7 @@ import {
   RSVPController,
   WeddingController,
 } from './controllers';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -106,6 +107,7 @@ import {
     RSVPService,
     UploadMaintenanceService,
     UrlParserService,
+    HttpExceptionFilter,
   ],
 })
 export class AppModule {}

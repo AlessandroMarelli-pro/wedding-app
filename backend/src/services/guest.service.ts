@@ -205,7 +205,6 @@ export class GuestService {
             });
             return;
           }
-          console.log('row.data', row.data);
           try {
             const validationResult = this.validateCSVRowWithDetails(
               row.data,
@@ -307,7 +306,6 @@ export class GuestService {
     const errors: CSVValidationError[] = [];
     const warnings: CSVWarning[] = [];
     const validatedRow = { ...row };
-    console.log('validatedRow', validatedRow);
     // Validate firstName
     if (!validatedRow.firstName || typeof validatedRow.firstName !== 'string') {
       errors.push({
@@ -666,7 +664,6 @@ export class GuestService {
 
     // Generate unique hash code
     const hashCode = await this.generateUniqueHashCode();
-    console.log('hashCode', hashCode);
     const guest = this.guestRepository.create({
       firstName: row.firstName,
       lastName: row.lastName,
@@ -735,7 +732,7 @@ export class GuestService {
       order: { createdAt: 'DESC' },
       relations: ['guests'],
     });
-    console.log('guests', guests);
+
     return guests;
   }
 

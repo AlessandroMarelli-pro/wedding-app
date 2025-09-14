@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { initializeUploadSystem } from './config/upload';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 async function bootstrap() {
   // Initialize upload system before creating the app
@@ -38,6 +39,7 @@ async function bootstrap() {
     credentials: true,
     maxAge: 86400, // 24 hours
   });
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // Global validation pipe
   app.useGlobalPipes(
@@ -146,28 +148,6 @@ async function bootstrap() {
       '📚 Swagger documentation available at: http://localhost:3001/api/docs',
     );
   }
-
-  // Global error handler
-  app.use((error: any, req: any, res: any, next: any) => {
-    console.error('Global error handler:', error);
-
-    if (res.headersSent) {
-      return next(error);
-    }
-
-    const status = error.status || 500;
-    const message =
-      process.env.NODE_ENV === 'production'
-        ? 'Internal server error'
-        : error.message;
-
-    res.status(status).json({
-      error: error.name || 'Error',
-      message,
-      timestamp: new Date().toISOString(),
-      path: req.url,
-    });
-  });
 
   const port = process.env.PORT || 3001;
   const host = process.env.HOST || 'localhost';

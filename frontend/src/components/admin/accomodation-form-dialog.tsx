@@ -71,7 +71,6 @@ export const AccomodationFormDialog = ({
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     setIsSubmitting(true);
 
     try {
