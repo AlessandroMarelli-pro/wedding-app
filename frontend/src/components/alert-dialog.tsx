@@ -15,6 +15,7 @@ export default function AlertDialog({
   triggerText,
   triggerIcon,
   triggerVariant,
+  triggerClass,
   mainTitle,
   title,
   description,
@@ -33,6 +34,7 @@ export default function AlertDialog({
     | 'ghost'
     | null
     | undefined;
+  triggerClass?: string;
   mainTitle: string;
   title: string;
   description: string;
@@ -43,21 +45,19 @@ export default function AlertDialog({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant={triggerVariant}>
+        <Button variant={triggerVariant} className={triggerClass}>
           {triggerText} {triggerIcon}
         </Button>
       </DialogTrigger>
       <DialogContent className="overflow-hidden font-sans">
         <div className="-mt-3 -mx-6 border-b pb-3 px-6 flex justify-between items-center">
-          <DialogTitle>{mainTitle}</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <OctagonAlert className="h-5 w-5 text-destructive" />
+            {mainTitle}
+          </DialogTitle>
         </div>
         <DialogHeader className="pb-4">
-          <DialogTitle>
-            <div className=" mx-auto sm:mx-0 mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-destructive/10">
-              <OctagonAlert className="h-5 w-5 text-destructive" />
-            </div>
-            {title}
-          </DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription className="text-[15px]">
             {description}
           </DialogDescription>

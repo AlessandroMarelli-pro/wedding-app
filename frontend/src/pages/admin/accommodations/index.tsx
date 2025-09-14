@@ -2,6 +2,7 @@ import {
   AccomodationFormDialog,
   initialFormData,
 } from '@/components/admin/accomodation-form-dialog';
+import AlertDialog from '@/components/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -100,10 +101,6 @@ export default function AdminAccommodations() {
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm('Are you sure you want to delete this accommodation?')) {
-      return;
-    }
-
     try {
       const token = localStorage.getItem('adminToken');
       const response = await fetch(
@@ -238,16 +235,20 @@ export default function AdminAccommodations() {
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          onClick={() =>
-                            handleDelete(accommodation.id, accommodation.name)
-                          }
-                          size="icon"
-                          className="text-destructive "
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+
+                        <AlertDialog
+                          triggerIcon={<Trash2 className="w-4 h-4" />}
+                          triggerText=""
+                          triggerVariant="ghost"
+                          triggerClass="text-destructive"
+                          mainTitle="Supprimer le logement"
+                          title={`Êtes-vous sûr de vouloir supprimer ${accommodation.name} ?`}
+                          description="Cette action ne peut pas être annulée. Elle supprimera définitivement le logement."
+                          actionText="Supprimer"
+                          action={() => {
+                            handleDelete(accommodation.id, accommodation.name);
+                          }}
+                        />
                       </div>
                     </div>
                   </CardHeader>
