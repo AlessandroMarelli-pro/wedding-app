@@ -31,7 +31,7 @@ export const WeddingInformation = ({
               <Image
                 src={
                   (infoImage && getOptimizedUrl(infoImage.id)) ||
-                  '/images/lauziers-aqua.webp'
+                  '/images/lauziers.webp'
                 }
                 alt={weddingInfo.coupleNames}
                 width={600}

@@ -52,7 +52,7 @@ export const WeddingAccomodations = ({
               src={
                 (accommodationsImage &&
                   getOptimizedUrl(accommodationsImage.id)) ||
-                '/images/program/1.jpg'
+                '/images/condillac.webp'
               }
               alt={weddingInfo.coupleNames}
               width={600}

@@ -47,7 +47,7 @@ export const WeddingHero = ({
             height={500}
             src={
               (heroImage && getOptimizedUrl(heroImage.id)) ||
-              '/images/couple3.jpeg'
+              '/images/maries.webp'
             }
             alt="Ariane and Timothé"
             className="xl:h-180  xl:w-auto w-[90%]  xl:absolute  z-[-1] rounded-t-[90%]   xl:-bottom-5 xl:translate-y-0 translate-y-10"
