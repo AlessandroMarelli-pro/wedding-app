@@ -84,6 +84,16 @@ export class ImageService {
       );
     }
 
+    // Validate image orientation
+    const image = await sharp(imageData.buffer).metadata();
+    const isPortrait = image.width < image.height;
+
+    if (imageData.usageLocation === 'hero' && !isPortrait) {
+      throw new Error("L'image doit être en portrait");
+    } else if (imageData.usageLocation !== 'hero' && isPortrait) {
+      throw new Error("L'image doit être en paysage");
+    }
+
     // Generate unique filename
     const fileExtension = 'webp';
     const filename = this.generateUniqueFilename(fileExtension);

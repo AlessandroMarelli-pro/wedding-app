@@ -75,10 +75,10 @@ export function ImageUpload({
         'file-input',
       ) as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-    } catch (error) {
+    } catch (error: any) {
       toast.error('Erreur!', {
         duration: 10000,
-        description: `${selectedFile.name} n'a pas été déposé.`,
+        description: `${selectedFile.name} n'a pas été déposé: ${error?.message}`,
       });
     } finally {
       setUploading(false);
@@ -145,7 +145,12 @@ export function ImageUpload({
             {/* Upload Button */}
             <Button
               onClick={handleUpload}
-              disabled={!selectedFile || uploading}
+              disabled={
+                !selectedFile ||
+                uploading ||
+                !uploadOptions.usageLocation ||
+                !uploadOptions.altText
+              }
             >
               {uploading ? (
                 <>
