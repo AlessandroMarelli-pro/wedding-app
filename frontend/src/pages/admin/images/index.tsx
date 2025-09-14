@@ -1,22 +1,14 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Eye, Trash } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import {
   defaultUsageLocationOptions,
   ImageUpload,
 } from '../../../components/admin/image-upload';
+import AlertDialog from '../../../components/alert-dialog';
 import { ApiService } from '../../../services/api';
 
 interface UploadedImage {
@@ -109,14 +101,15 @@ export default function AdminImages() {
 
   const handleDelete = (id: string, name: string) => {
     return async () => {
-      if (confirm('Êtes-vous sûr de vouloir supprimer cette image?')) {
-        try {
-          await ApiService.deleteImage(id);
-          await fetchImages(); // Refresh the list
-        } catch (error) {
-          console.error('Error deleting image:', error);
-          setError('Failed to delete image');
-        }
+      try {
+        await ApiService.deleteImage(id);
+        await fetchImages(); // Refresh the list
+        toast.success('Image supprimée avec succès !', {
+          description: `${name} a été supprimé.`,
+        });
+      } catch (error) {
+        console.error('Error deleting image:', error);
+        setError('Failed to delete image');
       }
     };
   };
@@ -207,39 +200,25 @@ export default function AdminImages() {
                         <p className="truncate">Alt: {image.altText}</p>
                       )}
                     </div>
-                    <div className="gap-2 space-x-2 flex flex-row justify-between">
+                    <div className="gap-4  flex flex-row justify-between">
                       <Button
+                        variant="ghost"
                         onClick={() =>
                           window.open(getOptimizedUrl(image.id), '_blank')
                         }
                       >
-                        View Optimized
+                        Voir <Eye />
                       </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger>Supprimer</AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Êtes-vous sûr de vouloir supprimer cette image{' '}
-                              {image.originalName} ?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Cette action ne peut pas être annulée. Elle
-                              supprimera définitivement l'image de nos serveurs.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() =>
-                                handleDelete(image.id, image.originalName)
-                              }
-                            >
-                              Supprimer
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <AlertDialog
+                        triggerIcon={<Trash />}
+                        triggerVariant="destructive"
+                        mainTitle="Supprimer l'image"
+                        triggerText="Supprimer"
+                        title={`Êtes-vous sûr de vouloir supprimer cette image ${image.originalName} ?`}
+                        description="Cette action ne peut pas être annulée. Elle supprimera définitivement l'image de nos serveurs."
+                        actionText="Supprimer"
+                        action={handleDelete(image.id, image.originalName)}
+                      />
                     </div>
                   </div>
                 </div>
