@@ -1,6 +1,7 @@
 import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
 import { WeddingInformation } from '@/components/wedding-information';
+import { cn } from '@/lib/utils';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
@@ -132,6 +133,29 @@ const RSVPSection = () => {
   );
 };
 
+const BonusSection = () => {
+  return (
+    <Section id="bonus" background="muted">
+      <div className="w-full h-[50vh] flex flex-col text-center justify-center items-center  gap-5">
+        <span className={cn(bilbo.className, 'text-2xl text-[#F38181]')}>
+          En bonus, l'instant où la demande de mariage a été acceptée
+        </span>
+        <iframe
+          className="w-[75%] h-[75%]"
+          width="50%"
+          height="50%"
+          src="https://www.youtube.com/embed/Xud6KnnQJec?si=d2TUR0h-j21-a6CN"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </Section>
+  );
+};
+
 const MissingDataSection = () => {
   return (
     <>
@@ -235,6 +259,7 @@ export default function HomePage({
           />
           <WeddingProgramSection />
           <RSVPSection />
+          <BonusSection />
         </div>
       </NavbarLayout>
     </>
@@ -266,7 +291,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const images = (
       imagesResponse.ok ? await imagesResponse.json() : []
     ) as UploadedImage[];
-    console.log('images', images);
+
     return {
       props: {
         weddingInfo,
