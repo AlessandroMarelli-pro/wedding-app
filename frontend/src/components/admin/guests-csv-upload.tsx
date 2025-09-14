@@ -6,6 +6,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
+import { IconUser } from '@tabler/icons-react';
 import { File, FileText } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -17,6 +19,8 @@ interface CSVUpload {
   totalGuests: number;
   successfulImports: number;
   createdAt: string;
+  errorLog?: string;
+  errorRows?: number;
 }
 
 export const GuestsCsvUpload = ({
@@ -95,8 +99,8 @@ export const GuestsCsvUpload = ({
             maxFileSize={10 * 1024 * 1024} // 10MB
           />
           <p className="text-sm text-gray-600">
-            CSV format: firstName, lastName, email, phoneNumber, partySize,
-            dietaryRestrictions, specialRequests
+            Colonnes requises : <br /> Nom, Prénom, email, numéro de téléphone,
+            nombre de personnes, restrictions alimentaires, besoins spéciaux
           </p>
         </>
       )}
@@ -146,19 +150,38 @@ export const GuestsCsvUpload = ({
       {csvUploads.length > 0 && (
         <div>
           <h4 className="font-medium mb-2">Derniers dépôts:</h4>
-          <div className="space-y-2">
-            {csvUploads.slice(0, 3).map((upload) => (
+          <div className="space-y-2 max-h-[10rem] overflow-y-auto">
+            {csvUploads.map((upload) => (
               <div
                 key={upload.id}
-                className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                className={cn(
+                  'flex items-center justify-between p-2 bg-gray-50 rounded',
+                  upload.errorRows ? 'bg-red-50' : 'bg-green-50',
+                )}
               >
                 <div className="flex items-center">
                   <FileText className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{upload.filename}</span>
+                  <span className="text-sm">
+                    <strong>{upload.filename}</strong> importés le{' '}
+                    {new Date(upload.createdAt).toLocaleDateString('fr-FR', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </span>
                 </div>
-                <div className="text-sm text-gray-600">
-                  {upload.successfulImports}/{upload.totalGuests} imported
-                </div>
+                {upload.errorRows ? (
+                  <div className="text-sm text-red-600">
+                    {upload.successfulImports}/{upload.totalGuests}
+                  </div>
+                ) : (
+                  <div className="text-sm text-green-600 flex flex-row items-center gap-2">
+                    {upload.successfulImports > 0 && (
+                      <IconUser className="w-4 h-4" />
+                    )}
+                    {upload.successfulImports}/{upload.totalGuests}
+                  </div>
+                )}
               </div>
             ))}
           </div>

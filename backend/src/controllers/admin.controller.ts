@@ -138,7 +138,7 @@ export class AdminController {
     description: 'List of CSV uploads',
     type: [CSVUpload],
   })
-  async getCSVUploads(): Promise<CSVUpload[]> {
+  async getCSVUploads() {
     return this.guestService.getCSVUploads();
   }
 

@@ -134,8 +134,8 @@ const columns: (
     ),
   },
   {
-    accessorKey: 'Statut',
-    header: 'Status',
+    accessorKey: 'status',
+    header: 'Statut',
     cell: ({ row }) => getStatusBadge(row.original),
   },
   {

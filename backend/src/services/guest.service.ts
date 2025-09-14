@@ -727,13 +727,20 @@ export class GuestService {
     await this.guestRepository.delete({ csvUploadId });
   }
 
-  async getCSVUploads(): Promise<CSVUpload[]> {
-    const guests = await this.csvUploadRepository.find({
+  async getCSVUploads(): Promise<
+    (CSVUpload & { successfulImports: number; totalGuests: number })[]
+  > {
+    const uploads = (await this.csvUploadRepository.find({
       order: { createdAt: 'DESC' },
       relations: ['guests'],
-    });
-
-    return guests;
+    })) as (CSVUpload & { guests: Guest[] })[];
+    const augmentedUploads = uploads.map((upload) => ({
+      ...upload,
+      successfulImports: upload.guests.length,
+      totalGuests: upload.totalRows,
+      guests: undefined,
+    }));
+    return augmentedUploads;
   }
 
   async getCSVUpload(id: string): Promise<CSVUpload | null> {
