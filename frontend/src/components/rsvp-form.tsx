@@ -1,4 +1,4 @@
-import { IconMoodSmileBeam } from '@tabler/icons-react';
+import { IconHeartFilled, IconMoodSmileBeam } from '@tabler/icons-react';
 import { MessageSquare, MousePointerClick, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from './ui/button-pers';
@@ -169,6 +169,26 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
 
   // Step 3: Confirmation Screen
   if (currentStep === 'confirmation' && confirmedGuest) {
+    if (!rsvpData.isAttending) {
+      return (
+        <div
+          className={`  p-8  ${className} flex flex-col justify-center items-center`}
+        >
+          <div className="text-center flex flex-col items-center justify-center space-y-4">
+            <h3 className="text-xl lg:text-2xl  text-[#F38181]  flex items-center justify-center gap-2">
+              Vous nous manquerez
+              <IconHeartFilled />
+            </h3>
+            <p className="text-sm lg:text-lg   text-gray-700">
+              Nous vous remercions de nous avoir prévenu.
+            </p>
+            <p className="text-sm lg:text-lg text-gray-700 ">
+              N'hésitez pas à nous prévenir si vous changez d'avis, à bientôt !
+            </p>
+          </div>
+        </div>
+      );
+    }
     return (
       <div
         className={`  p-8  ${className} flex flex-col justify-center items-center`}
