@@ -50,7 +50,10 @@ async function createAccommodation(
     res.status(201).json(accommodation);
   } catch (error) {
     logger.error('Create accommodation error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 
@@ -66,7 +69,10 @@ async function getAllAccommodations(
     res.json(accommodations);
   } catch (error) {
     logger.error('Get accommodations error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

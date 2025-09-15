@@ -106,7 +106,10 @@ async function getUploadStats(req: AuthenticatedRequest, res: NextApiResponse) {
     res.json(stats);
   } catch (error) {
     logger.error('Get upload stats error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

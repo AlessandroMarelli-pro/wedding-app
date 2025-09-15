@@ -23,6 +23,7 @@ export interface LogContext {
 export interface LogEntry {
   level: LogLevel;
   message: string;
+  messages?: string;
   timestamp: string;
   context?: LogContext;
   error?: {
@@ -49,6 +50,7 @@ class Logger {
       level,
       message,
       timestamp: new Date().toISOString(),
+      messages: message,
     };
 
     if (context) {

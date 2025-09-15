@@ -11,7 +11,10 @@ async function getAllEvents(req: NextApiRequest, res: NextApiResponse) {
     res.json(events);
   } catch (error) {
     logger.error('Get program events error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

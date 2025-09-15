@@ -17,7 +17,10 @@ async function deleteGuest(req: AuthenticatedRequest, res: NextApiResponse) {
     if ((error as any).code === 'P2025') {
       return res.status(404).json({ error: 'Guest not found' });
     }
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

@@ -29,7 +29,10 @@ async function getGuestInfo(req: NextApiRequest, res: NextApiResponse) {
     });
   } catch (error) {
     logger.error('Get guest info error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

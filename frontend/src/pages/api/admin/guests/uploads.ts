@@ -114,7 +114,10 @@ async function getAllUploads(req: AuthenticatedRequest, res: NextApiResponse) {
     res.status(200).json(augmentedUploads);
   } catch (error) {
     logger.error('Get all uploads error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

@@ -46,7 +46,7 @@ async function login(req: NextApiRequest, res: NextApiResponse) {
     });
   } catch (error) {
     logger.error('Login error', { email: req.body?.email }, error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error });
   }
 }
 

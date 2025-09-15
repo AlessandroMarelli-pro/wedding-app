@@ -11,7 +11,10 @@ async function getImages(req: NextApiRequest, res: NextApiResponse) {
     res.json(images);
   } catch (error) {
     logger.error('Get images error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

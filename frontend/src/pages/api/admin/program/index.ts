@@ -41,7 +41,10 @@ async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
     res.status(201).json(event);
   } catch (error) {
     logger.error('Create program event error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 
@@ -54,7 +57,10 @@ async function getAllEvents(req: AuthenticatedRequest, res: NextApiResponse) {
     res.json(events);
   } catch (error) {
     logger.error('Get program events error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

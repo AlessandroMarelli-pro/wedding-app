@@ -18,7 +18,10 @@ async function getAllConfirmations(
     res.json(confirmations);
   } catch (error) {
     logger.error('Get RSVP confirmations error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

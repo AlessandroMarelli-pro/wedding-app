@@ -18,7 +18,10 @@ async function checkConfirmation(req: NextApiRequest, res: NextApiResponse) {
     res.json({ confirmed: !!guest.rsvpConfirmation });
   } catch (error) {
     logger.error('Check confirmation error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

@@ -21,7 +21,10 @@ async function verify(req: NextApiRequest, res: NextApiResponse) {
     });
   } catch (error) {
     logger.error('Token verification error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

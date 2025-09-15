@@ -11,7 +11,10 @@ async function getAllAccommodations(req: NextApiRequest, res: NextApiResponse) {
     res.json(accommodations);
   } catch (error) {
     logger.error('Get accommodations error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

@@ -14,7 +14,10 @@ async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
     res.json(weddingInfo);
   } catch (error) {
     logger.error('Get wedding info error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 
@@ -62,7 +65,10 @@ async function updateWeddingInfo(
     res.json(weddingInfo);
   } catch (error) {
     logger.error('Update wedding info error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

@@ -11,7 +11,7 @@ async function getCurrentUser(req: AuthenticatedRequest, res: NextApiResponse) {
     });
   } catch (error) {
     logger.error('Get current user error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error });
   }
 }
 

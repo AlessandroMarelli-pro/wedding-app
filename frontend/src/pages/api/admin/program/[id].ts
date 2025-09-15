@@ -18,7 +18,10 @@ async function getEventById(req: AuthenticatedRequest, res: NextApiResponse) {
     res.json(event);
   } catch (error) {
     logger.error('Get program event error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 
@@ -56,7 +59,10 @@ async function updateEvent(req: AuthenticatedRequest, res: NextApiResponse) {
     if ((error as any).code === 'P2025') {
       return res.status(404).json({ error: 'Event not found' });
     }
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 
@@ -74,7 +80,10 @@ async function deleteEvent(req: AuthenticatedRequest, res: NextApiResponse) {
     if ((error as any).code === 'P2025') {
       return res.status(404).json({ error: 'Event not found' });
     }
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 

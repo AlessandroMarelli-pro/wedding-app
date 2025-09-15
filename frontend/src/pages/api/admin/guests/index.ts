@@ -16,7 +16,10 @@ async function getAllGuests(req: AuthenticatedRequest, res: NextApiResponse) {
     res.json(guests);
   } catch (error) {
     logger.error('Get all guests error:', error as Error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: (error as Error).message,
+    });
   }
 }
 
