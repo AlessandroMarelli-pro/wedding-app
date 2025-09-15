@@ -12,7 +12,7 @@ export const GuestsList = ({
   fetchData,
   guests,
 }: {
-  fetchData: () => void;
+  fetchData: () => Promise<void>;
   guests: Guest[];
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
