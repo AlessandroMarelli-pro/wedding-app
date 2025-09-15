@@ -52,7 +52,7 @@ async function updateEvent(req: AuthenticatedRequest, res: NextApiResponse) {
     res.json(event);
   } catch (error) {
     console.error('Update program event error:', error);
-    if (error.code === 'P2025') {
+    if ((error as any).code === 'P2025') {
       return res.status(404).json({ error: 'Event not found' });
     }
     res.status(500).json({ error: 'Internal server error' });
@@ -70,7 +70,7 @@ async function deleteEvent(req: AuthenticatedRequest, res: NextApiResponse) {
     res.json({ message: 'Program event deleted successfully' });
   } catch (error) {
     console.error('Delete program event error:', error);
-    if (error.code === 'P2025') {
+    if ((error as any).code === 'P2025') {
       return res.status(404).json({ error: 'Event not found' });
     }
     res.status(500).json({ error: 'Internal server error' });

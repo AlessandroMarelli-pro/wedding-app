@@ -23,7 +23,10 @@ export function withAuth(
       return res.status(401).json({ error: 'Invalid token' });
     }
 
-    (req as AuthenticatedRequest).admin = payload;
+    (req as AuthenticatedRequest).admin = {
+      id: payload.adminId,
+      email: payload.email,
+    };
     return handler(req as AuthenticatedRequest, res);
   };
 }

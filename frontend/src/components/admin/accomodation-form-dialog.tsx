@@ -129,7 +129,7 @@ export const AccomodationFormDialog = ({
     setIsParsingUrl(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`/api/admin/accommodations/parse-url`, {
+      const response = await fetch(`/api/admin/scrape/accommodation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

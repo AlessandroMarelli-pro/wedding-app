@@ -21,7 +21,7 @@ async function healthCheck(req: NextApiRequest, res: NextApiResponse) {
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
       database: 'disconnected',
-      error: error.message,
+      error: (error as Error).message,
     };
 
     res.status(503).json(health);
