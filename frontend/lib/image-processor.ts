@@ -25,6 +25,11 @@ export class ImageProcessor {
     uploadedBy: string,
     processingOptions?: ImageProcessingOptions,
   ): Promise<any> {
+    // Test if this.uploadDir exists
+    if (!fs.existsSync(this.uploadDir)) {
+      fs.mkdirSync(this.uploadDir, { recursive: true });
+    }
+
     // Generate unique filename
     const filename = generateUniqueFilename(imageData.originalName);
     const filePath = path.join(this.uploadDir, filename);
