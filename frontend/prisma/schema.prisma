@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WeddingInfo {
+  id                  String    @id @default(uuid())
+  coupleNames         String    @db.VarChar(100)
+  presentationMessage String?   @db.Text
+  weddingAddress      String?   @db.VarChar(300)
+  weddingDate         DateTime  @db.Date
+  locationDirections  Json?     // Array of Direction objects
+  heroImageId         String?   @db.VarChar(255)
+  heroMessage         String?   @db.Text
+  heroAddress         String?   @db.VarChar(200)
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  @@map("wedding_info")
+}
+
+model Admin {
+  id           String   @id @default(uuid())
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relationships
+  csvUploads     CSVUpload[]
+  uploadedImages UploadedImage[]
+
+  @@map("admins")
+}
+
+model CSVUpload {
+  id            String      @id @default(uuid())
+  filename      String      @db.VarChar(200)
+  totalRows     Int         @default(0) @map("total_rows")
+  processedRows Int         @default(0) @map("processed_rows")
+  errorRows     Int         @default(0) @map("error_rows")
+  status        UploadStatus @default(PENDING)
+  errorLog      String?     @db.Text @map("error_log")
+  uploadedBy    String      @map("uploaded_by")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  // Relationships
+  uploadedByAdmin Admin    @relation(fields: [uploadedBy], references: [id])
+  guests          Guest[]
+
+  @@map("csv_uploads")
+}
+
+model Guest {
+  id                   String    @id @default(uuid())
+  firstName            String    @map("first_name") @db.VarChar(50)
+  lastName             String    @map("last_name") @db.VarChar(50)
+  email                String?   @db.VarChar(255)
+  hashCode             String    @unique @map("hash_code") @db.VarChar(8)
+  phoneNumber          String?   @map("phone_number") @db.VarChar(20)
+  partySize            Int       @default(1) @map("party_size")
+  dietaryRestrictions  String?   @db.Text @map("dietary_restrictions")
+  specialRequests      String?   @db.Text @map("special_requests")
+  csvUploadId          String    @map("csv_upload_id")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  // Relationships
+  csvUpload        CSVUpload        @relation(fields: [csvUploadId], references: [id])
+  rsvpConfirmation RSVPConfirmation?
+
+  @@map("guests")
+}
+
+model RSVPConfirmation {
+  id                  String   @id @default(uuid())
+  guestId             String   @unique @map("guest_id")
+  confirmedAt         DateTime @map("confirmed_at") @db.Date
+  ipAddress           String   @map("ip_address") @db.VarChar(45)
+  userAgent           String?  @db.Text @map("user_agent")
+  isAttending         Boolean  @map("is_attending")
+  confirmedPartySize  Int      @map("confirmed_party_size")
+  message             String?  @db.Text
+
+  // Relationships
+  guest Guest @relation(fields: [guestId], references: [id])
+
+  @@map("rsvp_confirmations")
+}
+
+model Accommodation {
+  id            String    @id @default(uuid())
+  name          String    @db.VarChar(100)
+  description   String    @db.Text
+  address       String    @db.VarChar(300)
+  contactInfo   String?   @map("contact_info") @db.VarChar(200)
+  latitude      Decimal?  @db.Decimal(10, 8)
+  longitude     Decimal?  @db.Decimal(11, 8)
+  priceRange    String?   @map("price_range") @db.VarChar(50)
+  isRecommended Boolean   @default(false) @map("is_recommended")
+  displayOrder  Int       @unique @map("display_order")
+  sourceUrl     String?   @db.Text @map("source_url")
+  imagesUrl     String?   @db.Text @map("images_url")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("accommodations")
+}
+
+model ProgramEvent {
+  id                String   @id @default(uuid())
+  title             String   @db.VarChar(100)
+  description       String   @db.Text
+  startTime         DateTime @map("start_time") @db.Date
+  endTime           DateTime @map("end_time") @db.Date
+  location          String   @db.VarChar(200)
+  displayOrder      Int      @unique @map("display_order")
+  includeInCalendar Boolean  @default(true) @map("include_in_calendar")
+  icon              String?  @db.VarChar(50)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("program_events")
+}
+
+model UploadedImage {
+  id             String   @id @default(uuid())
+  originalName   String   @map("original_name") @db.VarChar(200)
+  filename       String   @unique @db.VarChar(200)
+  mimeType       String   @map("mime_type") @db.VarChar(50)
+  size           Int
+  width          Int
+  height         Int
+  altText        String?  @map("alt_text") @db.VarChar(200)
+  usageLocation  String   @map("usage_location") @db.VarChar(100)
+  uploadedBy     String   @map("uploaded_by")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relationships
+  uploadedByAdmin Admin @relation(fields: [uploadedBy], references: [id])
+
+  @@map("uploaded_images")
+}
+
+enum UploadStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}

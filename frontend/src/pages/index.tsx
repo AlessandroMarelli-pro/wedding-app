@@ -206,6 +206,15 @@ export default function HomePage({
     // Ensure we're at the top of the page
     window.scrollTo(0, 0);
 
+    const scrollToSection = (
+      sectionId: string,
+      behavior: 'smooth' | 'instant' = 'smooth',
+    ) => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior });
+      }
+    };
     // Progress bar animation
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
@@ -229,16 +238,6 @@ export default function HomePage({
   if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
-
-  const scrollToSection = (
-    sectionId: string,
-    behavior: 'smooth' | 'instant' = 'smooth',
-  ) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const getDirectionName = (directionType: string) => {
     return directionType === 'car'
