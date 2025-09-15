@@ -4,6 +4,7 @@ export {
 } from './accommodation.controller';
 export { AdminController } from './admin.controller';
 export { AuthController } from './auth.controller';
+export { HealthController } from './health.controller';
 export { ImageController } from './image.controller';
 export {
   AdminProgramController,

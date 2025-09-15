@@ -149,10 +149,10 @@ const BonusSection = () => {
           height="50%"
           src="https://www.youtube.com/embed/Xud6KnnQJec?si=d2TUR0h-j21-a6CN"
           title="YouTube video player"
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
         ></iframe>
       </div>
     </Section>
@@ -163,7 +163,7 @@ const MissingDataSection = () => {
   return (
     <>
       <Head>
-        <title>Wedding Information Coming Soon</title>
+        <title>Mariage d'Ariane & Timothe</title>
         <meta
           name="description"
           content="Please check back later for details about our special day"
@@ -175,10 +175,10 @@ const MissingDataSection = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-4xl  text-foreground mb-4">
-            Wedding Information Coming Soon
+            Le site est en cours de construction
           </h1>
           <p className="text-muted-foreground">
-            Please check back later for details about our special day.
+            Veuillez vérifier plus tard pour les détails de notre jour spécial.
           </p>
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function HomePage({
 }: HomePageProps) {
   const [currentSection, setCurrentSection] = useState('home');
 
-  if (!weddingInfo) {
+  if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
 

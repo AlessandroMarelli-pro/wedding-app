@@ -267,7 +267,7 @@ export const AccomodationFormDialog = ({
                           <span>
                             Ex: Un logement confortable avec une vue sur la mer
                           </span>
-                          <span>{field.value.length}/2000 caractères</span>
+                          <span>{field.value?.length}/2000 caractères</span>
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

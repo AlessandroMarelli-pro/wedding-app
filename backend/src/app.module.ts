@@ -31,6 +31,7 @@ import {
   ProgramService,
   PythonScraperService,
   RSVPService,
+  SeedService,
   UploadMaintenanceService,
   UrlParserService,
   WeddingService,
@@ -45,6 +46,7 @@ import {
   AdminRSVPController,
   AdminWeddingController,
   AuthController,
+  HealthController,
   ImageController,
   ProgramController,
   RSVPController,
@@ -83,6 +85,7 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
   ],
   controllers: [
     AuthController,
+    HealthController,
     WeddingController,
     AdminWeddingController,
     AccommodationController,
@@ -108,6 +111,7 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
     UploadMaintenanceService,
     UrlParserService,
     HttpExceptionFilter,
+    SeedService,
   ],
 })
 export class AppModule {}

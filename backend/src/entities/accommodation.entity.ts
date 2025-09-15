@@ -14,7 +14,7 @@ export class Accommodation {
   @Column({ length: 100 })
   name!: string;
 
-  @Column({ type: 'text', length: 500 })
+  @Column({ type: 'text' })
   description!: string;
 
   @Column({ length: 300 })

@@ -21,12 +21,12 @@ export interface UploadedImage {
 export interface WeddingInfo {
   id: string;
   coupleNames: string;
-  presentationMessage: string;
-  weddingAddress: string;
-  weddingDate: string;
-  heroMessage: string;
-  heroAddress: string;
-  locationDirections: Direction[];
+  presentationMessage?: string;
+  weddingAddress?: string;
+  weddingDate: Date;
+  heroMessage?: string;
+  heroAddress?: string;
+  locationDirections?: Direction[];
   heroImageId?: string;
   createdAt: string;
   updatedAt: string;

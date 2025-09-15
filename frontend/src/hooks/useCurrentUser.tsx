@@ -1,5 +1,6 @@
 import { ApiService } from '@/services/api';
 import { CurrentUser } from '@/types/api';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 interface UseCurrentUserReturn {
@@ -28,9 +29,33 @@ export function useCurrentUser(): UseCurrentUserReturn {
     }
   };
 
+  // Redirect to login page if not connected
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !currentUser) {
+      // Only redirect if not already on the login page
+      if (router.pathname !== '/admin/login') {
+        router.replace('/admin/login');
+      }
+    }
+    // We want to run this effect when loading or currentUser changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, currentUser]);
+
   useEffect(() => {
     fetchCurrentUser();
   }, []);
+
+  if (loading) {
+    return {
+      currentUser: null,
+      loading: true,
+      error: null,
+      refetch: fetchCurrentUser,
+    };
+  }
 
   return {
     currentUser,

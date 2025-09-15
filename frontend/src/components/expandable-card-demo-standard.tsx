@@ -75,7 +75,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
               className="w-[90%] lg:w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0]   overflow-x-hidden overflow-y-scroll"
             >
               <div className="flex justify-center items-center [&>*:nth-child(even)]:hidden lg:[&>*:nth-child(even)]:block">
-                {active.imagesUrl?.map((image, idx) => (
+                {active.imagesUrl?.map((image: string, idx: number) => (
                   <motion.div
                     layoutId={`image-${image}-${id}`}
                     key={'images' + idx}
@@ -150,7 +150,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
       </AnimatePresence>
 
       {/* THE GRID OF CARDS */}
-      <div className="mx-auto w-full gap-4 grid grid-cols-2  ">
+      <div className="mx-auto w-full gap-4 grid grid-cols-2  lg:max-h-[80vh] overflow-y-scroll">
         {cards.map((card, index) => (
           <motion.div
             layoutId={`card-${card.title}-${id}`}

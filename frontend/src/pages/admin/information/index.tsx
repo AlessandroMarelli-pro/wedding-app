@@ -31,23 +31,25 @@ import { z } from 'zod';
 import { Direction } from '../../../types/api';
 
 export const formSchema = z.object({
-  id: z.string().min(2).max(300),
+  id: z.string().min(2).max(300).optional(),
   coupleNames: z.string().min(2).max(50),
   presentationMessage: z.string().min(2).max(2000),
   weddingAddress: z.string().min(2).max(300),
   weddingDate: z.date(),
   heroMessage: z.string().min(2).max(500),
   heroAddress: z.string().min(2).max(200),
-  locationDirections: z.array(
-    z.object({
-      type: z.enum(['car', 'train', 'car rental']),
-      information: z.string().min(2).max(300),
-      location: z.object({
-        address: z.string().min(2).max(300),
-        link: z.string().min(2).max(300).optional(),
+  locationDirections: z
+    .array(
+      z.object({
+        type: z.enum(['car', 'train', 'car rental']),
+        information: z.string().min(2).max(300),
+        location: z.object({
+          address: z.string().min(2).max(300),
+          link: z.string().min(2).max(300).optional(),
+        }),
       }),
-    }),
-  ),
+    )
+    .optional(),
 });
 
 export interface WeddingInfo {
@@ -77,19 +79,20 @@ export default function AdminWedding() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: '',
+      id: undefined,
       coupleNames: '',
       presentationMessage: '',
       weddingAddress: '',
       weddingDate: new Date(),
-      heroMessage:
-        'Nous avons le plaisir de vous inviter à notre mariage le 13 Juillet 2026',
-      heroAddress: 'Lauziers, Condillac',
-      locationDirections: [
-        { type: 'car', information: '', location: { address: '', link: '' } },
-      ],
+      heroMessage: '',
+      heroAddress: '',
+      locationDirections: [],
     },
   });
+
+  useEffect(() => {
+    console.log('form errors', form.formState.errors);
+  }, [form.formState.errors]);
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const token = localStorage.getItem('adminToken');
@@ -111,6 +114,7 @@ export default function AdminWedding() {
       );
 
       if (response.ok) {
+        console.log('response', response);
         // Update original data to reflect saved state
 
         form.reset(values);
@@ -367,7 +371,7 @@ export default function AdminWedding() {
                         <FormLabel>Message d'invitation</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Message d'invitation affiché sur la page d'accueil"
+                            placeholder="Nous avons le plaisir de vous inviter à notre mariage le 13 Juillet 2026"
                             {...field}
                           />
                         </FormControl>
@@ -385,13 +389,10 @@ export default function AdminWedding() {
                       <FormItem className="w-full">
                         <FormLabel>Adresse du lieu (page d'accueil)</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="e.g., Lauziers, Condillac"
-                            {...field}
-                          />
+                          <Input placeholder="Lauziers, Condillac" {...field} />
                         </FormControl>
                         <FormDescription>
-                          Cette adresse sera affichée sur la page d'accueil.
+                          Ce message sera affiché sur la page d'accueil.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -416,7 +417,7 @@ export default function AdminWedding() {
                           <span>
                             Ce message sera affiché après la page d'accueil.
                           </span>
-                          <span>{field.value.length}/2000 caractères</span>
+                          <span>{field.value?.length}/2000 caractères</span>
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

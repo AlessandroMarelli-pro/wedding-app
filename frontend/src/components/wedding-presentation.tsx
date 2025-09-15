@@ -4,14 +4,10 @@ import { Direction } from '../types/api';
 interface WeddingInfo {
   id: string;
   coupleNames: string;
-  weddingDate: string;
-  weddingAddress: string;
-  presentationMessage: string;
-  locationDirections?: Direction[];
-  ceremonyTime?: string;
-  receptionTime?: string;
-  dressCode?: string;
-  specialInstructions?: string;
+  weddingDate: Date;
+  weddingAddress?: string;
+  presentationMessage?: string;
+  locationDirections: Direction[];
 }
 
 interface WeddingPresentationProps {

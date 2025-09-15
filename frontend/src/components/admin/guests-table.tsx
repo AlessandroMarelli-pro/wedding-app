@@ -85,7 +85,7 @@ const getStatusBadge = (guest: Guest) => {
 
 const columns: (
   handleDeleteGuest: (guestId: string) => void,
-) => ColumnDef<z.infer<typeof schema>>[] = (handleDeleteGuest) => [
+) => ColumnDef<Guest>[] = (handleDeleteGuest) => [
   {
     accessorKey: 'firstName',
     header: 'Utilisateur',

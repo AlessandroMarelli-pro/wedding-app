@@ -2,6 +2,7 @@ import { LoginForm, schema } from '@/components/login-form';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { toast } from 'sonner';
 import z from 'zod';
 
 export default function AdminLogin() {
@@ -31,6 +32,7 @@ export default function AdminLogin() {
       );
 
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
         // Store the token
@@ -38,9 +40,13 @@ export default function AdminLogin() {
 
         // Redirect to dashboard
         router.push('/admin/dashboard');
+      } else {
+        toast.error('La connexion a échoué', {
+          description: data.message,
+        });
       }
-    } catch (error) {
-      console.error('Error logging in:', error);
+    } catch (error: any) {
+      console.log('Error logging in:', error?.data?.message);
     }
   };
 
