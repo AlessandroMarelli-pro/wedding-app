@@ -2,6 +2,7 @@ import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
 import { WeddingInformation } from '@/components/wedding-information';
 import { cn } from '@/lib/utils';
+import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
@@ -194,7 +195,15 @@ export default function HomePage({
 }: HomePageProps) {
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(true);
-
+  const scrollToSection = (
+    sectionId: string,
+    behavior: 'smooth' | 'instant' = 'smooth',
+  ) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior });
+    }
+  };
   // Handle URL anchors on page load and progress bar
   useEffect(() => {
     // Remove any anchor from the URL on page load
@@ -229,16 +238,6 @@ export default function HomePage({
   if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
-
-  const scrollToSection = (
-    sectionId: string,
-    behavior: 'smooth' | 'instant' = 'smooth',
-  ) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const getDirectionName = (directionType: string) => {
     return directionType === 'car'
@@ -327,29 +326,12 @@ export default function HomePage({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    // Fetch wedding information
-    const weddingResponse = await fetch(
-      `${process.env.API_URL || 'http://localhost:3001'}/api/wedding`,
-    );
-
-    const weddingInfo = weddingResponse.ok
-      ? await weddingResponse.json()
-      : null;
+    const weddingInfo = await ApiService.getWeddingInfo();
 
     // Fetch accommodations
-    const accommodationsResponse = await fetch(
-      `${process.env.API_URL || 'http://localhost:3001'}/api/accommodations`,
-    );
-    const accommodations = (
-      accommodationsResponse.ok ? await accommodationsResponse.json() : []
-    ) as Accommodation[];
+    const accommodations = await ApiService.getAccommodations();
 
-    const imagesResponse = await fetch(
-      `${process.env.API_URL || 'http://localhost:3001'}/api/images`,
-    );
-    const images = (
-      imagesResponse.ok ? await imagesResponse.json() : []
-    ) as UploadedImage[];
+    const images = await ApiService.getPublicImages();
 
     return {
       props: {

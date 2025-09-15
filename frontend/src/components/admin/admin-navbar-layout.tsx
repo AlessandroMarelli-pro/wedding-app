@@ -75,12 +75,6 @@ export function NavbarLayout({
     loading: userLoading,
     error: userError,
   } = useCurrentUser();
-  if (userLoading) {
-    return <div>Loading...</div>;
-  }
-  if (userError) {
-    return <div>Error: {userError}</div>;
-  }
 
   return (
     <div

@@ -42,14 +42,20 @@ export function AdminStats({ className }: AdminStatsProps) {
       setLoading(true);
       setError(null);
 
-      const [summary, rsvp, uploads] = await Promise.all([
-        ApiService.getDashboardSummary(),
+      const [analytics, uploads] = await Promise.all([
         ApiService.getRSVPAnalytics(),
         ApiService.getUploadAnalytics(),
       ]);
 
-      setDashboardSummary(summary);
-      setRsvpAnalytics(rsvp);
+      setDashboardSummary({
+        totalGuests: analytics.overview.totalGuests,
+        responseRate: analytics.overview.responseRate,
+        attendanceRate: analytics.overview.attendanceRate,
+        confirmedAttendees: analytics.attendance.confirmedAttendees,
+        recentResponses: analytics.recentActivity.length,
+        pendingInvitations: analytics.overview.totalPending,
+      });
+      setRsvpAnalytics(analytics);
       setUploadAnalytics(uploads);
     } catch (err) {
       console.error('Failed to load analytics:', err);

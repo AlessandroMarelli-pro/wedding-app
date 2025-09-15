@@ -16,5 +16,5 @@ export const formatDateTime = (dateString: string) => {
   });
 };
 export const getOptimizedUrl = (imageId: string): string => {
-  return `/api/images/${imageId}/optimized`;
+  return `/api/images/${imageId}`;
 };

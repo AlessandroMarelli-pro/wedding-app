@@ -1,20 +1,31 @@
 {
-  "framework": "nextjs",
   "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
   "outputDirectory": ".next",
+  "framework": "nextjs",
   "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
+    "src/pages/api/**/*.ts": {
+      "maxDuration": 30
     }
   },
   "env": {
-    "NEXT_PUBLIC_API_URL": "@api_url"
+    "DATABASE_URL": "@database_url",
+    "JWT_SECRET": "@jwt_secret",
+    "JWT_EXPIRES_IN": "@jwt_expires_in",
+    "NODE_ENV": "@node_env",
+    "CORS_ORIGIN": "@cors_origin",
+    "UPLOAD_DEST": "@upload_dest",
+    "MAX_FILE_SIZE": "@max_file_size",
+    "RATE_LIMIT_WINDOW_MS": "@rate_limit_window_ms",
+    "RATE_LIMIT_MAX_REQUESTS": "@rate_limit_max_requests",
+    "DEFAULT_ADMIN_EMAIL": "@default_admin_email",
+    "DEFAULT_ADMIN_PASSWORD": "@default_admin_password",
+    "DEFAULT_COUPLE_NAMES": "@default_couple_names",
+    "DEFAULT_WEDDING_DATE": "@default_wedding_date",
+    "DEFAULT_WEDDING_ADDRESS": "@default_wedding_address"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_API_URL": "@api_url"
+      "PRISMA_GENERATE_DATAPROXY": "true"
     }
   }
 }

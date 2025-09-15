@@ -17,10 +17,11 @@ import {
   WeddingInfo,
 } from '../types/api';
 
+const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 // Create axios instance with default configuration
 const createApiClient = (): AxiosInstance => {
   // Use relative URLs - the Next.js API proxy will handle routing to the backend
-  const baseURL = '/api';
+  const baseURL = `${baseApiUrl}/api`;
   const client = axios.create({
     baseURL,
     timeout: 10000,
@@ -96,6 +97,7 @@ export class ApiService {
 
   // Public Wedding Information
   static async getWeddingInfo(): Promise<WeddingInfo> {
+    console.info(process.env.NEXT_PUBLIC_API_URL);
     const response = await api.get<WeddingInfo>('/wedding');
     return response.data;
   }
@@ -175,7 +177,7 @@ export class ApiService {
 
     // Use the upload proxy for file uploads
     const response = await api.post<CSVUpload>(
-      '/upload/admin/guests/upload',
+      '/admin/guests/uploads',
       formData,
       {
         headers: {
@@ -317,7 +319,7 @@ export class ApiService {
     if (options.format) formData.append('format', options.format);
 
     // Use the upload proxy for file uploads
-    const response = await api.post('/upload/admin/images/upload', formData, {
+    const response = await api.post('/admin/images/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -325,9 +327,20 @@ export class ApiService {
     return response.data;
   }
 
+  static async getPublicImages(usageLocation?: string): Promise<any[]> {
+    const params = usageLocation ? { usageLocation } : {};
+    const response = await api.get('/images', { params });
+    return response.data;
+  }
+
   static async getImages(usageLocation?: string): Promise<any[]> {
     const params = usageLocation ? { usageLocation } : {};
     const response = await api.get('/admin/images', { params });
+    return response.data;
+  }
+
+  static async getPublicImageById(id: string): Promise<any> {
+    const response = await api.get(`/admin/images/${id}`);
     return response.data;
   }
 

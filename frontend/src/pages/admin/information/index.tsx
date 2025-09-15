@@ -174,7 +174,7 @@ export default function AdminWedding() {
 
   const fetchWeddingInfo = async () => {
     try {
-      const response = await fetch(`/api/wedding`);
+      const response = await fetch(`/api/admin/wedding`);
       if (response.ok) {
         const data = await response.json();
         // Ensure locationDirections is an array
