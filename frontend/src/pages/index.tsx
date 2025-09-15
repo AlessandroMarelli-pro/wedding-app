@@ -275,24 +275,26 @@ export default function HomePage({
 
       {/* Progress Bar */}
       {showProgress && (
-        <div className="fixed top-0 left-0 right-0 z-[5000000] min-h-screen w-full bg-[#F38181] flex flex-col items-center justify-center space-y-4">
-          <span className={cn(bilbo.className, 'text-white text-5xl')}>
-            Bienvenue
-          </span>
-          <span className={cn(bilbo.className, 'text-white text-5xl')}>
-            {progress} %
-          </span>
-          <Progress
-            value={progress}
-            className="h-1  w-[50%]"
-            style={
-              {
-                '--progress-background': '#F38181',
-                '--progress-foreground': '#95E1D3',
-              } as React.CSSProperties
-            }
-          />
-        </div>
+        <Section id="progress" background="accent">
+          <div className="fixed top-0  z-[5000000] min-h-screen w-full bg-[#F38181] flex flex-col items-center justify-center space-y-4">
+            <span className={cn(bilbo.className, 'text-white text-5xl')}>
+              Bienvenue
+            </span>
+            <span className={cn(bilbo.className, 'text-white text-5xl')}>
+              {progress} %
+            </span>
+            <Progress
+              value={progress}
+              className="h-1  w-[50%]"
+              style={
+                {
+                  '--progress-background': '#F38181',
+                  '--progress-foreground': '#95E1D3',
+                } as React.CSSProperties
+              }
+            />
+          </div>
+        </Section>
       )}
 
       <NavbarLayout>
