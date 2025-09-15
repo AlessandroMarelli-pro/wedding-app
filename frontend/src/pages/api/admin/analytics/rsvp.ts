@@ -156,13 +156,14 @@ async function getRSVPStats(req: AuthenticatedRequest, res: NextApiResponse) {
       message: confirmation.message,
       timestamp: confirmation.confirmedAt,
     }));
+
     // Count recent responses (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     const recentResponses = recentActivity.filter(
       (activity) => activity.timestamp > sevenDaysAgo,
-    ).length;
+    );
 
     const stats = {
       overview: {
