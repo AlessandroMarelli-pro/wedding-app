@@ -7,7 +7,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { IconUser } from '@tabler/icons-react';
+import ApiService from '@/services/api';
+import { IconLoader2, IconUser } from '@tabler/icons-react';
 import { File, FileText } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -27,7 +28,7 @@ export const GuestsCsvUpload = ({
   fetchData,
   csvUploads,
 }: {
-  fetchData: () => void;
+  fetchData: () => Promise<void>;
   csvUploads: CSVUpload[];
 }) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -51,25 +52,18 @@ export const GuestsCsvUpload = ({
     formData.append('file', selectedFile);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/upload`,
-        {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        },
-      );
+      const data: any = await ApiService.uploadGuestCSV(selectedFile);
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (data) {
         toast.success(`CSV importé avec succès! `, {
           duration: 10000,
         });
 
         setSelectedFile(null);
         setTimeout(() => {
-          fetchData(); // Refresh stats
+          fetchData().then(() => {
+            setIsUploading(false);
+          });
         }, 2000);
       } else {
         setUploadMessage({
@@ -82,8 +76,6 @@ export const GuestsCsvUpload = ({
         type: 'error',
         text: 'Network error. Please try again.',
       });
-    } finally {
-      setIsUploading(false);
     }
   };
 
@@ -150,7 +142,14 @@ export const GuestsCsvUpload = ({
 
       {csvUploads.length > 0 && (
         <div>
-          <h4 className="font-medium mb-2">Derniers dépôts:</h4>
+          <h4 className="font-medium mb-2 flex items-center gap-2">
+            Derniers dépôts:{' '}
+            {isUploading ? (
+              <IconLoader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              ''
+            )}
+          </h4>
           <div className="space-y-2 max-h-[10rem] overflow-y-auto">
             {csvUploads.map((upload) => (
               <div

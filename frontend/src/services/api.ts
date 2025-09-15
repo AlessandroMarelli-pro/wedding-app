@@ -19,8 +19,8 @@ import {
 
 // Create axios instance with default configuration
 const createApiClient = (): AxiosInstance => {
-  const baseURL =
-    (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/api';
+  // Use relative URLs - the Next.js API proxy will handle routing to the backend
+  const baseURL = '/api';
   const client = axios.create({
     baseURL,
     timeout: 10000,
@@ -173,8 +173,9 @@ export class ApiService {
     const formData = new FormData();
     formData.append('file', file);
 
+    // Use the upload proxy for file uploads
     const response = await api.post<CSVUpload>(
-      '/admin/guests/upload',
+      '/upload/admin/guests/upload',
       formData,
       {
         headers: {
@@ -315,7 +316,8 @@ export class ApiService {
     if (options.quality) formData.append('quality', options.quality.toString());
     if (options.format) formData.append('format', options.format);
 
-    const response = await api.post('/admin/images/upload', formData, {
+    // Use the upload proxy for file uploads
+    const response = await api.post('/upload/admin/images/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

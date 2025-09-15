@@ -67,9 +67,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
     setMessage(null);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/rsvp/guest/${hashCode.toUpperCase()}`,
-      );
+      const response = await fetch(`/api/rsvp/guest/${hashCode.toUpperCase()}`);
 
       const data = await response.json();
 
@@ -114,23 +112,20 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
     setMessage(null);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/rsvp`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            hashCode: hashCode.toUpperCase(),
-            isAttending: rsvpData.isAttending,
-            confirmedPartySize: rsvpData.isAttending
-              ? rsvpData.confirmedPartySize
-              : 0,
-            message: rsvpData.message?.trim() || undefined,
-          }),
+      const response = await fetch(`/api/rsvp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({
+          hashCode: hashCode.toUpperCase(),
+          isAttending: rsvpData.isAttending,
+          confirmedPartySize: rsvpData.isAttending
+            ? rsvpData.confirmedPartySize
+            : 0,
+          message: rsvpData.message?.trim() || undefined,
+        }),
+      });
 
       const data = await response.json();
 

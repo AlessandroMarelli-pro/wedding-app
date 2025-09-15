@@ -52,15 +52,12 @@ export const GuestsList = ({
         throw new Error('No admin token found');
       }
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/${guestId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`/api/admin/guests/${guestId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (!response.ok) {
         throw new Error('Failed to delete guest');

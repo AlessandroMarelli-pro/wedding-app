@@ -329,7 +329,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   try {
     // Fetch wedding information
     const weddingResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/wedding`,
+      `${process.env.API_URL || 'http://localhost:3001'}/api/wedding`,
     );
 
     const weddingInfo = weddingResponse.ok
@@ -338,14 +338,14 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     // Fetch accommodations
     const accommodationsResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/accommodations`,
+      `${process.env.API_URL || 'http://localhost:3001'}/api/accommodations`,
     );
     const accommodations = (
       accommodationsResponse.ok ? await accommodationsResponse.json() : []
     ) as Accommodation[];
 
     const imagesResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/images`,
+      `${process.env.API_URL || 'http://localhost:3001'}/api/images`,
     );
     const images = (
       imagesResponse.ok ? await imagesResponse.json() : []

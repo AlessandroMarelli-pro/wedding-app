@@ -20,16 +20,13 @@ export default function AdminLogin() {
 
   const handleSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/login`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values),
+      const response = await fetch(`/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(values),
+      });
 
       const data = await response.json();
       console.log(data);

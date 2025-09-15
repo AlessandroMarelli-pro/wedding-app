@@ -101,17 +101,14 @@ export default function AdminWedding() {
     setMessage(null);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/wedding`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(values),
+      const response = await fetch(`/api/admin/wedding`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify(values),
+      });
 
       if (response.ok) {
         console.log('response', response);
@@ -177,9 +174,7 @@ export default function AdminWedding() {
 
   const fetchWeddingInfo = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/wedding`,
-      );
+      const response = await fetch(`/api/wedding`);
       if (response.ok) {
         const data = await response.json();
         // Ensure locationDirections is an array
