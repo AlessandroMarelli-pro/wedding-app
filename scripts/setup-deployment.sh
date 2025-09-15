@@ -67,6 +67,7 @@ log "🔨 Building applications..."
 # Build backend
 log "Building backend..."
 cd backend
+npm install
 if npm run build; then
     log "✅ Backend built successfully"
 else
@@ -78,6 +79,7 @@ cd ..
 # Build frontend
 log "Building frontend..."
 cd frontend
+npm install
 if npm run build; then
     log "✅ Frontend built successfully"
 else
