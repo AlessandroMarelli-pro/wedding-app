@@ -63,17 +63,18 @@ export const GuestsCsvUpload = ({
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(`CSV uploaded successfully! `, {
+        toast.success(`CSV importé avec succès! `, {
           duration: 10000,
-          description: `Processed ${data.processedRows} guests.`,
         });
 
         setSelectedFile(null);
-        fetchData(); // Refresh stats
+        setTimeout(() => {
+          fetchData(); // Refresh stats
+        }, 2000);
       } else {
         setUploadMessage({
           type: 'error',
-          text: data.message || 'Upload failed. Please try again.',
+          text: data.message || 'Importation échouée. Veuillez réessayer.',
         });
       }
     } catch (error) {
@@ -162,7 +163,7 @@ export const GuestsCsvUpload = ({
                 <div className="flex items-center">
                   <FileText className="w-4 h-4 mr-2" />
                   <span className="text-sm">
-                    <strong>{upload.filename}</strong> importés le{' '}
+                    <strong>{upload.filename}</strong> importé le{' '}
                     {new Date(upload.createdAt).toLocaleDateString('fr-FR', {
                       month: 'short',
                       day: 'numeric',
