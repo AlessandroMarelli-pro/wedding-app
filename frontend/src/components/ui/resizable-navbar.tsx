@@ -1,6 +1,6 @@
 'use client';
 import { IconMenu2, IconX } from '@tabler/icons-react';
-import { AnimatePresence, motion, useScroll } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { cn } from 'src/lib/utils';
 
 import React, { useRef, useState } from 'react';
@@ -22,7 +22,7 @@ interface NavItemsProps {
     link: string;
   }[];
   className?: string;
-  onItemClick?: () => void;
+  onItemClick?: (e: React.MouseEvent<HTMLAnchorElement>, link: string) => void;
 }
 
 interface MobileNavProps {
@@ -45,10 +45,7 @@ interface MobileNavMenuProps {
 
 export const Navbar = ({ children, className }: NavbarProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  });
+
   const [visible, setVisible] = useState<boolean>(false);
 
   return (
@@ -113,7 +110,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => (
         <a
           onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
+          onClick={(e) => onItemClick?.(e, item.link)}
           className="relative px-4 py-2  hover:text-[#95E1D3]"
           key={`link-${idx}`}
           href={item.link}

@@ -6,7 +6,7 @@ import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   NavbarLayout,
   RSVPFormModal,
@@ -193,6 +193,18 @@ export default function HomePage({
 }: HomePageProps) {
   const [currentSection, setCurrentSection] = useState('home');
 
+  // Handle URL anchors on page load
+  useEffect(() => {
+    // Remove any anchor from the URL on page load
+    if (window.location.hash) {
+      // Remove the hash from URL without triggering scroll
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+
+    // Ensure we're at the top of the page
+    window.scrollTo(0, 0);
+  }, []);
+
   if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
@@ -238,10 +250,7 @@ export default function HomePage({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NavbarLayout
-        currentSection={currentSection}
-        onSectionChange={scrollToSection}
-      >
+      <NavbarLayout>
         <div className="min-h-screen bg-white">
           <HeroSection
             heroImage={heroImage as UploadedImage}

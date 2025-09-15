@@ -1,14 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Direction } from '../types/api';
-
-interface WeddingInfo {
-  id: string;
-  coupleNames: string;
-  weddingDate: Date;
-  weddingAddress?: string;
-  presentationMessage?: string;
-  locationDirections: Direction[];
-}
+import { WeddingInfo } from '../types/api';
 
 interface WeddingPresentationProps {
   weddingInfo: WeddingInfo;
