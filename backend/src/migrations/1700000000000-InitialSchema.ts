@@ -21,10 +21,13 @@ export class InitialSchema1700000000000 implements MigrationInterface {
       CREATE TABLE "wedding_info" (
         "id" varchar PRIMARY KEY NOT NULL,
         "couple_names" varchar(100) NOT NULL,
-        "presentation_message" text NOT NULL,
-        "wedding_address" varchar(300) NOT NULL,
-        "wedding_date" datetime NOT NULL,
-        "location_directions" text NOT NULL,
+        "presentation_message" text,
+        "wedding_address" varchar(300),
+        "wedding_date" date NOT NULL,
+        "location_directions" json,
+        "hero_image_id" varchar,
+        "hero_message" text,
+        "hero_address" varchar(200),
         "created_at" datetime NOT NULL DEFAULT (datetime('now')),
         "updated_at" datetime NOT NULL DEFAULT (datetime('now'))
       )
@@ -43,6 +46,8 @@ export class InitialSchema1700000000000 implements MigrationInterface {
         "price_range" varchar(50),
         "is_recommended" boolean NOT NULL DEFAULT (0),
         "display_order" integer NOT NULL,
+        "source_url" text,
+        "images_url" text,
         "created_at" datetime NOT NULL DEFAULT (datetime('now')),
         "updated_at" datetime NOT NULL DEFAULT (datetime('now')),
         CONSTRAINT "UQ_accommodations_display_order" UNIQUE ("display_order")
@@ -74,6 +79,10 @@ export class InitialSchema1700000000000 implements MigrationInterface {
         "last_name" varchar(50) NOT NULL,
         "email" varchar(255),
         "hash_code" varchar(8) NOT NULL,
+        "phone_number" varchar(20),
+        "party_size" integer NOT NULL DEFAULT (1),
+        "dietary_restrictions" text,
+        "special_requests" text,
         "csv_upload_id" varchar NOT NULL,
         "created_at" datetime NOT NULL DEFAULT (datetime('now')),
         "updated_at" datetime NOT NULL DEFAULT (datetime('now')),
@@ -86,13 +95,33 @@ export class InitialSchema1700000000000 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "rsvp_confirmations" (
         "id" varchar PRIMARY KEY NOT NULL,
-        "hash_code" varchar(8) NOT NULL,
         "guest_id" varchar NOT NULL,
-        "confirmed_at" datetime NOT NULL,
+        "confirmed_at" date NOT NULL,
         "ip_address" varchar(45) NOT NULL,
         "user_agent" text,
-        CONSTRAINT "UQ_rsvp_confirmations_hash_code" UNIQUE ("hash_code"),
+        "is_attending" boolean NOT NULL,
+        "confirmed_party_size" integer NOT NULL,
+        "message" text,
+        CONSTRAINT "UQ_rsvp_confirmations_guest_id" UNIQUE ("guest_id"),
         CONSTRAINT "FK_rsvp_confirmations_guest_id" FOREIGN KEY ("guest_id") REFERENCES "guests" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+      )
+    `);
+
+    // Create program_events table
+    await queryRunner.query(`
+      CREATE TABLE "program_events" (
+        "id" varchar PRIMARY KEY NOT NULL,
+        "title" varchar(100) NOT NULL,
+        "description" text NOT NULL,
+        "start_time" date NOT NULL,
+        "end_time" date NOT NULL,
+        "location" varchar(200) NOT NULL,
+        "display_order" integer NOT NULL,
+        "include_in_calendar" boolean NOT NULL DEFAULT (1),
+        "icon" varchar(50),
+        "created_at" datetime NOT NULL DEFAULT (datetime('now')),
+        "updated_at" datetime NOT NULL DEFAULT (datetime('now')),
+        CONSTRAINT "UQ_program_events_display_order" UNIQUE ("display_order")
       )
     `);
 
@@ -129,10 +158,14 @@ export class InitialSchema1700000000000 implements MigrationInterface {
     await queryRunner.query(
       `CREATE INDEX "IDX_accommodations_is_recommended_display_order" ON "accommodations" ("is_recommended", "display_order")`,
     );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_program_events_display_order" ON "program_events" ("display_order")`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Drop indexes
+    await queryRunner.query(`DROP INDEX "IDX_program_events_display_order"`);
     await queryRunner.query(
       `DROP INDEX "IDX_accommodations_is_recommended_display_order"`,
     );
@@ -142,6 +175,7 @@ export class InitialSchema1700000000000 implements MigrationInterface {
 
     // Drop tables in reverse order
     await queryRunner.query(`DROP TABLE "uploaded_images"`);
+    await queryRunner.query(`DROP TABLE "program_events"`);
     await queryRunner.query(`DROP TABLE "rsvp_confirmations"`);
     await queryRunner.query(`DROP TABLE "guests"`);
     await queryRunner.query(`DROP TABLE "csv_uploads"`);

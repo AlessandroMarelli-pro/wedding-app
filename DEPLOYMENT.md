@@ -54,6 +54,7 @@ The database configuration has been updated to support both SQLite (development)
 1. In your Railway project, click "New"
 2. Select "Database" → "PostgreSQL"
 3. Railway will automatically provide the `DATABASE_URL` environment variable
+4. Create db if needed : createdb -U postgres wedding_db
 
 ### Step 3: Configure Environment Variables
 
@@ -141,6 +142,7 @@ If you have existing SQLite data to migrate:
 
    ```bash
    cd backend
+   npm run migration:generate -n src/migrations/1700000000000-InitialSchema.ts
    npm run migration:run
    ```
 
