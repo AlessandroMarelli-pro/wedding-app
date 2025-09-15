@@ -16,7 +16,8 @@
     "seed": "node scripts/seed-database.js",
     "seed:reset": "node scripts/seed-database.js --reset",
     "test:scraper": "node scripts/test-scraper.js",
-    "test:uploads": "node scripts/test-uploads.js"
+    "test:uploads": "node scripts/test-uploads.js",
+    "test:maintenance": "node scripts/test-maintenance.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

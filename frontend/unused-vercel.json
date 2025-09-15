@@ -1,0 +1,27 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/hourly-cleanup",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/daily-cleanup",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-report",
+      "schedule": "0 3 * * 0"
+    }
+  ],
+  "functions": {
+    "src/pages/api/cron/hourly-cleanup.ts": {
+      "maxDuration": 60
+    },
+    "src/pages/api/cron/daily-cleanup.ts": {
+      "maxDuration": 120
+    },
+    "src/pages/api/cron/weekly-report.ts": {
+      "maxDuration": 60
+    }
+  }
+}
