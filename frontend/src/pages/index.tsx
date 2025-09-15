@@ -2,6 +2,7 @@ import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
 import { WeddingInformation } from '@/components/wedding-information';
 import { cn } from '@/lib/utils';
+import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
@@ -325,23 +326,12 @@ export default function HomePage({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    // Fetch wedding information
-    const weddingResponse = await fetch(`/api/wedding`);
-
-    const weddingInfo = weddingResponse.ok
-      ? await weddingResponse.json()
-      : null;
+    const weddingInfo = await ApiService.getWeddingInfo();
 
     // Fetch accommodations
-    const accommodationsResponse = await fetch(`/api/accommodations`);
-    const accommodations = (
-      accommodationsResponse.ok ? await accommodationsResponse.json() : []
-    ) as Accommodation[];
+    const accommodations = await ApiService.getAccommodations();
 
-    const imagesResponse = await fetch(`/api/images`);
-    const images = (
-      imagesResponse.ok ? await imagesResponse.json() : []
-    ) as UploadedImage[];
+    const images = await ApiService.getPublicImages();
 
     return {
       props: {

@@ -56,9 +56,9 @@ if [ ! -f "backend/.env" ]; then
     info "Copy backend/env.template to backend/.env and configure your settings"
 fi
 
-if [ ! -f "frontend/.env.local" ]; then
-    warn "frontend/.env.local not found. Please create it from frontend/env.template"
-    info "Copy frontend/env.template to frontend/.env.local and configure your settings"
+if [ ! -f "frontend/.env" ]; then
+    warn "frontend/.env not found. Please create it from frontend/env.template"
+    info "Copy frontend/env.template to frontend/.env and configure your settings"
 fi
 
 # Phase 3: Build applications
@@ -142,7 +142,7 @@ info "✅ Database configuration updated"
 echo ""
 warn "⚠️  Next steps:"
 echo "   1. Create backend/.env from backend/env.template"
-echo "   2. Create frontend/.env.local from frontend/env.template"
+echo "   2. Create frontend/.env from frontend/env.template"
 echo "   3. Configure your Google Maps API key"
 echo "   4. Follow DEPLOYMENT.md for platform-specific setup"
 echo ""
