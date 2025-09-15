@@ -195,7 +195,7 @@ export const GuestsCsvUploadDialog = ({
   fetchData,
   csvUploads,
 }: {
-  fetchData: () => void;
+  fetchData: () => Promise<void>;
   csvUploads: CSVUpload[];
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
