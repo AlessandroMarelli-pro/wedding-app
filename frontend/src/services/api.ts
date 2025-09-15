@@ -17,7 +17,7 @@ import {
   WeddingInfo,
 } from '../types/api';
 
-const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const baseApiUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 // Create axios instance with default configuration
 const createApiClient = (): AxiosInstance => {
   // Use relative URLs - the Next.js API proxy will handle routing to the backend
@@ -97,7 +97,6 @@ export class ApiService {
 
   // Public Wedding Information
   static async getWeddingInfo(): Promise<WeddingInfo> {
-    console.info(process.env.NEXT_PUBLIC_API_URL);
     const response = await api.get<WeddingInfo>('/wedding');
     return response.data;
   }

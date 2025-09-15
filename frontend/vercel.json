@@ -8,20 +8,17 @@
     }
   },
   "env": {
-    "DATABASE_URL": "@database_url",
-    "JWT_SECRET": "@jwt_secret",
-    "JWT_EXPIRES_IN": "@jwt_expires_in",
-    "NODE_ENV": "@node_env",
-    "CORS_ORIGIN": "@cors_origin",
-    "UPLOAD_DEST": "@upload_dest",
-    "MAX_FILE_SIZE": "@max_file_size",
-    "RATE_LIMIT_WINDOW_MS": "@rate_limit_window_ms",
-    "RATE_LIMIT_MAX_REQUESTS": "@rate_limit_max_requests",
-    "DEFAULT_ADMIN_EMAIL": "@default_admin_email",
-    "DEFAULT_ADMIN_PASSWORD": "@default_admin_password",
-    "DEFAULT_COUPLE_NAMES": "@default_couple_names",
-    "DEFAULT_WEDDING_DATE": "@default_wedding_date",
-    "DEFAULT_WEDDING_ADDRESS": "@default_wedding_address"
+    "DATABASE_URL": "@DATABASE_URL",
+    "JWT_SECRET": "@JWT_SECRET",
+    "JWT_EXPIRES_IN": "@JWT_EXPIRES_IN",
+    "NODE_ENV": "@NODE_ENV",
+    "CORS_ORIGIN": "@CORS_ORIGIN",
+    "UPLOAD_DIR": "@UPLOAD_DIR",
+    "DEFAULT_ADMIN_EMAIL": "@DEFAULT_ADMIN_EMAIL",
+    "DEFAULT_ADMIN_PASSWORD": "@DEFAULT_ADMIN_PASSWORD",
+    "DEFAULT_COUPLE_NAMES": "@DEFAULT_COUPLE_NAMES",
+    "DEFAULT_WEDDING_DATE": "@DEFAULT_WEDDING_DATE",
+    "DEFAULT_WEDDING_ADDRESS": "@DEFAULT_WEDDING_ADDRESSs"
   },
   "build": {
     "env": {
