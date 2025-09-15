@@ -19,6 +19,7 @@
     "test:scraper": "node scripts/test-scraper.js",
     "test:uploads": "node scripts/test-uploads.js",
     "test:maintenance": "node scripts/test-maintenance.js",
+    "test:puppeteer": "tsx scripts/test-puppeteer-vercel.ts",
     "deploy": "node scripts/deploy-to-vercel.js",
     "deploy:setup": "vercel login && vercel link",
     "db:push": "prisma db push",

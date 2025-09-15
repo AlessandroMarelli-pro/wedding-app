@@ -1,4 +1,5 @@
-import puppeteer, { Browser, Page } from 'puppeteer';
+import { Browser, Page } from 'puppeteer-core';
+import { launchPuppeteerBrowser } from '../puppeteer-config';
 
 export interface ParsedAccommodationData {
   name: string;
@@ -86,19 +87,7 @@ export class AccommodationScraper {
     let page: Page | null = null;
 
     try {
-      this.browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--disable-gpu',
-          '--disable-blink-features=AutomationControlled',
-        ],
-      });
+      this.browser = await launchPuppeteerBrowser();
 
       page = await this.browser.newPage();
 
@@ -207,19 +196,7 @@ export class AccommodationScraper {
     let page: Page | null = null;
 
     try {
-      this.browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--disable-gpu',
-          '--disable-blink-features=AutomationControlled',
-        ],
-      });
+      this.browser = await launchPuppeteerBrowser();
 
       page = await this.browser.newPage();
 

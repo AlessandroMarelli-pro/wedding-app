@@ -7,10 +7,13 @@
       "maxDuration": 30
     }
   },
-
   "build": {
     "env": {
       "PRISMA_GENERATE_DATAPROXY": "true"
     }
+  },
+  "env": {
+    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
+    "PUPPETEER_EXECUTABLE_PATH": "/opt/chrome/chrome"
   }
 }
