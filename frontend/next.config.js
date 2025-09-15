@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    POSTGRES_URL: process.env.POSTGRES_URL,
   },
   images: {
     domains: [
@@ -20,9 +21,6 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   devIndicators: false,
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
 };
 
 module.exports = nextConfig;
