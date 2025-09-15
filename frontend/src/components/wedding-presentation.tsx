@@ -75,9 +75,7 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
   if (!timeLeft) {
     return (
       <div className={cn('text-center', className)}>
-        <p className="text-2xl  text-foreground text-white">
-          The big day is here! 🎉
-        </p>
+        <p className="text-2xl   text-white">The big day is here! 🎉</p>
       </div>
     );
   }

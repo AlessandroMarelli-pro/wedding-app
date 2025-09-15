@@ -14,6 +14,7 @@ import {
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
+import { Progress } from '../components/ui/progress';
 import { Accommodation, UploadedImage, WeddingInfo } from '../types/api';
 
 const bilbo = Parisienne({
@@ -191,9 +192,10 @@ export default function HomePage({
   accommodations,
   images,
 }: HomePageProps) {
-  const [currentSection, setCurrentSection] = useState('home');
+  const [progress, setProgress] = useState(0);
+  const [showProgress, setShowProgress] = useState(true);
 
-  // Handle URL anchors on page load
+  // Handle URL anchors on page load and progress bar
   useEffect(() => {
     // Remove any anchor from the URL on page load
     if (window.location.hash) {
@@ -203,14 +205,35 @@ export default function HomePage({
 
     // Ensure we're at the top of the page
     window.scrollTo(0, 0);
+
+    // Progress bar animation
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          scrollToSection('home', 'instant');
+
+          // Hide progress bar after completion
+          setTimeout(() => {
+            setShowProgress(false);
+          }, 100);
+          return 100;
+        }
+        return prev + 2;
+      });
+    }, 10);
+
+    return () => clearInterval(progressInterval);
   }, []);
 
   if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
 
-  const scrollToSection = (sectionId: string) => {
-    setCurrentSection(sectionId);
+  const scrollToSection = (
+    sectionId: string,
+    behavior: 'smooth' | 'instant' = 'smooth',
+  ) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -249,6 +272,28 @@ export default function HomePage({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {/* Progress Bar */}
+      {showProgress && (
+        <div className="fixed top-0 left-0 right-0 z-[5000000] min-h-screen w-full bg-[#F38181] flex flex-col items-center justify-center space-y-4">
+          <span className={cn(bilbo.className, 'text-white text-5xl')}>
+            Bienvenue
+          </span>
+          <span className={cn(bilbo.className, 'text-white text-5xl')}>
+            {progress} %
+          </span>
+          <Progress
+            value={progress}
+            className="h-1  w-[50%]"
+            style={
+              {
+                '--progress-background': '#F38181',
+                '--progress-foreground': '#95E1D3',
+              } as React.CSSProperties
+            }
+          />
+        </div>
+      )}
 
       <NavbarLayout>
         <div className="min-h-screen bg-white">
