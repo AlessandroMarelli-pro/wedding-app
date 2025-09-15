@@ -126,7 +126,8 @@ export function validateFile(
   }
 
   // Check MIME type
-  if (!config.mimeTypes.includes(mimeType)) {
+  const mimeTypeArray = config.mimeTypes as readonly string[];
+  if (!mimeTypeArray.includes(mimeType)) {
     return {
       isValid: false,
       error: `Invalid file type. Allowed: ${config.mimeTypes.join(', ')}`,
@@ -135,7 +136,8 @@ export function validateFile(
 
   // Check file extension
   const ext = path.extname(filename).toLowerCase();
-  if (!config.extensions.includes(ext)) {
+  const extArray = config.extensions as readonly string[];
+  if (!extArray.includes(ext)) {
     return {
       isValid: false,
       error: `Invalid file extension. Allowed: ${config.extensions.join(', ')}`,
