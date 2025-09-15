@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -17,7 +17,13 @@
     "seed:reset": "node scripts/seed-database.js --reset",
     "test:scraper": "node scripts/test-scraper.js",
     "test:uploads": "node scripts/test-uploads.js",
-    "test:maintenance": "node scripts/test-maintenance.js"
+    "test:maintenance": "node scripts/test-maintenance.js",
+    "deploy": "node scripts/deploy-to-vercel.js",
+    "deploy:setup": "vercel login && vercel link",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -79,7 +85,6 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
-    "@types/google.maps": "^3.58.1",
     "@types/multer": "^2.0.0",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.1",
