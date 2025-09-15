@@ -20,7 +20,9 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  devIndicators: false,
+  devIndicators: false, // The `serverExternalPackages` option allows you to opt-out of bundling dependencies in your Server Components.
+
+  serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
 };
 
 module.exports = nextConfig;

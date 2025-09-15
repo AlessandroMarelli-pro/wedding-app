@@ -1,5 +1,5 @@
 require('dotenv').config({ path: './.env' });
-const { SeedService } = require('../lib/seed');
+import { SeedService } from '../lib/seed';
 
 async function seedDatabase() {
   try {
