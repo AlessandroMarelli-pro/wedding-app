@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const {
@@ -39,7 +40,7 @@ async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.status(201).json(event);
   } catch (error) {
-    console.error('Create program event error:', error);
+    logger.error('Create program event error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -52,7 +53,7 @@ async function getAllEvents(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(events);
   } catch (error) {
-    console.error('Get program events error:', error);
+    logger.error('Get program events error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

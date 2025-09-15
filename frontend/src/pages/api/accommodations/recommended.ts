@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prisma';
 
@@ -13,7 +14,7 @@ async function getRecommendedAccommodations(
 
     res.json(accommodations);
   } catch (error) {
-    console.error('Get recommended accommodations error:', error);
+    logger.error('Get recommended accommodations error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

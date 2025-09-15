@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ImageProcessor } from '../../../../../lib/image-processor';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 
+import { logger } from '@/logger';
 async function getImageById(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
@@ -15,7 +16,7 @@ async function getImageById(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(image);
   } catch (error: any) {
-    console.error('Get image error:', error);
+    logger.error('Get image error:', error as Error);
     if (error.message === 'Image not found') {
       return res.status(404).json({ error: 'Image not found' });
     }
@@ -36,7 +37,7 @@ async function deleteImage(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json({ message: 'Image deleted successfully' });
   } catch (error: any) {
-    console.error('Delete image error:', error);
+    logger.error('Delete image error:', error as Error);
     if (error.message === 'Image not found') {
       return res.status(404).json({ error: 'Image not found' });
     }

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getImages(req: NextApiRequest, res: NextApiResponse) {
   try {
     const images = await prisma.uploadedImage.findMany({
@@ -9,7 +10,7 @@ async function getImages(req: NextApiRequest, res: NextApiResponse) {
 
     res.json(images);
   } catch (error) {
-    console.error('Get images error:', error);
+    logger.error('Get images error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

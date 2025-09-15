@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getAllEvents(req: NextApiRequest, res: NextApiResponse) {
   try {
     const events = await prisma.programEvent.findMany({
@@ -9,7 +10,7 @@ async function getAllEvents(req: NextApiRequest, res: NextApiResponse) {
 
     res.json(events);
   } catch (error) {
-    console.error('Get program events error:', error);
+    logger.error('Get program events error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

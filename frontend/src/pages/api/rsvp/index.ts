@@ -1,17 +1,17 @@
+import { logger } from '@/logger';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prisma';
 
 async function confirmRSVP(req: NextApiRequest, res: NextApiResponse) {
+  const {
+    hashCode,
+    isAttending,
+    confirmedPartySize,
+    dietaryRestrictions,
+    specialRequests,
+    message,
+  } = req.body;
   try {
-    const {
-      hashCode,
-      isAttending,
-      confirmedPartySize,
-      dietaryRestrictions,
-      specialRequests,
-      message,
-    } = req.body;
-
     if (!hashCode) {
       return res.status(400).json({ error: 'Hash code is required' });
     }
@@ -51,21 +51,27 @@ async function confirmRSVP(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
+    logger.info('RSVP confirmed', {
+      guestId: guest.id,
+      hashCode,
+      isAttending,
+      confirmedPartySize,
+    });
+
     res.json({
       success: true,
       message: 'RSVP confirmed successfully',
       confirmation: rsvpConfirmation,
     });
   } catch (error) {
-    console.error('Confirm RSVP error:', error);
+    logger.error('Confirm RSVP error', { hashCode }, error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
 
 async function checkConfirmation(req: NextApiRequest, res: NextApiResponse) {
+  const { hashCode } = req.query;
   try {
-    const { hashCode } = req.query;
-
     if (!hashCode) {
       return res.status(400).json({ error: 'Hash code is required' });
     }
@@ -81,7 +87,7 @@ async function checkConfirmation(req: NextApiRequest, res: NextApiResponse) {
 
     res.json({ confirmed: !!guest.rsvpConfirmation });
   } catch (error) {
-    console.error('Check confirmation error:', error);
+    logger.error('Check confirmation error', { hashCode }, error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

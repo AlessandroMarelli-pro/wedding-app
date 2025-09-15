@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../lib/prisma';
 
@@ -13,9 +14,14 @@ async function healthCheck(req: NextApiRequest, res: NextApiResponse) {
       version: '1.0.0',
     };
 
+    logger.info('Health check passed', { status: 'healthy' });
     res.json(health);
   } catch (error) {
-    console.error('Health check error:', error);
+    logger.error(
+      'Health check failed',
+      { status: 'unhealthy' },
+      error as Error,
+    );
 
     const health = {
       status: 'unhealthy',

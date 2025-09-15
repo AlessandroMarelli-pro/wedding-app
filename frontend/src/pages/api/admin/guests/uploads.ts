@@ -7,6 +7,7 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 import { FILE_TYPES } from '../../../../../lib/upload';
 
+import { logger } from '@/logger';
 export const config = {
   api: {
     bodyParser: false, // Disable body parsing for file uploads
@@ -60,7 +61,11 @@ async function uploadGuestCSV(req: AuthenticatedRequest, res: NextApiResponse) {
     // Validate admin exists before processing
     const adminValidation = await validateAdminExists(req.admin.id);
     if (!adminValidation.isValid) {
-      console.error('Admin validation failed:', adminValidation.error);
+      logger.error(
+        'Admin validation failed:',
+        { adminId: req.admin.id },
+        adminValidation.error,
+      );
       return res.status(400).json({
         error: 'Admin validation failed',
         details: adminValidation.error,
@@ -77,7 +82,7 @@ async function uploadGuestCSV(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.status(201).json(result);
   } catch (error: any) {
-    console.error('CSV upload error:', error);
+    logger.error('CSV upload error:', error as Error);
 
     if (error.message.includes('Invalid byte sequence')) {
       return res.status(400).json({
@@ -108,7 +113,7 @@ async function getAllUploads(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.status(200).json(augmentedUploads);
   } catch (error) {
-    console.error('Get all uploads error:', error);
+    logger.error('Get all uploads error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

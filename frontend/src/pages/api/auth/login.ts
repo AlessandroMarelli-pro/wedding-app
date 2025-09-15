@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { comparePassword, generateToken } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
@@ -16,13 +17,15 @@ async function login(req: NextApiRequest, res: NextApiResponse) {
     });
 
     if (!admin) {
+      logger.logAuth('Login failed - user not found', undefined, { email });
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Compare password
     const isValidPassword = await comparePassword(password, admin.passwordHash);
-    console.log('isValidPassword', isValidPassword);
+    logger.debug('Password validation result', { email, isValidPassword });
     if (!isValidPassword) {
+      logger.logAuth('Login failed - invalid password', admin.id, { email });
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
@@ -31,6 +34,9 @@ async function login(req: NextApiRequest, res: NextApiResponse) {
       adminId: admin.id,
       email: admin.email,
     });
+
+    logger.logAuth('Login successful', admin.id, { email });
+
     res.json({
       accessToken,
       admin: {
@@ -39,7 +45,7 @@ async function login(req: NextApiRequest, res: NextApiResponse) {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error('Login error', { email: req.body?.email }, error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

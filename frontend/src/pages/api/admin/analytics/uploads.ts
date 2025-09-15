@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 /**
  * Analyze upload errors
  */
@@ -104,7 +105,7 @@ async function getUploadStats(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(stats);
   } catch (error) {
-    console.error('Get upload stats error:', error);
+    logger.error('Get upload stats error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

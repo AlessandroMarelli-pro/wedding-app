@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import formidable from 'formidable';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { validateAdminExists } from '../../../../../lib/admin-utils';
@@ -16,7 +17,7 @@ async function uploadImage(req: AuthenticatedRequest, res: NextApiResponse) {
     const form = formidable({
       maxFileSize: FILE_TYPES.IMAGES.maxSize,
       filter: ({ mimetype }) => {
-        console.log('mimetype', mimetype);
+        logger.debug('File mimetype validation', { mimetype });
         return FILE_TYPES.IMAGES.mimeTypes.includes(mimetype as any);
       },
     });
@@ -28,7 +29,7 @@ async function uploadImage(req: AuthenticatedRequest, res: NextApiResponse) {
       (Array.isArray(files.image) ? files.image[0] : files.image);
 
     if (!file) {
-      console.error('No file uploaded', files, files.image);
+      logger.error('No file uploaded', { files: Object.keys(files) });
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
@@ -65,7 +66,11 @@ async function uploadImage(req: AuthenticatedRequest, res: NextApiResponse) {
     // Validate admin exists before processing
     const adminValidation = await validateAdminExists(req.admin.id);
     if (!adminValidation.isValid) {
-      console.error('Admin validation failed:', adminValidation.error);
+      logger.error(
+        'Admin validation failed',
+        { adminId: req.admin.id },
+        new Error(adminValidation.error),
+      );
       return res.status(400).json({
         error: 'Admin validation failed',
         details: adminValidation.error,
@@ -85,9 +90,23 @@ async function uploadImage(req: AuthenticatedRequest, res: NextApiResponse) {
       req.admin.id,
     );
 
+    logger.logFileOperation(
+      'upload',
+      file.originalFilename || 'image.jpg',
+      buffer.length,
+      {
+        adminId: req.admin.id,
+        usageLocation,
+      },
+    );
+
     res.status(201).json(result);
   } catch (error: any) {
-    console.error('Image upload error:', error);
+    logger.error(
+      'Image upload error',
+      { adminId: req.admin.id },
+      error as Error,
+    );
     res.status(500).json({
       error: 'Image upload failed',
       message: error.message,

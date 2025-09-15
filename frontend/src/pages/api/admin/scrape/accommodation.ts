@@ -2,6 +2,7 @@ import { withAuth } from 'lib/middleware';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { UrlParserService } from '../../../../../lib/scrapers/url-parser';
 
+import { logger } from '@/logger';
 async function parseAccommodationUrl(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -36,7 +37,7 @@ async function parseAccommodationUrl(
 
     res.json(result);
   } catch (error: any) {
-    console.error('Scraping error:', error);
+    logger.error('Scraping error:', error as Error);
 
     // Cleanup resources on error
     await urlParser.cleanup();

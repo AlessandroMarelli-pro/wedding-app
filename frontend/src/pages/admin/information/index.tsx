@@ -185,7 +185,7 @@ export default function AdminWedding() {
         form.reset({ ...data, weddingDate: new Date(data.weddingDate) });
       }
     } catch (error) {
-      console.error('Error fetching wedding info:', error);
+      console.error('Error fetching wedding info:', error as Error);
     } finally {
       setIsLoading(false);
     }

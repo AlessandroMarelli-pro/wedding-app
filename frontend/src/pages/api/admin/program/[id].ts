@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getEventById(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
@@ -16,7 +17,7 @@ async function getEventById(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(event);
   } catch (error) {
-    console.error('Get program event error:', error);
+    logger.error('Get program event error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -51,7 +52,7 @@ async function updateEvent(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(event);
   } catch (error) {
-    console.error('Update program event error:', error);
+    logger.error('Update program event error:', error as Error);
     if ((error as any).code === 'P2025') {
       return res.status(404).json({ error: 'Event not found' });
     }
@@ -69,7 +70,7 @@ async function deleteEvent(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json({ message: 'Program event deleted successfully' });
   } catch (error) {
-    console.error('Delete program event error:', error);
+    logger.error('Delete program event error:', error as Error);
     if ((error as any).code === 'P2025') {
       return res.status(404).json({ error: 'Event not found' });
     }

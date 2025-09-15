@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MaintenanceService } from '../../../../lib/maintenance';
 
@@ -17,16 +18,17 @@ export default async function handler(
   }
 
   try {
-    console.log('🌙 Starting daily cleanup cron job...');
+    logger.logCron('daily-cleanup', 'started');
 
     const maintenanceService = new MaintenanceService();
 
     // Clean orphaned files
     const result = await maintenanceService.cleanupOrphanedFiles();
 
-    console.log(
-      `✅ Daily cleanup completed: ${result.orphanedFiles} orphaned files cleaned, ${result.freedSpace} bytes freed`,
-    );
+    logger.logCron('daily-cleanup', 'completed', {
+      orphanedFiles: result.orphanedFiles,
+      freedSpace: result.freedSpace,
+    });
 
     res.status(200).json({
       success: true,
@@ -35,7 +37,7 @@ export default async function handler(
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('❌ Daily cleanup cron job failed:', error);
+    logger.logCron('daily-cleanup', 'failed', { error: error.message });
 
     res.status(500).json({
       success: false,

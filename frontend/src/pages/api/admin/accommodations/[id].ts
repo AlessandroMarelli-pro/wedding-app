@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function updateAccommodation(
   req: AuthenticatedRequest,
   res: NextApiResponse,
@@ -41,7 +42,7 @@ async function updateAccommodation(
 
     res.json(accommodation);
   } catch (error: any) {
-    console.error('Update accommodation error:', error);
+    logger.error('Update accommodation error:', error as Error);
     if (error.code === 'P2025') {
       return res.status(404).json({ error: 'Accommodation not found' });
     }
@@ -62,7 +63,7 @@ async function deleteAccommodation(
 
     res.json({ message: 'Accommodation deleted successfully' });
   } catch (error: any) {
-    console.error('Delete accommodation error:', error);
+    logger.error('Delete accommodation error:', error as Error);
     if (error.code === 'P2025') {
       return res.status(404).json({ error: 'Accommodation not found' });
     }

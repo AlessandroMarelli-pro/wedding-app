@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ImageProcessor } from '../../../../../lib/image-processor';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 
+import { logger } from '@/logger';
 async function getAllImages(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const imageProcessor = new ImageProcessor();
@@ -9,7 +10,7 @@ async function getAllImages(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(images);
   } catch (error: any) {
-    console.error('Get images error:', error);
+    logger.error('Get images error:', error as Error);
     res.status(500).json({ error: 'Failed to get images' });
   }
 }
@@ -21,7 +22,7 @@ async function getImageStats(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(stats);
   } catch (error: any) {
-    console.error('Get image stats error:', error);
+    logger.error('Get image stats error:', error as Error);
     res.status(500).json({ error: 'Failed to get image stats' });
   }
 }

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function createAccommodation(
   req: AuthenticatedRequest,
   res: NextApiResponse,
@@ -48,7 +49,7 @@ async function createAccommodation(
 
     res.status(201).json(accommodation);
   } catch (error) {
-    console.error('Create accommodation error:', error);
+    logger.error('Create accommodation error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -64,7 +65,7 @@ async function getAllAccommodations(
 
     res.json(accommodations);
   } catch (error) {
-    console.error('Get accommodations error:', error);
+    logger.error('Get accommodations error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

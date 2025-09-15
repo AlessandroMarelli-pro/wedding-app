@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MaintenanceService } from '../../../../lib/maintenance';
 
@@ -17,16 +18,17 @@ export default async function handler(
   }
 
   try {
-    console.log('📊 Starting weekly storage report cron job...');
+    logger.logCron('weekly-report', 'started');
 
     const maintenanceService = new MaintenanceService();
 
     // Generate storage usage report
     const report = await maintenanceService.generateStorageReport();
 
-    console.log(
-      `✅ Weekly report completed: ${report.totalFiles} files, ${report.totalSize} bytes total`,
-    );
+    logger.logCron('weekly-report', 'completed', {
+      totalFiles: report.totalFiles,
+      totalSize: report.totalSize,
+    });
 
     res.status(200).json({
       success: true,
@@ -35,7 +37,7 @@ export default async function handler(
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('❌ Weekly report cron job failed:', error);
+    logger.logCron('weekly-report', 'failed', { error: error.message });
 
     res.status(500).json({
       success: false,

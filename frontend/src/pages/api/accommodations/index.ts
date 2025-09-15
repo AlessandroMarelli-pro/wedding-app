@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getAllAccommodations(req: NextApiRequest, res: NextApiResponse) {
   try {
     const accommodations = await prisma.accommodation.findMany({
@@ -9,7 +10,7 @@ async function getAllAccommodations(req: NextApiRequest, res: NextApiResponse) {
 
     res.json(accommodations);
   } catch (error) {
-    console.error('Get accommodations error:', error);
+    logger.error('Get accommodations error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

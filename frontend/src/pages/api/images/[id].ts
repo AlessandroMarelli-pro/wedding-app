@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ImageProcessor } from '../../../../lib/image-processor';
 
+import { logger } from '@/logger';
 async function serveImage(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
@@ -20,7 +21,7 @@ async function serveImage(req: NextApiRequest, res: NextApiResponse) {
     // Send the image buffer
     res.send(imageFile.buffer);
   } catch (error: any) {
-    console.error('Serve image error:', error);
+    logger.error('Serve image error:', error as Error);
     if (
       error.message === 'Image not found' ||
       error.message === 'Image file not found on disk'

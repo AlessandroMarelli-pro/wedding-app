@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../lib/middleware';
 
+import { logger } from '@/logger';
 async function getCurrentUser(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     // The admin information is already available from the middleware
@@ -9,7 +10,7 @@ async function getCurrentUser(req: AuthenticatedRequest, res: NextApiResponse) {
       email: req.admin.email,
     });
   } catch (error) {
-    console.error('Get current user error:', error);
+    logger.error('Get current user error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

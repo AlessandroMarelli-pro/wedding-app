@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { MaintenanceService } from '../../../../../lib/maintenance';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 
+import { logger } from '@/logger';
 async function generateStorageReport(
   req: AuthenticatedRequest,
   res: NextApiResponse,
@@ -17,7 +18,7 @@ async function generateStorageReport(
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('Generate storage report error:', error);
+    logger.error('Generate storage report error:', error as Error);
     res.status(500).json({
       error: 'Failed to generate storage report',
       details: error.message,
@@ -39,7 +40,7 @@ async function getStorageUsage(
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('Get storage usage error:', error);
+    logger.error('Get storage usage error:', error as Error);
     res.status(500).json({
       error: 'Failed to get storage usage',
       details: error.message,
@@ -61,7 +62,7 @@ async function validateUploadHealth(
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('Validate upload health error:', error);
+    logger.error('Validate upload health error:', error as Error);
     res.status(500).json({
       error: 'Failed to validate upload health',
       details: error.message,

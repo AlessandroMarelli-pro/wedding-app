@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {
   Accommodation,
@@ -66,13 +67,12 @@ const createApiClient = (): AxiosInstance => {
       }
 
       // Log error for debugging
-      console.error('API Error:', {
+      logger.error('API Error:', {
         url: error.config?.url,
         method: error.config?.method,
         status: error.response?.status,
         data: error.response?.data,
       });
-
       return Promise.reject(error);
     },
   );

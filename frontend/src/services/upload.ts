@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import * as fs from 'fs';
 import { diskStorage, memoryStorage } from 'multer';
 import * as path from 'path';
@@ -168,7 +169,7 @@ export async function cleanupTempFiles(
         fs.unlinkSync(filePath);
         deletedCount++;
       } catch (error) {
-        console.error(`Failed to delete temp file ${file}:`, error);
+        logger.error(`Failed to delete temp file ${file}:`, error as Error);
       }
     }
   }

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getGuestInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { hashCode } = req.query;
@@ -27,7 +28,7 @@ async function getGuestInfo(req: NextApiRequest, res: NextApiResponse) {
       confirmed,
     });
   } catch (error) {
-    console.error('Get guest info error:', error);
+    logger.error('Get guest info error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

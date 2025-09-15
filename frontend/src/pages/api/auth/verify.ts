@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { verifyToken } from '../../../../lib/auth';
 
+import { logger } from '@/logger';
 async function verify(req: NextApiRequest, res: NextApiResponse) {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
@@ -19,7 +20,7 @@ async function verify(req: NextApiRequest, res: NextApiResponse) {
       admin: payload,
     });
   } catch (error) {
-    console.error('Token verification error:', error);
+    logger.error('Token verification error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

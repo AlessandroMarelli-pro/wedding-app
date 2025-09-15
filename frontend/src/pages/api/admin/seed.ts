@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../lib/middleware';
 import { SeedService } from '../../../../lib/seed';
 
+import { logger } from '@/logger';
 async function seedDatabase(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const { reset } = req.query;
@@ -18,7 +19,7 @@ async function seedDatabase(req: AuthenticatedRequest, res: NextApiResponse) {
       reset: reset === 'true',
     });
   } catch (error: any) {
-    console.error('Seed error:', error);
+    logger.error('Seed error:', error as Error);
     res.status(500).json({
       error: 'Seeding failed',
       details: error.message,
@@ -37,7 +38,7 @@ async function seedCustomData(req: AuthenticatedRequest, res: NextApiResponse) {
       message: 'Custom data seeded successfully',
     });
   } catch (error: any) {
-    console.error('Custom seed error:', error);
+    logger.error('Custom seed error:', error as Error);
     res.status(500).json({
       error: 'Custom seeding failed',
       details: error.message,

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getAllConfirmations(
   req: AuthenticatedRequest,
   res: NextApiResponse,
@@ -16,7 +17,7 @@ async function getAllConfirmations(
 
     res.json(confirmations);
   } catch (error) {
-    console.error('Get RSVP confirmations error:', error);
+    logger.error('Get RSVP confirmations error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function checkConfirmation(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { hashCode } = req.query;
@@ -16,7 +17,7 @@ async function checkConfirmation(req: NextApiRequest, res: NextApiResponse) {
 
     res.json({ confirmed: !!guest.rsvpConfirmation });
   } catch (error) {
-    console.error('Check confirmation error:', error);
+    logger.error('Check confirmation error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

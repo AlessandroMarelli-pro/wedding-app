@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getAllGuests(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const guests = await prisma.guest.findMany({
@@ -14,7 +15,7 @@ async function getAllGuests(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(guests);
   } catch (error) {
-    console.error('Get all guests error:', error);
+    logger.error('Get all guests error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

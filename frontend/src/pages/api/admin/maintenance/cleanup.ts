@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { MaintenanceService } from '../../../../../lib/maintenance';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 
+import { logger } from '@/logger';
 async function cleanupTempFiles(
   req: AuthenticatedRequest,
   res: NextApiResponse,
@@ -20,7 +21,7 @@ async function cleanupTempFiles(
       olderThanHours,
     });
   } catch (error: any) {
-    console.error('Cleanup temp files error:', error);
+    logger.error('Cleanup temp files error:', error as Error);
     res.status(500).json({
       error: 'Failed to cleanup temporary files',
       details: error.message,
@@ -42,7 +43,7 @@ async function cleanupOrphanedFiles(
       result,
     });
   } catch (error: any) {
-    console.error('Cleanup orphaned files error:', error);
+    logger.error('Cleanup orphaned files error:', error as Error);
     res.status(500).json({
       error: 'Failed to cleanup orphaned files',
       details: error.message,
@@ -61,7 +62,7 @@ async function manualCleanup(req: AuthenticatedRequest, res: NextApiResponse) {
       result,
     });
   } catch (error: any) {
-    console.error('Manual cleanup error:', error);
+    logger.error('Manual cleanup error:', error as Error);
     res.status(500).json({
       error: 'Failed to perform manual cleanup',
       details: error.message,

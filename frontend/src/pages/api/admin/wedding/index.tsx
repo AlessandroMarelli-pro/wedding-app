@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
     const weddingInfo = await prisma.weddingInfo.findFirst();
@@ -12,7 +13,7 @@ async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
 
     res.json(weddingInfo);
   } catch (error) {
-    console.error('Get wedding info error:', error);
+    logger.error('Get wedding info error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -60,7 +61,7 @@ async function updateWeddingInfo(
 
     res.json(weddingInfo);
   } catch (error) {
-    console.error('Update wedding info error:', error);
+    logger.error('Update wedding info error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

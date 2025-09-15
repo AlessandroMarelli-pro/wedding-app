@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MaintenanceService } from '../../../../lib/maintenance';
 
@@ -17,14 +18,14 @@ export default async function handler(
   }
 
   try {
-    console.log('🕐 Starting hourly cleanup cron job...');
+    logger.logCron('hourly-cleanup', 'started');
 
     const maintenanceService = new MaintenanceService();
 
     // Clean temporary files older than 24 hours
     const deletedCount = await maintenanceService.cleanupTempFiles(24);
 
-    console.log(`✅ Hourly cleanup completed: ${deletedCount} files cleaned`);
+    logger.logCron('hourly-cleanup', 'completed', { deletedCount });
 
     res.status(200).json({
       success: true,
@@ -33,7 +34,7 @@ export default async function handler(
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('❌ Hourly cleanup cron job failed:', error);
+    logger.logCron('hourly-cleanup', 'failed', { error: error.message });
 
     res.status(500).json({
       success: false,

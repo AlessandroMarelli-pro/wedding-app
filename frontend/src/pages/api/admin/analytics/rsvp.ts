@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
+import { logger } from '@/logger';
 /**
  * Analyze guest demographics
  */
@@ -187,7 +188,7 @@ async function getRSVPStats(req: AuthenticatedRequest, res: NextApiResponse) {
 
     res.json(stats);
   } catch (error) {
-    console.error('Get RSVP stats error:', error);
+    logger.error('Get RSVP stats error:', error as Error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
