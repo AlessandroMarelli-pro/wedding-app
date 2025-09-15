@@ -25,8 +25,9 @@ import {
 } from '@/components/ui/table';
 import { Guest } from '@/types/api';
 import { IconApple, IconMessage, IconUserQuestion } from '@tabler/icons-react';
-import { CheckCircle, Clock, TrashIcon, X } from 'lucide-react';
+import { CheckCircle, Clock, Trash2, X } from 'lucide-react';
 import { z } from 'zod';
+import AlertDialog from '../alert-dialog';
 import { Badge } from '../ui/badge';
 import { CopyButton } from '../ui/shadcn-io/copy-button';
 import { CustomTooltip } from '../ui/tooltip';
@@ -84,7 +85,11 @@ const getStatusBadge = (guest: Guest) => {
 };
 
 const columns: (
-  handleDeleteGuest: (guestId: string) => void,
+  handleDeleteGuest: (
+    guestId: string,
+    firstName: string,
+    lastName: string,
+  ) => void,
 ) => ColumnDef<Guest>[] = (handleDeleteGuest) => [
   {
     accessorKey: 'firstName',
@@ -186,13 +191,23 @@ const columns: (
   {
     id: 'actions',
     cell: ({ row }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleDeleteGuest(row.original.id)}
-        className="text-destructive "
-      >
-        <TrashIcon />
-      </Button>
+      <AlertDialog
+        triggerIcon={<Trash2 className="w-4 h-4" />}
+        triggerText=""
+        triggerVariant="ghost"
+        triggerClass="text-destructive"
+        mainTitle="Supprimer le guest"
+        title={`Êtes-vous sûr de vouloir supprimer ${row.original.firstName} ${row.original.lastName} ?`}
+        description="Cette action ne peut pas être annulée. Elle supprimera définitivement l'invité."
+        actionText="Supprimer"
+        action={() => {
+          handleDeleteGuest(
+            row.original.id,
+            row.original.firstName,
+            row.original.lastName,
+          );
+        }}
+      />
     ),
   },
 ];
@@ -202,7 +217,11 @@ export function GuestsTable({
   handleDeleteGuest,
 }: {
   data: Guest[];
-  handleDeleteGuest: (guestId: string) => void;
+  handleDeleteGuest: (
+    guestId: string,
+    firstName: string,
+    lastName: string,
+  ) => void;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

@@ -2,9 +2,9 @@ import { Input } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 
-import { useToast } from '@/hooks/use-toast';
 import { Guest } from '@/types/api';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { ApiService } from '../../services/api';
 import { GuestsTable } from './guests-table';
 
@@ -24,8 +24,6 @@ export const GuestsList = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { toast } = useToast();
-
   const handleExportCSV = async () => {
     try {
       const blob = await ApiService.exportGuestsCSV();
@@ -43,7 +41,11 @@ export const GuestsList = ({
     }
   };
 
-  const handleDeleteGuest = async (guestId: string) => {
+  const handleDeleteGuest = async (
+    guestId: string,
+    firstName: string,
+    lastName: string,
+  ) => {
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) {
@@ -64,25 +66,17 @@ export const GuestsList = ({
         throw new Error('Failed to delete guest');
       }
 
-      toast({
-        title: 'Success',
-        description: 'Guest deleted successfully',
+      toast.success('Invité supprimé avec succès !', {
+        description: `${firstName} ${lastName} a été supprimé.`,
       });
 
       fetchData(); // Refresh the data
-    } catch (error) {
+    } catch (error: any) {
       console.error('Delete error:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to delete guest',
-        variant: 'destructive',
+      toast.error('Erreur lors de la suppression du guest !', {
+        description: error?.message,
       });
     }
-  };
-
-  const handleViewGuest = (guest: Guest) => {
-    setSelectedGuest(guest);
-    setIsModalOpen(true);
   };
 
   const filteredGuests = guests.filter((guest) => {
