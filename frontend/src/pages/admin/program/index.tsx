@@ -238,7 +238,7 @@ export default function AdminProgram() {
   return (
     <>
       <Head>
-        <title>Wedding Program - Admin</title>
+        <title>Admin - Programme</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <div className="p-6 space-y-8 flex flex-col">

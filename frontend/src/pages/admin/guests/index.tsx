@@ -95,7 +95,7 @@ export default function GuestsPage() {
   return (
     <>
       <Head>
-        <title>Guest Management - Wedding Admin</title>
+        <title>Admin - Invités</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

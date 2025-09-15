@@ -264,10 +264,10 @@ export default function HomePage({
   return (
     <>
       <Head>
-        <title>{`${weddingInfo.coupleNames} - Wedding`}</title>
+        <title>{`${weddingInfo.coupleNames} `}</title>
         <meta
           name="description"
-          content={`Join us for the wedding celebration of ${weddingInfo.coupleNames}`}
+          content={`Venez fêter avec nous le mariage d'${weddingInfo.coupleNames}`}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

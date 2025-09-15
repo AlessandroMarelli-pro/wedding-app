@@ -53,7 +53,7 @@ export default function AdminLogin() {
   return (
     <>
       <Head>
-        <title>Admin Login - Wedding Management</title>
+        <title>Admin - Connexion</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

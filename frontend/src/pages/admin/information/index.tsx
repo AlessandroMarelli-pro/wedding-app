@@ -219,7 +219,7 @@ export default function AdminWedding() {
   return (
     <>
       <Head>
-        <title>Wedding Information - Admin</title>
+        <title>Admin - Informations</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

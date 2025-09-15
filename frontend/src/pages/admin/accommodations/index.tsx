@@ -163,7 +163,7 @@ export default function AdminAccommodations() {
   return (
     <>
       <Head>
-        <title>Accommodations - Wedding Admin</title>
+        <title>Admin - Logements</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
