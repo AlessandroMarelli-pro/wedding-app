@@ -177,7 +177,7 @@ export class ApiService {
 
     // Use the upload proxy for file uploads
     const response = await api.post<CSVUpload>(
-      '/upload/admin/guests/upload',
+      '/admin/guests/uploads',
       formData,
       {
         headers: {
@@ -319,7 +319,7 @@ export class ApiService {
     if (options.format) formData.append('format', options.format);
 
     // Use the upload proxy for file uploads
-    const response = await api.post('/upload/admin/images/upload', formData, {
+    const response = await api.post('/admin/images/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

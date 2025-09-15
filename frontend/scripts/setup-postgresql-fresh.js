@@ -1,6 +1,6 @@
 require('dotenv').config({ path: './.env' });
 const { PrismaClient } = require('@prisma/client');
-const { SeedService } = require('../lib/seed');
+const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
@@ -8,8 +8,63 @@ async function setupPostgreSQLFresh() {
   try {
     console.log('🚀 Setting up fresh PostgreSQL database...\n');
 
-    // Use the SeedService for admin users and wedding info
-    await SeedService.seedStaticData();
+    // Create default admin if it doesn't exist
+    const defaultAdminEmail =
+      process.env.DEFAULT_ADMIN_EMAIL || 'admin@wedding.com';
+    const defaultAdminPassword =
+      process.env.DEFAULT_ADMIN_PASSWORD || 'admin123';
+
+    const existingAdmin = await prisma.admin.findUnique({
+      where: { email: defaultAdminEmail },
+    });
+
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash(defaultAdminPassword, 10);
+      await prisma.admin.create({
+        data: {
+          email: defaultAdminEmail,
+          passwordHash: hashedPassword,
+        },
+      });
+      console.log('✅ Default admin created:', defaultAdminEmail);
+    } else {
+      console.log('ℹ️  Default admin already exists.');
+    }
+
+    // Create default wedding info if it doesn't exist
+    const existingWeddingInfo = await prisma.weddingInfo.findFirst();
+
+    if (!existingWeddingInfo) {
+      await prisma.weddingInfo.create({
+        data: {
+          id: 'default-wedding-info', // Use a fixed ID for upsert logic
+          coupleNames: process.env.DEFAULT_COUPLE_NAMES || 'Ariane & Timothe',
+          presentationMessage:
+            'Welcome to our wedding website! We are excited to celebrate this special day with you.',
+          weddingAddress:
+            process.env.DEFAULT_WEDDING_ADDRESS ||
+            'Château de Malmaison, Avenue du Château, 92500 Rueil-Malmaison, France',
+          weddingDate: new Date(
+            process.env.DEFAULT_WEDDING_DATE || '2024-06-15T15:00:00Z',
+          ),
+          locationDirections: [
+            {
+              type: 'car',
+              information: 'By car from Paris, take the A13 motorway.',
+              location: {
+                address: 'Château de Malmaison',
+                link: 'https://maps.google.com',
+              },
+            },
+          ],
+          heroMessage: 'Join us for our special day',
+          heroAddress: 'Château de Malmaison',
+        },
+      });
+      console.log('✅ Default wedding info created');
+    } else {
+      console.log('ℹ️  Default wedding info already exists.');
+    }
 
     // Create sample program events
     const existingEvents = await prisma.programEvent.count();

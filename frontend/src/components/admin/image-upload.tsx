@@ -153,7 +153,7 @@ export function ImageUpload({
             >
               {uploading ? (
                 <>
-                  <Upload className="mr-2 h-4 w-4 animate-spin" />
+                  <Upload className="mr-2 h-4 w-4 " />
                   En cours de dépôt...
                 </>
               ) : (
