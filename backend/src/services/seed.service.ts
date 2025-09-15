@@ -21,15 +21,20 @@ export class SeedService {
   }
 
   async seedStaticData() {
-    const users = process.env.USERS?.split(',').map((user) => {
-      const [email, password] = user.split(':');
-      return { email, password };
-    }) || [
-      {
-        email: 'admin@wedding.com',
-        password: 'admin123',
-      },
-    ];
+    const isProduction = process.env.NODE_ENV === 'production';
+    const defaultAdminUser = isProduction
+      ? []
+      : [
+          {
+            email: 'admin@wedding.com',
+            password: 'admin123',
+          },
+        ];
+    const users =
+      process.env.USERS?.split(',').map((user) => {
+        const [email, password] = user.split(':');
+        return { email, password };
+      }) || defaultAdminUser;
     for (const user of users) {
       await this.authService.createAdmin(user.email, user.password);
     }
