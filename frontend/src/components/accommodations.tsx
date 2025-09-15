@@ -1,17 +1,13 @@
 import { IconCurrencyEuro, IconMapPin } from '@tabler/icons-react';
-import { Accommodation, Direction } from '../types/api';
+import { Accommodation, WeddingInfo } from '../types/api';
 import ExpandableCardDemo from './expandable-card-demo-standard';
 
 interface AccommodationsListProps {
   accommodations: Accommodation[];
-  weddingInfo: {
-    weddingAddress: string;
-    weddingDate: string;
-    coupleNames: string;
-    locationDirections?: Direction[];
-    latitude?: number;
-    longitude?: number;
-  };
+  weddingInfo: Pick<
+    WeddingInfo,
+    'weddingAddress' | 'weddingDate' | 'coupleNames' | 'locationDirections'
+  >;
 }
 
 export function AccommodationsList({

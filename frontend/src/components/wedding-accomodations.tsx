@@ -39,8 +39,6 @@ export const WeddingAccomodations = ({
               weddingDate: weddingInfo.weddingDate,
               coupleNames: weddingInfo.coupleNames,
               locationDirections: weddingInfo.locationDirections,
-              latitude: undefined, // We'll need to add this to the wedding info entity
-              longitude: undefined, // We'll need to add this to the wedding info entity
             }}
           />
         </div>

@@ -82,8 +82,8 @@ export const AccomodationFormDialog = ({
       };
 
       const url = editingAccommodation
-        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/accommodations/${editingAccommodation.id}`
-        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/accommodations`;
+        ? `/api/admin/accommodations/${editingAccommodation.id}`
+        : `/api/admin/accommodations`;
 
       const method = editingAccommodation ? 'PUT' : 'POST';
 
@@ -129,17 +129,14 @@ export const AccomodationFormDialog = ({
     setIsParsingUrl(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/accommodations/parse-url`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ url: urlInput }),
+      const response = await fetch(`/api/admin/accommodations/parse-url`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify({ url: urlInput }),
+      });
 
       if (response.ok) {
         const parsedData = await response.json();
@@ -267,7 +264,7 @@ export const AccomodationFormDialog = ({
                           <span>
                             Ex: Un logement confortable avec une vue sur la mer
                           </span>
-                          <span>{field.value.length}/2000 caractères</span>
+                          <span>{field.value?.length}/2000 caractères</span>
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

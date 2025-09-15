@@ -14,13 +14,13 @@ export class ProgramEvent {
   @Column({ length: 100 })
   title!: string;
 
-  @Column({ type: 'text', length: 500 })
+  @Column({ type: 'text' })
   description!: string;
 
-  @Column({ name: 'start_time', type: 'datetime' })
+  @Column({ name: 'start_time', type: 'date' })
   startTime!: Date;
 
-  @Column({ name: 'end_time', type: 'datetime' })
+  @Column({ name: 'end_time', type: 'date' })
   endTime!: Date;
 
   @Column({ length: 200 })

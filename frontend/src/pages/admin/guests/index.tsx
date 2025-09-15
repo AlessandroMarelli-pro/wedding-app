@@ -51,14 +51,11 @@ export default function GuestsPage() {
         throw new Error('No admin token found');
       }
 
-      const guestsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const guestsResponse = await fetch(`/api/admin/guests`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (guestsResponse.ok) {
         const guestsData = await guestsResponse.json();
@@ -66,14 +63,11 @@ export default function GuestsPage() {
         setGuests(guestsData);
       }
 
-      const uploadsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/guests/uploads`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const uploadsResponse = await fetch(`/api/admin/guests/uploads`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (uploadsResponse.ok) {
         const uploadsData = await uploadsResponse.json();
@@ -95,7 +89,7 @@ export default function GuestsPage() {
   return (
     <>
       <Head>
-        <title>Guest Management - Wedding Admin</title>
+        <title>Admin - Invités</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

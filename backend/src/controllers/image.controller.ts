@@ -99,7 +99,7 @@ export class ImageController {
       fileStream.pipe(res);
 
       // Handle stream errors
-      fileStream.on('error', (error) => {
+      fileStream.on('error', () => {
         if (!res.headersSent) {
           res.status(500).json({
             error: 'File read error',

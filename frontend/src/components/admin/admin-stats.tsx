@@ -59,7 +59,8 @@ export function AdminStats({ className }: AdminStatsProps) {
     }
   };
 
-  const formatPercentage = (value: number) => `${value.toFixed(1)}%`;
+  const formatPercentage = (value: number) =>
+    (value && `${value.toFixed(1)}%`) || '0%';
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString();
 
@@ -246,12 +247,13 @@ export function AdminStats({ className }: AdminStatsProps) {
                       <span className="text-sm font-medium">
                         {activity.guestName}
                       </span>
-                      {activity?.confirmedPartySize > 0 && (
-                        <span className="text-xs text-muted-foreground">
-                          ({activity.confirmedPartySize} personne
-                          {activity.confirmedPartySize > 1 ? 's' : ''})
-                        </span>
-                      )}
+                      {activity?.confirmedPartySize &&
+                        activity.confirmedPartySize > 0 && (
+                          <span className="text-xs text-muted-foreground">
+                            ({activity.confirmedPartySize} personne
+                            {activity.confirmedPartySize > 1 ? 's' : ''})
+                          </span>
+                        )}
                     </div>
 
                     <span className="text-xs text-muted-foreground flex flex-row items-center gap-2">

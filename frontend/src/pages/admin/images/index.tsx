@@ -108,7 +108,7 @@ export default function AdminImages() {
   return (
     <>
       <Head>
-        <title>Image Management - Wedding Admin</title>
+        <title>Admin - Images</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

@@ -57,12 +57,9 @@ export default function AdminAccommodations() {
   const fetchAccommodations = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/accommodations`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await fetch(`/api/accommodations`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -103,13 +100,10 @@ export default function AdminAccommodations() {
   const handleDelete = async (id: string, name: string) => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/accommodations/${id}`,
-        {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await fetch(`/api/admin/accommodations/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.ok) {
         toast.warning('Logement supprimé avec succès !', {
@@ -163,7 +157,7 @@ export default function AdminAccommodations() {
   return (
     <>
       <Head>
-        <title>Accommodations - Wedding Admin</title>
+        <title>Admin - Logements</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

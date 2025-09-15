@@ -659,7 +659,8 @@ export class GuestService {
     });
 
     if (existingGuest) {
-      throw new Error(`Guest ${row.firstName} ${row.lastName} already exists`);
+      console.log(`Guest ${row.firstName} ${row.lastName} already exists`);
+      return existingGuest;
     }
 
     // Generate unique hash code

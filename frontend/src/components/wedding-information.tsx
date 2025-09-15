@@ -50,7 +50,7 @@ export const WeddingInformation = ({
               Le lieu
             </h1>
             <div>
-              {weddingInfo.weddingAddress.split(',').map((chunk) => (
+              {weddingInfo.weddingAddress?.split(',').map((chunk) => (
                 <p
                   key={chunk}
                   className="text-md lg:text-xl text-[#EAFFD0] font-light"
@@ -77,7 +77,7 @@ export const WeddingInformation = ({
                 </div>
               </div>
               <div className="row-span-1  flex flex-col  gap-4">
-                {weddingInfo.locationDirections.map((direction, index) => (
+                {weddingInfo.locationDirections?.map((direction, index) => (
                   <div
                     key={index}
                     className="relative flex flex-col   items-center rounded-lg   p-3"

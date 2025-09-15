@@ -2,6 +2,7 @@ import { LoginForm, schema } from '@/components/login-form';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { toast } from 'sonner';
 import z from 'zod';
 
 export default function AdminLogin() {
@@ -19,18 +20,16 @@ export default function AdminLogin() {
 
   const handleSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/login`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values),
+      const response = await fetch(`/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(values),
+      });
 
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
         // Store the token
@@ -38,16 +37,20 @@ export default function AdminLogin() {
 
         // Redirect to dashboard
         router.push('/admin/dashboard');
+      } else {
+        toast.error('La connexion a échoué', {
+          description: data.message,
+        });
       }
-    } catch (error) {
-      console.error('Error logging in:', error);
+    } catch (error: any) {
+      console.log('Error logging in:', error?.data?.message);
     }
   };
 
   return (
     <>
       <Head>
-        <title>Admin Login - Wedding Management</title>
+        <title>Admin - Connexion</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

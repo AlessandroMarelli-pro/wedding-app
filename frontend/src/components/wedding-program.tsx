@@ -25,9 +25,7 @@ export function WeddingProgram({ font }: { font: NextFontWithVariable }) {
 
   const fetchProgram = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/program`,
-      );
+      const response = await fetch(`/api/program`);
       if (response.ok) {
         const data = await response.json();
         setEvents(

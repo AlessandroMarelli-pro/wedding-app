@@ -79,7 +79,11 @@ export function LoginForm({
                     <FormItem className="w-full">
                       <FormLabel>Mot de passe</FormLabel>
                       <FormControl>
-                        <Input placeholder="********" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="********"
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription>
                         Entrez votre mot de passe ci-dessus pour vous connecter

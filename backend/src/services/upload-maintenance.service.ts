@@ -55,7 +55,7 @@ export class UploadMaintenanceService {
       let freedSpace = 0;
 
       // Check each upload directory
-      for (const [dirName, dirPath] of Object.entries(UPLOAD_PATHS)) {
+      for (const [_, dirPath] of Object.entries(UPLOAD_PATHS)) {
         if (!fs.existsSync(dirPath)) continue;
 
         const files = fs.readdirSync(dirPath);
@@ -186,7 +186,7 @@ export class UploadMaintenanceService {
       });
       const dbFilenames = new Set(dbImages.map((img) => img.filename));
 
-      for (const [dirName, dirPath] of Object.entries(UPLOAD_PATHS)) {
+      for (const [_, dirPath] of Object.entries(UPLOAD_PATHS)) {
         if (!fs.existsSync(dirPath)) continue;
 
         const files = fs.readdirSync(dirPath);

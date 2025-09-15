@@ -60,11 +60,6 @@ export class UrlParserService {
   }
 
   private async parseAirbnbUrl(url: string): Promise<ParsedAccommodationData> {
-    // For Airbnb, we'll extract basic info from the URL and provide a template
-    const urlObj = new URL(url);
-    const pathParts = urlObj.pathname.split('/');
-    const roomId = pathParts[pathParts.length - 1];
-
     return {
       name: 'Airbnb Property',
       description:

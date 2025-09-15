@@ -49,18 +49,18 @@ export const DirectionsForm = ({
   const hasAllDirectionTypes = () => {
     const existingTypes = form
       .getValues()
-      .locationDirections.map((d: Direction) => d.type);
+      .locationDirections?.map((d: Direction) => d.type);
     const allTypes: Direction['type'][] = ['car', 'train', 'car rental'];
-    return allTypes.every((type) => existingTypes.includes(type));
+    return allTypes.every((type) => existingTypes?.includes(type));
   };
 
   const getAvailableTypes = (): Direction['type'][] => {
     if (!form) return ['car', 'train', 'car rental'];
     const existingTypes = form
       .getValues()
-      .locationDirections.map((d: Direction) => d.type);
+      .locationDirections?.map((d: Direction) => d.type);
     const allTypes: Direction['type'][] = ['car', 'train', 'car rental'];
-    return allTypes.filter((type) => !existingTypes.includes(type));
+    return allTypes.filter((type) => !existingTypes?.includes(type));
   };
 
   const addDirection = (direction: Direction) => {
@@ -72,7 +72,7 @@ export const DirectionsForm = ({
       return;
 
     form.setValue('locationDirections', [
-      ...form.getValues().locationDirections,
+      ...(form.getValues().locationDirections || []),
       { ...direction },
     ]);
     form.trigger('locationDirections');
@@ -91,7 +91,7 @@ export const DirectionsForm = ({
   const updateDirection = (index: number, direction: Direction) => {
     if (!form) return;
 
-    const updatedDirections = [...form.getValues().locationDirections];
+    const updatedDirections = [...(form.getValues().locationDirections || [])];
     updatedDirections[index] = direction;
 
     form.setValue('locationDirections', updatedDirections);
@@ -104,7 +104,8 @@ export const DirectionsForm = ({
     if (!form) return;
 
     const updatedDirections = [
-      ...form.getValues().locationDirections.filter((_, i) => i !== index),
+      ...(form.getValues().locationDirections?.filter((_, i) => i !== index) ||
+        []),
     ];
     form.setValue('locationDirections', updatedDirections);
     form.trigger('locationDirections');

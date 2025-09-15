@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
 import { RSVPFormModal } from './rsvp-form-modal';
 import {
@@ -15,9 +14,6 @@ import {
 
 interface NavbarLayoutProps {
   children: ReactNode;
-  currentSection?: string;
-  currentPath?: string;
-  onSectionChange?: (section: string) => void;
 }
 
 // Public navigation configuration
@@ -40,29 +36,33 @@ const navItems = [
   },
 ];
 
-export function NavbarLayout({
-  children,
-  currentSection,
-  currentPath,
-  onSectionChange,
-}: NavbarLayoutProps) {
-  const router = useRouter();
-
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    router.push('/admin/login');
-  };
-
+export function NavbarLayout({ children }: NavbarLayoutProps) {
   // Configure navbar based on type
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    link: string,
+  ) => {
+    e.preventDefault();
+    const sectionId = link.replace('#', '');
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar className={'fixed lg:absolute'}>
         {/* Desktop Navigation */}
         <NavBody className="">
-          <NavItems items={navItems} className="font-bold text-[#F38181] " />
+          <NavItems
+            items={navItems}
+            className="font-bold text-[#F38181]"
+            onItemClick={handleNavClick}
+          />
           <RSVPFormModal
             shadowCls="shadow-none"
             btnColor="bg-[#F38181]"
@@ -87,7 +87,10 @@ export function NavbarLayout({
               <a
                 key={`mobile-link-${idx}`}
                 href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => {
+                  handleNavClick(e, item.link);
+                  setIsMobileMenuOpen(false);
+                }}
                 className="relative text-white"
               >
                 <span className="block">{item.name}</span>

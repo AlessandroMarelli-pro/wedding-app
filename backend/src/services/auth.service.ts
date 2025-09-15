@@ -87,7 +87,7 @@ export class AuthService {
     });
 
     if (existingAdmin) {
-      throw new Error('Admin with this email already exists');
+      return existingAdmin;
     }
 
     const passwordHash = await this.hashPassword(password);

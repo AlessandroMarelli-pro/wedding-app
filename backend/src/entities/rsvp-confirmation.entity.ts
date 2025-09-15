@@ -14,7 +14,7 @@ export class RSVPConfirmation {
   @Column({ name: 'guest_id', unique: true })
   guestId!: string;
 
-  @Column({ name: 'confirmed_at', type: 'datetime' })
+  @Column({ name: 'confirmed_at', type: 'date' })
   confirmedAt!: Date;
 
   @Column({ name: 'ip_address', length: 45 })

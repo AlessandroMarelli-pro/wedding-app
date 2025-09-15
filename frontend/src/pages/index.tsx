@@ -6,7 +6,7 @@ import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   NavbarLayout,
   RSVPFormModal,
@@ -14,6 +14,7 @@ import {
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
+import { Progress } from '../components/ui/progress';
 import { Accommodation, UploadedImage, WeddingInfo } from '../types/api';
 
 const bilbo = Parisienne({
@@ -140,7 +141,7 @@ const BonusSection = () => {
             'text-2xl text-[#F38181] flex lg:flex-row flex-col items-center gap-2 pt-5',
           )}
         >
-          En bonus, l'instant où la demande de mariage a été acceptée{' '}
+          En bonus, l'instant où la demande de mariage a été faite{' '}
           <IconHeartHandshake />
         </span>
         <iframe
@@ -149,10 +150,10 @@ const BonusSection = () => {
           height="50%"
           src="https://www.youtube.com/embed/Xud6KnnQJec?si=d2TUR0h-j21-a6CN"
           title="YouTube video player"
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
         ></iframe>
       </div>
     </Section>
@@ -163,7 +164,7 @@ const MissingDataSection = () => {
   return (
     <>
       <Head>
-        <title>Wedding Information Coming Soon</title>
+        <title>Mariage d'Ariane & Timothe</title>
         <meta
           name="description"
           content="Please check back later for details about our special day"
@@ -175,10 +176,10 @@ const MissingDataSection = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-4xl  text-foreground mb-4">
-            Wedding Information Coming Soon
+            Le site est en cours de construction
           </h1>
           <p className="text-muted-foreground">
-            Please check back later for details about our special day.
+            Veuillez vérifier plus tard pour les détails de notre jour spécial.
           </p>
         </div>
       </div>
@@ -191,14 +192,48 @@ export default function HomePage({
   accommodations,
   images,
 }: HomePageProps) {
-  const [currentSection, setCurrentSection] = useState('home');
+  const [progress, setProgress] = useState(0);
+  const [showProgress, setShowProgress] = useState(true);
 
-  if (!weddingInfo) {
+  // Handle URL anchors on page load and progress bar
+  useEffect(() => {
+    // Remove any anchor from the URL on page load
+    if (window.location.hash) {
+      // Remove the hash from URL without triggering scroll
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+
+    // Ensure we're at the top of the page
+    window.scrollTo(0, 0);
+
+    // Progress bar animation
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          scrollToSection('home', 'instant');
+
+          // Hide progress bar after completion
+          setTimeout(() => {
+            setShowProgress(false);
+          }, 100);
+          return 100;
+        }
+        return prev + 2;
+      });
+    }, 10);
+
+    return () => clearInterval(progressInterval);
+  }, []);
+
+  if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
 
-  const scrollToSection = (sectionId: string) => {
-    setCurrentSection(sectionId);
+  const scrollToSection = (
+    sectionId: string,
+    behavior: 'smooth' | 'instant' = 'smooth',
+  ) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -229,19 +264,40 @@ export default function HomePage({
   return (
     <>
       <Head>
-        <title>{`${weddingInfo.coupleNames} - Wedding`}</title>
+        <title>{`${weddingInfo.coupleNames} `}</title>
         <meta
           name="description"
-          content={`Join us for the wedding celebration of ${weddingInfo.coupleNames}`}
+          content={`Venez fêter avec nous le mariage d'${weddingInfo.coupleNames}`}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NavbarLayout
-        currentSection={currentSection}
-        onSectionChange={scrollToSection}
-      >
+      {/* Progress Bar */}
+      {showProgress && (
+        <Section id="progress" background="accent">
+          <div className="fixed top-0  z-[5000000] min-h-screen w-full bg-[#F38181] flex flex-col items-center justify-center space-y-4">
+            <span className={cn(bilbo.className, 'text-white text-5xl')}>
+              Bienvenue
+            </span>
+            <span className={cn(bilbo.className, 'text-white text-5xl')}>
+              {progress} %
+            </span>
+            <Progress
+              value={progress}
+              className="h-1  w-[50%]"
+              style={
+                {
+                  '--progress-background': '#F38181',
+                  '--progress-foreground': '#95E1D3',
+                } as React.CSSProperties
+              }
+            />
+          </div>
+        </Section>
+      )}
+
+      <NavbarLayout>
         <div className="min-h-screen bg-white">
           <HeroSection
             heroImage={heroImage as UploadedImage}
@@ -273,7 +329,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   try {
     // Fetch wedding information
     const weddingResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/wedding`,
+      `${process.env.API_URL || 'http://localhost:3001'}/api/wedding`,
     );
 
     const weddingInfo = weddingResponse.ok
@@ -282,14 +338,14 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     // Fetch accommodations
     const accommodationsResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/accommodations`,
+      `${process.env.API_URL || 'http://localhost:3001'}/api/accommodations`,
     );
     const accommodations = (
       accommodationsResponse.ok ? await accommodationsResponse.json() : []
     ) as Accommodation[];
 
     const imagesResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/images`,
+      `${process.env.API_URL || 'http://localhost:3001'}/api/images`,
     );
     const images = (
       imagesResponse.ok ? await imagesResponse.json() : []

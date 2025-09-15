@@ -6,13 +6,7 @@ import { ImageService } from './image.service';
 
 export interface CreateWeddingInfoDto {
   coupleNames: string;
-  presentationMessage: string;
-  weddingAddress: string;
   weddingDate: Date;
-  heroMessage: string;
-  heroAddress: string;
-  locationDirections: Direction[];
-  heroImageId?: string;
 }
 
 export interface UpdateWeddingInfoDto {

@@ -98,12 +98,9 @@ export default function AdminProgram() {
     if (!token) return;
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/program`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await fetch(`/api/admin/program`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -125,8 +122,8 @@ export default function AdminProgram() {
     if (!token) return;
     try {
       const url = editingEvent
-        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/program/${editingEvent.id}`
-        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/program`;
+        ? `/api/admin/program/${editingEvent.id}`
+        : `/api/admin/program`;
 
       const method = editingEvent ? 'PUT' : 'POST';
 
@@ -175,13 +172,10 @@ export default function AdminProgram() {
     if (!token) return;
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/admin/program/${eventId}`,
-        {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await fetch(`/api/admin/program/${eventId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.ok) {
         toast.warning('Événement supprimé avec succès !');
@@ -238,7 +232,7 @@ export default function AdminProgram() {
   return (
     <>
       <Head>
-        <title>Wedding Program - Admin</title>
+        <title>Admin - Programme</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <div className="p-6 space-y-8 flex flex-col">

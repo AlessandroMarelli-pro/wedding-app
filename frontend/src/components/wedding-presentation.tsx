@@ -1,18 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Direction } from '../types/api';
-
-interface WeddingInfo {
-  id: string;
-  coupleNames: string;
-  weddingDate: string;
-  weddingAddress: string;
-  presentationMessage: string;
-  locationDirections?: Direction[];
-  ceremonyTime?: string;
-  receptionTime?: string;
-  dressCode?: string;
-  specialInstructions?: string;
-}
+import { WeddingInfo } from '../types/api';
 
 interface WeddingPresentationProps {
   weddingInfo: WeddingInfo;
@@ -88,9 +75,7 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
   if (!timeLeft) {
     return (
       <div className={cn('text-center', className)}>
-        <p className="text-2xl  text-foreground text-white">
-          The big day is here! 🎉
-        </p>
+        <p className="text-2xl   text-white">The big day is here! 🎉</p>
       </div>
     );
   }

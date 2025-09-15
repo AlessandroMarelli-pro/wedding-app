@@ -315,14 +315,15 @@ export class MapsService {
         {
           origin: request.origin,
           destination: request.destination,
-          travelMode:
-            this.googleMaps.maps.TravelMode[request.travelMode || 'DRIVING'],
+          travelMode: (this.googleMaps?.maps?.TravelMode[
+            request.travelMode || 'DRIVING'
+          ] || this.googleMaps?.maps?.TravelMode.DRIVING) as any,
           avoidHighways: request.avoidHighways || false,
           avoidTolls: request.avoidTolls || false,
         },
         (result, status) => {
           if (status === 'OK' && result) {
-            resolve(result as DirectionsResult);
+            resolve(result as unknown as DirectionsResult);
           } else {
             reject(new Error(`Directions failed: ${status}`));
           }
@@ -350,13 +351,16 @@ export class MapsService {
     return new Promise((resolve, reject) => {
       const request = {
         query,
-        location: new this.googleMaps.maps.LatLng(location.lat, location.lng),
+        location: new (this.googleMaps?.maps?.LatLng as any)(
+          location.lat,
+          location.lng,
+        ),
         radius,
       };
 
       placesService.textSearch(request, (results, status) => {
         if (
-          status === this.googleMaps.maps.places.PlacesServiceStatus.OK &&
+          status === this.googleMaps?.maps?.places?.PlacesServiceStatus.OK &&
           results
         ) {
           const placeDetails = results.map((place) => ({
@@ -365,8 +369,8 @@ export class MapsService {
             formatted_address: place.formatted_address,
             geometry: {
               location: {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
+                lat: place.geometry?.location?.lat() || 0,
+                lng: place.geometry?.location?.lng() || 0,
               },
             },
             rating: place.rating,
@@ -377,7 +381,7 @@ export class MapsService {
               width: photo.width,
             })),
           }));
-          resolve(placeDetails);
+          resolve(placeDetails as PlaceDetails[]);
         } else {
           reject(new Error(`Places search failed: ${status}`));
         }
@@ -415,17 +419,17 @@ export class MapsService {
 
       placesService.getDetails(request, (place, status) => {
         if (
-          status === this.googleMaps.maps.places.PlacesServiceStatus.OK &&
+          status === this.googleMaps?.maps?.places?.PlacesServiceStatus.OK &&
           place
         ) {
           resolve({
-            place_id: place.place_id,
-            name: place.name,
-            formatted_address: place.formatted_address,
+            place_id: place.place_id || '',
+            name: place.name || '',
+            formatted_address: place.formatted_address || '',
             geometry: {
               location: {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
+                lat: place.geometry?.location?.lat() || 0,
+                lng: place.geometry?.location?.lng() || 0,
               },
             },
             rating: place.rating,
@@ -437,8 +441,8 @@ export class MapsService {
             })),
             opening_hours: place.opening_hours
               ? {
-                  open_now: place.opening_hours.open_now,
-                  weekday_text: place.opening_hours.weekday_text,
+                  open_now: place.opening_hours.open_now || false,
+                  weekday_text: place.opening_hours.weekday_text || [],
                 }
               : undefined,
             website: place.website,

@@ -7,6 +7,7 @@ export { ImageService } from './image.service';
 export { ProgramService } from './program.service';
 export { PythonScraperService } from './python-scraper.service';
 export { RSVPService } from './rsvp.service';
+export { SeedService } from './seed.service';
 export { UploadMaintenanceService } from './upload-maintenance.service';
 export { UrlParserService } from './url-parser.service';
 export { WeddingService } from './wedding.service';

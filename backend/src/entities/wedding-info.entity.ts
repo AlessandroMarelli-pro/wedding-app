@@ -23,30 +23,30 @@ export class WeddingInfo {
   @Column({ name: 'couple_names', length: 100 })
   coupleNames!: string;
 
-  @Column({ name: 'presentation_message', type: 'text', length: 2000 })
-  presentationMessage!: string;
+  @Column({ name: 'presentation_message', type: 'text', nullable: true })
+  presentationMessage?: string;
 
-  @Column({ name: 'wedding_address', length: 300 })
-  weddingAddress!: string;
+  @Column({ name: 'wedding_address', length: 300, nullable: true })
+  weddingAddress?: string;
 
-  @Column({ name: 'wedding_date', type: 'datetime' })
+  @Column({ name: 'wedding_date', type: 'date' })
   weddingDate!: Date;
 
-  @Column({ name: 'location_directions', type: 'json' })
-  locationDirections!: Direction[];
+  @Column({ name: 'location_directions', type: 'json', nullable: true })
+  locationDirections?: Direction[];
 
   @Column({ name: 'hero_image_id', nullable: true })
-  heroImageId!: string;
+  heroImageId?: string;
 
-  @Column({ name: 'hero_message', type: 'text', length: 500 })
-  heroMessage!: string;
+  @Column({ name: 'hero_message', type: 'text', nullable: true })
+  heroMessage?: string;
 
-  @Column({ name: 'hero_address', length: 200 })
-  heroAddress!: string;
+  @Column({ name: 'hero_address', length: 200, nullable: true })
+  heroAddress?: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt!: Date;
 }
