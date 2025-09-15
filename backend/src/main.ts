@@ -23,8 +23,8 @@ async function bootstrap() {
 
   // Enable CORS for frontend communication
   app.enableCors({
-    origin: [
-      process.env.CORS_ORIGIN || 'http://localhost:3000', // Next.js development server
+    origin: process.env.CORS_ORIGIN?.split(',') || [
+      'http://localhost:3000', // Next.js development server
       'http://localhost:3001', // Alternative port
       'https://wedding.example.com', // Production domain
     ],
