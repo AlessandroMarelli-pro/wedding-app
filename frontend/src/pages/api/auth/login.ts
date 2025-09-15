@@ -21,18 +21,18 @@ async function login(req: NextApiRequest, res: NextApiResponse) {
 
     // Compare password
     const isValidPassword = await comparePassword(password, admin.passwordHash);
+    console.log('isValidPassword', isValidPassword);
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Generate JWT token
-    const token = generateToken({
+    const accessToken = generateToken({
       adminId: admin.id,
       email: admin.email,
     });
-
     res.json({
-      token,
+      accessToken,
       admin: {
         id: admin.id,
         email: admin.email,

@@ -194,7 +194,15 @@ export default function HomePage({
 }: HomePageProps) {
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(true);
-
+  const scrollToSection = (
+    sectionId: string,
+    behavior: 'smooth' | 'instant' = 'smooth',
+  ) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior });
+    }
+  };
   // Handle URL anchors on page load and progress bar
   useEffect(() => {
     // Remove any anchor from the URL on page load
@@ -206,15 +214,6 @@ export default function HomePage({
     // Ensure we're at the top of the page
     window.scrollTo(0, 0);
 
-    const scrollToSection = (
-      sectionId: string,
-      behavior: 'smooth' | 'instant' = 'smooth',
-    ) => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior });
-      }
-    };
     // Progress bar animation
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
@@ -327,25 +326,19 @@ export default function HomePage({
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     // Fetch wedding information
-    const weddingResponse = await fetch(
-      `${process.env.API_URL || 'http://localhost:3001'}/api/wedding`,
-    );
+    const weddingResponse = await fetch(`/api/wedding`);
 
     const weddingInfo = weddingResponse.ok
       ? await weddingResponse.json()
       : null;
 
     // Fetch accommodations
-    const accommodationsResponse = await fetch(
-      `${process.env.API_URL || 'http://localhost:3001'}/api/accommodations`,
-    );
+    const accommodationsResponse = await fetch(`/api/accommodations`);
     const accommodations = (
       accommodationsResponse.ok ? await accommodationsResponse.json() : []
     ) as Accommodation[];
 
-    const imagesResponse = await fetch(
-      `${process.env.API_URL || 'http://localhost:3001'}/api/images`,
-    );
+    const imagesResponse = await fetch(`/api/images`);
     const images = (
       imagesResponse.ok ? await imagesResponse.json() : []
     ) as UploadedImage[];

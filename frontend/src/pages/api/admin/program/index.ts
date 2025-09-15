@@ -1,0 +1,69 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
+import { prisma } from '../../../../../lib/prisma';
+
+async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
+  try {
+    const {
+      title,
+      description,
+      startTime,
+      endTime,
+      location,
+      displayOrder,
+      includeInCalendar,
+      icon,
+    } = req.body;
+
+    // Get the next display order if not provided
+    let finalDisplayOrder = displayOrder;
+    if (!finalDisplayOrder) {
+      const lastEvent = await prisma.programEvent.findFirst({
+        orderBy: { displayOrder: 'desc' },
+      });
+      finalDisplayOrder = (lastEvent?.displayOrder || 0) + 1;
+    }
+
+    const event = await prisma.programEvent.create({
+      data: {
+        title,
+        description,
+        startTime: new Date(startTime),
+        endTime: new Date(endTime),
+        location,
+        displayOrder: finalDisplayOrder,
+        includeInCalendar: Boolean(includeInCalendar),
+        icon,
+      },
+    });
+
+    res.status(201).json(event);
+  } catch (error) {
+    console.error('Create program event error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function getAllEvents(req: AuthenticatedRequest, res: NextApiResponse) {
+  try {
+    const events = await prisma.programEvent.findMany({
+      orderBy: { displayOrder: 'asc' },
+    });
+
+    res.json(events);
+  } catch (error) {
+    console.error('Get program events error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  switch (req.method) {
+    case 'GET':
+      return withAuth(getAllEvents)(req, res);
+    case 'POST':
+      return withAuth(createEvent)(req, res);
+    default:
+      return res.status(405).json({ error: 'Method not allowed' });
+  }
+}

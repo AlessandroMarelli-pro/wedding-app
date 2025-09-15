@@ -29,7 +29,7 @@ export default function AdminLogin() {
       });
 
       const data = await response.json();
-      console.log(data);
+      console.log('Response', data, response.ok);
 
       if (response.ok) {
         // Store the token

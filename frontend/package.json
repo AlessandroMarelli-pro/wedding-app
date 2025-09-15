@@ -12,7 +12,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "cypress run",
-    "test:e2e:open": "cypress open"
+    "test:e2e:open": "cypress open",
+    "seed": "node scripts/seed-database.js",
+    "seed:reset": "node scripts/seed-database.js --reset"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

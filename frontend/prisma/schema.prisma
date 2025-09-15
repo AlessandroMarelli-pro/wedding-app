@@ -89,6 +89,8 @@ model RSVPConfirmation {
   isAttending         Boolean  @map("is_attending")
   confirmedPartySize  Int      @map("confirmed_party_size")
   message             String?  @db.Text
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
 
   // Relationships
   guest Guest @relation(fields: [guestId], references: [id])
