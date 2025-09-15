@@ -173,7 +173,7 @@ export const SidebarLink = ({
       )}
       {...props}
     >
-      {link.icon}
+      <div className="group-hover/sidebar:animate-pulse">{link.icon}</div>
 
       <motion.span
         animate={{
