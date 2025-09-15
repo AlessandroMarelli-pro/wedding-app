@@ -2,12 +2,12 @@ require('dotenv').config({ path: './.env' });
 const { Client } = require('pg');
 
 async function createDatabase() {
-  // Parse DATABASE_URL or use individual components
+  // Parse POSTGRES_PRISMA_URL or use individual components
   let connectionConfig;
 
-  if (process.env.DATABASE_URL) {
-    // Extract components from DATABASE_URL
-    const url = new URL(process.env.DATABASE_URL);
+  if (process.env.POSTGRES_PRISMA_URL) {
+    // Extract components from POSTGRES_PRISMA_URL
+    const url = new URL(process.env.POSTGRES_PRISMA_URL);
     connectionConfig = {
       user: url.username,
       host: url.hostname,
@@ -26,8 +26,8 @@ async function createDatabase() {
     };
   }
 
-  const dbName = process.env.DATABASE_URL
-    ? new URL(process.env.DATABASE_URL).pathname.slice(1)
+  const dbName = process.env.POSTGRES_PRISMA_URL
+    ? new URL(process.env.POSTGRES_PRISMA_URL).pathname.slice(1)
     : process.env.DB_NAME || 'wedding_db';
 
   const client = new Client(connectionConfig);

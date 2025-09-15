@@ -336,7 +336,7 @@ node scripts/test-maintenance.js
 # Required environment variables
 CRON_SECRET="your-secure-cron-secret"
 JWT_SECRET="your-jwt-secret"
-DATABASE_URL="your-database-url"
+POSTGRES_PRISMA_URL="your-database-url"
 ```
 
 ---

@@ -52,7 +52,7 @@ Create a `.env.production` file in your `frontend/` directory:
 
 ```env
 # Database Configuration
-DATABASE_URL="postgresql://username:password@host:port/database?schema=public"
+POSTGRES_PRISMA_URL="postgresql://username:password@host:port/database?schema=public"
 
 # JWT Configuration
 JWT_SECRET="your-super-secure-jwt-secret-key-minimum-32-characters"
@@ -97,7 +97,7 @@ Update your `frontend/vercel.json`:
     }
   },
   "env": {
-    "DATABASE_URL": "@database_url",
+    "POSTGRES_PRISMA_URL": "@database_url",
     "JWT_SECRET": "@jwt_secret",
     "JWT_EXPIRES_IN": "@jwt_expires_in",
     "NODE_ENV": "@node_env",
@@ -157,7 +157,7 @@ Update your `frontend/vercel.json`:
 
 3. **Set Environment Variables**
    ```bash
-   vercel env add DATABASE_URL
+   vercel env add POSTGRES_PRISMA_URL
    vercel env add JWT_SECRET
    vercel env add JWT_EXPIRES_IN
    vercel env add NODE_ENV

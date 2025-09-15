@@ -67,7 +67,7 @@ Successfully migrated JWT authentication system to Next.js API routes.
 cp env.template .env
 
 # Edit .env with your PostgreSQL credentials
-DATABASE_URL="postgresql://postgres:password@localhost:5432/wedding_db"
+POSTGRES_PRISMA_URL="postgresql://postgres:password@localhost:5432/wedding_db"
 ```
 
 ### **2. Database Setup**

@@ -37,7 +37,7 @@ Use this checklist to ensure a smooth deployment of your wedding app to Vercel.
 
 - [ ] **Create Postgres Database**: `vercel storage create postgres wedding-db`
 - [ ] **Get Connection String**: Copy from Vercel dashboard
-- [ ] **Update DATABASE_URL**: Set in environment variables
+- [ ] **Update POSTGRES_PRISMA_URL**: Set in environment variables
 
 ### Step 3: Environment Variables
 
@@ -45,7 +45,7 @@ Set these in Vercel dashboard or via CLI:
 
 **Required Variables:**
 
-- [ ] `DATABASE_URL` - PostgreSQL connection string
+- [ ] `POSTGRES_PRISMA_URL` - PostgreSQL connection string
 - [ ] `JWT_SECRET` - Secure random string (32+ chars)
 - [ ] `JWT_EXPIRES_IN` - Token expiration (e.g., "7d")
 - [ ] `NODE_ENV` - Set to "production"
@@ -130,7 +130,7 @@ Set these in Vercel dashboard or via CLI:
 ### Common Issues
 
 - [ ] **Build Failures**: Check build logs in Vercel dashboard
-- [ ] **Database Connection**: Verify DATABASE_URL format
+- [ ] **Database Connection**: Verify POSTGRES_PRISMA_URL format
 - [ ] **Environment Variables**: Ensure all required vars are set
 - [ ] **File Uploads**: Check upload directory permissions
 - [ ] **CORS Errors**: Verify CORS_ORIGIN matches your domain

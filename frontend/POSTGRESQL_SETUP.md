@@ -42,7 +42,7 @@ cp env.template .env
 Edit `.env` file with your PostgreSQL credentials:
 
 ```env
-DATABASE_URL="postgresql://username:password@localhost:5432/wedding_db"
+POSTGRES_PRISMA_URL="postgresql://username:password@localhost:5432/wedding_db"
 ```
 
 ### 3. Create Database
@@ -120,13 +120,13 @@ After setup, you can login with:
 ### Vercel Deployment
 
 1. Set up PostgreSQL database (e.g., Supabase, Railway, Neon)
-2. Add `DATABASE_URL` environment variable in Vercel dashboard
+2. Add `POSTGRES_PRISMA_URL` environment variable in Vercel dashboard
 3. Deploy application
 
 ### Environment Variables for Production
 
 ```env
-DATABASE_URL="postgresql://user:password@host:port/database"
+POSTGRES_PRISMA_URL="postgresql://user:password@host:port/database"
 JWT_SECRET="your-production-secret-key"
 DEFAULT_ADMIN_EMAIL="your-admin@email.com"
 DEFAULT_ADMIN_PASSWORD="your-secure-password"
