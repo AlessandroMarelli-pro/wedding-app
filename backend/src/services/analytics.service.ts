@@ -246,9 +246,10 @@ export class AnalyticsService {
     } = {};
 
     confirmations.forEach((confirmation) => {
-      const date = confirmation.confirmedAt.toISOString().split('T')[0];
-      const week = this.getWeekKey(confirmation.confirmedAt);
-      const month = this.getMonthKey(confirmation.confirmedAt);
+      const confirmedAt = new Date(confirmation.confirmedAt);
+      const date = confirmedAt.toISOString().split('T')[0];
+      const week = this.getWeekKey(confirmedAt);
+      const month = this.getMonthKey(confirmedAt);
 
       // Daily
       if (!dailyResponses[date]) {

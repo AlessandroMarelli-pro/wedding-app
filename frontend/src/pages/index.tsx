@@ -140,7 +140,7 @@ const BonusSection = () => {
             'text-2xl text-[#F38181] flex lg:flex-row flex-col items-center gap-2 pt-5',
           )}
         >
-          En bonus, l'instant où la demande de mariage a été acceptée{' '}
+          En bonus, l'instant où la demande de mariage a été faite{' '}
           <IconHeartHandshake />
         </span>
         <iframe
