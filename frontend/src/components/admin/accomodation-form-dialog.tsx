@@ -171,7 +171,7 @@ export const AccomodationFormDialog = ({
       <DialogTrigger asChild className="space-y-2">
         <div>
           <Button
-            variant="default"
+            variant="secondary"
             onClick={() => resetForm()}
             className="hidden lg:flex"
           >
@@ -179,7 +179,7 @@ export const AccomodationFormDialog = ({
             <Plus />
           </Button>
           <Button
-            variant="default"
+            variant="secondary"
             onClick={() => resetForm()}
             className="block lg:hidden"
           >
@@ -187,20 +187,24 @@ export const AccomodationFormDialog = ({
           </Button>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto font-sans">
-        <DialogHeader>
-          <DialogTitle>
-            {editingAccommodation ? 'Edition du logement' : 'Nouveau logement'}
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-[95%]  max-h-[80vh] lg:max-w-2xl lg:max-h-[80vh] overflow-y-auto font-sans">
+        <div className="-mt-3 -mx-6 border-b pb-3 px-6 flex justify-between items-center">
+          <DialogHeader>
+            <DialogTitle>
+              {editingAccommodation
+                ? 'Edition du logement'
+                : 'Nouveau logement'}
+            </DialogTitle>
+          </DialogHeader>
+        </div>
         <Form {...formData}>
           <form
             onSubmit={formData.handleSubmit(onSubmit)}
-            className="space-y-4"
+            className="space-y-4 "
           >
             {/* URL Parser Section */}
             {!editingAccommodation && (
-              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border">
+              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border ">
                 <div>
                   <div className="flex space-x-2">
                     <FormItem className="w-full">
@@ -212,7 +216,7 @@ export const AccomodationFormDialog = ({
                             id="urlInput"
                             type="url"
                             value={urlInput}
-                            className="w-full"
+                            className="w-full text-xs lg:text-sm"
                             onChange={(e) => setUrlInput(e.target.value)}
                           />
                           <Button
@@ -221,9 +225,7 @@ export const AccomodationFormDialog = ({
                             variant="outline"
                             className="whitespace-nowrap"
                           >
-                            {isParsingUrl
-                              ? 'Analyse en cours...'
-                              : "Analyser l'URL"}
+                            {isParsingUrl ? 'Analyse en cours...' : 'Analyser '}
                             <IconAnalyzeFilled
                               className={isParsingUrl ? 'animate-spin' : ''}
                             />
@@ -251,7 +253,11 @@ export const AccomodationFormDialog = ({
                       <FormItem className="w-full">
                         <FormLabel>Nom *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Nom du logement" {...field} />
+                          <Input
+                            placeholder="Nom du logement"
+                            {...field}
+                            className="text-xs lg:text-sm"
+                          />
                         </FormControl>
                         <FormDescription>
                           Ex: Hotel de Paris, Hotel de la Paix
@@ -268,7 +274,7 @@ export const AccomodationFormDialog = ({
                         <FormLabel>Description *</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="h-40"
+                            className="h-40 text-xs lg:text-sm"
                             placeholder="Description du logement"
                             {...field}
                           />
@@ -291,7 +297,11 @@ export const AccomodationFormDialog = ({
                       <FormItem className="w-full">
                         <FormLabel>Adresse *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Adresse complète" {...field} />
+                          <Input
+                            placeholder="Adresse complète"
+                            {...field}
+                            className="text-xs lg:text-sm"
+                          />
                         </FormControl>
                         <FormDescription>
                           Ex: 123 Rue de la Paix, 75000 Paris
@@ -308,7 +318,11 @@ export const AccomodationFormDialog = ({
                       <FormItem className="w-full">
                         <FormLabel>Prix *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Prix par nuit" {...field} />
+                          <Input
+                            placeholder="Prix par nuit"
+                            {...field}
+                            className="text-xs lg:text-sm"
+                          />
                         </FormControl>
                         <FormDescription>Ex: 120-180€/nuit</FormDescription>
                         <FormMessage />
@@ -326,6 +340,7 @@ export const AccomodationFormDialog = ({
                           <Input
                             placeholder="Url complète de l'annonnce"
                             {...field}
+                            className="text-xs lg:text-sm"
                           />
                         </FormControl>
                         <FormDescription>
@@ -346,11 +361,13 @@ export const AccomodationFormDialog = ({
                           <Input
                             placeholder="Url des images qui seront affichées sur le site"
                             {...field}
+                            className="text-xs lg:text-sm"
                           />
                         </FormControl>
                         <FormDescription>
-                          Ex:
-                          https://www.airbnb.com/rooms/...,https://www.airbnb.com/rooms/...,https://www.airbnb.com/rooms/...
+                          Ex: https://www.airbnb.com/rooms/...,
+                          https://www.airbnb.com/rooms/...,
+                          https://www.airbnb.com/rooms/...
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -369,7 +386,7 @@ export const AccomodationFormDialog = ({
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>
-                          <FormLabel className="text-sm font-normal">
+                          <FormLabel className="text-xs lg:text-sm font-normal">
                             Marquer comme recommandé
                           </FormLabel>
                         </FormItem>
@@ -381,13 +398,13 @@ export const AccomodationFormDialog = ({
                 <div className="flex gap-2 justify-between">
                   <Button
                     type="button"
-                    variant="default"
+                    variant="secondary"
                     onClick={() => {
                       setIsDialogOpen(false);
                       resetForm();
                     }}
                   >
-                    Cancel
+                    Annuler
                   </Button>
                   <Button
                     type="submit"
@@ -395,10 +412,10 @@ export const AccomodationFormDialog = ({
                     disabled={isSubmitting}
                   >
                     {isSubmitting
-                      ? 'Saving...'
+                      ? 'En cours...'
                       : editingAccommodation
-                        ? 'Update'
-                        : 'Create'}
+                        ? 'Éditer'
+                        : 'Créer'}
                   </Button>
                 </div>
               </>

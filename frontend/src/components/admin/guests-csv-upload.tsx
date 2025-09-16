@@ -203,7 +203,7 @@ export const GuestsCsvUploadDialog = ({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">
+        <Button variant="secondary">
           Déposer un fichier <File />
         </Button>
       </DialogTrigger>

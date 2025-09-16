@@ -162,7 +162,7 @@ export default function AdminAccommodations() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="p-6 space-y-8 flex flex-col">
+      <div className="p-4 lg:p-6 space-y-8 flex flex-col">
         {/* Header */}
         <div className="space-y-8">
           <div className="flex justify-between items-start ">
@@ -200,7 +200,7 @@ export default function AdminAccommodations() {
                     <div className="flex justify-between items-start">
                       <div className="flex items-center lg:space-x-3">
                         <div>
-                          <CardTitle className="text-lg flex lg:flex-row flex-col   lg:space-x-2">
+                          <CardTitle className="text-lg flex lg:flex-row flex-col  space-y-2 lg:space-y-0 lg:space-x-2">
                             <span>{accommodation.name}</span>
                             {accommodation.priceRange && (
                               <>
@@ -212,10 +212,10 @@ export default function AdminAccommodations() {
                             )}
                             {accommodation.isRecommended && (
                               <>
-                                <Dot />
-                                <Badge variant="warning">
+                                <Dot className="lg:block hidden" />
+                                <Badge variant="warning" className="w-fit">
                                   <Star className="w-3 h-3 mr-1" />
-                                  Recommended
+                                  Recommandé
                                 </Badge>
                               </>
                             )}
