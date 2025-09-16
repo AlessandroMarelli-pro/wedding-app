@@ -193,6 +193,10 @@ export const Vortex = (props: VortexProps) => {
     const height = window?.innerHeight;
     canvas.width = innerWidth;
     canvas.height = height;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
 
     center[0] = 0.5 * canvas.width;
     center[1] = 0.5 * canvas.height;
