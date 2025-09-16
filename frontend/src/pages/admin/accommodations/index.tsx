@@ -12,7 +12,7 @@ import { Accommodation } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconWorldWww } from '@tabler/icons-react';
 import parse from 'html-react-parser';
-import { Dot, Edit, MapPin, Star, Trash2 } from 'lucide-react';
+import { Dot, Edit, MapPin, Star, Trash } from 'lucide-react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -232,7 +232,7 @@ export default function AdminAccommodations() {
                         </Button>
 
                         <AlertDialog
-                          triggerIcon={<Trash2 className="w-4 h-4" />}
+                          triggerIcon={<Trash className="w-4 h-4" />}
                           triggerText=""
                           triggerVariant="ghost"
                           triggerClass="text-destructive size-6 lg:size-8"

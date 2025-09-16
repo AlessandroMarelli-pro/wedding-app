@@ -67,11 +67,12 @@ export default function AlertDialog({
             <X /> Annuler
           </Button>
           <Button
-            variant="destructive"
+            variant="ghost"
             onClick={() => {
               action();
               setIsDialogOpen(false);
             }}
+            className="text-destructive hover:text-destructive"
           >
             <Trash />
             {actionText}

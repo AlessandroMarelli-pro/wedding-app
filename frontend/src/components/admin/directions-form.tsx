@@ -202,10 +202,10 @@ export const DirectionsForm = ({
                     <Edit />
                   </Button>
                   <Button
-                    variant="destructive"
+                    variant="ghost"
                     onClick={() => removeDirection(index)}
                     size="icon"
-                    className="bg-destructive"
+                    className="text-destructive hover:text-destructive"
                   >
                     <Trash />
                   </Button>

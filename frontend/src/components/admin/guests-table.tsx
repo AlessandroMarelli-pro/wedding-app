@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/table';
 import { Guest } from '@/types/api';
 import { IconApple, IconMessage, IconUserQuestion } from '@tabler/icons-react';
-import { CheckCircle, Clock, Trash2, X } from 'lucide-react';
+import { CheckCircle, Clock, Trash, X } from 'lucide-react';
 import { z } from 'zod';
 import AlertDialog from '../alert-dialog';
 import { Badge } from '../ui/badge';
@@ -192,7 +192,7 @@ const columns: (
     id: 'actions',
     cell: ({ row }) => (
       <AlertDialog
-        triggerIcon={<Trash2 className="w-4 h-4" />}
+        triggerIcon={<Trash className="w-4 h-4" />}
         triggerText=""
         triggerVariant="ghost"
         triggerClass="text-destructive"

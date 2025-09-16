@@ -251,9 +251,9 @@ export default function AdminProgram() {
         <title>Admin - Programme</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <div className="p-6 space-y-8 flex flex-col">
+      <div className="p-4 lg:p-6 space-y-8 flex flex-col">
         <div className="space-y-8">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col lg:flex-row lg:justify-between items-start space-y-4 lg:space-y-0">
             <div>
               <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
                 Programme de mariage
@@ -263,9 +263,18 @@ export default function AdminProgram() {
                 Gérez votre calendrier de mariage et vos événements
               </p>
             </div>
-            <Button onClick={startCreate}>
-              Ajouter un événement <Plus />
-            </Button>
+            <div className="lg:w-fit w-full flex text-center justify-center items-center">
+              {!isCreating && (
+                <Button
+                  onClick={startCreate}
+                  variant="secondary"
+                  disabled={isCreating}
+                >
+                  Ajouter un événement
+                  <Plus />
+                </Button>
+              )}
+            </div>
           </div>
 
           {(isCreating || editingEvent) && (
@@ -286,7 +295,7 @@ export default function AdminProgram() {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-8"
                   >
-                    <div className="flex justify-between items-start gap-4">
+                    <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
                       <FormField
                         control={form.control}
                         name="title"
@@ -297,6 +306,7 @@ export default function AdminProgram() {
                               <Input
                                 placeholder="Cérémonie de mariage"
                                 {...field}
+                                className="text-xs lg:text-sm"
                               />
                             </FormControl>
                             <FormDescription>
@@ -316,6 +326,7 @@ export default function AdminProgram() {
                               <Input
                                 placeholder="Nom et ville du lieu"
                                 {...field}
+                                className="text-xs lg:text-sm"
                               />
                             </FormControl>
                             <FormDescription>
@@ -388,7 +399,7 @@ export default function AdminProgram() {
                               )}
                               pattern="[0-9]{2}:[0-9]{2}"
                               onChange={handleChangeTime}
-                              className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:disabled [&::-webkit-calendar-picker-indicator]:appearance-none"
+                              className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:disabled [&::-webkit-calendar-picker-indicator]:appearance-none text-xs lg:text-sm"
                             />
                             <FormDescription>
                               Heure à laquelle l'événement aura lieu.
@@ -399,11 +410,7 @@ export default function AdminProgram() {
                       />
                     </div>
                     <div className="flex gap-2 flex-row justify-between">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={resetForm}
-                      >
+                      <Button type="button" variant="ghost" onClick={resetForm}>
                         Annuler
                       </Button>
                       <Button type="submit" variant="success">
@@ -420,16 +427,36 @@ export default function AdminProgram() {
             <div className="space-y-4">
               {events.map((event) => (
                 <Card key={event.id}>
-                  <CardContent className="p-6">
+                  <CardContent className="p-4 lg:p-6">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg  text-foreground">
-                            {event.title}
-                          </h3>
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <div>
+                            <h3 className="text-lg  text-foreground">
+                              {event.title}
+                            </h3>
+                          </div>
+
+                          <div className="flex gap-2 ml-4">
+                            <Button
+                              variant="ghost"
+                              onClick={() => startEdit(event)}
+                              size="icon"
+                            >
+                              <Edit />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              onClick={() => handleDelete(event.id)}
+                              size="icon"
+                              className="text-destructive hover:text-destructive"
+                            >
+                              <Trash />
+                            </Button>
+                          </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex flex-col lg:flex-row lg:items-center gap-2 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
                             {formatDate(event.startTime)} à{' '}
@@ -440,24 +467,6 @@ export default function AdminProgram() {
                             {event.location}
                           </div>
                         </div>
-                      </div>
-
-                      <div className="flex gap-2 ml-4">
-                        <Button
-                          variant="ghost"
-                          onClick={() => startEdit(event)}
-                          size="icon"
-                        >
-                          <Edit />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          onClick={() => handleDelete(event.id)}
-                          size="icon"
-                          className="bg-destructive"
-                        >
-                          <Trash />
-                        </Button>
                       </div>
                     </div>
                   </CardContent>
