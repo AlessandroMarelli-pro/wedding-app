@@ -5,7 +5,8 @@ import { logger } from './logger';
 
 // Upload directory configuration
 export const UPLOAD_PATHS =
-  (process.env.UPLOAD_PATHS && JSON.parse(process.env.UPLOAD_PATHS)) ||
+  (process.env.UPLOAD_PATHS &&
+    (JSON.parse(process.env.UPLOAD_PATHS) as Record<string, string>)) ||
   ({
     IMAGES: './uploads/images',
     DOCUMENTS: './uploads/documents',
@@ -62,9 +63,9 @@ export function ensureUploadDirectories(): void {
   logger.debug('Ensuring upload directories exist');
 
   Object.values(UPLOAD_PATHS).forEach((dir) => {
-    if (!fs.existsSync(dir as string)) {
+    if (!fs.existsSync(dir)) {
       logger.info(`Creating upload directory: ${dir}`);
-      fs.mkdirSync(dir as string, { recursive: true, mode: 0o755 });
+      fs.mkdirSync(dir, { recursive: true, mode: 0o755 });
     }
   });
 
