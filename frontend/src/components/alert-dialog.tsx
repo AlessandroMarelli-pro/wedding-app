@@ -49,7 +49,7 @@ export default function AlertDialog({
           {triggerText} {triggerIcon}
         </Button>
       </DialogTrigger>
-      <DialogContent className="overflow-hidden font-sans">
+      <DialogContent className="overflow-hidden font-sans max-w-[95%]  max-h-[80vh] lg:max-w-2xl lg:max-h-[80vh]">
         <div className="-mt-3 -mx-6 border-b pb-3 px-6 flex justify-between items-center">
           <DialogTitle className="flex items-center gap-2">
             <OctagonAlert className="h-5 w-5 text-destructive" />
@@ -62,8 +62,8 @@ export default function AlertDialog({
             {description}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="border-t -mx-6 -mb-6 px-6 py-5">
-          <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+        <DialogFooter className="border-t -mx-6 -mb-6 px-6 py-5 flex flex-row justify-between gap-4">
+          <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>
             <X /> Annuler
           </Button>
           <Button

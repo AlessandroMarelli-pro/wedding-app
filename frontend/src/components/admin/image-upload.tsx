@@ -97,7 +97,7 @@ export function ImageUpload({
       <Card>
         <CardHeader></CardHeader>
 
-        <CardContent className="space-y-4 flex flex-row gap-4">
+        <CardContent className="space-y-4 flex lg:flex-row flex-col gap-4 ">
           <div className="w-full flex flex-col gap-4">
             <CardTitle>Déposer une image</CardTitle>
             <CardDescription>
@@ -111,7 +111,10 @@ export function ImageUpload({
                   setUploadOptions({ ...uploadOptions, usageLocation: value })
                 }
               >
-                <SelectTrigger className="w-full" id="usage-location">
+                <SelectTrigger
+                  className="text-xs lg:text-sm"
+                  id="usage-location"
+                >
                   <SelectValue placeholder="Selectionner une catégorie de section" />
                 </SelectTrigger>
                 <SelectContent className="font-sans">
@@ -131,6 +134,7 @@ export function ImageUpload({
               <Label htmlFor="alt-text">Texte alternatif (Accessibilité)</Label>
               <Input
                 id="alt-text"
+                className="text-xs lg:text-sm"
                 placeholder="Décrivez l'image pour les lecteurs d'écran"
                 value={uploadOptions.altText || ''}
                 onChange={(e) =>
@@ -190,7 +194,7 @@ export function ImageUpload({
                     </div>
                   </div>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => {
                       setSelectedFile(null);

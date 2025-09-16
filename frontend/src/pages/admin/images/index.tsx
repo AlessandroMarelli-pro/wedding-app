@@ -102,7 +102,7 @@ export default function AdminImages() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="p-6 space-y-8">
+      <div className="p-4 lg:p-6 space-y-8">
         <div>
           <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
             Gestion des images
@@ -186,7 +186,7 @@ export default function AdminImages() {
                         <p className="truncate">Alt: {image.altText}</p>
                       )}
                     </div>
-                    <div className="gap-4  flex flex-row justify-between">
+                    <div className="gap-4  flex flex-row justify-between pt-4">
                       <Button
                         variant="ghost"
                         onClick={() =>
@@ -199,8 +199,9 @@ export default function AdminImages() {
                         Voir <Eye />
                       </Button>
                       <AlertDialog
+                        triggerClass="text-destructive"
                         triggerIcon={<Trash />}
-                        triggerVariant="destructive"
+                        triggerVariant="ghost"
                         mainTitle="Supprimer l'image"
                         triggerText="Supprimer"
                         title={`Êtes-vous sûr de vouloir supprimer cette image ${image.originalName} ?`}
