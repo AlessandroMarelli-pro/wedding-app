@@ -141,10 +141,11 @@ export default function AdminImages() {
                 </svg>
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No images uploaded yet
+                Aucune image déposée
               </h3>
               <p className="text-gray-500">
-                Upload your first image using the form above
+                Déposez votre première image en utilisant le formulaire
+                ci-dessus
               </p>
             </div>
           ) : (
