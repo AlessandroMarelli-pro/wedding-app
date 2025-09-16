@@ -93,8 +93,8 @@ export default function GuestsPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="p-6 space-y-8">
-        <div className="flex items-center justify-between">
+      <div className="p-4 lg:p-6 space-y-8 ">
+        <div className="flex flex-col lg:flex-row lg:justify-between items-start space-y-4 lg:space-y-0">
           <div>
             <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
               Gestion des invités
@@ -103,10 +103,12 @@ export default function GuestsPage() {
               Gérez votre liste d'invités et vos réponses de confirmation
             </p>
           </div>
-          <GuestsCsvUploadDialog
-            fetchData={fetchData}
-            csvUploads={csvUploads}
-          />
+          <div className="lg:w-fit w-full flex text-center justify-center items-center">
+            <GuestsCsvUploadDialog
+              fetchData={fetchData}
+              csvUploads={csvUploads}
+            />
+          </div>
         </div>
 
         {/* Stats Cards */}

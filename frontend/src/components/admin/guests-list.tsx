@@ -108,17 +108,17 @@ export const GuestsList = ({
         <div className="flex-1">
           <Input
             type="text"
-            placeholder="Search guests..."
+            placeholder="Rechercher un invité..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 lg:flex-row flex-col ">
           {(['all', 'confirmed', 'declined', 'pending'] as const).map(
             (status) => (
               <Button
                 key={status}
-                variant={statusFilter === status ? 'default' : 'outline'}
+                variant={statusFilter === status ? 'outline' : 'ghost'}
                 onClick={() => setStatusFilter(status)}
               >
                 {frenchStatuses[status as keyof typeof frenchStatuses]}
@@ -127,7 +127,7 @@ export const GuestsList = ({
           )}
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
-          <Button onClick={handleExportCSV}>
+          <Button onClick={handleExportCSV} variant="secondary">
             <Download className="h-4 w-4" />
             <span>Exporter les données (CSV)</span>
           </Button>

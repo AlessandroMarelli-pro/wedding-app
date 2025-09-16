@@ -80,7 +80,7 @@ export const GuestsCsvUpload = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       {!selectedFile && (
         <>
           <FileUpload
@@ -124,7 +124,7 @@ export const GuestsCsvUpload = ({
               setUploadMessage(null);
             }}
             disabled={isUploading}
-            variant="outline"
+            variant="secondary"
           >
             Annuler
           </Button>
@@ -207,11 +207,13 @@ export const GuestsCsvUploadDialog = ({
           Déposer un fichier <File />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto font-sans">
+      <DialogContent className="max-w-[95%]  max-h-[80vh] lg:max-w-2xl lg:max-h-[80vh] overflow-y-auto font-sans">
         {' '}
-        <DialogHeader>
-          <DialogTitle>Déposer un fichier</DialogTitle>
-        </DialogHeader>
+        <div className="-mt-3 -mx-6 border-b pb-3 px-6 flex justify-between items-center">
+          <DialogHeader>
+            <DialogTitle>Déposer un fichier</DialogTitle>
+          </DialogHeader>
+        </div>
         <GuestsCsvUpload fetchData={fetchData} csvUploads={csvUploads} />
       </DialogContent>
     </Dialog>

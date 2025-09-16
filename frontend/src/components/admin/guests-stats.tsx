@@ -81,12 +81,16 @@ export const GuestsStats = ({ guests }: { guests: Guest[] }) => {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {data.map((item) => (
         <Card key={item.title} className={`bg-${item.color}-50`}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg font-medium">{item.title}</CardTitle>
-            <item.icon className={cn(' ', `text-${item.color}-500`)} />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 lg:p-6">
+            <CardTitle className="lg:text-lg font-medium">
+              {item.title}
+            </CardTitle>
+            <item.icon
+              className={cn('size-4 lg:size-6 ', `text-${item.color}-500`)}
+            />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{item.value}</div>
+          <CardContent className="">
+            <div className="text-xl lg:text-3xl font-bold">{item.value}</div>
           </CardContent>
         </Card>
       ))}
