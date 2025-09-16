@@ -2,6 +2,8 @@ import { NavbarLayout } from '@/components/admin/admin-navbar-layout';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/sonner';
 import '@/styles/globals.css';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 
@@ -22,6 +24,8 @@ export default function App({ Component, pageProps }: AppProps) {
       ) : (
         <Component {...pageProps} />
       )}
+      <SpeedInsights />
+      <Analytics />
     </ErrorBoundary>
   );
 }
