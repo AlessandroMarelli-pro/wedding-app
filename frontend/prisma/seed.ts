@@ -34,6 +34,9 @@ export class SeedService {
       // Seed wedding info
       await this.seedWeddingInfo();
 
+      // Seed app config
+      await this.seedAppConfig();
+
       console.log('✅ Database seeding completed successfully!');
     } catch (error) {
       console.error('❌ Database seeding failed:', error);
@@ -144,6 +147,31 @@ export class SeedService {
     });
 
     console.log('💒 Created default wedding info');
+  }
+
+  /**
+   * Seed app configuration
+   */
+  private static async seedAppConfig(): Promise<void> {
+    const existingColorConfig = await prisma.appConfig.findUnique({
+      where: {
+        key: 'primary_color',
+      },
+    });
+
+    if (existingColorConfig) {
+      console.log('🎨 App config already exists');
+      return;
+    }
+
+    await prisma.appConfig.create({
+      data: {
+        key: 'primary_color',
+        value: '#95E1D3',
+      },
+    });
+
+    console.log('🎨 Created default app config');
   }
 
   /**

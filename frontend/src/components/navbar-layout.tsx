@@ -1,5 +1,6 @@
 'use client';
 
+import { useAppColor } from '@/hooks/useAppColor';
 import { ReactNode, useState } from 'react';
 import {
   MobileNav,
@@ -37,7 +38,7 @@ const navItems = [
 
 export function NavbarLayout({ children }: NavbarLayoutProps) {
   // Configure navbar based on type
-
+  const { color: appColor } = useAppColor();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleNavClick = (
@@ -65,7 +66,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
           {/* <RSVPFormModal
             shadowCls="shadow-none"
             btnColor="bg-[#F38181]"
-            btnTextColor="text-[#95E1D3] font-bold"
+            btnTextColor={`text-[${appColor}] font-bold`}
           /> */}
         </NavBody>
 
@@ -97,7 +98,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
             {/*  <RSVPFormModal
               shadowCls="shadow-none"
               btnColor="bg-[#F38181]"
-              btnTextColor="text-[#95E1D3] font-bold"
+              btnTextColor={`text-[${appColor}] font-bold`}
               containerCls="w-full"
             /> */}
           </MobileNavMenu>

@@ -1,3 +1,4 @@
+import { useAppColor } from '@/hooks/useAppColor';
 import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { createNoise3D } from 'simplex-noise';
@@ -22,6 +23,7 @@ export const Vortex = (props: VortexProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef(null);
   const animationFrameId = useRef<number | undefined>(undefined);
+  const { color: appColor } = useAppColor();
   const particleCount = props.particleCount || 700;
   const particlePropCount = 9;
   const particlePropsLength = particleCount * particlePropCount;
@@ -100,7 +102,7 @@ export const Vortex = (props: VortexProps) => {
     tick++;
 
     // Clear and set background color
-    ctx.fillStyle = '#95E1D3';
+    ctx.fillStyle = props.backgroundColor || appColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawParticles(ctx);

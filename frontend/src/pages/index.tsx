@@ -1,6 +1,7 @@
 import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
 import { WeddingInformation } from '@/components/wedding-information';
+import { useAppColor } from '@/hooks/useAppColor';
 import { cn } from '@/lib/utils';
 import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
@@ -194,6 +195,7 @@ export default function HomePage({
 }: HomePageProps) {
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(true);
+  const { color: appColor } = useAppColor();
   const scrollToSection = (
     sectionId: string,
     behavior: 'smooth' | 'instant' = 'smooth',
@@ -282,7 +284,7 @@ export default function HomePage({
               style={
                 {
                   '--progress-background': '#F38181',
-                  '--progress-foreground': '#95E1D3',
+                  '--progress-foreground': appColor,
                 } as React.CSSProperties
               }
             />

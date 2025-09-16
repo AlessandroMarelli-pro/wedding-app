@@ -1,4 +1,5 @@
 import { Progress } from '@/components/ui/progress';
+import { useAppColor } from '@/hooks/useAppColor';
 import { cn } from '@/lib/utils';
 import React, { useEffect, useState } from 'react';
 
@@ -10,6 +11,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
   isLoading,
 }) => {
   const [progress, setProgress] = useState(0);
+  const { color: appColor } = useAppColor();
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -49,7 +51,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
         style={
           {
             '--progress-background': '#F38181',
-            '--progress-foreground': '#95E1D3',
+            '--progress-foreground': appColor,
           } as React.CSSProperties
         }
       />

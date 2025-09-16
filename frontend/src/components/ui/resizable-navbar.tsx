@@ -1,4 +1,5 @@
 'use client';
+import { useAppColor } from '@/hooks/useAppColor';
 import { IconMenu2, IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn } from 'src/lib/utils';
@@ -98,6 +99,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { color: appColor } = useAppColor();
 
   return (
     <motion.div
@@ -111,14 +113,14 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         <a
           onMouseEnter={() => setHovered(idx)}
           onClick={(e) => onItemClick?.(e, item.link)}
-          className="relative px-4 py-2  hover:text-[#95E1D3]"
+          className={`relative px-4 py-2 hover:text-[${appColor}]`}
           key={`link-${idx}`}
           href={item.link}
         >
           {hovered === idx && (
             <motion.div
               layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-[#F38181] text-[#95E1D3] hover:text-[#95E1D3]"
+              className={`absolute inset-0 h-full w-full rounded-full bg-[#F38181] text-[${appColor}] hover:text-[${appColor}]`}
             />
           )}
           <span className="relative z-20">{item.name}</span>
