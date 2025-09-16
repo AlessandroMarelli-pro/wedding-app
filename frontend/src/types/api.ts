@@ -17,6 +17,7 @@ export interface UploadedImage {
   usageLocation: string;
   altText?: string;
   createdAt: string;
+  cloudflareUrl?: string;
 }
 export interface WeddingInfo {
   id: string;

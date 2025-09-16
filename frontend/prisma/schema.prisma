@@ -144,6 +144,8 @@ model UploadedImage {
   altText        String?  @map("alt_text") @db.VarChar(200)
   usageLocation  String   @map("usage_location") @db.VarChar(100)
   uploadedBy     String   @map("uploaded_by")
+  cloudflareUrl  String?  @map("cloudflare_url") @db.VarChar(500)
+  cloudflareKey  String?  @map("cloudflare_key") @db.VarChar(500)
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 

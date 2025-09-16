@@ -43,6 +43,7 @@ export const WeddingHero = ({
             width={500}
             height={500}
             src={
+              (heroImage && heroImage.cloudflareUrl) ||
               (heroImage && getOptimizedUrl(heroImage.id)) ||
               '/images/maries.webp'
             }

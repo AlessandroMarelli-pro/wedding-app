@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import sharp from 'sharp';
+import { CloudflareConfig, CloudflareProcessor } from './cloudflare-processor';
 import { logger } from './logger';
 import { prisma } from './prisma';
 import {
@@ -21,6 +22,56 @@ export interface ImageUploadData {
 
 export class ImageProcessor {
   private readonly uploadDir = UPLOAD_PATHS.IMAGES;
+  private cloudflareProcessor?: CloudflareProcessor;
+  private readonly useCloudflare: boolean;
+
+  constructor() {
+    this.useCloudflare = this.initializeCloudflare();
+  }
+
+  private initializeCloudflare(): boolean {
+    try {
+      const config: CloudflareConfig = {
+        accessKey: process.env.CLOUDFLARE_ACCESS_KEY || '',
+        secretKey: process.env.CLOUDFLARE_SECRET_KEY || '',
+        bucketName: process.env.CLOUDFLARE_BUCKET_NAME || '',
+        publicUrl: process.env.CLOUDFLARE_PUBLIC_URL || '',
+        region: process.env.CLOUDFLARE_REGION || 'auto',
+        accountId: process.env.CLOUDFLARE_ACCOUNT_ID || '',
+        apiToken: process.env.CLOUDFLARE_API_TOKEN || '',
+      };
+
+      // Check if all required Cloudflare config is present
+      const hasAllConfig =
+        config.accountId &&
+        config.apiToken &&
+        config.bucketName &&
+        config.publicUrl;
+
+      if (hasAllConfig) {
+        this.cloudflareProcessor = new CloudflareProcessor(config);
+        logger.info('Cloudflare R2 integration enabled', {
+          bucketName: config.bucketName,
+          publicUrl: config.publicUrl,
+        });
+        return true;
+      } else {
+        logger.warn(
+          'Cloudflare R2 configuration incomplete, falling back to local storage',
+          {
+            hasAccountId: !!config.accountId,
+            hasApiToken: !!config.apiToken,
+            hasBucketName: !!config.bucketName,
+            hasPublicUrl: !!config.publicUrl,
+          },
+        );
+        return false;
+      }
+    } catch (error: any) {
+      logger.error('Failed to initialize Cloudflare R2', {}, error);
+      return false;
+    }
+  }
 
   async uploadImage(
     imageData: ImageUploadData,
@@ -33,6 +84,7 @@ export class ImageProcessor {
       usageLocation: imageData.usageLocation,
       bufferSize: imageData.buffer.length,
       mimeType: imageData.mimeType,
+      useCloudflare: this.useCloudflare,
     });
 
     // Generate unique filename
@@ -53,6 +105,67 @@ export class ImageProcessor {
         dimensions: `${processedImage.width}x${processedImage.height}`,
       });
 
+      let cloudflareUrl: string | undefined;
+      let cloudflareKey: string | undefined;
+
+      // Upload to Cloudflare R2 if configured
+      if (this.useCloudflare && this.cloudflareProcessor) {
+        try {
+          const nodeEnv = process.env.NODE_ENV || 'development';
+          const cloudflareKey = this.cloudflareProcessor.generateFileKey(
+            filename,
+            'images',
+            nodeEnv,
+          );
+
+          // Read the processed image file for Cloudflare upload
+          const processedBuffer = fs.readFileSync(filePath);
+
+          const uploadResult = await this.cloudflareProcessor.uploadFile(
+            processedBuffer,
+            cloudflareKey,
+            processedImage.mimeType,
+            {
+              originalName: imageData.originalName,
+              uploadedBy,
+              usageLocation: imageData.usageLocation,
+              altText: imageData.altText || '',
+              width: processedImage.width.toString(),
+              height: processedImage.height.toString(),
+            },
+          );
+
+          if (uploadResult.success && uploadResult.url) {
+            cloudflareUrl = uploadResult.url;
+            logger.info('Image uploaded to Cloudflare R2', {
+              filename,
+              cloudflareKey,
+              cloudflareUrl,
+            });
+
+            // Clean up local file after successful Cloudflare upload
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+              logger.debug('Cleaned up local file after Cloudflare upload', {
+                filePath,
+              });
+            }
+          } else {
+            logger.warn('Cloudflare R2 upload failed, keeping local file', {
+              filename,
+              error: uploadResult.error,
+            });
+          }
+        } catch (cloudflareError: any) {
+          logger.error(
+            'Cloudflare R2 upload error',
+            { filename },
+            cloudflareError,
+          );
+          // Continue with local storage
+        }
+      }
+
       // Create database record
       const uploadedImage = await prisma.uploadedImage.create({
         data: {
@@ -65,6 +178,9 @@ export class ImageProcessor {
           altText: imageData.altText,
           usageLocation: imageData.usageLocation,
           uploadedBy,
+          // Store Cloudflare URL if available
+          ...(cloudflareUrl && { cloudflareUrl }),
+          ...(cloudflareKey && { cloudflareKey }),
         },
       });
 
@@ -72,6 +188,7 @@ export class ImageProcessor {
         imageId: uploadedImage.id,
         filename,
         uploadedBy,
+        cloudflareUrl,
       });
 
       logger.info('Image upload completed successfully', {
@@ -79,6 +196,7 @@ export class ImageProcessor {
         filename,
         originalSize: imageData.buffer.length,
         processedSize: processedImage.size,
+        cloudflareUrl,
       });
 
       return uploadedImage;
@@ -147,7 +265,31 @@ export class ImageProcessor {
 
     const image = await this.getImageById(id);
 
-    // Delete file from filesystem
+    // Delete from Cloudflare R2 if available
+    if (this.useCloudflare && this.cloudflareProcessor && image.cloudflareKey) {
+      try {
+        const deleteResult = await this.cloudflareProcessor.deleteFile(
+          image.cloudflareKey,
+        );
+        if (deleteResult.success) {
+          logger.info('Image deleted from Cloudflare R2', {
+            imageId: id,
+            cloudflareKey: image.cloudflareKey,
+          });
+        } else {
+          logger.warn('Failed to delete image from Cloudflare R2', {
+            imageId: id,
+            cloudflareKey: image.cloudflareKey,
+            error: deleteResult.error,
+          });
+        }
+      } catch (error: any) {
+        logger.error('Cloudflare R2 delete error', { imageId: id }, error);
+        // Continue with local deletion even if Cloudflare fails
+      }
+    }
+
+    // Delete file from filesystem (if it exists locally)
     const filePath = path.join(this.uploadDir, image.filename);
     if (fs.existsSync(filePath)) {
       try {
@@ -162,7 +304,10 @@ export class ImageProcessor {
         throw new Error(`Failed to delete image file: ${error}`);
       }
     } else {
-      logger.warn('Image file not found on filesystem', { filePath });
+      logger.debug(
+        'Image file not found on filesystem (may be stored in Cloudflare only)',
+        { filePath },
+      );
     }
 
     // Delete database record
@@ -174,15 +319,36 @@ export class ImageProcessor {
     logger.info('Image deletion completed', {
       imageId: id,
       filename: image.filename,
+      cloudflareKey: image.cloudflareKey,
     });
   }
 
-  async getImageFile(
-    id: string,
-  ): Promise<{ buffer: Buffer; mimeType: string; filename: string }> {
+  async getImageFile(id: string): Promise<{
+    buffer: Buffer;
+    mimeType: string;
+    filename: string;
+    cloudflareUrl?: string;
+  }> {
     logger.debug('Retrieving image file', { imageId: id });
 
     const image = await this.getImageById(id);
+
+    // If image is stored in Cloudflare, return the URL instead of buffer
+    if (image.cloudflareUrl) {
+      logger.debug('Image stored in Cloudflare R2, returning URL', {
+        imageId: id,
+        cloudflareUrl: image.cloudflareUrl,
+      });
+
+      return {
+        buffer: Buffer.from(''), // Empty buffer for Cloudflare images
+        mimeType: image.mimeType,
+        filename: image.filename,
+        cloudflareUrl: image.cloudflareUrl,
+      };
+    }
+
+    // Fallback to local file
     const filePath = path.join(this.uploadDir, image.filename);
 
     if (!fs.existsSync(filePath)) {

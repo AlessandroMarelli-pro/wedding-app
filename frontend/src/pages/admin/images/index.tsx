@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { getOptimizedUrl } from '@/lib';
+import { formatDateWithTime, getOptimizedUrl } from '@/lib';
+import { UploadedImage } from '@prisma/client';
 import { Eye, Trash } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -11,17 +12,6 @@ import {
 } from '../../../components/admin/image-upload';
 import AlertDialog from '../../../components/alert-dialog';
 import { ApiService } from '../../../services/api';
-
-interface UploadedImage {
-  id: string;
-  filename: string;
-  originalName: string;
-  mimeType: string;
-  size: number;
-  usageLocation: string;
-  altText?: string;
-  createdAt: string;
-}
 
 export default function AdminImages() {
   const [images, setImages] = useState<UploadedImage[]>([]);
@@ -166,7 +156,7 @@ export default function AdminImages() {
                 >
                   <div className="aspect-w-16 aspect-h-9 bg-gray-100">
                     <img
-                      src={getOptimizedUrl(image.id)}
+                      src={image.cloudflareUrl || getOptimizedUrl(image.id)}
                       alt={image.altText || image.originalName}
                       className="w-full h-48 object-cover"
                       loading="lazy"
@@ -186,7 +176,12 @@ export default function AdminImages() {
                           )?.name
                         }
                       </p>
-                      <p>Uploadé le : {formatDate(image.createdAt)}</p>
+                      <p>
+                        Uploadé le :{' '}
+                        {formatDateWithTime(
+                          new Date(image.createdAt).toISOString(),
+                        )}
+                      </p>
                       {image.altText && (
                         <p className="truncate">Alt: {image.altText}</p>
                       )}
@@ -195,7 +190,10 @@ export default function AdminImages() {
                       <Button
                         variant="ghost"
                         onClick={() =>
-                          window.open(getOptimizedUrl(image.id), '_blank')
+                          window.open(
+                            image.cloudflareUrl || getOptimizedUrl(image.id),
+                            '_blank',
+                          )
                         }
                       >
                         Voir <Eye />

@@ -30,6 +30,7 @@ export const WeddingInformation = ({
             <div className="text-center  flex flex-row   gap-10">
               <Image
                 src={
+                  (infoImage && infoImage.cloudflareUrl) ||
                   (infoImage && getOptimizedUrl(infoImage.id)) ||
                   '/images/lauziers.webp'
                 }

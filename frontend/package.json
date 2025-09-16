@@ -14,7 +14,7 @@
     "test:watch": "jest --watch",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
-    "seed": "node scripts/seed-database.ts",
+    "seed": "tsx scripts/seed-database.ts",
     "seed:reset": "node scripts/seed-database.js --reset",
     "test:scraper": "node scripts/test-scraper.js",
     "test:uploads": "node scripts/test-uploads.js",
@@ -28,6 +28,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.888.0",
     "@hookform/resolvers": "^3.10.0",
     "@prisma/adapter-neon": "^6.16.1",
     "@prisma/client": "^6.16.1",

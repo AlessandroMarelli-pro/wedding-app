@@ -6,13 +6,14 @@ const nextConfig = {
     POSTGRES_URL: process.env.POSTGRES_URL,
   },
   images: {
-    domains: [
-      'localhost',
-      '192.168.1.17',
-      'cf.bstatic.com',
-      'a0.muscache.com',
-      'booking.com',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
     ],
+
+    //domains: [...(process.env.WHITELISTED_DOMAINS?.split(',') || [])],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

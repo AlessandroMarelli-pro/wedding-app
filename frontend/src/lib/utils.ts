@@ -15,6 +15,17 @@ export const formatDate = (dateString: string) => {
   });
 };
 
+export const formatDateWithTime = (dateString: string) => {
+  return new Date(dateString).toLocaleString('fr-FR', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: false,
+  });
+};
+
 export const formatTime = (dateString: string) => {
   return dateString.split('T')?.[1]?.split(':')?.slice(0, 2)?.join(':');
 };

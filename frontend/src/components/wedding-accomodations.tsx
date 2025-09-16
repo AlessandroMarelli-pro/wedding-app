@@ -48,6 +48,7 @@ export const WeddingAccomodations = ({
           <div className="text-center  flex flex-row items-center justify-around ">
             <Image
               src={
+                (accommodationsImage && accommodationsImage.cloudflareUrl) ||
                 (accommodationsImage &&
                   getOptimizedUrl(accommodationsImage.id)) ||
                 '/images/condillac.webp'
