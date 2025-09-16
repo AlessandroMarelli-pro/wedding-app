@@ -196,14 +196,19 @@ export class AccommodationScraper {
     let page: Page | null = null;
 
     try {
+      console.info('scraping booking with puppeteer');
       this.browser = await launchPuppeteerBrowser();
 
+      console.info('browser', this.browser);
       page = await this.browser.newPage();
+
+      console.info('page', page);
 
       // Set realistic user agent
       await page.setUserAgent(
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       );
+      console.info('page', 'page');
 
       // Add language parameter to force French
       const urlWithLang = url.includes('?')
@@ -215,12 +220,15 @@ export class AccommodationScraper {
         waitUntil: 'networkidle2',
         timeout: 30000,
       });
+      console.info('page', 'page');
 
       // Wait for content to load
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // Extract data using page.evaluate
       const data = await page.evaluate(() => {
+        console.info('data', 'data');
+
         const getTextContent = (selector: string): string | null => {
           const element = document.querySelector(selector);
           return element ? element.textContent?.trim() || null : null;
@@ -254,22 +262,40 @@ export class AccommodationScraper {
           getTextContent('.hp__hotel_description') ||
           getTextContent('.description') ||
           'Property found on Booking.com. Please fill in the details manually.';
-
-        const address =
-          getTextContent(
-            'div[data-testid="PropertyHeaderAddressDesktop-wrapper"] > button div:nth-child(1)',
-          ) ||
-          getTextContent(
-            'div[data-testid="PropertyHeaderAddressDesktop-wrapper"] button didiv:nth-child(1)',
-          ) ||
-          getTextContent(
-            '[data-testid="PropertyHeaderAddressDesktop-wrapper"] button div:nth-child(1)',
-          ) ||
-          getTextContent('.hp_address_subtitle') ||
-          getTextContent('[data-testid="address"]') ||
-          getTextContent('.address') ||
-          getTextContent('.location') ||
-          'Address not available - please fill in manually';
+        console.info('description', description);
+        // Custom logic to skip divs with aria-hidden="true" when scraping address
+        const getAddressSkippingAriaHidden = (): string => {
+          // Try to find the address container
+          const wrapper = document.querySelector(
+            'div[data-testid="PropertyHeaderAddressDesktop-wrapper"] button',
+          );
+          if (wrapper) {
+            // Find all direct child divs that are NOT aria-hidden="true"
+            const divs = Array.from(wrapper.querySelectorAll('div')).filter(
+              (div) => div.getAttribute('aria-hidden') !== 'true',
+            );
+            if (divs.length > 0) {
+              // Return the text content of the first matching div
+              const text = divs?.[0]?.childNodes?.[0]?.textContent?.trim();
+              if (text) return text;
+            }
+          }
+          // Fallback to previous selectors if not found
+          return (
+            getTextContent(
+              'div[data-testid="PropertyHeaderAddressDesktop-wrapper"] button div:nth-child(0)',
+            ) ||
+            getTextContent(
+              '[data-testid="PropertyHeaderAddressDesktop-wrapper"] button div:nth-child(0)',
+            ) ||
+            getTextContent('.hp_address_subtitle') ||
+            getTextContent('[data-testid="address"]') ||
+            getTextContent('.address') ||
+            getTextContent('.location') ||
+            'Address not available - please fill in manually'
+          );
+        };
+        const address = getAddressSkippingAriaHidden();
 
         const priceRange =
           getTextContent(
