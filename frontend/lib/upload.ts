@@ -63,9 +63,16 @@ export function ensureUploadDirectories(): void {
   logger.debug('Ensuring upload directories exist');
 
   Object.values(UPLOAD_PATHS).forEach((dir) => {
-    if (!fs.existsSync(dir)) {
-      logger.info(`Creating upload directory: ${dir}`);
-      fs.mkdirSync(dir, { recursive: true, mode: 0o755 });
+    try {
+      if (!fs.existsSync(dir)) {
+        logger.info(`Creating upload directory: ${dir}`);
+        fs.mkdirSync(dir, { recursive: true, mode: 0o755 });
+      }
+    } catch (error: any) {
+      logger.error(`Failed to create upload directory: ${dir}`, error as Error);
+      if (error.code === 'ENOENT') {
+        fs.mkdirSync(dir, { recursive: true, mode: 0o755 });
+      }
     }
   });
 
