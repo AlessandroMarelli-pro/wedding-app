@@ -7,7 +7,15 @@ import {
 } from '@/components/ui/form';
 import { formSchema } from '@/pages/admin/information';
 import { IconMapPinFilled } from '@tabler/icons-react';
-import { Car, CheckCircle2Icon, Edit, Plus, Train, Trash } from 'lucide-react';
+import {
+  Car,
+  CheckCircle2Icon,
+  Edit,
+  Plus,
+  Save,
+  Train,
+  Trash,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import z from 'zod';
@@ -147,7 +155,7 @@ export const DirectionsForm = ({
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <Badge
-                      variant="default"
+                      variant="secondary"
                       className="flex items-center gap-2"
                     >
                       {DirectionsIcons[direction.type]}{' '}
@@ -158,12 +166,12 @@ export const DirectionsForm = ({
                           : 'Location de voiture'}
                     </Badge>
                   </div>
-                  <p className="text-sm  mb-2 whitespace-pre-line">
+                  <div className="text-xs lg:text-sm  mb-2 whitespace-pre-line">
                     {convertTextWithLinksToReactNodes(
                       direction.information,
                       'text-black dark:text-black',
                     )}
-                  </p>
+                  </div>
                   <div className="flex flex-row items-center gap-2 text-gray-700">
                     {direction.location.link ? (
                       <>
@@ -173,13 +181,13 @@ export const DirectionsForm = ({
                           url={direction.location.link}
                           width={400}
                           height={300}
-                          className=" hover:text-blue-800 underline text-black dark:text-black"
+                          className=" hover:text-blue-800 underline text-black dark:text-black text-xs lg:text-sm"
                         >
                           {direction.location.address}
                         </LinkPreview>
                       </>
                     ) : (
-                      <span className="text-gray-600 text-sm">
+                      <span className="text-gray-600 text-xs lg:text-sm">
                         {direction.location.address}
                       </span>
                     )}
@@ -209,7 +217,7 @@ export const DirectionsForm = ({
       </div>
 
       {shouldDisplayAddForm && (
-        <div className="bg-gray-50 rounded-lg p-4 border">
+        <div className="bg-gray-50 rounded-lg p-4 border ">
           <h4 className="font-medium text-gray-700 mb-3">
             Ajouter de nouvelles indications
           </h4>
@@ -234,7 +242,7 @@ export const DirectionsForm = ({
       {!hasAllDirectionTypes() && !shouldDisplayAddForm && (
         <div className=" flex justify-center">
           <Button
-            variant="default"
+            variant="ghost"
             className=""
             onClick={() => setShouldDisplayAddForm(true)}
           >
@@ -318,7 +326,7 @@ function DirectionEditForm({
             defaultValue={formData.type}
           >
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className="text-xs lg:text-sm">
                 <SelectValue placeholder="Select a verified email to display" />
               </SelectTrigger>
             </FormControl>
@@ -342,16 +350,16 @@ function DirectionEditForm({
         <FormLabel>Informations</FormLabel>
         <FormControl>
           <Textarea
-            className="h-20"
+            className="h-20 text-xs lg:text-sm"
             onChange={(e) => handleChange('information', e.target.value)}
             required
             value={formData.information}
           />
         </FormControl>
         <FormDescription className="flex flex-col justify-between">
-          <span>Indications, parkings, gares ou autres détails utiles... </span>
           <span>
-            Utilisez le format [texte] ([url]) pour ajouter des liens.
+            Utilisez le format <strong>texte (URL)</strong> pour ajouter des
+            liens (ex: Leclerc (https://www.leclerc.fr)).
           </span>
         </FormDescription>
         <FormMessage />
@@ -360,6 +368,7 @@ function DirectionEditForm({
         <FormLabel>Adresse</FormLabel>
         <FormControl>
           <Input
+            className="text-xs lg:text-sm"
             placeholder="Adresse complète"
             value={formData.location.address}
             onChange={(e) => handleLocationChange('address', e.target.value)}
@@ -375,6 +384,7 @@ function DirectionEditForm({
         <FormLabel>Lien de l'adresse</FormLabel>
         <FormControl>
           <Input
+            className="text-xs lg:text-sm"
             type="url"
             value={formData.location.link || ''}
             onChange={(e) => handleLocationChange('link', e.target.value)}
@@ -389,7 +399,7 @@ function DirectionEditForm({
       </FormItem>
 
       <div className="flex gap-2 justify-between">
-        <Button variant="default" onClick={onCancel}>
+        <Button variant="ghost" onClick={onCancel}>
           Annuler
         </Button>{' '}
         <Button
@@ -402,9 +412,15 @@ function DirectionEditForm({
             !formData.location?.link?.trim()
           }
         >
-          {isNew
-            ? 'Ajouter la nouvelle indication'
-            : 'Sauvegarder les modifications'}
+          <span className="hidden lg:block">
+            {isNew
+              ? 'Ajouter la nouvelle indication'
+              : 'Sauvegarder les modifications'}{' '}
+          </span>
+          <span className="block lg:hidden">
+            {isNew ? 'Ajouter ' : 'Sauvegarder '}
+          </span>
+          {isNew ? <Plus /> : <Save />}
         </Button>
       </div>
     </div>

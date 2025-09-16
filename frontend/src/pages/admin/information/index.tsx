@@ -26,6 +26,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Direction } from '../../../types/api';
 
@@ -61,6 +62,36 @@ export interface WeddingInfo {
   heroAddress: string;
   locationDirections: Direction[];
 }
+
+const ButtonComponent = ({
+  visibility,
+  changesStatus,
+}: {
+  visibility: string;
+  changesStatus: string;
+}) => (
+  <div
+    className={cn('flex gap-2 justify-between lg:justify-start', visibility)}
+  >
+    <Button
+      type="submit"
+      variant={changesStatus === '1' ? 'default' : 'secondary'}
+      className={cn('cursor-pointer')}
+      disabled={changesStatus !== '1'}
+    >
+      Enregistrer <span className="hidden lg:block">les modifications</span>{' '}
+      <Save />
+    </Button>
+    <Button
+      type="button"
+      onClick={() => window.open('/', '_blank')}
+      variant="ghost"
+    >
+      Prévisualiser <span className="hidden lg:block">le site</span>
+      <Eye />
+    </Button>
+  </div>
+);
 
 export default function AdminWedding() {
   const [isLoading, setIsLoading] = useState(true);
@@ -114,6 +145,9 @@ export default function AdminWedding() {
 
         form.reset(values);
         setChangesStatus('2');
+        toast.success(`Informations mises à jour avec succès! `, {
+          duration: 10000,
+        });
       } else {
         const data = await response.json();
         setMessage({
@@ -216,16 +250,16 @@ export default function AdminWedding() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="p-6 space-y-8">
+      <div className="p-4 lg:p-6 space-y-8 ">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-8"
             id="information-form"
           >
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
+            <div className="flex justify-between items-start flex-col lg:flex-row ">
+              <div className="flex flex-col ">
+                <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between flex-col lg:flex-row">
                   Informations
                   {changesStatus === '0' && (
                     <Badge variant="secondary">
@@ -245,7 +279,7 @@ export default function AdminWedding() {
                   )}
                 </h1>
 
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-sm lg:text-base">
                   Mettez à jour les détails qui apparaissent sur votre site de
                   mariage
                 </p>
@@ -263,26 +297,12 @@ export default function AdminWedding() {
                   </div>
                 </div>
               )}
-              <div className="flex gap-2">
-                <Button
-                  type="submit"
-                  variant={changesStatus === '1' ? 'default' : 'secondary'}
-                  className={cn('cursor-pointer')}
-                  disabled={changesStatus !== '1'}
-                >
-                  Enregistrer les modifications <Save />
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => window.open('/', '_blank')}
-                  variant="default"
-                >
-                  Prévisualiser le site
-                  <Eye />
-                </Button>
-              </div>
+              <ButtonComponent
+                visibility={'hidden lg:flex'}
+                changesStatus={changesStatus}
+              />
             </div>
-            <div className="flex flex-col lg:flex-row w-full gap-4">
+            <div className="flex flex-col lg:flex-row w-full gap-4 ">
               <div className="flex flex-col w-full gap-4">
                 <div
                   className="flex flex-col lg:flex-row w-full gap-4"
@@ -296,6 +316,7 @@ export default function AdminWedding() {
                         <FormLabel>Nom du couple</FormLabel>
                         <FormControl>
                           <Input
+                            className="text-xs lg:text-sm"
                             placeholder="e.g., Ariane & Timothe"
                             {...field}
                           />
@@ -319,7 +340,7 @@ export default function AdminWedding() {
                               <Button
                                 variant={'outline'}
                                 className={cn(
-                                  'w-full  text-left font-normal h-10',
+                                  'w-full  text-left font-normal h-10 text-xs lg:text-sm',
                                   !field.value && 'text-muted-foreground',
                                 )}
                               >
@@ -364,6 +385,7 @@ export default function AdminWedding() {
                         <FormLabel>Message d'invitation</FormLabel>
                         <FormControl>
                           <Input
+                            className="text-xs lg:text-sm"
                             placeholder="Nous avons le plaisir de vous inviter à notre mariage le 13 Juillet 2026"
                             {...field}
                           />
@@ -382,7 +404,11 @@ export default function AdminWedding() {
                       <FormItem className="w-full">
                         <FormLabel>Adresse du lieu (page d'accueil)</FormLabel>
                         <FormControl>
-                          <Input placeholder="Lauziers, Condillac" {...field} />
+                          <Input
+                            className="text-xs lg:text-sm"
+                            placeholder="Lauziers, Condillac"
+                            {...field}
+                          />
                         </FormControl>
                         <FormDescription>
                           Ce message sera affiché sur la page d'accueil.
@@ -401,7 +427,7 @@ export default function AdminWedding() {
                         <FormLabel>Message de présentation</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="h-30"
+                            className="h-30 text-xs lg:text-sm"
                             placeholder="Un message personnalisé à adresser à vos invités"
                             {...field}
                           />
@@ -426,6 +452,7 @@ export default function AdminWedding() {
                         <FormLabel>Adresse complète du lieu</FormLabel>
                         <FormControl>
                           <Input
+                            className="text-xs lg:text-sm"
                             placeholder="Veuillez entrer l'adresse du lieu"
                             {...field}
                           />
@@ -442,6 +469,10 @@ export default function AdminWedding() {
 
               <DirectionsForm form={form} setChangesStatus={setChangesStatus} />
             </div>
+            <ButtonComponent
+              visibility={'flex lg:hidden'}
+              changesStatus={changesStatus}
+            />
           </form>
         </Form>
       </div>

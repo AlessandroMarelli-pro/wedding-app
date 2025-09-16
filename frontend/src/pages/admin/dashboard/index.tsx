@@ -22,7 +22,7 @@ export default function AdminDashboard() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <div className="">
+      <div className="p-4 lg:p-6 space-y-8">
         {/* Advanced Analytics */}
         <div className="">
           <AdminStats />
