@@ -1,4 +1,5 @@
 import { logger } from '@/logger';
+import { ProgramEvent } from '@prisma/client';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {
   Accommodation,
@@ -101,6 +102,11 @@ export class ApiService {
     return response.data;
   }
 
+  // Public Programs
+  static async getPrograms(): Promise<ProgramEvent[]> {
+    const response = await api.get<ProgramEvent[]>('/programs');
+    return response.data;
+  }
   // Public Accommodations
   static async getAccommodations(): Promise<Accommodation[]> {
     const response = await api.get<Accommodation[]>('/accommodations');

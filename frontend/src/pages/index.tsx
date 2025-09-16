@@ -4,7 +4,7 @@ import { WeddingInformation } from '@/components/wedding-information';
 import { cn } from '@/lib/utils';
 import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,12 @@ import {
   WeddingProgram,
 } from '../components';
 import { Progress } from '../components/ui/progress';
-import { Accommodation, UploadedImage, WeddingInfo } from '../types/api';
+import {
+  Accommodation,
+  ProgramEvent,
+  UploadedImage,
+  WeddingInfo,
+} from '../types/api';
 
 const bilbo = Parisienne({
   subsets: ['latin'],
@@ -28,6 +33,7 @@ interface HomePageProps {
   weddingInfo: WeddingInfo | null;
   accommodations: any[];
   images: UploadedImage[];
+  programs: ProgramEvent[];
 }
 
 const HeroSection = ({
@@ -101,14 +107,14 @@ const AccommodationsSection = ({
   );
 };
 
-const WeddingProgramSection = () => {
+const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
   return (
     <Section
       id="programme"
       background="muted"
       className="lg:h-[50vh] xl:max-h-screen "
     >
-      <WeddingProgram font={bilbo} />
+      <WeddingProgram font={bilbo} events={programs} />
     </Section>
   );
 };
@@ -189,6 +195,7 @@ export default function HomePage({
   weddingInfo,
   accommodations,
   images,
+  programs,
 }: HomePageProps) {
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(true);
@@ -306,7 +313,7 @@ export default function HomePage({
             weddingInfo={weddingInfo}
             accommodationsImage={accommodationsImage as UploadedImage}
           />
-          <WeddingProgramSection />
+          <WeddingProgramSection programs={programs} />
           <RSVPSection />
           <BonusSection />
         </div>
@@ -315,21 +322,23 @@ export default function HomePage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   try {
-    const weddingInfo = await ApiService.getWeddingInfo();
-
-    // Fetch accommodations
-    const accommodations = await ApiService.getAccommodations();
-
-    const images = await ApiService.getPublicImages();
-
+    const [weddingInfo, accommodations, images, programs] = await Promise.all([
+      ApiService.getWeddingInfo(),
+      ApiService.getAccommodations(),
+      ApiService.getPublicImages(),
+      ApiService.getPrograms(),
+    ]);
     return {
       props: {
         weddingInfo,
         accommodations,
         images,
+        programs,
       },
+      // Revalidate every 60 seconds to keep data fresh
+      revalidate: 60,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
@@ -338,7 +347,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
         weddingInfo: null,
         accommodations: [],
         images: [],
+        programs: [],
       },
+      // Still revalidate even on error to retry
+      revalidate: 60,
     };
   }
 };

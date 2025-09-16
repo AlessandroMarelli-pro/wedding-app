@@ -5,7 +5,7 @@ import { logger } from '@/logger';
 async function getAllEvents(req: NextApiRequest, res: NextApiResponse) {
   try {
     const events = await prisma.programEvent.findMany({
-      orderBy: { displayOrder: 'asc' },
+      orderBy: { startTime: 'asc' },
     });
 
     res.json(events);
