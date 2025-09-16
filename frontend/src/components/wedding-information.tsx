@@ -1,6 +1,7 @@
 import { LinkPreview } from '@/components/ui/link-preview';
 import { cn, getOptimizedUrl } from '@/lib/utils';
 import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
+import parse from 'html-react-parser';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
 import { UploadedImage, WeddingInfo } from '../types/api';
@@ -90,15 +91,12 @@ export const WeddingInformation = ({
                       </h5>
                     </div>
                     <p className="block text-white  leading-normal   mb-1 text-md text-center">
-                      {direction.information
-                        .split('.')
-                        .filter((line) => line.trim() !== '')
-                        .map((line, index) => (
-                          <span key={index}>
-                            {line + '.'}
-                            <br />
-                          </span>
-                        ))}
+                      {parse(
+                        direction.information?.replace(
+                          /(?:\r\n|\r|\n)/g,
+                          '<br>',
+                        ),
+                      )}
                     </p>
                     <div className="text-left flex flex-row items-center gap-2">
                       <span className="text-sm text-white ">

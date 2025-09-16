@@ -11,6 +11,7 @@ import { cn } from '@/lib';
 import { Accommodation } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconWorldWww } from '@tabler/icons-react';
+import parse from 'html-react-parser';
 import { Dot, Edit, MapPin, Star, Trash2 } from 'lucide-react';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -268,7 +269,12 @@ export default function AdminAccommodations() {
                     <div className="flex flex-col text-xs">
                       <div className="space-y-2 text-sm ">
                         <p className="text-sm text-justify">
-                          {accommodation.description}
+                          {parse(
+                            accommodation.description?.replace(
+                              /(?:\r\n|\r|\n)/g,
+                              '<br>',
+                            ),
+                          )}
                         </p>
                         <div className="flex items-start space-x-2">
                           <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />

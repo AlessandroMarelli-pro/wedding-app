@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib';
+import parse from 'html-react-parser';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useOutsideClick } from 'src/hooks/use-outside-click';
@@ -129,7 +130,9 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                       layoutId={`description-${active.description}-${id}`}
                       className="text-xs lg:text-md"
                     >
-                      {active.description}
+                      {parse(
+                        active.description?.replace(/(?:\r\n|\r|\n)/g, '<br>'),
+                      )}
                     </motion.p>
                   </div>
 

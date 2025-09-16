@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import parse from 'html-react-parser';
 import { WeddingInfo } from '../types/api';
 
 interface WeddingPresentationProps {
@@ -10,9 +11,10 @@ export function WeddingPresentation({
   weddingInfo,
   className,
 }: WeddingPresentationProps) {
-  const weddingDate = new Date(weddingInfo.weddingDate);
-  const isValidDate = !isNaN(weddingDate.getTime());
-
+  const presentationMessage =
+    '<span>' +
+    weddingInfo.presentationMessage?.replace(/(?:\r\n|\r|\n)/g, '<br>') +
+    '</span>';
   return (
     <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
@@ -21,7 +23,7 @@ export function WeddingPresentation({
           <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
         </div>
         <p className="  leading-relaxed font-light italic font-small text-justify text-lg">
-          "{weddingInfo.presentationMessage}"
+          {parse(presentationMessage)}
         </p>
         <div className="py-4">
           <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />

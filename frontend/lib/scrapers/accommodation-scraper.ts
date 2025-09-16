@@ -196,19 +196,14 @@ export class AccommodationScraper {
     let page: Page | null = null;
 
     try {
-      console.info('scraping booking with puppeteer');
       this.browser = await launchPuppeteerBrowser();
 
-      console.info('browser', this.browser);
       page = await this.browser.newPage();
-
-      console.info('page', page);
 
       // Set realistic user agent
       await page.setUserAgent(
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       );
-      console.info('page', 'page');
 
       // Add language parameter to force French
       const urlWithLang = url.includes('?')
@@ -220,15 +215,12 @@ export class AccommodationScraper {
         waitUntil: 'networkidle2',
         timeout: 30000,
       });
-      console.info('page', 'page');
 
       // Wait for content to load
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // Extract data using page.evaluate
       const data = await page.evaluate(() => {
-        console.info('data', 'data');
-
         const getTextContent = (selector: string): string | null => {
           const element = document.querySelector(selector);
           return element ? element.textContent?.trim() || null : null;
@@ -330,7 +322,7 @@ export class AccommodationScraper {
           images,
         };
       });
-
+      console.info('data', data);
       return {
         name: data.name,
         description: data.description,
