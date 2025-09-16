@@ -46,8 +46,8 @@ async function updateEvent(req: AuthenticatedRequest, res: NextApiResponse) {
       data: {
         title,
         description,
-        startTime: startTime ? toUTCDate(new Date(startTime)) : undefined,
-        endTime: endTime ? toUTCDate(new Date(endTime)) : undefined,
+        startTime: startTime ? toUTCDate(new Date(startTime), true) : undefined,
+        endTime: endTime ? toUTCDate(new Date(endTime), true) : undefined,
         location,
         displayOrder,
         includeInCalendar: Boolean(includeInCalendar),

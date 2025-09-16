@@ -230,12 +230,18 @@ export default function AdminProgram() {
   const endMonth = new Date(currentYear + 2, currentMonth + 2);
 
   const handleChangeTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
     const time = e.target.value;
-    const date = new Date(form.getValues('startTime'));
-    date.setHours(parseInt(time.split(':')[0]));
-    date.setMinutes(parseInt(time.split(':')[1]));
-    date.setSeconds(parseInt(time.split(':')[2]));
-    form.setValue('startTime', date);
+    const date = Date.UTC(
+      form.getValues('startTime').getFullYear(),
+      form.getValues('startTime').getMonth(),
+      form.getValues('startTime').getDate(),
+      parseInt(time.split(':')[0], 10),
+      parseInt(time.split(':')[1], 10),
+      0,
+    );
+
+    form.setValue('startTime', new Date(date));
     form.trigger('startTime');
   };
 
@@ -373,13 +379,16 @@ export default function AdminProgram() {
                           <FormItem className=" w-full">
                             <FormLabel> Heure de l'événement</FormLabel>
                             <Input
+                              aria-label="Time"
                               type="time"
                               id="time-picker"
-                              step="1"
+                              step="0"
                               value={formatTime(
                                 form.getValues('startTime').toISOString(),
                               )}
+                              pattern="[0-9]{2}:[0-9]{2}"
                               onChange={handleChangeTime}
+                              className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:disabled [&::-webkit-calendar-picker-indicator]:appearance-none"
                             />
                             <FormDescription>
                               Heure à laquelle l'événement aura lieu.

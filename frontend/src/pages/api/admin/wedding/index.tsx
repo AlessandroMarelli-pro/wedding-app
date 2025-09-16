@@ -39,13 +39,21 @@ async function updateWeddingInfo(
       heroAddress,
     } = req.body;
 
+    const date = Date.UTC(
+      new Date(weddingDate).getFullYear(),
+      new Date(weddingDate).getMonth(),
+      new Date(weddingDate).getDate(),
+      0,
+      0,
+      0,
+    );
     const weddingInfo = await prisma.weddingInfo.upsert({
       where: { id: 'default-wedding-info' },
       update: {
         coupleNames,
         presentationMessage,
         weddingAddress,
-        weddingDate: weddingDate ? toUTCDate(new Date(weddingDate)) : undefined,
+        weddingDate: weddingDate ? new Date(date) : undefined,
         locationDirections,
         heroImageId,
         heroMessage,

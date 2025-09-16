@@ -30,8 +30,8 @@ async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
       data: {
         title,
         description,
-        startTime: toUTCDate(new Date(startTime)),
-        endTime: toUTCDate(new Date(endTime)),
+        startTime: toUTCDate(new Date(startTime), true),
+        endTime: toUTCDate(new Date(endTime), true),
         location,
         displayOrder: finalDisplayOrder,
         includeInCalendar: Boolean(includeInCalendar),
