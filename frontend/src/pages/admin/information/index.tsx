@@ -110,7 +110,6 @@ export default function AdminWedding() {
       });
 
       if (response.ok) {
-        console.log('response', response);
         // Update original data to reflect saved state
 
         form.reset(values);

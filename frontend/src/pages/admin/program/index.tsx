@@ -230,7 +230,6 @@ export default function AdminProgram() {
   const endMonth = new Date(currentYear + 2, currentMonth + 2);
 
   const handleChangeTime = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     const time = e.target.value;
     const date = Date.UTC(
       form.getValues('startTime').getFullYear(),

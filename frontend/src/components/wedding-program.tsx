@@ -27,17 +27,17 @@ export function WeddingProgram({
         <Fragment key={item.id}>
           <div
             id={item.id}
-            className="flex flex-col flex-[1_1_20%] justify-center items-center text-center  pt-4 lg:pt-0 h-full"
+            className="flex flex-col flex-[1_1_20%] justify-center items-center text-center  pt-4 lg:pt-0 h-full space-y-5 lg:space-y-0"
           >
             <div
               className={cn(
-                'text-3xl lg:text-4xl xl:text-6xl h-full flex items-center justify-center',
+                'text-5xl xl:text-6xl h-full flex items-center justify-center',
                 font.className,
               )}
             >
               {item.title}
             </div>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col lg:gap-5 gap-2">
               <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
                 {new Date(item.startTime).toLocaleDateString('fr-FR', {
                   year: 'numeric',

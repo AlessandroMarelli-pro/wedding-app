@@ -44,10 +44,10 @@ export const WeddingInformation = ({
               />
             </div>
           </div>
-          <div className="row-span-1  flex flex-col h-[50%] xl:h-[40%]  justify-around">
+          <div className="row-span-1  flex flex-col h-[50%] xl:h-[40%]  lg:justify-around justify-center lg:space-y-0 space-y-4">
             <h1
               className={cn(
-                'text-[#EAFFD0]  text-5xl xl:text-8xl my-4',
+                'text-[#EAFFD0]  text-5xl xl:text-8xl lg:my-4 ',
                 font.className,
               )}
             >
@@ -67,12 +67,12 @@ export const WeddingInformation = ({
         </div>
         {weddingInfo.locationDirections &&
           weddingInfo.locationDirections.length > 0 && (
-            <div className="row-span-2 flex flex-col justify-around">
+            <div className="row-span-2 flex flex-col justify-around lg:p-y-0 py-4">
               <div className="row-span-1 flex flex-col  ">
                 <div className="h-full ">
                   <h1
                     className={cn(
-                      'py-5  text-5xl xl:text-8xl text-[#EAFFD0]',
+                      'lg:py-5  text-5xl xl:text-8xl text-[#EAFFD0]',
                       font.className,
                     )}
                   >
@@ -92,12 +92,12 @@ export const WeddingInformation = ({
                         {getDirectionName(direction.type)}
                       </h5>
                     </div>
-                    <p className="block text-white  leading-normal   mb-1 text-md text-center">
+                    <div className="block text-white  leading-normal   mb-1 text-md text-center">
                       {convertTextWithLinksToReactNodes(
                         direction.information,
                         'text-[#EAFFD0]',
                       )}
-                    </p>
+                    </div>
                     <div className="text-left flex flex-row items-center gap-2">
                       <span className="text-sm text-white ">
                         <IconMapPinFilled className="w-4 h-4" />

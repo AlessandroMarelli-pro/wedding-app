@@ -254,7 +254,6 @@ export class AccommodationScraper {
           getTextContent('.hp__hotel_description') ||
           getTextContent('.description') ||
           'Property found on Booking.com. Please fill in the details manually.';
-        console.info('description', description);
         // Custom logic to skip divs with aria-hidden="true" when scraping address
         const getAddressSkippingAriaHidden = (): string => {
           // Try to find the address container
@@ -322,7 +321,6 @@ export class AccommodationScraper {
           images,
         };
       });
-      console.info('data', data);
       return {
         name: data.name,
         description: data.description,

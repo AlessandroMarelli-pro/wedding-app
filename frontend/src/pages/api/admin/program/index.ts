@@ -38,7 +38,6 @@ async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
         icon,
       },
     });
-    console.info(event);
     res.status(201).json(event);
   } catch (error) {
     logger.error('Create program event error:', error as Error);

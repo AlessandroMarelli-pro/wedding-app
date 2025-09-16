@@ -151,12 +151,10 @@ export const convertTextWithLinksToReactNodes = (
   information: string,
   className?: string,
 ) => {
-  console.info('information', information);
   // Regex to match: [text] ([url])
   const linkRegex = /(.*?)(?:\s*\((https?:\/\/[^\s)]+)\))/g;
   const info = information || '';
   const matches = [...info.matchAll(linkRegex)];
-  console.info('matches', matches);
   if (matches.length > 0) {
     // There are one or more links in the text
     // We'll split the text and render LinkPreview for each
