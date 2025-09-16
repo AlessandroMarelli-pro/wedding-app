@@ -4,15 +4,22 @@ import sharp from 'sharp';
 import { logger } from './logger';
 
 // Upload directory configuration
+// On Vercel, use /tmp directory which is writable
+const isVercel = process.env.VERCEL === '1';
+const baseUploadDir = isVercel ? '/tmp' : './uploads';
+
 export const UPLOAD_PATHS =
   (process.env.UPLOAD_PATHS &&
-    (JSON.parse(process.env.UPLOAD_PATHS) as Record<string, string>)) ||
+    (JSON.parse(process.env.UPLOAD_PATHS.replace(/\\"/g, '"')) as Record<
+      string,
+      string
+    >)) ||
   ({
-    IMAGES: './uploads/images',
-    DOCUMENTS: './uploads/documents',
-    TEMP: './uploads/temp',
-    THUMBNAILS: './uploads/thumbnails',
-    OPTIMIZED: './uploads/optimized',
+    IMAGES: `${baseUploadDir}/images`,
+    DOCUMENTS: `${baseUploadDir}/documents`,
+    TEMP: `${baseUploadDir}/temp`,
+    THUMBNAILS: `${baseUploadDir}/thumbnails`,
+    OPTIMIZED: `${baseUploadDir}/optimized`,
   } as const);
 
 // File type configurations
@@ -60,7 +67,10 @@ export interface ProcessedImageResult {
  * Ensure upload directories exist with proper permissions
  */
 export function ensureUploadDirectories(): void {
-  logger.debug('Ensuring upload directories exist');
+  logger.debug('Ensuring upload directories exist', {
+    isVercel: process.env.VERCEL === '1',
+    baseUploadDir: isVercel ? '/tmp' : './uploads',
+  });
 
   Object.values(UPLOAD_PATHS).forEach((dir) => {
     try {
@@ -71,7 +81,20 @@ export function ensureUploadDirectories(): void {
     } catch (error: any) {
       logger.error(`Failed to create upload directory: ${dir}`, error as Error);
       if (error.code === 'ENOENT') {
-        fs.mkdirSync(dir, { recursive: true, mode: 0o755 });
+        try {
+          fs.mkdirSync(dir, { recursive: true, mode: 0o755 });
+        } catch (retryError: any) {
+          logger.error(
+            `Retry failed for directory: ${dir}`,
+            retryError as Error,
+          );
+          // On Vercel, if we can't create directories, we'll work with what's available
+          if (process.env.VERCEL === '1') {
+            logger.warn(`Skipping directory creation on Vercel: ${dir}`);
+          } else {
+            throw retryError;
+          }
+        }
       }
     }
   });
@@ -259,12 +282,28 @@ export async function processImage(
       .toBuffer();
 
     // Write processed image
-    fs.writeFileSync(outputPath, processedBuffer);
-    logger.logFileOperation(
-      'write',
-      path.basename(outputPath),
-      processedBuffer.length,
-    );
+    try {
+      fs.writeFileSync(outputPath, processedBuffer);
+      logger.logFileOperation(
+        'write',
+        path.basename(outputPath),
+        processedBuffer.length,
+      );
+    } catch (writeError: any) {
+      logger.error(
+        'Failed to write processed image',
+        { outputPath },
+        writeError as Error,
+      );
+      // On Vercel, if we can't write to the filesystem, we'll still return the processed buffer
+      if (process.env.VERCEL === '1') {
+        logger.warn(
+          'Running on Vercel - file write failed, continuing with buffer',
+        );
+      } else {
+        throw writeError;
+      }
+    }
 
     // Get processed image metadata
     const processedMetadata = await sharp(processedBuffer).metadata();
@@ -319,9 +358,19 @@ export function formatFileSize(bytes: number): string {
 export async function cleanupTempFiles(
   olderThanHours: number = 24,
 ): Promise<number> {
-  logger.info('Starting cleanup of temporary files', { olderThanHours });
+  logger.info('Starting cleanup of temporary files', {
+    olderThanHours,
+    isVercel: process.env.VERCEL === '1',
+  });
 
   const tempDir = UPLOAD_PATHS.TEMP;
+
+  // On Vercel, temp files are automatically cleaned up, so we can skip this
+  if (process.env.VERCEL === '1') {
+    logger.debug('Running on Vercel - temp files are automatically cleaned up');
+    return 0;
+  }
+
   if (!fs.existsSync(tempDir)) {
     logger.debug('Temp directory does not exist, skipping cleanup');
     return 0;

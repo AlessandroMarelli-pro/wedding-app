@@ -85,6 +85,7 @@ export class ImageProcessor {
       bufferSize: imageData.buffer.length,
       mimeType: imageData.mimeType,
       useCloudflare: this.useCloudflare,
+      isVercel: process.env.VERCEL === '1',
     });
 
     // Generate unique filename
@@ -119,7 +120,25 @@ export class ImageProcessor {
           );
 
           // Read the processed image file for Cloudflare upload
-          const processedBuffer = fs.readFileSync(filePath);
+          let processedBuffer: Buffer;
+          try {
+            processedBuffer = fs.readFileSync(filePath);
+          } catch (readError: any) {
+            logger.error(
+              'Failed to read processed image file',
+              { filePath },
+              readError as Error,
+            );
+            // On Vercel, if the file wasn't written to disk, use the original processed buffer
+            if (process.env.VERCEL === '1') {
+              logger.warn(
+                'Running on Vercel - using processed buffer directly',
+              );
+              processedBuffer = imageData.buffer; // Use original buffer as fallback
+            } else {
+              throw readError;
+            }
+          }
 
           const uploadResult = await this.cloudflareProcessor.uploadFile(
             processedBuffer,
@@ -145,10 +164,24 @@ export class ImageProcessor {
 
             // Clean up local file after successful Cloudflare upload
             if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath);
-              logger.debug('Cleaned up local file after Cloudflare upload', {
-                filePath,
-              });
+              try {
+                fs.unlinkSync(filePath);
+                logger.debug('Cleaned up local file after Cloudflare upload', {
+                  filePath,
+                });
+              } catch (cleanupError: any) {
+                logger.warn(
+                  'Failed to cleanup local file after Cloudflare upload',
+                  {
+                    filePath,
+                    error: cleanupError.message,
+                  },
+                );
+                // On Vercel, this is expected since files are automatically cleaned up
+                if (process.env.VERCEL !== '1') {
+                  throw cleanupError;
+                }
+              }
             }
           } else {
             logger.warn('Cloudflare R2 upload failed, keeping local file', {
@@ -222,6 +255,10 @@ export class ImageProcessor {
             { filePath },
             cleanupError as Error,
           );
+          // On Vercel, file cleanup failures are less critical
+          if (process.env.VERCEL === '1') {
+            logger.warn('Running on Vercel - file cleanup failure is expected');
+          }
         }
       }
       throw new Error(`Failed to process image: ${error.message}`);
@@ -353,7 +390,17 @@ export class ImageProcessor {
 
     if (!fs.existsSync(filePath)) {
       logger.error('Image file not found on disk', { imageId: id, filePath });
-      throw new Error('Image file not found on disk');
+      // On Vercel, if the file doesn't exist locally, it might be stored in Cloudflare only
+      if (process.env.VERCEL === '1') {
+        logger.warn(
+          'Running on Vercel - image file not found locally, may be Cloudflare-only',
+        );
+        throw new Error(
+          'Image file not available locally on Vercel - check Cloudflare storage',
+        );
+      } else {
+        throw new Error('Image file not found on disk');
+      }
     }
 
     const buffer = fs.readFileSync(filePath);
@@ -372,7 +419,11 @@ export class ImageProcessor {
   }
 
   async createThumbnail(imageId: string, size: number = 300): Promise<string> {
-    logger.info('Creating thumbnail', { imageId, size });
+    logger.info('Creating thumbnail', {
+      imageId,
+      size,
+      isVercel: process.env.VERCEL === '1',
+    });
 
     const image = await this.getImageById(imageId);
     const originalPath = path.join(this.uploadDir, image.filename);
@@ -385,10 +436,28 @@ export class ImageProcessor {
 
     // Ensure thumbnail directory exists
     if (!fs.existsSync(UPLOAD_PATHS.THUMBNAILS)) {
-      fs.mkdirSync(UPLOAD_PATHS.THUMBNAILS, { recursive: true });
-      logger.debug('Created thumbnail directory', {
-        path: UPLOAD_PATHS.THUMBNAILS,
-      });
+      try {
+        fs.mkdirSync(UPLOAD_PATHS.THUMBNAILS, { recursive: true });
+        logger.debug('Created thumbnail directory', {
+          path: UPLOAD_PATHS.THUMBNAILS,
+        });
+      } catch (mkdirError: any) {
+        logger.error(
+          'Failed to create thumbnail directory',
+          {
+            path: UPLOAD_PATHS.THUMBNAILS,
+          },
+          mkdirError as Error,
+        );
+        // On Vercel, if we can't create directories, we'll work with what's available
+        if (process.env.VERCEL === '1') {
+          logger.warn(
+            'Running on Vercel - thumbnail directory creation failed',
+          );
+        } else {
+          throw mkdirError;
+        }
+      }
     }
 
     try {
@@ -422,7 +491,11 @@ export class ImageProcessor {
     imageId: string,
     options: ImageProcessingOptions = {},
   ): Promise<string> {
-    logger.info('Starting image optimization', { imageId, options });
+    logger.info('Starting image optimization', {
+      imageId,
+      options,
+      isVercel: process.env.VERCEL === '1',
+    });
 
     const image = await this.getImageById(imageId);
     const originalPath = path.join(this.uploadDir, image.filename);
@@ -435,10 +508,28 @@ export class ImageProcessor {
 
     // Ensure optimized directory exists
     if (!fs.existsSync(UPLOAD_PATHS.OPTIMIZED)) {
-      fs.mkdirSync(UPLOAD_PATHS.OPTIMIZED, { recursive: true });
-      logger.debug('Created optimized directory', {
-        path: UPLOAD_PATHS.OPTIMIZED,
-      });
+      try {
+        fs.mkdirSync(UPLOAD_PATHS.OPTIMIZED, { recursive: true });
+        logger.debug('Created optimized directory', {
+          path: UPLOAD_PATHS.OPTIMIZED,
+        });
+      } catch (mkdirError: any) {
+        logger.error(
+          'Failed to create optimized directory',
+          {
+            path: UPLOAD_PATHS.OPTIMIZED,
+          },
+          mkdirError as Error,
+        );
+        // On Vercel, if we can't create directories, we'll work with what's available
+        if (process.env.VERCEL === '1') {
+          logger.warn(
+            'Running on Vercel - optimized directory creation failed',
+          );
+        } else {
+          throw mkdirError;
+        }
+      }
     }
 
     try {
