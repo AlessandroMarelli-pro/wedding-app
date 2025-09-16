@@ -140,7 +140,6 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         paddingRight: visible ? '12px' : '0px',
         paddingLeft: visible ? '12px' : '0px',
         borderRadius: visible ? '4px' : '2rem',
-        y: visible ? 20 : 0,
       }}
       transition={{
         type: 'spring',
@@ -163,12 +162,7 @@ export const MobileNavHeader = ({
   className,
 }: MobileNavHeaderProps) => {
   return (
-    <div
-      className={cn(
-        'flex w-full flex-row items-center justify-between',
-        className,
-      )}
-    >
+    <div className={cn('flex w-full flex-row justify-end', className)}>
       {children}
     </div>
   );
@@ -185,13 +179,19 @@ export const MobileNavMenu = ({
       {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: 0.95 }}
           exit={{ opacity: 0 }}
           className={cn(
-            'absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-[#F38181] px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] ',
+            'fixed h-full w-full inset-0 bg-[#F38181]  p-10 z-[100] flex flex-col justify-start gap-4',
             className,
           )}
         >
+          <div
+            className="absolute right-10 top-10 z-50 text-white dark:text-white"
+            onClick={onClose}
+          >
+            <IconX />
+          </div>
           {children}
         </motion.div>
       )}
@@ -199,18 +199,8 @@ export const MobileNavMenu = ({
   );
 };
 
-export const MobileNavToggle = ({
-  isOpen,
-  onClick,
-}: {
-  isOpen: boolean;
-  onClick: () => void;
-}) => {
-  return isOpen ? (
-    <IconX className="text-black dark:text-white" onClick={onClick} />
-  ) : (
-    <IconMenu2 className="text-black dark:text-white" onClick={onClick} />
-  );
+export const MobileNavToggle = ({ onClick }: { onClick: () => void }) => {
+  return <IconMenu2 className="text-black dark:text-white" onClick={onClick} />;
 };
 
 export const NavbarLogo = () => {

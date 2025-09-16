@@ -74,7 +74,6 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
         <MobileNav>
           <MobileNavHeader>
             <MobileNavToggle
-              isOpen={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             />
           </MobileNavHeader>
@@ -93,7 +92,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
                 }}
                 className="relative text-white"
               >
-                <span className="block">{item.name}</span>
+                <span className="flew flex-row">{item.name}</span>
               </a>
             ))}
             <RSVPFormModal
