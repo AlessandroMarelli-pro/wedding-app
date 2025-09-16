@@ -10,6 +10,7 @@ import {
 import { encode } from 'qss';
 import React from 'react';
 
+import parse from 'html-react-parser';
 import { cn } from 'src/lib/utils';
 
 type LinkPreviewProps = {
@@ -144,4 +145,64 @@ export const LinkPreview = ({
       </HoverCardPrimitive.Root>
     </>
   );
+};
+
+export const convertTextWithLinksToReactNodes = (
+  information: string,
+  className?: string,
+) => {
+  console.info('information', information);
+  // Regex to match: [text] ([url])
+  const linkRegex = /(.*?)(?:\s*\((https?:\/\/[^\s)]+)\))/g;
+  const info = information || '';
+  const matches = [...info.matchAll(linkRegex)];
+  console.info('matches', matches);
+  if (matches.length > 0) {
+    // There are one or more links in the text
+    // We'll split the text and render LinkPreview for each
+    let lastIndex = 0;
+    const elements: React.ReactNode[] = [];
+
+    matches.forEach((match, idx) => {
+      const [full, text, url] = match;
+      const start = match.index ?? 0;
+      // Add any text before this match
+      if (start > lastIndex) {
+        const before = info.slice(lastIndex, start);
+        elements.push(
+          <span key={`before-${idx}`}>
+            {parse(before.replace(/(?:\r\n|\r|\n)/g, '<br>'))}
+          </span>,
+        );
+      }
+      // Add the LinkPreview for this match
+      elements.push(
+        <LinkPreview
+          key={`link-${idx}`}
+          width={300}
+          height={200}
+          url={url}
+          className={cn(' underline text-sm target:blank', className)}
+        >
+          {text.trim()}
+        </LinkPreview>,
+      );
+      lastIndex = start + full.length;
+    });
+
+    // Add any remaining text after the last match
+    if (lastIndex < info.length) {
+      const after = info.slice(lastIndex);
+      elements.push(
+        <span key="after-last">
+          {parse(after.replace(/(?:\r\n|\r|\n)/g, '<br>'))}
+        </span>,
+      );
+    }
+
+    return elements;
+  } else {
+    // No links, just parse as before
+    return parse(info.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+  }
 };

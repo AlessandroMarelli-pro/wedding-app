@@ -41,7 +41,7 @@ export const formSchema = z.object({
     .array(
       z.object({
         type: z.enum(['car', 'train', 'car rental']),
-        information: z.string().min(2).max(300),
+        information: z.string().min(2).max(2000),
         location: z.object({
           address: z.string().min(2).max(300),
           link: z.string().min(2).max(300).optional(),

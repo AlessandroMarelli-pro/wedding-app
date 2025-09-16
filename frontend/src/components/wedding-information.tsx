@@ -1,7 +1,9 @@
-import { LinkPreview } from '@/components/ui/link-preview';
+import {
+  convertTextWithLinksToReactNodes,
+  LinkPreview,
+} from '@/components/ui/link-preview';
 import { cn, getOptimizedUrl } from '@/lib/utils';
 import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
-import parse from 'html-react-parser';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
 import { UploadedImage, WeddingInfo } from '../types/api';
@@ -91,11 +93,9 @@ export const WeddingInformation = ({
                       </h5>
                     </div>
                     <p className="block text-white  leading-normal   mb-1 text-md text-center">
-                      {parse(
-                        direction.information?.replace(
-                          /(?:\r\n|\r|\n)/g,
-                          '<br>',
-                        ),
+                      {convertTextWithLinksToReactNodes(
+                        direction.information,
+                        'text-[#EAFFD0]',
                       )}
                     </p>
                     <div className="text-left flex flex-row items-center gap-2">

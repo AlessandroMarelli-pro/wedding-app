@@ -16,7 +16,10 @@ import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { LinkPreview } from '../ui/link-preview';
+import {
+  convertTextWithLinksToReactNodes,
+  LinkPreview,
+} from '../ui/link-preview';
 import {
   Select,
   SelectContent,
@@ -156,7 +159,10 @@ export const DirectionsForm = ({
                     </Badge>
                   </div>
                   <p className="text-sm  mb-2 whitespace-pre-line">
-                    {direction.information}
+                    {convertTextWithLinksToReactNodes(
+                      direction.information,
+                      'text-black dark:text-black',
+                    )}
                   </p>
                   <div className="flex flex-row items-center gap-2 text-gray-700">
                     {direction.location.link ? (
@@ -342,8 +348,11 @@ function DirectionEditForm({
             value={formData.information}
           />
         </FormControl>
-        <FormDescription className="flex flex-row justify-between">
-          <span>Indications, parkings, gares ou autres détails utiles...</span>
+        <FormDescription className="flex flex-col justify-between">
+          <span>Indications, parkings, gares ou autres détails utiles... </span>
+          <span>
+            Utilisez le format [texte] ([url]) pour ajouter des liens.
+          </span>
         </FormDescription>
         <FormMessage />
       </FormItem>
