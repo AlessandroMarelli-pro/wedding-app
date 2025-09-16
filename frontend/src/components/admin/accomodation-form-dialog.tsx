@@ -169,10 +169,23 @@ export const AccomodationFormDialog = ({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild className="space-y-2">
-        <Button variant="default" onClick={() => resetForm()}>
-          Ajouter un logement
-          <Plus />
-        </Button>
+        <div>
+          <Button
+            variant="default"
+            onClick={() => resetForm()}
+            className="hidden lg:flex"
+          >
+            Ajouter un logement
+            <Plus />
+          </Button>
+          <Button
+            variant="default"
+            onClick={() => resetForm()}
+            className="block lg:hidden"
+          >
+            <Plus />
+          </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto font-sans">
         <DialogHeader>

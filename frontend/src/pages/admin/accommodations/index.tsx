@@ -165,7 +165,7 @@ export default function AdminAccommodations() {
       <div className="p-6 space-y-8 flex flex-col">
         {/* Header */}
         <div className="space-y-8">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start ">
             <div>
               <h1 className="text-3xl  text-foreground flex items-center gap-2 mb-2 justify-between">
                 Logements
@@ -189,23 +189,23 @@ export default function AdminAccommodations() {
 
         {/* Accommodations List */}
         {!isLoading && (
-          <div className="space-y-4 flex flex-row  flex-wrap">
+          <div className="space-y-4 flex flex-col lg:flex-row  lg:flex-wrap">
             {accommodations.map((accommodation, index) => (
               <div
-                className={cn(' max-w-1/2', index % 2 === 0 && 'pr-4')}
+                className={cn(' lg:max-w-1/2', index % 2 === 0 && 'lg:pr-4')}
                 key={accommodation.id}
               >
                 <Card className="h-full">
-                  <CardHeader className="pb-1">
+                  <CardHeader className="px-4 lg:px-6 lg:pb-1">
                     <div className="flex justify-between items-start">
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center lg:space-x-3">
                         <div>
-                          <CardTitle className="text-lg flex items-center space-x-2">
+                          <CardTitle className="text-lg flex lg:flex-row flex-col   lg:space-x-2">
                             <span>{accommodation.name}</span>
                             {accommodation.priceRange && (
                               <>
-                                <Dot />
-                                <Badge variant="outline">
+                                <Dot className="lg:block hidden" />
+                                <Badge variant="outline" className="w-fit">
                                   {`${accommodation.priceRange?.replace('€', '')} € `}
                                 </Badge>
                               </>
@@ -222,7 +222,7 @@ export default function AdminAccommodations() {
                           </CardTitle>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex align-bottom items-center lg:space-x-2">
                         <Button
                           variant="ghost"
                           size="icon"
@@ -235,7 +235,7 @@ export default function AdminAccommodations() {
                           triggerIcon={<Trash2 className="w-4 h-4" />}
                           triggerText=""
                           triggerVariant="ghost"
-                          triggerClass="text-destructive"
+                          triggerClass="text-destructive size-6 lg:size-8"
                           mainTitle="Supprimer le logement"
                           title={`Êtes-vous sûr de vouloir supprimer ${accommodation.name} ?`}
                           description="Cette action ne peut pas être annulée. Elle supprimera définitivement le logement."
@@ -247,28 +247,28 @@ export default function AdminAccommodations() {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className=" flex flex-col gap-4">
+                  <CardContent className=" flex flex-col gap-4 px-4 lg:px-6">
                     {accommodation.imagesUrl && (
-                      <div className="flex flex-row  justify-center gap-4">
+                      <div className="flex  lg:flex-row flex-col justify-center gap-4">
                         <Image
                           src={getImageUrlByIndex(accommodation.imagesUrl, 0)}
                           alt={accommodation.name}
                           width={1000}
                           height={1000}
-                          className="w-[50%] rounded-lg max-h-50"
+                          className="lg:w-[50%] w-full rounded-lg max-h-50"
                         />
                         <Image
                           src={getImageUrlByIndex(accommodation.imagesUrl, 1)}
                           alt={accommodation.name}
                           width={1000}
                           height={1000}
-                          className="w-[50%]  rounded-lg max-h-50"
+                          className="lg:w-[50%] w-full rounded-lg max-h-50"
                         />
                       </div>
                     )}
                     <div className="flex flex-col text-xs">
                       <div className="space-y-2 text-sm ">
-                        <p className="text-sm text-justify">
+                        <p className="text-xs lg:text-sm text-justify">
                           {parse(
                             accommodation.description?.replace(
                               /(?:\r\n|\r|\n)/g,
@@ -278,7 +278,9 @@ export default function AdminAccommodations() {
                         </p>
                         <div className="flex items-start space-x-2">
                           <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                          <span>{accommodation.address}</span>
+                          <span className="text-xs lg:text-sm">
+                            {accommodation.address}
+                          </span>
                         </div>
                         {accommodation.sourceUrl && (
                           <div className="flex items-start space-x-2">
@@ -287,7 +289,7 @@ export default function AdminAccommodations() {
                               width={400}
                               height={300}
                               url={accommodation.sourceUrl || ''}
-                              className=" hover:text-blue-800 underline text-black dark:text-black"
+                              className=" hover:text-blue-800 underline text-black dark:text-black text-xs lg:text-sm"
                             >
                               View on {getSourceName(accommodation.sourceUrl)}
                             </LinkPreview>
