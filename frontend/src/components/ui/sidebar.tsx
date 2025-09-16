@@ -163,7 +163,7 @@ export const SidebarLink = ({
   link: Links;
   className?: string;
 }) => {
-  const { open, animate } = useSidebar();
+  const { open, animate, setOpen } = useSidebar();
   return (
     <Link
       href={link.href}
@@ -172,6 +172,7 @@ export const SidebarLink = ({
         className,
       )}
       {...props}
+      onClick={() => setOpen(false)}
     >
       <div className="group-hover/sidebar:animate-pulse">{link.icon}</div>
 
