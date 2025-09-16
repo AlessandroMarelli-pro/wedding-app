@@ -231,6 +231,7 @@ export default function AdminProgram() {
 
   const handleChangeTime = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = e.target.value;
+    if (!time) return;
     const date = Date.UTC(
       form.getValues('startTime').getFullYear(),
       form.getValues('startTime').getMonth(),
