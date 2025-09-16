@@ -1,6 +1,6 @@
 import { Toaster } from '@/components/ui/sonner';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Head, Html, Main, NextScript } from 'next/document';
-
 export default function Document() {
   return (
     <Html lang="fr">
@@ -81,6 +81,7 @@ export default function Document() {
         <Main />
         <NextScript />
         <Toaster />
+        <SpeedInsights />
       </body>
     </Html>
   );

@@ -10,7 +10,6 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import {
   NavbarLayout,
-  RSVPFormModal,
   Section,
   WeddingPresentation,
   WeddingProgram,
@@ -126,10 +125,6 @@ const RSVPSection = () => {
         <p className=" text-3xl lg:text-5xl   text-[#EAFFD0]">
           Nous espérons vous voir en ce jour spécial !
         </p>
-        <RSVPFormModal
-          btnColor="bg-[#EAFFD0]"
-          btnTextColor="text-[#F38181] font-bold"
-        />
       </div>
     </Section>
   );

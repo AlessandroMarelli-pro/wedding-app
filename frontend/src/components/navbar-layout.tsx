@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
-import { RSVPFormModal } from './rsvp-form-modal';
 import {
   MobileNav,
   MobileNavHeader,
@@ -57,17 +56,17 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
     <div className="min-h-screen bg-background">
       <Navbar className={'fixed lg:absolute'}>
         {/* Desktop Navigation */}
-        <NavBody className="">
+        <NavBody className="h-20">
           <NavItems
             items={navItems}
             className="font-bold text-[#F38181]"
             onItemClick={handleNavClick}
           />
-          <RSVPFormModal
+          {/* <RSVPFormModal
             shadowCls="shadow-none"
             btnColor="bg-[#F38181]"
             btnTextColor="text-[#95E1D3] font-bold"
-          />
+          /> */}
         </NavBody>
 
         {/* Mobile Navigation */}
@@ -95,12 +94,12 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
                 <span className="flew flex-row">{item.name}</span>
               </a>
             ))}
-            <RSVPFormModal
+            {/*  <RSVPFormModal
               shadowCls="shadow-none"
               btnColor="bg-[#F38181]"
               btnTextColor="text-[#95E1D3] font-bold"
               containerCls="w-full"
-            />
+            /> */}
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
