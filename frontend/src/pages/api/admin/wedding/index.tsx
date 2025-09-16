@@ -3,6 +3,8 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
 import { logger } from '@/logger';
+import { toUTCDate } from 'lib/date';
+
 async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
     const weddingInfo = await prisma.weddingInfo.findFirst();
@@ -43,7 +45,7 @@ async function updateWeddingInfo(
         coupleNames,
         presentationMessage,
         weddingAddress,
-        weddingDate: weddingDate ? new Date(weddingDate) : undefined,
+        weddingDate: weddingDate ? toUTCDate(new Date(weddingDate)) : undefined,
         locationDirections,
         heroImageId,
         heroMessage,
@@ -54,7 +56,9 @@ async function updateWeddingInfo(
         coupleNames,
         presentationMessage,
         weddingAddress,
-        weddingDate: weddingDate ? new Date(weddingDate) : new Date(),
+        weddingDate: weddingDate
+          ? toUTCDate(new Date(weddingDate))
+          : new Date(),
         locationDirections,
         heroImageId,
         heroMessage,

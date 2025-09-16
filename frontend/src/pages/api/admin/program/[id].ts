@@ -3,6 +3,8 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
 import { logger } from '@/logger';
+import { toUTCDate } from 'lib/date';
+
 async function getEventById(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
@@ -44,8 +46,8 @@ async function updateEvent(req: AuthenticatedRequest, res: NextApiResponse) {
       data: {
         title,
         description,
-        startTime: startTime ? new Date(startTime) : undefined,
-        endTime: endTime ? new Date(endTime) : undefined,
+        startTime: startTime ? toUTCDate(new Date(startTime)) : undefined,
+        endTime: endTime ? toUTCDate(new Date(endTime)) : undefined,
         location,
         displayOrder,
         includeInCalendar: Boolean(includeInCalendar),

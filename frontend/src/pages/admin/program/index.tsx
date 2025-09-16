@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn, formatDateTime } from '@/lib';
+import { cn, formatDate, formatTime } from '@/lib';
 import {
   CalendarIcon,
   Clock,
@@ -229,6 +229,16 @@ export default function AdminProgram() {
   const currentYear = new Date().getFullYear();
   const endMonth = new Date(currentYear + 2, currentMonth + 2);
 
+  const handleChangeTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = e.target.value;
+    const date = new Date(form.getValues('startTime'));
+    date.setHours(parseInt(time.split(':')[0]));
+    date.setMinutes(parseInt(time.split(':')[1]));
+    date.setSeconds(parseInt(time.split(':')[2]));
+    form.setValue('startTime', date);
+    form.trigger('startTime');
+  };
+
   return (
     <>
       <Head>
@@ -326,7 +336,7 @@ export default function AdminProgram() {
                                     )}
                                   >
                                     {field.value ? (
-                                      formatDateTime(field.value.toISOString())
+                                      formatDate(field.value.toISOString())
                                     ) : (
                                       <span>Pick a date</span>
                                     )}
@@ -356,8 +366,30 @@ export default function AdminProgram() {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="startTime"
+                        render={({ field }) => (
+                          <FormItem className=" w-full">
+                            <FormLabel> Heure de l'événement</FormLabel>
+                            <Input
+                              type="time"
+                              id="time-picker"
+                              step="1"
+                              value={formatTime(
+                                form.getValues('startTime').toISOString(),
+                              )}
+                              onChange={handleChangeTime}
+                            />
+                            <FormDescription>
+                              Heure à laquelle l'événement aura lieu.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-row justify-between">
                       <Button
                         type="button"
                         variant="outline"
@@ -391,7 +423,8 @@ export default function AdminProgram() {
                         <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
-                            {formatDateTime(event.startTime)}
+                            {formatDate(event.startTime)} à{' '}
+                            {formatTime(event.startTime)}
                           </div>
                           <div className="flex items-center gap-1">
                             <MapPin className="w-4 h-4" />

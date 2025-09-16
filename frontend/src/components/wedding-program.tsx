@@ -1,4 +1,4 @@
-import { cn } from '@/lib';
+import { cn, formatTime } from '@/lib';
 import { IconGalaxy } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import { Fragment } from 'react';
@@ -48,12 +48,7 @@ export function WeddingProgram({
                 })}
               </div>
               <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
-                {new Date(item.startTime)
-                  .toLocaleTimeString('fr-FR', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: false,
-                  })
+                {formatTime(item.startTime)
                   .split(':')
                   .join('h ')
                   .replace('h 00', 'h')}

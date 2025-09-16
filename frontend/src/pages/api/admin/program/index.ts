@@ -3,6 +3,7 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
 import { logger } from '@/logger';
+import { toUTCDate } from 'lib/date';
 async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const {
@@ -29,15 +30,15 @@ async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
       data: {
         title,
         description,
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
+        startTime: toUTCDate(new Date(startTime)),
+        endTime: toUTCDate(new Date(endTime)),
         location,
         displayOrder: finalDisplayOrder,
         includeInCalendar: Boolean(includeInCalendar),
         icon,
       },
     });
-
+    console.info(event);
     res.status(201).json(event);
   } catch (error) {
     logger.error('Create program event error:', error as Error);
@@ -51,7 +52,7 @@ async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
 async function getAllEvents(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const events = await prisma.programEvent.findMany({
-      orderBy: { displayOrder: 'asc' },
+      orderBy: { startTime: 'asc' },
     });
 
     res.json(events);
