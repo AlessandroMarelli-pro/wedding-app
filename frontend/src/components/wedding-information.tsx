@@ -2,6 +2,7 @@ import {
   convertTextWithLinksToReactNodes,
   LinkPreview,
 } from '@/components/ui/link-preview';
+import { useAppColor } from '@/hooks/useAppColor';
 import { cn, getOptimizedUrl } from '@/lib/utils';
 import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
@@ -25,6 +26,7 @@ export const WeddingInformation = ({
   getDirectionName: (directionType: string) => string;
   font: NextFontWithVariable;
 }) => {
+  const { secondaryColor } = useAppColor();
   return (
     <div className="space-y-4 pb-4 lg:pb-0">
       <div className="text-center grid  grid-cols-1 lg:grid-cols-2  gap-6 lg:max-h-screen lg:h-screen">
@@ -47,7 +49,7 @@ export const WeddingInformation = ({
           <div className="row-span-1  flex flex-col h-[50%] xl:h-[40%]  lg:justify-around justify-center lg:space-y-0 space-y-4">
             <h1
               className={cn(
-                'text-[#EAFFD0]  text-5xl xl:text-8xl lg:my-4 ',
+                `text-[${secondaryColor}]  text-5xl xl:text-8xl lg:my-4 `,
                 font.className,
               )}
             >
@@ -57,7 +59,7 @@ export const WeddingInformation = ({
               {weddingInfo.weddingAddress?.split(',').map((chunk) => (
                 <p
                   key={chunk}
-                  className="text-md lg:text-xl text-[#EAFFD0] font-light"
+                  className={`text-md lg:text-xl text-[${secondaryColor}] font-light`}
                 >
                   {chunk}
                 </p>
@@ -72,7 +74,7 @@ export const WeddingInformation = ({
                 <div className="h-full ">
                   <h1
                     className={cn(
-                      'lg:py-5  text-5xl xl:text-8xl text-[#EAFFD0]',
+                      `lg:py-5  text-5xl xl:text-8xl text-[${secondaryColor}]`,
                       font.className,
                     )}
                   >
@@ -86,16 +88,20 @@ export const WeddingInformation = ({
                     key={index}
                     className="relative flex flex-col   items-center rounded-lg   p-3"
                   >
-                    <div className="flex items-center mb-1 gap-2 text-[#EAFFD0]">
+                    <div
+                      className={`flex items-center mb-1 gap-2 text-[${secondaryColor}]`}
+                    >
                       {WeddingHowToArriveIcons[direction.type]}
-                      <h5 className="font-medium text-[#EAFFD0] capitalize text-xl lg:text-3xl  ">
+                      <h5
+                        className={`font-medium text-[${secondaryColor}] capitalize text-xl lg:text-3xl  `}
+                      >
                         {getDirectionName(direction.type)}
                       </h5>
                     </div>
                     <div className="block text-white  leading-normal   mb-1 text-md text-center">
                       {convertTextWithLinksToReactNodes(
                         direction.information,
-                        'text-[#EAFFD0]',
+                        `text-[${secondaryColor}]`,
                       )}
                     </div>
                     <div className="text-left flex flex-row items-center gap-2">
@@ -106,7 +112,7 @@ export const WeddingInformation = ({
                         width={300}
                         height={200}
                         url={direction.location.link || ''}
-                        className="text-[#EAFFD0] underline text-sm target:blank"
+                        className={`text-[${secondaryColor}] underline text-sm target:blank`}
                       >
                         {direction.location.address}
                       </LinkPreview>

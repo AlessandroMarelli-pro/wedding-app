@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { hashPassword } from './auth';
+import { hashPassword } from '../lib/auth';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +33,9 @@ export class SeedService {
 
       // Seed wedding info
       await this.seedWeddingInfo();
+
+      // Seed app config
+      await this.seedAppConfig();
 
       console.log('✅ Database seeding completed successfully!');
     } catch (error) {
@@ -147,6 +150,57 @@ export class SeedService {
   }
 
   /**
+   * Seed app configuration
+   */
+  /**
+   * Seed app configuration
+   */
+  private static async seedAppConfig(): Promise<void> {
+    const [primaryColorConfig, secondaryColorConfig] = await Promise.all([
+      prisma.appConfig.findUnique({
+        where: {
+          key: 'primary_color',
+        },
+      }),
+      prisma.appConfig.findUnique({
+        where: {
+          key: 'secondary_color',
+        },
+      }),
+    ]);
+    let skipPrimaryColor = false;
+    let skipSecondaryColor = false;
+    if (primaryColorConfig) {
+      console.log('🎨 primary_color config already exists');
+      skipPrimaryColor = true;
+    }
+    if (secondaryColorConfig) {
+      console.log('🎨 secondary_color config already exists');
+      skipSecondaryColor = true;
+    }
+
+    if (!skipPrimaryColor) {
+      await prisma.appConfig.create({
+        data: {
+          key: 'primary_color',
+          value: '#95E1D3',
+        },
+      });
+    }
+
+    if (!skipSecondaryColor) {
+      await prisma.appConfig.create({
+        data: {
+          key: 'secondary_color',
+          value: '#EAFFD0',
+        },
+      });
+    }
+
+    console.log('🎨 Created default app config');
+  }
+
+  /**
    * Manual seeding with custom data
    */
   static async seedCustomData(data: SeedData): Promise<void> {
@@ -206,4 +260,21 @@ export class SeedService {
       throw error;
     }
   }
+}
+
+// Default export function for Prisma seed
+export default async function seed() {
+  await SeedService.seedStaticData();
+}
+
+// Allow running the seed script directly
+if (require.main === module) {
+  seed()
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
 }

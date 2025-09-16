@@ -102,7 +102,7 @@ export const Vortex = (props: VortexProps) => {
     tick++;
 
     // Clear and set background color
-    ctx.fillStyle = props.backgroundColor || appColor;
+    ctx.fillStyle = appColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawParticles(ctx);

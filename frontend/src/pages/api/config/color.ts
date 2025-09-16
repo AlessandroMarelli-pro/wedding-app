@@ -4,22 +4,27 @@ import { prisma } from '../../../../lib/prisma';
 
 async function getColorConfig(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Get the primary color from the database
-    const colorConfig = await prisma.appConfig.findUnique({
-      where: {
-        key: 'primary_color',
-      },
-    });
+    // Get both colors from the database
+    const [primaryColorConfig, secondaryColorConfig] = await Promise.all([
+      prisma.appConfig.findUnique({
+        where: { key: 'primary_color' },
+      }),
+      prisma.appConfig.findUnique({
+        where: { key: 'secondary_color' },
+      }),
+    ]);
 
-    // If no color is configured, return the default color
-    const primaryColor = colorConfig?.value || '#95E1D3';
+    // If no colors are configured, return the default colors
+    const primaryColor = primaryColorConfig?.value || '#95E1D3';
+    const secondaryColor = secondaryColorConfig?.value || '#EAFFD0';
 
     const response = {
-      color: primaryColor,
+      primaryColor,
+      secondaryColor,
       timestamp: new Date().toISOString(),
     };
 
-    logger.info('Color config retrieved', { color: primaryColor });
+    logger.info('Color config retrieved', { primaryColor, secondaryColor });
     res.json(response);
   } catch (error) {
     logger.error(
@@ -28,11 +33,12 @@ async function getColorConfig(req: NextApiRequest, res: NextApiResponse) {
       error as Error,
     );
 
-    // Return default color even if database fails
+    // Return default colors even if database fails
     const response = {
-      color: '#95E1D3',
+      primaryColor: '#95E1D3',
+      secondaryColor: '#EAFFD0',
       timestamp: new Date().toISOString(),
-      error: 'Using default color due to database error',
+      error: 'Using default colors due to database error',
     };
 
     res.status(200).json(response);

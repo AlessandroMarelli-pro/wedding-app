@@ -1,5 +1,6 @@
 'use client';
 
+import { useAppColor } from '@/hooks/useAppColor';
 import { cn } from '@/lib';
 import parse from 'html-react-parser';
 import { AnimatePresence, motion } from 'motion/react';
@@ -11,6 +12,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
     null,
   );
   const [displayScrollbar, setDisplayScrollbar] = useState(true);
+  const { secondaryColor } = useAppColor();
 
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
@@ -85,7 +87,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
             <motion.div
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
-              className="w-[90%] lg:w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0]   overflow-x-hidden overflow-y-scroll"
+              className={`w-[90%] lg:w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[${secondaryColor}]   overflow-x-hidden overflow-y-scroll`}
             >
               <div className="flex justify-center items-center [&>*:nth-child(even)]:hidden lg:[&>*:nth-child(even)]:block">
                 {active.imagesUrl?.map((image: string, idx: number) => (

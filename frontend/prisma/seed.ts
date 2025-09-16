@@ -153,23 +153,46 @@ export class SeedService {
    * Seed app configuration
    */
   private static async seedAppConfig(): Promise<void> {
-    const existingColorConfig = await prisma.appConfig.findUnique({
-      where: {
-        key: 'primary_color',
-      },
-    });
-
-    if (existingColorConfig) {
-      console.log('🎨 App config already exists');
-      return;
+    const [primaryColorConfig, secondaryColorConfig] = await Promise.all([
+      prisma.appConfig.findUnique({
+        where: {
+          key: 'primary_color',
+        },
+      }),
+      prisma.appConfig.findUnique({
+        where: {
+          key: 'secondary_color',
+        },
+      }),
+    ]);
+    let skipPrimaryColor = false;
+    let skipSecondaryColor = false;
+    if (primaryColorConfig) {
+      console.log('🎨 primary_color config already exists');
+      skipPrimaryColor = true;
+    }
+    if (secondaryColorConfig) {
+      console.log('🎨 secondary_color config already exists');
+      skipSecondaryColor = true;
     }
 
-    await prisma.appConfig.create({
-      data: {
-        key: 'primary_color',
-        value: '#95E1D3',
-      },
-    });
+    if (!skipPrimaryColor) {
+      await prisma.appConfig.create({
+        data: {
+          key: 'primary_color',
+          value: '#95E1D3',
+        },
+      });
+    }
+
+    if (!skipSecondaryColor) {
+      await prisma.appConfig.create({
+        data: {
+          key: 'secondary_color',
+          value: '#EAFFD0',
+        },
+      });
+    }
 
     console.log('🎨 Created default app config');
   }

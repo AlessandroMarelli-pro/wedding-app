@@ -120,10 +120,12 @@ const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
 };
 
 const RSVPSection = () => {
+  const { secondaryColor } = useAppColor();
+
   return (
     <Section id="rsvp" background="accent" className="h-[50vh] max-h-screen ">
       <div className="w-full h-full flex flex-col text-center justify-center items-center  gap-10">
-        <p className=" text-3xl lg:text-5xl   text-[#EAFFD0]">
+        <p className={` text-3xl lg:text-5xl   text-[${secondaryColor}]`}>
           Nous espérons vous voir en ce jour spécial !
         </p>
       </div>

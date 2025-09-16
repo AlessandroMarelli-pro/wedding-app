@@ -1,3 +1,4 @@
+import { useAppColor } from '@/hooks/useAppColor';
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 
@@ -14,9 +15,11 @@ export function Section({
   id,
   background = 'default',
 }: SectionProps) {
+  const { secondaryColor } = useAppColor();
+
   const backgroundClasses = {
     default: 'bg-background',
-    muted: 'bg-[#EAFFD0]',
+    muted: `bg-[${secondaryColor}]`,
     accent: 'bg-[#F38181]',
   };
 
