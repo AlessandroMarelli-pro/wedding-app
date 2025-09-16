@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useOutsideClick } from 'src/hooks/use-outside-click';
@@ -8,6 +9,8 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null,
   );
+  const [displayScrollbar, setDisplayScrollbar] = useState(true);
+
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
 
@@ -30,6 +33,15 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
 
   useOutsideClick(ref, () => setActive(null));
 
+  useEffect(() => {
+    if (active) {
+      setDisplayScrollbar(false);
+    } else {
+      setTimeout(() => {
+        setDisplayScrollbar(true);
+      }, 500);
+    }
+  }, [active]);
   return (
     <>
       {/* THE CARD DETAILS */}
@@ -150,7 +162,12 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
       </AnimatePresence>
 
       {/* THE GRID OF CARDS */}
-      <div className="mx-auto w-full gap-4 grid grid-cols-2  lg:max-h-[80vh] overflow-y-scroll">
+      <div
+        className={cn(
+          'mx-auto w-full gap-4 grid grid-cols-2  lg:max-h-[80vh] overflow-y-scroll',
+          !displayScrollbar && 'overflow-hidden',
+        )}
+      >
         {cards.map((card, index) => (
           <motion.div
             layoutId={`card-${card.title}-${id}`}
