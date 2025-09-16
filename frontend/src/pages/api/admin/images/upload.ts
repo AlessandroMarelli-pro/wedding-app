@@ -12,6 +12,20 @@ export const config = {
   },
 };
 
+async function initializeUploadSystem(
+  req: AuthenticatedRequest,
+  res: NextApiResponse,
+) {
+  try {
+    const imageProcessor = new ImageProcessor();
+    const exists = await imageProcessor.initializeUploadSystem();
+    res.json({ message: 'done' });
+  } catch (error: any) {
+    logger.error('Check folder exists error:', error as Error);
+    res.status(500).json({ error: 'Failed to check folder exists' });
+  }
+}
+
 async function uploadImage(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const form = formidable({
@@ -116,6 +130,8 @@ async function uploadImage(req: AuthenticatedRequest, res: NextApiResponse) {
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
+    case 'GET':
+      return withAuth(initializeUploadSystem)(req, res);
     case 'POST':
       return withAuth(uploadImage)(req, res);
     default:

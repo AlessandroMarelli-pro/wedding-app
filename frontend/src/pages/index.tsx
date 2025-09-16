@@ -34,12 +34,10 @@ const HeroSection = ({
   weddingInfo,
   heroImage,
   scrollToSection,
-  maxCanvasHeight,
 }: {
   weddingInfo: WeddingInfo;
   heroImage: UploadedImage;
   scrollToSection: (sectionId: string) => void;
-  maxCanvasHeight: number;
 }) => {
   return (
     <Section id="home">
@@ -48,7 +46,6 @@ const HeroSection = ({
         heroImage={heroImage}
         scrollToSection={scrollToSection}
         font={bilbo}
-        maxCanvasHeight={maxCanvasHeight}
       />
     </Section>
   );
@@ -246,12 +243,7 @@ export default function HomePage({
         ? 'En train'
         : 'Location de voiture';
   };
-  let maxCanvasHeight = 500;
-  try {
-    maxCanvasHeight = window?.screen?.height;
-  } catch (error) {
-    console.error('Error getting max canvas height:', error);
-  }
+
   const heroImage = images.find((image) => image.usageLocation === 'hero');
   const accommodationsImage = images.find(
     (image) => image.usageLocation === 'accommodation',
@@ -302,7 +294,6 @@ export default function HomePage({
             heroImage={heroImage as UploadedImage}
             weddingInfo={weddingInfo}
             scrollToSection={scrollToSection}
-            maxCanvasHeight={maxCanvasHeight}
           />
           <OurStorySection weddingInfo={weddingInfo} />
           <WeddingDetailsSection

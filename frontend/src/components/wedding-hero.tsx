@@ -11,20 +11,17 @@ export const WeddingHero = ({
   heroImage,
   scrollToSection,
   font,
-  maxCanvasHeight,
 }: {
   weddingInfo: WeddingInfo;
   heroImage: UploadedImage;
   scrollToSection: (sectionId: string) => void;
   font: NextFontWithVariable;
-  maxCanvasHeight: number;
 }) => (
   <Vortex
     backgroundColor="black"
     rangeY={800}
     baseHue={150}
     particleCount={150}
-    height={maxCanvasHeight}
     className="flex items-center flex-col justify-center px-2 xl:px-10  w-full h-screen"
   >
     <div className="relative grid grid-rows-3  grid-cols-1 xl:grid-rows-1 xl:grid-cols-6  items-center justify-center h-full w-full ">
