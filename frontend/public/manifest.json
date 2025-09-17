@@ -1,7 +1,7 @@
 {
-  "name": "Ariane & Timothe Wedding",
-  "short_name": "Wedding",
-  "description": "Wedding website for Ariane & Timothe's special day",
+  "name": "Mariage d'Ariane & Timothé",
+  "short_name": "Mariage Ricerf",
+  "description": "Le site du mariage d'Ariane & Timothé",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -6,13 +6,13 @@ export default function Document() {
     <Html lang="fr">
       <Head>
         {/* PWA Meta Tags */}
-        <meta name="application-name" content="Ariane & Timothe Wedding" />
+        <meta name="application-name" content="Mariage d'Ariane & Timothé" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Wedding" />
+        <meta name="apple-mobile-web-app-title" content="Mariage Ricerf" />
         <meta
           name="description"
-          content="Wedding website for Ariane & Timothe's special day"
+          content="Le site du mariage d'Ariane & Timothé"
         />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -79,10 +79,10 @@ export default function Document() {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.ricerf2026en26.fr/" />
-        <meta property="og:title" content="Ariane & Timothe Wedding" />
+        <meta property="og:title" content="Mariage d'Ariane & Timothé" />
         <meta
           property="og:description"
-          content="Wedding website for Ariane & Timothe's special day"
+          content="Le site du mariage d'Ariane & Timothé"
         />
         <meta
           property="og:image"
@@ -92,16 +92,16 @@ export default function Document() {
         <meta property="og:image:height" content="630" />
         <meta
           property="og:image:alt"
-          content="Ariane & Timothe Wedding Website Screenshot"
+          content="Mariage d'Ariane & Timothé Website Screenshot"
         />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://www.ricerf2026en26.fr/" />
-        <meta property="twitter:title" content="Ariane & Timothe Wedding" />
+        <meta property="twitter:title" content="Mariage d'Ariane & Timothé" />
         <meta
           property="twitter:description"
-          content="Wedding website for Ariane & Timothe's special day"
+          content="Le site du mariage d'Ariane & Timothé"
         />
         <meta
           property="twitter:image"
@@ -109,7 +109,7 @@ export default function Document() {
         />
         <meta
           property="twitter:image:alt"
-          content="Ariane & Timothe Wedding Website Screenshot"
+          content="Mariage d'Ariane & Timothé Website Screenshot"
         />
       </Head>
       <body>
