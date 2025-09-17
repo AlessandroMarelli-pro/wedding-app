@@ -7,8 +7,15 @@ async function getAllAccommodations(req: NextApiRequest, res: NextApiResponse) {
     const accommodations = await prisma.accommodation.findMany({
       orderBy: { displayOrder: 'asc' },
     });
+    // Generate a random ID for each accommodation (if needed for frontend use)
+    // This does not modify the DB, just adds a randomId property to each item in the response
 
-    res.json(accommodations);
+    res.json(
+      accommodations.map((acc) => ({
+        ...acc,
+        randomId: Math.random().toString(36).substr(2, 9),
+      })),
+    );
   } catch (error) {
     logger.error('Get accommodations error:', error as Error);
     res.status(500).json({

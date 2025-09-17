@@ -7,14 +7,13 @@ import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetStaticProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   NavbarLayout,
   Section,
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
-import { Progress } from '../components/ui/progress';
 import {
   Accommodation,
   ProgramEvent,
@@ -95,7 +94,7 @@ const AccommodationsSection = ({
   accommodationsImage: UploadedImage;
 }) => {
   return (
-    <Section id="logements" background="default">
+    <Section id="logements" background="accent">
       <WeddingAccomodations
         accommodationsImage={accommodationsImage}
         accommodations={accommodations}
@@ -121,9 +120,28 @@ const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
 const RSVPSection = () => {
   return (
     <Section id="rsvp" background="accent" className="h-[50vh] max-h-screen ">
-      <div className="w-full h-full flex flex-col text-center justify-center items-center  gap-10">
-        <p className=" text-3xl lg:text-5xl   text-[#EAFFD0]">
-          Nous espérons vous voir en ce jour spécial !
+      <div className="w-full h-full flex flex-col lg:text-center lg:justify-center lg:items-center justify-start items-start text-center gap-10">
+        <video
+          id="video"
+          width="100%"
+          height="100%"
+          autoPlay
+          muted
+          loop
+          className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-bottom hidden lg:block"
+          playsInline
+        >
+          <source src="/clips/clip-mobile.webm" type="video/webm" />
+        </video>
+        <Image
+          src="/clips/clip.gif"
+          alt="RSVP"
+          width={1000}
+          height={1000}
+          className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-bottom lg:hidden block"
+        />
+        <p className=" text-4xl lg:text-6xl   text-[#EAFFD0] z-1 pt-10 lg:pt-0 ">
+          Nous espérons vous voir nombreux en ce jour spécial !
         </p>
       </div>
     </Section>
@@ -192,8 +210,6 @@ export default function HomePage({
   images,
   programs,
 }: HomePageProps) {
-  const [progress, setProgress] = useState(0);
-  const [showProgress, setShowProgress] = useState(true);
   const scrollToSection = (
     sectionId: string,
     behavior: 'smooth' | 'instant' = 'smooth',
@@ -203,40 +219,6 @@ export default function HomePage({
       element.scrollIntoView({ behavior });
     }
   };
-  // Handle URL anchors on page load and progress bar
-  useEffect(() => {
-    // Remove any anchor from the URL on page load
-    if (window.location.hash) {
-      // Remove the hash from URL without triggering scroll
-      window.history.replaceState(null, '', window.location.pathname);
-    }
-
-    // Ensure we're at the top of the page
-    window.scrollTo(0, 0);
-
-    // Progress bar animation
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          scrollToSection('home', 'instant');
-
-          // Hide progress bar after completion
-          setTimeout(() => {
-            setShowProgress(false);
-          }, 100);
-          return 100;
-        }
-        return prev + 2;
-      });
-    }, 10);
-
-    return () => clearInterval(progressInterval);
-  }, []);
-
-  if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
-    return <MissingDataSection />;
-  }
 
   const getDirectionName = (directionType: string) => {
     return directionType === 'car'
@@ -254,6 +236,10 @@ export default function HomePage({
     (image) => image.usageLocation === 'information',
   );
 
+  if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
+    return <MissingDataSection />;
+  }
+
   return (
     <>
       <Head>
@@ -267,28 +253,6 @@ export default function HomePage({
       </Head>
 
       {/* Progress Bar */}
-      {showProgress && (
-        <Section id="progress" background="accent">
-          <div className="fixed top-0  z-[5000000] min-h-screen w-full bg-[#F38181] flex flex-col items-center justify-center space-y-4">
-            <span className={cn(bilbo.className, 'text-white text-5xl')}>
-              Bienvenue
-            </span>
-            <span className={cn(bilbo.className, 'text-white text-5xl')}>
-              {progress} %
-            </span>
-            <Progress
-              value={progress}
-              className="h-1  w-[50%]"
-              style={
-                {
-                  '--progress-background': '#F38181',
-                  '--progress-foreground': '#95E1D3',
-                } as React.CSSProperties
-              }
-            />
-          </div>
-        </Section>
-      )}
 
       <NavbarLayout>
         <div className="min-h-screen bg-white">
@@ -319,6 +283,7 @@ export default function HomePage({
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
+    const isProd = process.env.NODE_ENV === 'production';
     const [weddingInfo, accommodations, images, programs] = await Promise.all([
       ApiService.getWeddingInfo(),
       ApiService.getAccommodations(),
@@ -333,7 +298,7 @@ export const getStaticProps: GetStaticProps = async () => {
         programs,
       },
       // Revalidate every 60 seconds to keep data fresh
-      revalidate: 60,
+      revalidate: isProd ? 60 : 1,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);

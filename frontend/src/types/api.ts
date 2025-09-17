@@ -46,6 +46,7 @@ export interface Accommodation {
   updatedAt?: string;
   sourceUrl?: string;
   imagesUrl?: string;
+  randomId?: string;
 }
 
 // RSVP

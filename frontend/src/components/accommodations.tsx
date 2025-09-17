@@ -18,6 +18,7 @@ export function AccommodationsList({
 
   const cards = accommodations.map((accommodation) => {
     return {
+      id: accommodation.randomId,
       title: accommodation.name,
       description: accommodation.address,
       src: accommodation?.imagesUrl?.split(',')[0],

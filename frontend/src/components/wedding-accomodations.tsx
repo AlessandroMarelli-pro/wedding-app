@@ -23,7 +23,7 @@ export const WeddingAccomodations = ({
           <div className="lg:h-full ">
             <h1
               className={cn(
-                'py-5  text-5xl lg:text-8xl text-[#F38181]',
+                'py-5  text-5xl lg:text-8xl text-[#EAFFD0]',
                 font.className,
               )}
             >

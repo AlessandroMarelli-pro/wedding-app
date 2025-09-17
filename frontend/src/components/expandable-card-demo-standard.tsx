@@ -14,7 +14,6 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
 
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
-
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -173,13 +172,13 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
       >
         {cards.map((card, index) => (
           <motion.div
-            layoutId={`card-${card.title}-${id}`}
-            key={`card-${card.title}-${id}`}
+            layoutId={`card-${card.id}-${id}`}
+            key={`card-${card.id}-${id}`}
             onClick={() => setActive(card)}
-            className="p-1 flex flex-col md:flex-row lg:justify-around   hover:bg-neutral-200   cursor-pointer"
+            className="p-1 flex flex-col md:flex-row lg:justify-around   hover:bg-[#EAFFD0] text-[#EAFFD0] hover:text-[#F38181]   cursor-pointer"
           >
-            <div className="flex gap-4 flex-col  justify-items-start w-full">
-              <motion.div layoutId={`image-${card.title}-${id}`}>
+            <div className="flex gap-4 flex-col  justify-items-start w-full ">
+              <motion.div layoutId={`image-${card.id}-${id}`}>
                 <div className="flex flex-row  justify-around">
                   <img
                     width={300}
@@ -199,14 +198,14 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
               </motion.div>
               <div className="p-4">
                 <motion.h3
-                  layoutId={`title-${card.title}-${id}`}
-                  className="font-medium text-neutral-800  text-center md:text-left"
+                  layoutId={`title-${card.id}-${id}`}
+                  className="font-medium   text-center md:text-left"
                 >
                   {card.title}
                 </motion.h3>
                 <motion.p
-                  layoutId={`description-${card.description}-${id}`}
-                  className="text-neutral-600  text-center md:text-left"
+                  layoutId={`description-${card.id}-${id}`}
+                  className=" text-center md:text-left"
                 >
                   {card.description}
                 </motion.p>

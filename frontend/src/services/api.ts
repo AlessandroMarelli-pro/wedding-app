@@ -110,6 +110,7 @@ export class ApiService {
   // Public Accommodations
   static async getAccommodations(): Promise<Accommodation[]> {
     const response = await api.get<Accommodation[]>('/accommodations');
+
     return response.data;
   }
 
