@@ -6,6 +6,7 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "orientation": "portrait-primary",
+  "theme_color": "#95E1D3",
   "scope": "/",
   "lang": "fr",
   "categories": ["lifestyle", "social"],

@@ -8,6 +8,7 @@ import { GetStaticProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import {
   NavbarLayout,
   Section,
@@ -205,6 +206,68 @@ const MissingDataSection = () => {
   );
 };
 
+const MetaThemeChanger = () => {
+  // Change theme-color meta tag on scroll direction
+  useEffect(() => {
+    // Only run on client
+    if (typeof window === 'undefined') return;
+
+    let lastScrollY = window.scrollY;
+    let lastDirection: 'up' | 'down' | null = null;
+
+    const THEME_COLOR_UP = '#95E1D3';
+    const THEME_COLOR_DOWN = '#EAFFD0';
+
+    // Helper to set the theme-color meta tag
+    const setThemeColor = (color: string) => {
+      let meta = document.querySelector(
+        'meta[name="theme-color"]',
+      ) as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'theme-color';
+        document.head.appendChild(meta);
+      }
+      if (meta.content !== color) {
+        meta.content = color;
+      }
+    };
+
+    // Set initial color
+    setThemeColor(THEME_COLOR_UP);
+
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      let direction: 'up' | 'down' = 'up';
+      if (currentScrollY > lastScrollY + window.screen.height) {
+        direction = 'down';
+      } else if (currentScrollY < lastScrollY - window.screen.height) {
+        direction = 'up';
+      } else {
+        // No movement
+        return;
+      }
+
+      if (direction !== lastDirection) {
+        if (direction === 'down') {
+          setThemeColor(THEME_COLOR_DOWN);
+        } else {
+          setThemeColor(THEME_COLOR_UP);
+        }
+        lastDirection = direction;
+      }
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+  return null;
+};
+
 export default function HomePage({
   weddingInfo,
   accommodations,
@@ -252,7 +315,7 @@ export default function HomePage({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <MetaThemeChanger />
       {/* Progress Bar */}
 
       <NavbarLayout>
