@@ -208,18 +208,26 @@ const MissingDataSection = () => {
 
 const MetaThemeChanger = () => {
   // Change theme-color meta tag on scroll direction
-  useEffect(() => {
-    // Only run on client
-    if (typeof window === 'undefined') return;
+  const THEME_COLOR_NONE = '#FFFFFF';
+  const THEME_COLOR_DEFAULT = '#95E1D3';
+  const THEME_COLOR_MUTED = '#EAFFD0';
+  const THEME_COLOR_ACCENT = '#F38181';
+  // home -> default, nous -> none, informations -> accent,
+  // logements -> accent, programme -> muted, rsvp -> accent, bonus -> muted
+  const THEME_COLOR_MAP = {
+    home: THEME_COLOR_DEFAULT,
+    nous: THEME_COLOR_NONE,
+    informations: THEME_COLOR_ACCENT,
+    logements: THEME_COLOR_ACCENT,
+    programme: THEME_COLOR_MUTED,
+    rsvp: THEME_COLOR_MUTED,
+    bonus: THEME_COLOR_MUTED,
+  };
 
-    let lastScrollY = window.scrollY;
-    let lastDirection: 'up' | 'down' | null = null;
-
-    const THEME_COLOR_UP = '#95E1D3';
-    const THEME_COLOR_DOWN = '#EAFFD0';
-
-    // Helper to set the theme-color meta tag
-    const setThemeColor = (color: string) => {
+  // If the section is visible, set the theme-color to the corresponding color
+  const setThemeColor = (sectionId: string) => {
+    const color = THEME_COLOR_MAP[sectionId as keyof typeof THEME_COLOR_MAP];
+    if (color) {
       let meta = document.querySelector(
         'meta[name="theme-color"]',
       ) as HTMLMetaElement | null;
@@ -231,32 +239,30 @@ const MetaThemeChanger = () => {
       if (meta.content !== color) {
         meta.content = color;
       }
-    };
+    }
+  };
 
-    // Set initial color
-    setThemeColor(THEME_COLOR_UP);
+  // Set initial color
+  const timeout = setTimeout(() => {
+    setThemeColor('home');
+  }, 1000);
+
+  useEffect(() => {
+    // Only run on client
+    if (typeof window === 'undefined') return;
 
     const onScroll = () => {
-      const currentScrollY = window.scrollY;
-      let direction: 'up' | 'down' = 'up';
-      if (currentScrollY > lastScrollY + window.screen.height) {
-        direction = 'down';
-      } else if (currentScrollY < lastScrollY - window.screen.height) {
-        direction = 'up';
-      } else {
-        // No movement
-        return;
-      }
+      clearTimeout(timeout);
+      // get the id of the section in the view
+      const sections = document.querySelectorAll('section');
+      const sectionInView = Array.from(sections).find((section) => {
+        const rect = section.getBoundingClientRect();
 
-      if (direction !== lastDirection) {
-        if (direction === 'down') {
-          setThemeColor(THEME_COLOR_DOWN);
-        } else {
-          setThemeColor(THEME_COLOR_UP);
-        }
-        lastDirection = direction;
+        return rect.top <= window.innerHeight && rect.bottom >= 0;
+      });
+      if (sectionInView) {
+        setThemeColor(sectionInView.id);
       }
-      lastScrollY = currentScrollY;
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
