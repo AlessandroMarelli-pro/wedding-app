@@ -130,6 +130,14 @@ export default function AdminWedding() {
 
     setMessage(null);
 
+    // Add 12h to weddingDate by adding milliseconds
+    const updatedValues = {
+      ...values,
+      weddingDate: values.weddingDate
+        ? new Date(values.weddingDate.getTime() + 12 * 60 * 60 * 1000)
+        : values.weddingDate,
+    };
+
     try {
       const response = await fetch(`/api/admin/wedding`, {
         method: 'PUT',
@@ -137,13 +145,13 @@ export default function AdminWedding() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(updatedValues),
       });
 
       if (response.ok) {
         // Update original data to reflect saved state
 
-        form.reset(values);
+        form.reset(updatedValues);
         setChangesStatus('2');
         toast.success(`Informations mises à jour avec succès! `, {
           duration: 10000,
