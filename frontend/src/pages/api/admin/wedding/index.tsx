@@ -43,7 +43,7 @@ async function updateWeddingInfo(
       new Date(weddingDate).getFullYear(),
       new Date(weddingDate).getMonth(),
       new Date(weddingDate).getDate(),
-      0,
+      12,
       0,
       0,
     );

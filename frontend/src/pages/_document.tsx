@@ -75,6 +75,42 @@ export default function Document() {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.ricerf2026en26.fr/" />
+        <meta property="og:title" content="Ariane & Timothe Wedding" />
+        <meta
+          property="og:description"
+          content="Wedding website for Ariane & Timothe's special day"
+        />
+        <meta
+          property="og:image"
+          content="https://www.ricerf2026en26.fr/screenshots/desktop-screenshot.png"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content="Ariane & Timothe Wedding Website Screenshot"
+        />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://www.ricerf2026en26.fr/" />
+        <meta property="twitter:title" content="Ariane & Timothe Wedding" />
+        <meta
+          property="twitter:description"
+          content="Wedding website for Ariane & Timothe's special day"
+        />
+        <meta
+          property="twitter:image"
+          content="https://www.ricerf2026en26.fr/screenshots/desktop-screenshot.png"
+        />
+        <meta
+          property="twitter:image:alt"
+          content="Ariane & Timothe Wedding Website Screenshot"
+        />
       </Head>
       <body>
         <Main />
