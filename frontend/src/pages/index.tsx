@@ -131,10 +131,11 @@ const RSVPSection = () => {
           className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-bottom hidden lg:block"
           playsInline
         >
-          <source src="/clips/clip-mobile.webm" type="video/webm" />
+          <source src="/clips/clip.webm" type="video/webm" />
         </video>
         <Image
-          src="/clips/clip.gif"
+          priority
+          src="/clips/clip_optimized.gif"
           alt="RSVP"
           width={1000}
           height={1000}
