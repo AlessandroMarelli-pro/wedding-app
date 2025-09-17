@@ -40,14 +40,16 @@ export default function App({ Component, pageProps }: AppProps) {
         </div>
       ) : (
         <>
-          <Section id="progress" background="accent">
-            <LoadingProgress
-              endFunction={() => {
-                scrollToSection('home', 'instant');
-              }}
-              bilbo={bilbo}
-            />
-          </Section>
+          {!isAdminLoginPage && (
+            <Section id="progress" background="accent">
+              <LoadingProgress
+                endFunction={() => {
+                  scrollToSection('home', 'instant');
+                }}
+                bilbo={bilbo}
+              />
+            </Section>
+          )}
           <Component {...pageProps} />
         </>
       )}
