@@ -17,9 +17,7 @@ export default function Document() {
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="msapplication-TileColor" content="#be185d" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#be185d" />
 
         {/* Apple Touch Icons */}
 
