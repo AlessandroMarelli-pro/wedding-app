@@ -1,3 +1,4 @@
+import { useAppColor } from '@/hooks/useAppColor';
 import { cn } from '@/lib/utils';
 import parse from 'html-react-parser';
 import { WeddingInfo } from '../types/api';
@@ -11,6 +12,7 @@ export function WeddingPresentation({
   weddingInfo,
   className,
 }: WeddingPresentationProps) {
+  const { accentColor } = useAppColor();
   const presentationMessage =
     '<span>' +
     weddingInfo.presentationMessage?.replace(/(?:\r\n|\r|\n)/g, '<br>') +
@@ -18,7 +20,9 @@ export function WeddingPresentation({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
-      <div className="text-[#F38181] container-responsive text-center  flex flex-col items-center justify-center  p-10 ">
+      <div
+        className={`text-[${accentColor}] container-responsive text-center  flex flex-col items-center justify-center  p-10 `}
+      >
         <div className="py-4">
           <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
         </div>

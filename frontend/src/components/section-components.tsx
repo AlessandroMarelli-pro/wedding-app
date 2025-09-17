@@ -15,12 +15,12 @@ export function Section({
   id,
   background = 'default',
 }: SectionProps) {
-  const { secondaryColor } = useAppColor();
+  const { secondaryColor, accentColor } = useAppColor();
 
   const backgroundClasses = {
     default: 'bg-background',
     muted: `bg-[${secondaryColor}]`,
-    accent: 'bg-[#F38181]',
+    accent: `bg-[${accentColor}]`,
   };
 
   return (

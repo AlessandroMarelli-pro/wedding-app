@@ -99,7 +99,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
-  const { color: appColor } = useAppColor();
+  const { color: appColor, accentColor } = useAppColor();
 
   return (
     <motion.div
@@ -120,7 +120,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
           {hovered === idx && (
             <motion.div
               layoutId="hovered"
-              className={`absolute inset-0 h-full w-full rounded-full bg-[#F38181] text-[${appColor}] hover:text-[${appColor}]`}
+              className={`absolute inset-0 h-full w-full rounded-full bg-[${accentColor}] text-[${appColor}] hover:text-[${appColor}]`}
             />
           )}
           <span className="relative z-20">{item.name}</span>
@@ -176,6 +176,8 @@ export const MobileNavMenu = ({
   isOpen,
   onClose,
 }: MobileNavMenuProps) => {
+  const { accentColor } = useAppColor();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -184,7 +186,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 0.95 }}
           exit={{ opacity: 0 }}
           className={cn(
-            'fixed h-full w-full inset-0 bg-[#F38181]  p-10 z-[100] flex flex-col justify-start gap-4',
+            `fixed h-full w-full inset-0 bg-[${accentColor}]  p-10 z-[100] flex flex-col justify-start gap-4`,
             className,
           )}
         >

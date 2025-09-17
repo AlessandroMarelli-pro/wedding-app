@@ -1,3 +1,4 @@
+import { useAppColor } from '@/hooks/useAppColor';
 import { cn, formatTime } from '@/lib';
 import { IconGalaxy } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
@@ -21,8 +22,12 @@ export function WeddingProgram({
   font: NextFontWithVariable;
   events: ProgramEvent[];
 }) {
+  const { accentColor } = useAppColor();
+
   return (
-    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-[#F38181] xl:gap-5 lg:gap-0 gap-5 py-10 lg:py-0 lg:pb-5">
+    <div
+      className={`w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-[${accentColor}] xl:gap-5 lg:gap-0 gap-5 py-10 lg:py-0 lg:pb-5`}
+    >
       {events.map((item, index) => (
         <Fragment key={item.id}>
           <div

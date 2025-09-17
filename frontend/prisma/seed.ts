@@ -153,20 +153,27 @@ export class SeedService {
    * Seed app configuration
    */
   private static async seedAppConfig(): Promise<void> {
-    const [primaryColorConfig, secondaryColorConfig] = await Promise.all([
-      prisma.appConfig.findUnique({
-        where: {
-          key: 'primary_color',
-        },
-      }),
-      prisma.appConfig.findUnique({
-        where: {
-          key: 'secondary_color',
-        },
-      }),
-    ]);
+    const [primaryColorConfig, secondaryColorConfig, accentColorConfig] =
+      await Promise.all([
+        prisma.appConfig.findUnique({
+          where: {
+            key: 'primary_color',
+          },
+        }),
+        prisma.appConfig.findUnique({
+          where: {
+            key: 'secondary_color',
+          },
+        }),
+        prisma.appConfig.findUnique({
+          where: {
+            key: 'accent_color',
+          },
+        }),
+      ]);
     let skipPrimaryColor = false;
     let skipSecondaryColor = false;
+    let skipAccentColor = false;
     if (primaryColorConfig) {
       console.log('🎨 primary_color config already exists');
       skipPrimaryColor = true;
@@ -174,6 +181,10 @@ export class SeedService {
     if (secondaryColorConfig) {
       console.log('🎨 secondary_color config already exists');
       skipSecondaryColor = true;
+    }
+    if (accentColorConfig) {
+      console.log('🎨 accent_color config already exists');
+      skipAccentColor = true;
     }
 
     if (!skipPrimaryColor) {
@@ -190,6 +201,15 @@ export class SeedService {
         data: {
           key: 'secondary_color',
           value: '#EAFFD0',
+        },
+      });
+    }
+
+    if (!skipAccentColor) {
+      await prisma.appConfig.create({
+        data: {
+          key: 'accent_color',
+          value: '#F38181',
         },
       });
     }

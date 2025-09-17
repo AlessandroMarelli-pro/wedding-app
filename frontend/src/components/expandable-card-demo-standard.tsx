@@ -12,7 +12,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
     null,
   );
   const [displayScrollbar, setDisplayScrollbar] = useState(true);
-  const { secondaryColor } = useAppColor();
+  const { secondaryColor, accentColor } = useAppColor();
 
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
@@ -107,7 +107,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                       rotate: 0,
                       zIndex: 100,
                     }}
-                    className="rounded-xl -mr-4 mt-4 p-1 bg-[#F38181] border-[#F38181] border  shrink-0 overflow-hidden "
+                    className={`rounded-xl -mr-4 mt-4 p-1 bg-[${accentColor}] border-[${accentColor}] border  shrink-0 overflow-hidden `}
                   >
                     <img
                       src={image}
@@ -120,7 +120,9 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                 ))}
               </div>
               <div>
-                <div className="flex justify-between items-left p-4 pb-0 text-[#F38181]">
+                <div
+                  className={`flex justify-between items-left p-4 pb-0 text-[${accentColor}]`}
+                >
                   <div className="lg:p-4 text-left ">
                     <motion.h3
                       layoutId={`title-${active.title}-${id}`}
@@ -147,7 +149,9 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     Voir l'annonce
                   </motion.a>
                 </div>
-                <div className="relative lg:px-4 h-full text-[#F38181]">
+                <div
+                  className={`relative lg:px-4 h-full text-[${accentColor}]`}
+                >
                   <motion.div
                     layout
                     initial={{ opacity: 0 }}

@@ -11,7 +11,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
   isLoading,
 }) => {
   const [progress, setProgress] = useState(0);
-  const { color: appColor } = useAppColor();
+  const { color: appColor, accentColor } = useAppColor();
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -50,7 +50,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
         className="h-1  w-[50%]"
         style={
           {
-            '--progress-background': '#F38181',
+            '--progress-background': accentColor,
             '--progress-foreground': appColor,
           } as React.CSSProperties
         }

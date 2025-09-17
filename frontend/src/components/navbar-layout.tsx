@@ -38,7 +38,7 @@ const navItems = [
 
 export function NavbarLayout({ children }: NavbarLayoutProps) {
   // Configure navbar based on type
-  const { color: appColor } = useAppColor();
+  const { color: appColor, accentColor } = useAppColor();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleNavClick = (
@@ -60,12 +60,12 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
         <NavBody className="h-20">
           <NavItems
             items={navItems}
-            className="font-bold text-[#F38181]"
+            className={`font-bold text-[${accentColor}]`}
             onItemClick={handleNavClick}
           />
           {/* <RSVPFormModal
             shadowCls="shadow-none"
-            btnColor="bg-[#F38181]"
+            btnColor={`bg-[${accentColor}]`}
             btnTextColor={`text-[${appColor}] font-bold`}
           /> */}
         </NavBody>
@@ -97,7 +97,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
             ))}
             {/*  <RSVPFormModal
               shadowCls="shadow-none"
-              btnColor="bg-[#F38181]"
+              btnColor={`bg-[${accentColor}]`}
               btnTextColor={`text-[${appColor}] font-bold`}
               containerCls="w-full"
             /> */}
