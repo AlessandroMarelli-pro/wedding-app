@@ -27,95 +27,94 @@ export const WeddingInformation = ({
 }) => {
   return (
     <div className="space-y-4 pb-4 lg:pb-0">
-      <div className="text-center grid  grid-cols-1 lg:grid-cols-2  gap-6 lg:max-h-screen lg:h-screen">
-        <div className=" row-span-2">
-          <div className="row-span-1  flex flex-col">
-            <div className="text-center  flex flex-row   gap-10">
-              <Image
-                src={
-                  (infoImage && infoImage.cloudflareUrl) ||
-                  (infoImage && getOptimizedUrl(infoImage.id)) ||
-                  '/images/lauziers.webp'
-                }
-                alt={weddingInfo.coupleNames}
-                width={600}
-                height={600}
-                className="object-cover w-full lg:max-h-[30rem]"
-              />
+      <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row gap-10 lg:gap-0">
+        <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
+          <div className=" flex flex-row  ">
+            <Image
+              src={
+                (infoImage && infoImage.cloudflareUrl) ||
+                (infoImage && getOptimizedUrl(infoImage.id)) ||
+                '/images/lauziers.webp'
+              }
+              alt={weddingInfo.coupleNames}
+              width={6000}
+              height={600}
+              className="object-cover w-full "
+            />
+          </div>
+          <div className=" flex flex-row h-full  w-full text-center">
+            <div className="flex flex-col justify-around items-center w-full">
+              <h1
+                className={cn(
+                  'text-[#EAFFD0]  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
+                  font.className,
+                )}
+              >
+                Le lieu
+              </h1>
+              <div>
+                {weddingInfo.weddingAddress?.split(',').map((chunk) => (
+                  <p
+                    key={chunk}
+                    className="text-md lg:text-xl text-[#EAFFD0] font-light"
+                  >
+                    {chunk}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="row-span-1  flex flex-col h-[50%] xl:h-[40%]  lg:justify-around justify-center lg:space-y-0 space-y-4">
-            <h1
-              className={cn(
-                'text-[#EAFFD0]  text-5xl xl:text-8xl lg:my-4 ',
-                font.className,
-              )}
-            >
-              Le lieu
-            </h1>
-            <div>
-              {weddingInfo.weddingAddress?.split(',').map((chunk) => (
-                <p
-                  key={chunk}
-                  className="text-md lg:text-xl text-[#EAFFD0] font-light"
+        </div>
+        <div className="flex flex-col  lg:w-[50%]  gap-10 lg:gap-0">
+          <div className="flex flex-row h-[25%] w-full text-center justify-center items-center ">
+            <div className="flex flex-colh-full ">
+              <h1
+                className={cn(
+                  ' text-5xl xl:text-8xl text-[#EAFFD0]',
+                  font.className,
+                )}
+              >
+                Comment venir ?
+              </h1>
+            </div>
+          </div>
+          <div className="flex flex-row h-[75%] w-full justify-center">
+            <div className="flex flex-col text-center justify-center items-center w-full gap-10">
+              {weddingInfo.locationDirections?.map((direction, index) => (
+                <div
+                  key={index}
+                  className=" flex flex-col justify-center items-center w-full"
                 >
-                  {chunk}
-                </p>
+                  <div className="flex   text-[#EAFFD0]">
+                    {WeddingHowToArriveIcons[direction.type]}
+                    <h5 className="font-medium text-[#EAFFD0] capitalize text-xl lg:text-3xl  ">
+                      {getDirectionName(direction.type)}
+                    </h5>
+                  </div>
+                  <div className=" text-white  text-sm lg:text-base px-10 lg:px-0 ">
+                    {convertTextWithLinksToReactNodes(
+                      direction.information,
+                      'text-[#EAFFD0]',
+                    )}
+                  </div>
+                  <div className=" flex flex-row justify-center items-center w-full">
+                    <span className="text-sm text-white ">
+                      <IconMapPinFilled className="w-4 h-4" />
+                    </span>
+                    <LinkPreview
+                      width={300}
+                      height={200}
+                      url={direction.location.link || ''}
+                      className="text-[#EAFFD0] underline text-sm target:blank"
+                    >
+                      {direction.location.address}
+                    </LinkPreview>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </div>
-        {weddingInfo.locationDirections &&
-          weddingInfo.locationDirections.length > 0 && (
-            <div className="row-span-2 flex flex-col justify-around lg:p-y-0 py-4">
-              <div className="row-span-1 flex flex-col  ">
-                <div className="h-full ">
-                  <h1
-                    className={cn(
-                      'lg:py-5  text-5xl xl:text-8xl text-[#EAFFD0]',
-                      font.className,
-                    )}
-                  >
-                    Comment venir ?
-                  </h1>
-                </div>
-              </div>
-              <div className="row-span-1  flex flex-col  gap-4">
-                {weddingInfo.locationDirections?.map((direction, index) => (
-                  <div
-                    key={index}
-                    className="relative flex flex-col   items-center rounded-lg   p-3"
-                  >
-                    <div className="flex items-center mb-1 gap-2 text-[#EAFFD0]">
-                      {WeddingHowToArriveIcons[direction.type]}
-                      <h5 className="font-medium text-[#EAFFD0] capitalize text-xl lg:text-3xl  ">
-                        {getDirectionName(direction.type)}
-                      </h5>
-                    </div>
-                    <div className="block text-white  leading-normal   mb-1 text-md text-center">
-                      {convertTextWithLinksToReactNodes(
-                        direction.information,
-                        'text-[#EAFFD0]',
-                      )}
-                    </div>
-                    <div className="text-left flex flex-row items-center gap-2">
-                      <span className="text-sm text-white ">
-                        <IconMapPinFilled className="w-4 h-4" />
-                      </span>
-                      <LinkPreview
-                        width={300}
-                        height={200}
-                        url={direction.location.link || ''}
-                        className="text-[#EAFFD0] underline text-sm target:blank"
-                      >
-                        {direction.location.address}
-                      </LinkPreview>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
       </div>
     </div>
   );
