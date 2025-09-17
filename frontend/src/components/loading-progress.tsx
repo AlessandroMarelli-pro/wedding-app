@@ -17,7 +17,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
   const [showProgress, setShowProgress] = useState(true);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    const interval: NodeJS.Timeout | null = null;
 
     // Remove any anchor from the URL on page load
     if (window.location.hash) {
