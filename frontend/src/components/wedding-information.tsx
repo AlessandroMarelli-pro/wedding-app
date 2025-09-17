@@ -78,8 +78,8 @@ export const WeddingInformation = ({
               </h1>
             </div>
           </div>
-          <div className="flex flex-row h-[75%] w-full pb-10">
-            <div className="flex flex-col text-center justify-end items-center w-full gap-10">
+          <div className="flex flex-row h-[75%] w-full ">
+            <div className="flex flex-col text-center justify-around items-center w-full gap-10">
               {weddingInfo.locationDirections?.map((direction, index) => (
                 <div
                   key={index}
