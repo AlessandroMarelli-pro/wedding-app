@@ -1,6 +1,7 @@
 export { AccommodationsList } from './accommodations';
 export { AdminStats } from './admin/admin-stats';
 export { ImageUpload } from './admin/image-upload';
+export { DivWithAnimation } from './animations';
 export {
   CalendarDownload,
   DetailedCalendarDownload,

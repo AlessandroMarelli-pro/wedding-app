@@ -7,6 +7,7 @@ import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
 import { UploadedImage, WeddingInfo } from '../types/api';
+import { DivWithAnimation } from './animations';
 
 const WeddingHowToArriveIcons = {
   car: <IconCar className="lg:w-10 lg:h-10" />,
@@ -29,7 +30,7 @@ export const WeddingInformation = ({
     <div className="space-y-4 pb-4 lg:pb-0">
       <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row gap-10 lg:gap-0">
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
-          <div className=" flex flex-row  ">
+          <DivWithAnimation className=" flex flex-row  ">
             <Image
               src={
                 (infoImage && infoImage.cloudflareUrl) ||
@@ -41,8 +42,8 @@ export const WeddingInformation = ({
               height={600}
               className="object-cover w-full "
             />
-          </div>
-          <div className=" flex flex-row h-full  w-full text-center">
+          </DivWithAnimation>
+          <DivWithAnimation className=" flex flex-row h-full  w-full text-center">
             <div className="flex flex-col justify-around items-center w-full">
               <h1
                 className={cn(
@@ -63,10 +64,10 @@ export const WeddingInformation = ({
                 ))}
               </div>
             </div>
-          </div>
+          </DivWithAnimation>
         </div>
         <div className="flex flex-col  lg:w-[50%]  gap-10 lg:gap-0">
-          <div className="flex flex-row h-[25%] w-full text-center justify-center items-center ">
+          <DivWithAnimation className="flex flex-row h-[25%] w-full text-center justify-center items-center ">
             <div className="flex flex-colh-full ">
               <h1
                 className={cn(
@@ -77,8 +78,8 @@ export const WeddingInformation = ({
                 Comment venir ?
               </h1>
             </div>
-          </div>
-          <div className="flex flex-row h-[75%] w-full ">
+          </DivWithAnimation>
+          <DivWithAnimation className="flex flex-row h-[75%] w-full ">
             <div className="flex flex-col text-center justify-around items-center w-full gap-10">
               {weddingInfo.locationDirections?.map((direction, index) => (
                 <div
@@ -113,7 +114,7 @@ export const WeddingInformation = ({
                 </div>
               ))}
             </div>
-          </div>
+          </DivWithAnimation>
         </div>
       </div>
     </div>

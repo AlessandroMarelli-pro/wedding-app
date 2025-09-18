@@ -10,6 +10,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import {
+  DivWithAnimation,
   NavbarLayout,
   Section,
   WeddingPresentation,
@@ -142,9 +143,9 @@ const RSVPSection = () => {
           height={1000}
           className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-bottom lg:hidden block"
         />
-        <p className=" text-4xl lg:text-6xl   text-[#EAFFD0] z-1 pt-10 lg:pt-0 ">
+        <DivWithAnimation className=" text-4xl lg:text-6xl   text-[#EAFFD0] z-1 pt-10 lg:pt-0 ">
           Nous espérons vous voir nombreux en ce jour spécial !
-        </p>
+        </DivWithAnimation>
       </div>
     </Section>
   );
@@ -153,7 +154,7 @@ const RSVPSection = () => {
 const BonusSection = () => {
   return (
     <Section id="bonus" background="muted">
-      <div className="w-full h-[50vh] flex flex-col text-center justify-center items-center  gap-5">
+      <DivWithAnimation className="w-full h-[50vh] flex flex-col text-center justify-center items-center  gap-5">
         <span
           className={cn(
             bilbo.className,
@@ -174,7 +175,7 @@ const BonusSection = () => {
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         ></iframe>
-      </div>
+      </DivWithAnimation>
     </Section>
   );
 };

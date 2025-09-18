@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { motion } from 'motion/react';
 import { ReactNode } from 'react';
 
 interface SectionProps {
@@ -21,7 +22,10 @@ export function Section({
   };
 
   return (
-    <section
+    <motion.section
+      initial="offscreen"
+      whileInView="onscreen"
+      viewport={{ amount: 0.8 }}
       id={id}
       className={cn(
         'lg:max-h-screen ',
@@ -30,6 +34,6 @@ export function Section({
       )}
     >
       <div className="mx-auto h-full">{children}</div>
-    </section>
+    </motion.section>
   );
 }

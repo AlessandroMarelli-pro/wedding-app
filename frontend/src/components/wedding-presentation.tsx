@@ -1,6 +1,10 @@
 import { cn } from '@/lib/utils';
 import parse from 'html-react-parser';
 import { WeddingInfo } from '../types/api';
+// Fix React import for countdown component
+import { IconGalaxy } from '@tabler/icons-react';
+import * as React from 'react';
+import { DivWithAnimation } from './animations';
 
 interface WeddingPresentationProps {
   weddingInfo: WeddingInfo;
@@ -18,7 +22,7 @@ export function WeddingPresentation({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
-      <div className="text-[#F38181] container-responsive text-center  flex flex-col items-center justify-center  p-10 ">
+      <DivWithAnimation className="text-[#F38181] container-responsive text-center  flex flex-col items-center justify-center  p-10 ">
         <div className="py-4">
           <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
         </div>
@@ -31,7 +35,7 @@ export function WeddingPresentation({
         <span className="text-base lg:text-2xl font-bold">
           {weddingInfo.coupleNames}
         </span>
-      </div>
+      </DivWithAnimation>
     </div>
   );
 }
@@ -104,7 +108,3 @@ export function WeddingCountdown({ targetDate, className }: CountdownProps) {
     </div>
   );
 }
-
-// Fix React import for countdown component
-import { IconGalaxy } from '@tabler/icons-react';
-import * as React from 'react';

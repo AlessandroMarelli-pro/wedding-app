@@ -3,10 +3,8 @@ import { Vortex } from '@/components/ui/vortex';
 import { cn, getOptimizedUrl } from '@/lib/utils';
 import { UploadedImage, WeddingInfo } from '@/types/api';
 import { IconArrowDown } from '@tabler/icons-react';
-import { motion, useInView } from 'motion/react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
-import { useRef } from 'react';
 
 export const WeddingHero = ({
   weddingInfo,
@@ -19,9 +17,6 @@ export const WeddingHero = ({
   scrollToSection: (sectionId: string) => void;
   font: NextFontWithVariable;
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true });
-
   return (
     <Vortex
       backgroundColor="black"
@@ -35,10 +30,7 @@ export const WeddingHero = ({
           {weddingInfo.heroMessage}
         </p>{' '}
         <div className=" z-10 row-span-1 xl:col-span-4  h-full w-full flex flex-col items-center justify-center">
-          <motion.div
-            ref={ref}
-            className="text-center text-white    flex flex-col items-center justify-center"
-          >
+          <div className="text-center text-white    flex flex-col items-center justify-center">
             <h1
               className={cn(
                 'text-5xl xl:text-9xl xl:mb-6 leading-tight color-black absolute w-full top-1/3 left-1/2 transform -translate-x-1/2  -translate-y-1/2',
@@ -69,7 +61,7 @@ export const WeddingHero = ({
                 <span>Détails</span>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
         <p className=" text-[#F38181]  translate-y-10 lg:translate-y-0 font-bold row-span-1 xl:col-span-1 text-2xl   opacity-90 h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end xl:pb-10 pt-10 xl:pt-0">
           {weddingInfo.heroAddress}
