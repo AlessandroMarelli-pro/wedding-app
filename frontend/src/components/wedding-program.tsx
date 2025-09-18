@@ -31,7 +31,11 @@ const AnimatedDiv = ({
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ amount: 0.5, once: true }}
-      transition={{ ease: 'easeInOut', duration: 0.8 + index * 0.3 }}
+      transition={{
+        duration: 0.8,
+        ease: 'linear',
+        delay: index * 0.2,
+      }}
       id={id}
       key={id}
       className={className}

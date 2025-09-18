@@ -5,6 +5,7 @@ import { UploadedImage, WeddingInfo } from '@/types/api';
 import { IconArrowDown } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
+import { DivWithAnimation } from './animations';
 
 export const WeddingHero = ({
   weddingInfo,
@@ -25,7 +26,10 @@ export const WeddingHero = ({
       particleCount={150}
       className="flex items-center flex-col justify-center px-2 xl:px-10  w-full h-screen"
     >
-      <div className="relative grid grid-rows-3  grid-cols-1 xl:grid-rows-1 xl:grid-cols-6  items-center justify-center h-full w-full ">
+      <DivWithAnimation
+        duration={1.5}
+        className="relative grid grid-rows-3  grid-cols-1 xl:grid-rows-1 xl:grid-cols-6  items-center justify-center h-full w-full "
+      >
         <p className="text-[#F38181]  row-span-1 xl:col-span-1  text-2xl xl:mb-2 font-light  h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end pb-10">
           {weddingInfo.heroMessage}
         </p>{' '}
@@ -66,7 +70,7 @@ export const WeddingHero = ({
         <p className=" text-[#F38181]  translate-y-10 lg:translate-y-0 font-bold row-span-1 xl:col-span-1 text-2xl   opacity-90 h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end xl:pb-10 pt-10 xl:pt-0">
           {weddingInfo.heroAddress}
         </p>
-      </div>
+      </DivWithAnimation>
     </Vortex>
   );
 };

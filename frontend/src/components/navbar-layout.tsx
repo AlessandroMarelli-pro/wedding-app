@@ -56,7 +56,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
     <div className="min-h-screen bg-background">
       <Navbar className={'fixed lg:absolute'}>
         {/* Desktop Navigation */}
-        <NavBody className="h-20">
+        <NavBody className="h-20" visible>
           <NavItems
             items={navItems}
             className="font-bold text-[#F38181]"
