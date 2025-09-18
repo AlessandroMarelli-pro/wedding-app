@@ -228,19 +228,22 @@ const MetaThemeChanger = () => {
   // If the section is visible, set the theme-color to the corresponding color
   const setThemeColor = (sectionId: string) => {
     const color = THEME_COLOR_MAP[sectionId as keyof typeof THEME_COLOR_MAP];
-    if (color) {
-      let meta = document.querySelector(
-        'meta[name="theme-color"]',
-      ) as HTMLMetaElement | null;
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.name = 'theme-color';
-        document.head.appendChild(meta);
+    try {
+      if (color) {
+        let meta = document.querySelector(
+          'meta[name="theme-color"]',
+        ) as HTMLMetaElement | null;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.name = 'theme-color';
+          document.head.appendChild(meta);
+        }
+        if (meta.content !== color) {
+          meta.content = color;
+        }
       }
-      if (meta.content !== color) {
-        meta.content = color;
-      }
-    }
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {}
   };
 
   // Set initial color
