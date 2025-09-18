@@ -48,6 +48,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
       <AnimatePresence>
         {active && typeof active === 'object' ? (
           <motion.div
+            layout
             initial={{
               opacity: 0,
             }}
@@ -82,14 +83,17 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
               <CloseIcon />
             </motion.button>
             <motion.div
-              layoutId={`card-${active.title}-${id}`}
+              layoutId={`card-${active.id}-${id}`}
               ref={ref}
               className="w-[90%] lg:w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0]   overflow-x-hidden overflow-y-scroll"
             >
-              <div className="flex justify-center items-center [&>*:nth-child(even)]:hidden lg:[&>*:nth-child(even)]:block">
+              <motion.div
+                className="flex justify-center items-center [&>*:nth-child(even)]:hidden lg:[&>*:nth-child(even)]:block"
+                layoutId={` image-${active.id}-${id}`}
+              >
                 {active.imagesUrl?.map((image: string, idx: number) => (
                   <motion.div
-                    layoutId={`image-${image}-${id}`}
+                    layoutId={`image-${active.id}-${id}-${idx}`}
                     key={'images' + idx}
                     style={{
                       rotate: idx * 5 - 10,
@@ -115,18 +119,18 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     />
                   </motion.div>
                 ))}
-              </div>
+              </motion.div>
               <div>
                 <div className="flex justify-between items-left p-4 pb-0 text-[#F38181]">
                   <div className="lg:p-4 text-left ">
                     <motion.h3
-                      layoutId={`title-${active.title}-${id}`}
+                      layoutId={`title-${active.id}-${id}`}
                       className="font-bold text-lg lg:text-2xl"
                     >
                       {active.title}
                     </motion.h3>
                     <motion.p
-                      layoutId={`description-${active.description}-${id}`}
+                      layoutId={`description-${active.id}-${id}`}
                       className="text-xs lg:text-md"
                     >
                       {parse(
