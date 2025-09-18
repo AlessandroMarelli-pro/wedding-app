@@ -60,35 +60,15 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
               opacity: 0,
               backdropFilter: 'blur(0px)',
             }}
-            className="fixed inset-0  grid place-items-center z-[100]"
+            className="fixed inset-0  flex place-items-center z-[100]  flex-col justify-center"
           >
-            <motion.button
-              key={`button-${active.title}-${id}`}
-              layout
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-                transition: {
-                  duration: 0.05,
-                },
-              }}
-              className="z-10 flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
-              onClick={() => setActive(null)}
-            >
-              <CloseIcon />
-            </motion.button>
             <motion.div
               layoutId={`card-${active.id}-${id}`}
               ref={ref}
-              className="w-[90%] lg:w-full max-w-[800px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0]   overflow-x-hidden overflow-y-scroll"
+              className="w-[90%] lg:w-full max-w-[800px]  h-[70%] md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0]    "
             >
               <motion.div
-                className="flex justify-center items-center [&>*:nth-child(even)]:hidden lg:[&>*:nth-child(even)]:block"
+                className="md:h-30 h-18 flex justify-center items-center [&>*:nth-child(even)]:hidden md:[&>*:nth-child(even)]:block -translate-y-10 -translate-x-2 md:-translate-x-0"
                 layoutId={` image-${active.id}-${id}`}
               >
                 {active.imagesUrl?.map((image: string, idx: number) => (
@@ -99,16 +79,21 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                       rotate: idx * 5 - 10,
                     }}
                     whileHover={{
-                      scale: 1.1,
+                      scale: 1.5,
                       rotate: 0,
-                      zIndex: 100,
+
+                      zIndex: 100000,
                     }}
                     whileTap={{
-                      scale: 1.1,
+                      scale: 2,
                       rotate: 0,
                       zIndex: 100,
                     }}
-                    className="rounded-xl -mr-4 mt-4 p-1 bg-[#F38181] border-[#F38181] border  shrink-0 overflow-hidden "
+                    exit={{
+                      scale: 1,
+                      zIndex: 100,
+                    }}
+                    className="rounded-xl -mr-4 mt-4 p-1    shrink-0 overflow-hidden "
                   >
                     <img
                       src={image}
@@ -120,8 +105,9 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                   </motion.div>
                 ))}
               </motion.div>
-              <div>
-                <div className="flex justify-between items-left p-4 pb-0 text-[#F38181]">
+
+              <div className="overflow-y-scroll">
+                <div className="flex justify-between items-left p-4 pb-0 text-[#F38181] ">
                   <div className="lg:p-4 text-left ">
                     <motion.h3
                       layoutId={`title-${active.id}-${id}`}
@@ -131,7 +117,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     </motion.h3>
                     <motion.p
                       layoutId={`description-${active.id}-${id}`}
-                      className="text-xs lg:text-md"
+                      className="text-xs lg:text-md "
                     >
                       {parse(
                         active.description?.replace(/(?:\r\n|\r|\n)/g, '<br>'),
@@ -196,7 +182,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     height={300}
                     src={card.image2}
                     alt={card.title}
-                    className="h-60 w-60 md:h-35 md:w-35  object-cover object-top hidden lg:block"
+                    className="h-60 w-60 md:h-35 md:w-35  object-cover object-top hidden md:block"
                   />
                 </div>
               </motion.div>

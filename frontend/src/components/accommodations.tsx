@@ -29,7 +29,7 @@ export function AccommodationsList({
       content: () => {
         return (
           <div className="p-4 flex flex-col gap-4 pt-0">
-            <p className=" leading-relaxed text-base  pt-4 text-justify">
+            <p className=" leading-relaxed text-base  pt-4 text-justify z-10">
               {accommodation.description
                 .split('.')
                 .filter((sentence) => sentence.trim() !== '')

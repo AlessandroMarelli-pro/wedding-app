@@ -28,8 +28,8 @@ const AnimatedDiv = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, x: -50 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ amount: 0.5, once: true }}
       transition={{
         duration: 0.8,
