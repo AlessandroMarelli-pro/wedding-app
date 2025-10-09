@@ -20,8 +20,10 @@ export const WeddingHero = ({
         alt="Ariane and Timothé"
         className="h-screen w-fit object-cover"
         duration={400}
-        delay={100}
-        pathDelay={1}
+        delay={50}
+        pathDelay={50}
+        useSetMode={true}
+        setPercentage={2}
       />
     </div>
   );

@@ -7,6 +7,9 @@ interface BrowserStylePaintingProps {
   duration?: number;
   delay?: number;
   pathDelay?: number; // Delay between each path
+  progressivePercentage?: number; // Percentage of paths to draw progressively (default 30%)
+  setPercentage?: number; // Percentage of paths per set (default 10%)
+  useSetMode?: boolean; // If true, draw by sets instead of progressive (default false)
 }
 
 interface PathData {
@@ -24,6 +27,9 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   duration = 3000,
   delay = 500,
   pathDelay = 10, // 10ms between each path
+  progressivePercentage = 30, // 30% of paths drawn progressively
+  setPercentage = 10, // 10% of paths per set
+  useSetMode = false, // Use set mode instead of progressive
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [svgData, setSvgData] = useState<{
@@ -169,32 +175,86 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     canvas.height = containerHeight * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
-    // Center the SVG in the canvas (it will be larger than container in one dimension)
+    // Position the SVG at the bottom of the canvas
     const scaledWidth = svgWidth * scale;
     const scaledHeight = svgHeight * scale;
-    const offsetX = (containerWidth - scaledWidth) / 2;
-    const offsetY = (containerHeight - scaledHeight) / 2;
+    const offsetX = (containerWidth - scaledWidth) / 2; // Center horizontally
+    const offsetY = (containerHeight - scaledHeight) / 4; // Position at bottom
 
-    // Apply transform to center and scale
+    // Apply transform to position and scale
     ctx.translate(offsetX, offsetY);
     ctx.scale(scale, scale);
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Browser-style progressive drawing
+    // Browser-style drawing with configurable modes
     let currentPathIndex = 0;
     const totalPaths = svgData.paths.length;
+    const pathsPerSet = Math.floor(totalPaths * (setPercentage / 100));
+    let currentSet = 0;
 
     const drawNextPath = () => {
       if (currentPathIndex < totalPaths) {
-        // Draw the current path
-        drawPath(ctx, svgData.paths[currentPathIndex]);
-        currentPathIndex++;
+        if (useSetMode) {
+          // Set mode: Draw by sets of X%
+          const setStartIndex = currentSet * pathsPerSet;
+          const setEndIndex = Math.min(setStartIndex + pathsPerSet, totalPaths);
 
-        // Schedule next path
-        if (currentPathIndex < totalPaths) {
-          setTimeout(drawNextPath, pathDelay);
+          if (setStartIndex < totalPaths) {
+            // Draw all paths in this set at once
+            for (let i = setStartIndex; i < setEndIndex; i++) {
+              drawPath(ctx, svgData.paths[i]);
+            }
+
+            currentPathIndex = setEndIndex;
+            currentSet++;
+
+            // Schedule next set if there are more paths
+            if (currentPathIndex < totalPaths) {
+              setTimeout(drawNextPath, pathDelay);
+            }
+          }
+        } else {
+          // Progressive mode: Draw individual paths with acceleration
+          const pathsPerProgressivePeriod = Math.floor(
+            totalPaths * (progressivePercentage / 100),
+          );
+
+          // Draw the current path
+          drawPath(ctx, svgData.paths[currentPathIndex]);
+          currentPathIndex++;
+
+          // Check if we should continue progressive drawing or draw by sets
+          if (currentPathIndex < totalPaths) {
+            if (currentPathIndex < pathsPerProgressivePeriod) {
+              // Continue progressive drawing (individual paths)
+              setTimeout(drawNextPath, pathDelay);
+            } else {
+              // Draw by sets of X%
+              const setStartIndex =
+                pathsPerProgressivePeriod + currentSet * pathsPerSet;
+              const setEndIndex = Math.min(
+                setStartIndex + pathsPerSet,
+                totalPaths,
+              );
+
+              if (setStartIndex < totalPaths) {
+                // Draw all paths in this set at once
+                for (let i = setStartIndex; i < setEndIndex; i++) {
+                  drawPath(ctx, svgData.paths[i]);
+                }
+
+                currentPathIndex = setEndIndex;
+                currentSet++;
+
+                // Schedule next set if there are more paths
+                if (currentPathIndex < totalPaths) {
+                  setTimeout(drawNextPath, pathDelay * 5); // Slightly longer delay between sets
+                }
+              }
+            }
+          }
         }
       }
     };
