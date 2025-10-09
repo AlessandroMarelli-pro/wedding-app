@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-interface AdvancedCanvasPaintingProps {
+interface BrowserStylePaintingProps {
   src: string;
   alt: string;
   className?: string;
   duration?: number;
   delay?: number;
-  animationClasses?: number;
-  easingFunction?: keyof typeof easingFunctions;
+  pathDelay?: number; // Delay between each path
 }
 
 interface PathData {
@@ -16,48 +15,15 @@ interface PathData {
   stroke?: string;
   strokeWidth?: string;
   transform?: string;
-  animationClass: number;
 }
 
-// Easing functions for smoother animations
-const easingFunctions = {
-  easeOut: (t: number): number => 1 - Math.pow(1 - t, 3),
-  easeInOut: (t: number): number =>
-    t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
-  easeIn: (t: number): number => t * t * t,
-  easeOutBack: (t: number): number => {
-    const c1 = 1.70158;
-    const c3 = c1 + 1;
-    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-  },
-  easeOutElastic: (t: number): number => {
-    const c4 = (2 * Math.PI) / 3;
-    return t === 0
-      ? 0
-      : t === 1
-        ? 1
-        : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-  },
-  // Custom easing for painting effect - starts slow, accelerates, then slows down
-  paintEase: (t: number): number => {
-    if (t < 0.3) {
-      return 0.5 * Math.pow(t / 0.3, 2);
-    } else if (t < 0.7) {
-      return 0.5 + 0.3 * ((t - 0.3) / 0.4);
-    } else {
-      return 0.8 + 0.2 * (1 - Math.pow((1 - t) / 0.3, 2));
-    }
-  },
-};
-
-export const AdvancedCanvasPainting: React.FC<AdvancedCanvasPaintingProps> = ({
+export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   src,
   alt,
   className = '',
-  duration = 5000,
+  duration = 3000,
   delay = 500,
-  animationClasses = 16,
-  easingFunction = 'paintEase',
+  pathDelay = 10, // 10ms between each path
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [svgData, setSvgData] = useState<{
@@ -84,7 +50,7 @@ export const AdvancedCanvasPainting: React.FC<AdvancedCanvasPaintingProps> = ({
       .catch((error) => {
         console.error('Error loading SVG:', error);
       });
-  }, [src, animationClasses]);
+  }, [src]);
 
   const parseSVG = (svgContent: string) => {
     const parser = new DOMParser();
@@ -96,10 +62,8 @@ export const AdvancedCanvasPainting: React.FC<AdvancedCanvasPaintingProps> = ({
     const viewBox = svg.getAttribute('viewBox') || '0 0 100 100';
     const paths: PathData[] = [];
 
-    // Extract all path elements
+    // Extract all path elements in order
     const pathElements = svg.querySelectorAll('path');
-    let pathIndex = 0;
-
     pathElements.forEach((path) => {
       const d = path.getAttribute('d') || '';
       const style = path.getAttribute('style') || '';
@@ -134,39 +98,24 @@ export const AdvancedCanvasPainting: React.FC<AdvancedCanvasPaintingProps> = ({
       const transform = path.getAttribute('transform') || undefined;
 
       if (d) {
-        // Assign animation class in round-robin fashion
-        const animationClass = (pathIndex % animationClasses) + 1;
         paths.push({
           d,
           fill,
           stroke,
           strokeWidth,
           transform,
-          animationClass,
         });
-        pathIndex++;
       }
     });
 
     return { viewBox, paths };
   };
 
-  const drawPath = (
-    ctx: CanvasRenderingContext2D,
-    pathData: PathData,
-    canvasWidth: number,
-    canvasHeight: number,
-    svgWidth: number,
-    svgHeight: number,
-    progress: number = 1,
-  ) => {
+  const drawPath = (ctx: CanvasRenderingContext2D, pathData: PathData) => {
     ctx.save();
 
-    // Set fill color with transparency based on progress
-    const fillColor = pathData.fill || '#000';
-    const alpha = progress; // Use progress as alpha for fade-in effect
-    ctx.fillStyle = fillColor;
-    ctx.globalAlpha = alpha;
+    // Set fill color
+    ctx.fillStyle = pathData.fill || '#000';
 
     // Set stroke if present
     if (pathData.stroke) {
@@ -233,51 +182,26 @@ export const AdvancedCanvasPainting: React.FC<AdvancedCanvasPaintingProps> = ({
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const startTime = Date.now();
+    // Browser-style progressive drawing
+    let currentPathIndex = 0;
+    const totalPaths = svgData.paths.length;
 
-    const animate = () => {
-      const elapsed = Date.now() - startTime - delay;
-      const progress = Math.min(elapsed / duration, 1);
+    const drawNextPath = () => {
+      if (currentPathIndex < totalPaths) {
+        // Draw the current path
+        drawPath(ctx, svgData.paths[currentPathIndex]);
+        currentPathIndex++;
 
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw paths based on their animation class timing
-      svgData.paths.forEach((pathData) => {
-        const classDelay =
-          (pathData.animationClass - 1) * (duration / animationClasses);
-        const pathStartTime = classDelay;
-        const pathEndTime = pathStartTime + duration / animationClasses;
-
-        if (elapsed >= pathStartTime) {
-          let pathProgress = Math.min(
-            (elapsed - pathStartTime) / (pathEndTime - pathStartTime),
-            1,
-          );
-
-          // Apply selected easing function for smoother animation
-          pathProgress = easingFunctions[easingFunction](pathProgress);
-
-          // Draw path with fade-in effect
-          drawPath(
-            ctx,
-            pathData,
-            containerWidth,
-            containerHeight,
-            svgWidth,
-            svgHeight,
-            pathProgress,
-          );
+        // Schedule next path
+        if (currentPathIndex < totalPaths) {
+          setTimeout(drawNextPath, pathDelay);
         }
-      });
-
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate);
       }
     };
 
+    // Start drawing after delay
     const timer = setTimeout(() => {
-      animate();
+      drawNextPath();
     }, delay);
 
     return () => {
@@ -286,7 +210,7 @@ export const AdvancedCanvasPainting: React.FC<AdvancedCanvasPaintingProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [svgData, duration, delay, animationClasses]);
+  }, [svgData, delay, pathDelay]);
 
   if (!isLoaded) {
     return;
