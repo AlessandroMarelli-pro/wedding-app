@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from 'react';
 import MobileNav2 from './mobile-nav';
+import { MagneticButton } from './ui';
 import { Navbar, NavBody, NavItems } from './ui/resizable-navbar';
 
 interface NavbarLayoutProps {
@@ -57,6 +58,10 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
             className="font-bold text-theme-accent-dark"
             onItemClick={handleNavClick}
           />
+          <MagneticButton variant="stroke" className="rounded-full">
+            RSVP Now
+          </MagneticButton>
+
           {/* <RSVPFormModal
             shadowCls="shadow-none"
             btnColor="bg-theme-accent"
