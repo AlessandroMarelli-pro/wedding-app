@@ -140,6 +140,7 @@ export const WeddingHero = ({
         stagger: 0.05,
         duration: 0.6,
         ease: 'power2.out',
+        delay: 0.6,
       });
     }
 
@@ -155,7 +156,7 @@ export const WeddingHero = ({
         stagger: 0.05,
         duration: 0.6,
         ease: 'power2.out',
-        delay: 0.3, // Slight delay after coupleNames
+        delay: 0.9, // Slight delay after coupleNames
       });
     }
 
@@ -171,7 +172,7 @@ export const WeddingHero = ({
         stagger: 0.05,
         duration: 0.6,
         ease: 'power2.out',
-        delay: 0.6, // Delay after heroMessage
+        delay: 1.2, // Delay after heroMessage
       });
     }
 
@@ -185,7 +186,7 @@ export const WeddingHero = ({
         alt="Ariane and Timothé"
         className="absolute inset-0"
         duration={4000}
-        delay={50}
+        delay={500}
         pathDelay={200}
         useSetMode={true}
         setPercentage={4}
