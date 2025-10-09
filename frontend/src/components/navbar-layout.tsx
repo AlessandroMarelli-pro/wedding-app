@@ -55,11 +55,19 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
         <NavBody className="h-20" visible>
           <NavItems
             items={navItems}
-            className="font-bold text-theme-accent-dark"
+            className="font-bold text-theme-accent-dark "
             onItemClick={handleNavClick}
           />
-          <MagneticButton variant="stroke" className="rounded-full">
-            RSVP Now
+          <MagneticButton
+            variant="stroke"
+            className="rounded-full after:border-theme-accent-dark hover:after:border-2 bg-theme-accent-dark text-theme-default  hover:text-theme-accent-dark"
+            flairClassName="bg-theme-default "
+            strokeColor="bg-theme-default"
+            onClick={() =>
+              window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
+            }
+          >
+            RSVP
           </MagneticButton>
 
           {/* <RSVPFormModal

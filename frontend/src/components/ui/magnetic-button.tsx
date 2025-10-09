@@ -12,6 +12,7 @@ interface MagneticButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  strokeColor?: string;
   [key: string]: any; // Allow additional props to be passed through
 }
 
@@ -23,6 +24,7 @@ export const MagneticButton = ({
   onClick,
   disabled = false,
   type = 'button',
+  strokeColor = 'bg-white',
   ...props
 }: MagneticButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -181,7 +183,7 @@ export const MagneticButton = ({
       <div ref={flairRef} className={getFlairClasses()} style={getFlairStyle()}>
         {variant === 'stroke' && (
           <div
-            className="absolute bg-white rounded-full"
+            className={cn('absolute rounded-full', strokeColor)}
             style={{
               aspectRatio: '1/1',
               width: '170%',

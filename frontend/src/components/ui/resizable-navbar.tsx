@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { cn } from 'src/lib/utils';
 
 import React, { useRef, useState } from 'react';
+import { MagneticButton } from './magnetic-button';
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -103,21 +104,30 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => (
-        <a
-          onMouseEnter={() => setHovered(idx)}
+        <MagneticButton
+          variant="stroke"
+          className="rounded-full  after:border-none hover:after:border-2 hover:text-theme-default text-theme-accent-dark"
+          flairClassName="bg-theme-accent-dark "
+          strokeColor="bg-theme-accent-dark"
           onClick={(e) => onItemClick?.(e, item.link)}
-          className="relative px-4 py-2  hover:text-theme-default"
-          key={`link-${idx}`}
-          href={item.link}
         >
-          {hovered === idx && (
-            <motion.div
-              layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-theme-accent text-theme-default hover:text-theme-default"
-            />
-          )}
-          <span className="relative z-20">{item.name}</span>
-        </a>
+          {item.name}
+        </MagneticButton>
+        /*   <a
+            onMouseEnter={() => setHovered(idx)}
+            onClick={(e) => onItemClick?.(e, item.link)}
+            className="relative px-4 py-2  hover:text-theme-default"
+            key={`link-${idx}`}
+            href={item.link}
+          >
+            {hovered === idx && (
+              <motion.div
+                layoutId="hovered"
+                className="absolute inset-0 h-full w-full rounded-full bg-theme-accent text-theme-default hover:text-theme-default"
+              />
+            )}
+            <span className="relative z-20">{item.name}</span>
+          </a> */
       ))}
     </motion.div>
   );
