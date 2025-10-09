@@ -2,7 +2,7 @@ import {
   convertTextWithLinksToReactNodes,
   LinkPreview,
 } from '@/components/ui/link-preview';
-import { cn, getOptimizedUrl } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
@@ -32,11 +32,7 @@ export const WeddingInformation = ({
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
           <DivWithAnimation className=" flex flex-row  ">
             <Image
-              src={
-                (infoImage && infoImage.cloudflareUrl) ||
-                (infoImage && getOptimizedUrl(infoImage.id)) ||
-                '/images/lauziers.webp'
-              }
+              src={'/images/lauziers2.png'}
               alt={weddingInfo.coupleNames}
               width={6000}
               height={600}
@@ -47,7 +43,7 @@ export const WeddingInformation = ({
             <div className="flex flex-col justify-around items-center w-full">
               <h1
                 className={cn(
-                  'text-theme-muted  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
+                  'text-theme-accent-dark  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
                   font.className,
                 )}
               >
@@ -57,7 +53,7 @@ export const WeddingInformation = ({
                 {weddingInfo.weddingAddress?.split(',').map((chunk) => (
                   <p
                     key={chunk}
-                    className="text-md lg:text-xl text-theme-muted font-light"
+                    className="text-md lg:text-xl text-theme-accent-dark font-regular"
                   >
                     {chunk}
                   </p>
@@ -71,7 +67,7 @@ export const WeddingInformation = ({
             <div className="flex flex-colh-full ">
               <h1
                 className={cn(
-                  ' text-5xl xl:text-8xl text-theme-muted',
+                  ' text-5xl xl:text-8xl text-theme-accent-dark',
                   font.className,
                 )}
               >
@@ -86,27 +82,27 @@ export const WeddingInformation = ({
                   key={index}
                   className=" flex flex-col justify-center items-center w-full"
                 >
-                  <div className="flex   text-theme-muted">
+                  <div className="flex   text-theme-accent-dark">
                     {WeddingHowToArriveIcons[direction.type]}
-                    <h5 className="font-medium text-theme-muted capitalize text-xl lg:text-3xl  ">
+                    <h5 className="font-medium text-theme-accent-dark capitalize text-xl lg:text-3xl  ">
                       {getDirectionName(direction.type)}
                     </h5>
                   </div>
-                  <div className=" text-white  text-sm lg:text-base px-10 lg:px-0 ">
+                  <div className=" text-theme-accent-dark/80  text-sm lg:text-base px-10 lg:px-0 ">
                     {convertTextWithLinksToReactNodes(
                       direction.information,
-                      'text-theme-muted',
+                      'text-theme-accent-dark/80',
                     )}
                   </div>
                   <div className=" flex flex-row justify-center items-center w-full">
-                    <span className="text-sm text-white ">
+                    <span className="text-sm text-theme-accent-dark/80 ">
                       <IconMapPinFilled className="w-4 h-4" />
                     </span>
                     <LinkPreview
                       width={300}
                       height={200}
                       url={direction.location.link || ''}
-                      className="text-theme-muted underline text-sm target:blank"
+                      className="text-theme-accent-dark underline text-sm target:blank"
                     >
                       {direction.location.address}
                     </LinkPreview>

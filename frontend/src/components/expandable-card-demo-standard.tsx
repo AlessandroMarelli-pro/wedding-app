@@ -165,7 +165,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
             layoutId={`card-${card.id}-${id}`}
             key={`card-${card.id}-${id}`}
             onClick={() => setActive(card)}
-            className="p-1 flex flex-col md:flex-row lg:justify-around   hover:bg-theme-muted text-theme-muted hover:text-theme-accent   cursor-pointer"
+            className="p-1 flex flex-col md:flex-row lg:justify-around   hover:bg-theme-muted text-theme-accent-dark hover:text-theme-accent   cursor-pointer"
           >
             <div className="flex gap-4 flex-col  justify-items-start w-full ">
               <motion.div layoutId={`image-${card.id}-${id}`}>
@@ -184,6 +184,15 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     alt={card.title}
                     className="h-60 w-60 md:h-35 md:w-35  object-cover object-top hidden md:block"
                   />
+                  {card.image3 && (
+                    <img
+                      width={300}
+                      height={300}
+                      src={card.image3}
+                      alt={card.title}
+                      className="h-60 w-60 md:h-35 md:w-35  object-cover object-top hidden md:block"
+                    />
+                  )}
                 </div>
               </motion.div>
               <div className="p-4">

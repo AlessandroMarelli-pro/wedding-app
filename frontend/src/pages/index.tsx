@@ -122,29 +122,20 @@ const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
 const RSVPSection = () => {
   return (
     <Section id="rsvp" background="accent" className="h-[50vh] max-h-screen ">
-      <div className="w-full h-full flex flex-col lg:text-center lg:justify-center lg:items-center justify-start items-start text-center gap-10">
-        <video
-          id="video"
-          width="100%"
-          height="100%"
-          autoPlay
-          muted
-          loop
-          className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-bottom hidden lg:block"
-          playsInline
-        >
-          <source src="/clips/clip.webm" type="video/webm" />
-        </video>
+      <div className="w-full h-full flex flex-col text-center ">
         <Image
           priority
-          src="/clips/clip_optimized.gif"
+          src="/images/capadocce.jpeg"
           alt="RSVP"
-          width={1000}
+          width={2000}
           height={1000}
-          className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-bottom lg:hidden block"
+          className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-center "
         />
-        <DivWithAnimation className=" text-4xl lg:text-6xl   text-theme-muted z-1 pt-10 lg:pt-0 ">
+        <DivWithAnimation className=" text-4xl lg:text-6xl   text-theme-default z-1 pt-20 font-bold px-10 ">
           Nous espérons vous voir nombreux en ce jour spécial !
+        </DivWithAnimation>
+        <DivWithAnimation className=" text-4xl lg:text-4xl   text-theme-default z-1   font-bold">
+          Réponse attendu avant le 28 février 2026
         </DivWithAnimation>
       </div>
     </Section>
@@ -158,7 +149,7 @@ const BonusSection = () => {
         <span
           className={cn(
             bilbo.className,
-            'text-2xl text-theme-accent flex lg:flex-row flex-col items-center gap-2 pt-5',
+            'text-2xl text-theme-accent-dark flex lg:flex-row flex-col items-center gap-2 pt-5',
           )}
         >
           En bonus, l'instant où la demande de mariage a été faite{' '}

@@ -23,6 +23,7 @@ export function AccommodationsList({
       description: accommodation.address,
       src: accommodation?.imagesUrl?.split(',')[0],
       image2: accommodation?.imagesUrl?.split(',')[1],
+      image3: accommodation?.imagesUrl?.split(',')[2],
       ctaText: accommodation.isRecommended ? 'Recommandé' : '',
       ctaLink: accommodation.sourceUrl || 'https://ui.aceternity.com/templates',
       imagesUrl: accommodation.imagesUrl?.split(',') || [],

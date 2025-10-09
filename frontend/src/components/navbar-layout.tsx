@@ -54,7 +54,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
         <NavBody className="h-20" visible>
           <NavItems
             items={navItems}
-            className="font-bold text-theme-accent"
+            className="font-bold text-theme-accent-dark"
             onItemClick={handleNavClick}
           />
           {/* <RSVPFormModal

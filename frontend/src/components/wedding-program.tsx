@@ -1,7 +1,7 @@
 import { cn, formatTime } from '@/lib';
-import { IconGalaxy } from '@tabler/icons-react';
 import { motion } from 'motion/react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
+import Image from 'next/image';
 import { Fragment } from 'react';
 
 interface ProgramEvent {
@@ -53,7 +53,7 @@ export function WeddingProgram({
   events: ProgramEvent[];
 }) {
   return (
-    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent xl:gap-5 lg:gap-0 gap-5 py-10 lg:py-0 lg:pb-5">
+    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent xl:gap-5 lg:gap-0 gap-5    p-10 z-[99999]">
       {events.map((item, index) => (
         <Fragment key={item.id}>
           <AnimatedDiv
@@ -97,7 +97,13 @@ export function WeddingProgram({
           </AnimatedDiv>
           {index !== events.length - 1 && (
             <AnimatedDiv index={index} id={item.id}>
-              <IconGalaxy className="lg:w-10 lg:h-10 w-8 h-8 animate-[spin_3s_linear_infinite]" />
+              <Image
+                src="/images/lavandes.png"
+                alt="lavande"
+                width={100}
+                height={100}
+                className="w-1/2 h-1/2 "
+              />
             </AnimatedDiv>
           )}
         </Fragment>

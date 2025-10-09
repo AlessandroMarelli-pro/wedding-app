@@ -62,9 +62,11 @@
 
 @theme {
   --color-theme-none: #ffffff;
-  --color-theme-default: oklch(0.74 0.15 75.57);
-  --color-theme-muted: oklch(0.74 0.15 75.57);
+  --color-theme-default: oklch(0.83 0.15 76.79);
+  --color-theme-muted: oklch(0.83 0.15 76.79);
   --color-theme-accent: oklch(0.87 0.06 57.1);
+  --color-theme-accent-dark: oklch(0.67 0.14 17.27);
+  --color-theme-blue: oklch(0.66 0.06 257.22);
   --color-border: hsl(214.3 31.8% 91.4%);
   --color-input: hsl(214.3 31.8% 91.4%);
   --color-ring: hsl(222.2 84% 4.9%);
