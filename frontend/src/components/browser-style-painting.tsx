@@ -168,7 +168,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     if (!ctx) return;
 
     // Parse viewBox (x, y, width, height)
-    const [x, y, svgWidth, svgHeight] = svgData.viewBox.split(' ').map(Number);
+    let [x, y, svgWidth, svgHeight] = svgData.viewBox.split(' ').map(Number);
+    svgWidth = Math.max(svgWidth, 1000);
 
     // Set canvas size
     const rect = canvas.getBoundingClientRect();
@@ -178,8 +179,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     // Calculate scale to fit the container while maintaining aspect ratio
     const scaleX = containerWidth / svgWidth;
     const scaleY = containerHeight / svgHeight;
-    const scale = Math.max(scaleX, scaleY); // Use Math.min to fit within container
-
+    const scale = Math.min(scaleX, scaleY) * 1.5; // Use Math.min to fit within container
+    console.log(scale);
     // Set canvas size
     canvas.width = containerWidth * window.devicePixelRatio;
     canvas.height = containerHeight * window.devicePixelRatio;

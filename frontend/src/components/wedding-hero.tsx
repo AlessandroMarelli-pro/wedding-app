@@ -1,5 +1,6 @@
 import { UploadedImage, WeddingInfo } from '@/types/api';
 import { gsap } from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import { useEffect, useRef, useState } from 'react';
 import { BrowserStylePainting } from './browser-style-painting';
@@ -87,6 +88,9 @@ export const WeddingHero = ({
 
   // GSAP responsive setup
   useEffect(() => {
+    // Register SplitText plugin
+    gsap.registerPlugin(SplitText);
+
     // Set up responsive animations with GSAP
     const mm = gsap.matchMedia();
 
@@ -120,6 +124,57 @@ export const WeddingHero = ({
       );
     });
 
+    // Split text animations
+    // Set initial opacity for all h1 elements
+    gsap.set('h1', { opacity: 1 });
+
+    // Animate coupleNames
+    if (textElementsRef.current.coupleNames) {
+      const coupleNamesSplit = SplitText.create(
+        textElementsRef.current.coupleNames,
+        { type: 'chars' },
+      );
+      gsap.from(coupleNamesSplit.chars, {
+        y: 20,
+        autoAlpha: 0,
+        stagger: 0.05,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+    }
+
+    // Animate heroMessage
+    if (textElementsRef.current.heroMessage) {
+      const heroMessageSplit = SplitText.create(
+        textElementsRef.current.heroMessage,
+        { type: 'chars' },
+      );
+      gsap.from(heroMessageSplit.chars, {
+        y: 20,
+        autoAlpha: 0,
+        stagger: 0.05,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: 0.3, // Slight delay after coupleNames
+      });
+    }
+
+    // Animate heroAddress
+    if (textElementsRef.current.heroAddress) {
+      const heroAddressSplit = SplitText.create(
+        textElementsRef.current.heroAddress,
+        { type: 'chars' },
+      );
+      gsap.from(heroAddressSplit.chars, {
+        y: 20,
+        autoAlpha: 0,
+        stagger: 0.05,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: 0.6, // Delay after heroMessage
+      });
+    }
+
     return () => mm.revert();
   }, []);
 
@@ -128,10 +183,10 @@ export const WeddingHero = ({
       <BrowserStylePainting
         src="/images/aqua.svg"
         alt="Ariane and Timothé"
-        className="absolute inset-0 w-full h-full"
-        duration={400}
+        className="absolute inset-0"
+        duration={4000}
         delay={50}
-        pathDelay={100}
+        pathDelay={200}
         useSetMode={true}
         setPercentage={4}
       />
@@ -140,7 +195,7 @@ export const WeddingHero = ({
           textElementsRef.current.coupleNames = el;
         }}
         id="couple-names"
-        className="absolute text-theme-accent-dark font-bold top-[calc(10%)] roundhand-regular z-10 w-max"
+        className="absolute text-theme-accent-dark font-bold top-[calc(9%)] roundhand-regular z-10 w-max"
         style={{
           left: imagePosition ? getRightEdgePosition() : '50%',
           transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
