@@ -47,7 +47,7 @@ export const WeddingInformation = ({
             <div className="flex flex-col justify-around items-center w-full">
               <h1
                 className={cn(
-                  'text-[#EAFFD0]  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
+                  'text-theme-muted  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
                   font.className,
                 )}
               >
@@ -57,7 +57,7 @@ export const WeddingInformation = ({
                 {weddingInfo.weddingAddress?.split(',').map((chunk) => (
                   <p
                     key={chunk}
-                    className="text-md lg:text-xl text-[#EAFFD0] font-light"
+                    className="text-md lg:text-xl text-theme-muted font-light"
                   >
                     {chunk}
                   </p>
@@ -71,7 +71,7 @@ export const WeddingInformation = ({
             <div className="flex flex-colh-full ">
               <h1
                 className={cn(
-                  ' text-5xl xl:text-8xl text-[#EAFFD0]',
+                  ' text-5xl xl:text-8xl text-theme-muted',
                   font.className,
                 )}
               >
@@ -86,16 +86,16 @@ export const WeddingInformation = ({
                   key={index}
                   className=" flex flex-col justify-center items-center w-full"
                 >
-                  <div className="flex   text-[#EAFFD0]">
+                  <div className="flex   text-theme-muted">
                     {WeddingHowToArriveIcons[direction.type]}
-                    <h5 className="font-medium text-[#EAFFD0] capitalize text-xl lg:text-3xl  ">
+                    <h5 className="font-medium text-theme-muted capitalize text-xl lg:text-3xl  ">
                       {getDirectionName(direction.type)}
                     </h5>
                   </div>
                   <div className=" text-white  text-sm lg:text-base px-10 lg:px-0 ">
                     {convertTextWithLinksToReactNodes(
                       direction.information,
-                      'text-[#EAFFD0]',
+                      'text-theme-muted',
                     )}
                   </div>
                   <div className=" flex flex-row justify-center items-center w-full">
@@ -106,7 +106,7 @@ export const WeddingInformation = ({
                       width={300}
                       height={200}
                       url={direction.location.link || ''}
-                      className="text-[#EAFFD0] underline text-sm target:blank"
+                      className="text-theme-muted underline text-sm target:blank"
                     >
                       {direction.location.address}
                     </LinkPreview>

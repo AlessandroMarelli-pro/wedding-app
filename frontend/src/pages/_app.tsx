@@ -1,7 +1,5 @@
 import { NavbarLayout } from '@/components/admin/admin-navbar-layout';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { LoadingProgress } from '@/components/loading-progress';
-import { Section } from '@/components/section-components';
 import { Toaster } from '@/components/ui/sonner';
 import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/next';
@@ -40,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </div>
       ) : (
         <>
-          {!isAdminLoginPage && (
+          {/*     {!isAdminLoginPage && (
             <Section id="progress" background="accent">
               <LoadingProgress
                 endFunction={() => {
@@ -49,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 bilbo={bilbo}
               />
             </Section>
-          )}
+          )} */}
           <Component {...pageProps} />
         </>
       )}

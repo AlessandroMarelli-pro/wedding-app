@@ -54,12 +54,12 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
         <NavBody className="h-20" visible>
           <NavItems
             items={navItems}
-            className="font-bold text-[#F38181]"
+            className="font-bold text-theme-accent"
             onItemClick={handleNavClick}
           />
           {/* <RSVPFormModal
             shadowCls="shadow-none"
-            btnColor="bg-[#F38181]"
+            btnColor="bg-theme-accent"
             btnTextColor="text-[#95E1D3] font-bold"
           /> */}
         </NavBody>

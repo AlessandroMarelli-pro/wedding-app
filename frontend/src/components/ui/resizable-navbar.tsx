@@ -106,14 +106,14 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         <a
           onMouseEnter={() => setHovered(idx)}
           onClick={(e) => onItemClick?.(e, item.link)}
-          className="relative px-4 py-2  hover:text-[#95E1D3]"
+          className="relative px-4 py-2  hover:text-theme-default"
           key={`link-${idx}`}
           href={item.link}
         >
           {hovered === idx && (
             <motion.div
               layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-[#F38181] text-[#95E1D3] hover:text-[#95E1D3]"
+              className="absolute inset-0 h-full w-full rounded-full bg-theme-accent text-theme-default hover:text-theme-default"
             />
           )}
           <span className="relative z-20">{item.name}</span>
@@ -177,7 +177,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 0.95 }}
           exit={{ opacity: 0 }}
           className={cn(
-            'fixed h-full w-full inset-0 bg-[#F38181]  p-10 z-[100] flex flex-col justify-start gap-4',
+            'fixed h-full w-full inset-0 bg-theme-accent  p-10 z-[100] flex flex-col justify-start gap-4',
             className,
           )}
         >

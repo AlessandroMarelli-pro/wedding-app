@@ -170,7 +170,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
           className={`  p-8  ${className} flex flex-col justify-center items-center`}
         >
           <div className="text-center flex flex-col items-center justify-center space-y-4">
-            <h3 className="text-xl lg:text-2xl  text-[#F38181]  flex items-center justify-center gap-2">
+            <h3 className="text-xl lg:text-2xl  text-theme-accent  flex items-center justify-center gap-2">
               Vous nous manquerez
               <IconHeartFilled />
             </h3>
@@ -189,7 +189,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
         className={`  p-8  ${className} flex flex-col justify-center items-center`}
       >
         <div className="text-center">
-          <h3 className="text-xl lg:text-2xl  text-[#F38181] mb-4 flex items-center justify-center gap-2">
+          <h3 className="text-xl lg:text-2xl  text-theme-accent mb-4 flex items-center justify-center gap-2">
             Votre venue est confirmée <IconMoodSmileBeam className="w-8 h-8" />
           </h3>
           <p className="text-base lg:text-lg text-gray-700 ">
@@ -264,7 +264,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
               size="lg"
               type="submit"
               disabled={isSubmitting || hashCode.length !== 8}
-              className="bg-[#F38181] text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              className="bg-theme-accent text-white px-6 sm:px-8 py-3  font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               {isSubmitting ? 'Vérification...' : 'Continuer'}{' '}
               <MousePointerClick className="pl-2 h-8 w-8" />
@@ -292,7 +292,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
     return (
       <div className={` p-4 w-full ${className}`}>
         <div className="text-center lg:mb-6">
-          <h2 className="text-2xl lg:text-3xl  font-bold text-[#F38181] mb-2">
+          <h2 className="text-2xl lg:text-3xl  font-bold text-theme-accent mb-2">
             Bonjour {guestInfo.firstName} !
           </h2>
           <p className="text-gray-600 text-sm lg:text-base">
@@ -306,7 +306,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
           <div className="flex flex-col lg:flex-row gap-4 lg:justify-between justify-around">
             <div className="flex flex-col lg:justify-left lg:items-left lg:text-left">
               <div>
-                <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                <Label className="lg:text-md text-sm font-bold text-theme-accent">
                   Nom
                 </Label>
                 <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
@@ -315,7 +315,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
               </div>
               {guestInfo.email && (
                 <div>
-                  <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                  <Label className="lg:text-md text-sm font-bold text-theme-accent">
                     Email
                   </Label>
                   <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
@@ -328,7 +328,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
               <div className="flex flex-col lg:justify-left lg:items-left lg:text-left">
                 {guestInfo.dietaryRestrictions && (
                   <div>
-                    <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                    <Label className="lg:text-md text-sm font-bold text-theme-accent">
                       Restrictions alimentaires
                     </Label>
                     <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
@@ -338,7 +338,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                 )}
                 {guestInfo.specialRequests && (
                   <div>
-                    <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+                    <Label className="lg:text-md text-sm font-bold text-theme-accent">
                       Requêtes spéciales
                     </Label>
                     <p className="text-gray-800  p-2 pl-0 text-sm lg:text-base">
@@ -350,7 +350,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
             )}
 
             <div className="flex flex-col justify-center items-center">
-              <Label className="lg:text-md text-sm font-bold text-[#F38181]">
+              <Label className="lg:text-md text-sm font-bold text-theme-accent">
                 Groupe
               </Label>{' '}
               <div>
@@ -373,7 +373,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                     -
                   </Button>
                   <div className="flex items-center ">
-                    <Users className="w-5 h-5 text-[#F38181]" />
+                    <Users className="w-5 h-5 text-theme-accent" />
                     <span className="text-2xl font-bold text-gray-800 pl-2 text-center">
                       {rsvpData.confirmedPartySize}
                     </span>
@@ -445,7 +445,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
               htmlFor="message"
               className="text-lg font-medium text-gray-700 flex items-center"
             >
-              <MessageSquare className="w-5 h-5 mr-2 text-[#F38181]" />
+              <MessageSquare className="w-5 h-5 mr-2 text-theme-accent" />
               Message (Optionnel)
             </Label>
             <textarea
@@ -459,7 +459,7 @@ export function RSVPForm({ className = '' }: RSVPFormProps) {
                   ? 'Toute note ou requête spéciale?'
                   : "Vous nous manquerez! Faites-nous savoir si vous changez d'avis."
               }
-              className="w-full px-3 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-[#F38181] focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-theme-accent focus:border-transparent resize-none"
               rows={3}
               disabled={isSubmitting}
             />

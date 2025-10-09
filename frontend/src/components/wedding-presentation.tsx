@@ -22,7 +22,7 @@ export function WeddingPresentation({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Couple's Message */}
-      <DivWithAnimation className="text-[#F38181] container-responsive text-center  flex flex-col items-center justify-center  p-10 ">
+      <DivWithAnimation className="text-theme-accent container-responsive text-center  flex flex-col items-center justify-center  p-10 ">
         <div className="py-4">
           <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
         </div>

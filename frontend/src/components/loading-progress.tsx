@@ -59,7 +59,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
           display: 'none',
         }}
         transition={{ duration: 1, delay: 0.5, ease: [0, 0.71, 0.2, 1.01] }}
-        className="fixed left-0  z-[500] w-[50%] h-full bg-[#F38181] flex flex-col items-center justify-center space-y-4"
+        className="fixed left-0  z-[500] w-[50%] h-full bg-theme-accent flex flex-col items-center justify-center space-y-4"
       ></motion.div>
 
       <motion.div
@@ -69,7 +69,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
           opacity: 0,
           display: 'none',
         }}
-        className="fixed right-0  z-[500]  w-[50%] h-full bg-[#F38181] flex flex-col items-center justify-center space-y-4"
+        className="fixed right-0  z-[500]  w-[50%] h-full bg-theme-accent flex flex-col items-center justify-center space-y-4"
       ></motion.div>
 
       {showProgress && (

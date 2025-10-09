@@ -16,6 +16,7 @@
     "test:e2e:open": "cypress open",
     "seed": "tsx scripts/seed-database.ts",
     "seed:reset": "node scripts/seed-database.js --reset",
+    "pregenerate-svg": "node scripts/pregenerate-animated-svg.js",
     "test:scraper": "node scripts/test-scraper.js",
     "test:uploads": "node scripts/test-uploads.js",
     "test:maintenance": "node scripts/test-maintenance.js",

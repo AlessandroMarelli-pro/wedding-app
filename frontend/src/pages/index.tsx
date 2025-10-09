@@ -143,7 +143,7 @@ const RSVPSection = () => {
           height={1000}
           className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-bottom lg:hidden block"
         />
-        <DivWithAnimation className=" text-4xl lg:text-6xl   text-[#EAFFD0] z-1 pt-10 lg:pt-0 ">
+        <DivWithAnimation className=" text-4xl lg:text-6xl   text-theme-muted z-1 pt-10 lg:pt-0 ">
           Nous espérons vous voir nombreux en ce jour spécial !
         </DivWithAnimation>
       </div>
@@ -158,7 +158,7 @@ const BonusSection = () => {
         <span
           className={cn(
             bilbo.className,
-            'text-2xl text-[#F38181] flex lg:flex-row flex-col items-center gap-2 pt-5',
+            'text-2xl text-theme-accent flex lg:flex-row flex-col items-center gap-2 pt-5',
           )}
         >
           En bonus, l'instant où la demande de mariage a été faite{' '}

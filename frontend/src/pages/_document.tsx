@@ -58,6 +58,8 @@ export default function Document() {
           rel="stylesheet"
         />
 
+        <link href="/fonts/Roundhand-Regular.woff" rel="stylesheet" />
+        <link href="/fonts/Roundhand-Bold.woff" rel="stylesheet" />
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />
 
