@@ -1,3 +1,4 @@
+import { gsap } from 'gsap';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface BrowserStylePaintingProps {
@@ -10,6 +11,13 @@ interface BrowserStylePaintingProps {
   progressivePercentage?: number; // Percentage of paths to draw progressively (default 30%)
   setPercentage?: number; // Percentage of paths per set (default 10%)
   useSetMode?: boolean; // If true, draw by sets instead of progressive (default false)
+  onPositionUpdate?: (position: {
+    offsetX: number;
+    scaledWidth: number;
+    containerWidth: number;
+    svgWidth: number;
+    svgHeight: number;
+  }) => void;
 }
 
 interface PathData {
@@ -30,6 +38,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   progressivePercentage = 30, // 30% of paths drawn progressively
   setPercentage = 10, // 10% of paths per set
   useSetMode = false, // Use set mode instead of progressive
+  onPositionUpdate,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [svgData, setSvgData] = useState<{
@@ -150,6 +159,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     ctx.restore();
   };
 
+  // Main animation effect
   useEffect(() => {
     if (!svgData || !canvasRef.current) return;
 
@@ -157,7 +167,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Parse viewBox
+    // Parse viewBox (x, y, width, height)
     const [x, y, svgWidth, svgHeight] = svgData.viewBox.split(' ').map(Number);
 
     // Set canvas size
@@ -165,112 +175,123 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     const containerWidth = rect.width;
     const containerHeight = rect.height;
 
-    // Calculate scale to fill the container while maintaining aspect ratio
+    // Calculate scale to fit the container while maintaining aspect ratio
     const scaleX = containerWidth / svgWidth;
     const scaleY = containerHeight / svgHeight;
-    const scale = Math.max(scaleX, scaleY); // Use Math.max to fill the screen
+    const scale = Math.max(scaleX, scaleY); // Use Math.min to fit within container
 
     // Set canvas size
     canvas.width = containerWidth * window.devicePixelRatio;
     canvas.height = containerHeight * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
-    // Position the SVG at the bottom of the canvas
+    // Position the SVG in the center of the canvas
     const scaledWidth = svgWidth * scale;
     const scaledHeight = svgHeight * scale;
+
     const offsetX = (containerWidth - scaledWidth) / 2; // Center horizontally
     const offsetY = (containerHeight - scaledHeight) / 4; // Position at bottom
+    // Apply viewBox offset to account for negative coordinates
 
-    // Apply transform to position and scale
+    // Notify parent component of position changes
+    if (onPositionUpdate) {
+      onPositionUpdate({
+        offsetX,
+        scaledWidth,
+        containerWidth,
+        svgWidth: svgWidth * scale,
+        svgHeight: svgHeight * scale,
+      });
+    }
+
+    // Clear canvas first
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Apply transform to position and scale (viewBox offset is handled in drawPath)
     ctx.translate(offsetX, offsetY);
     ctx.scale(scale, scale);
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Browser-style drawing with configurable modes
-    let currentPathIndex = 0;
+    // GSAP-optimized drawing with configurable modes
     const totalPaths = svgData.paths.length;
     const pathsPerSet = Math.floor(totalPaths * (setPercentage / 100));
-    let currentSet = 0;
 
-    const drawNextPath = () => {
-      if (currentPathIndex < totalPaths) {
-        if (useSetMode) {
-          // Set mode: Draw by sets of X%
-          const setStartIndex = currentSet * pathsPerSet;
-          const setEndIndex = Math.min(setStartIndex + pathsPerSet, totalPaths);
+    // Create GSAP timeline for smooth animation
+    const tl = gsap.timeline({ delay: delay / 1000 }); // Convert ms to seconds
 
-          if (setStartIndex < totalPaths) {
+    if (useSetMode) {
+      // Set mode: Draw by sets of X% with GSAP
+      const totalSets = Math.ceil(totalPaths / pathsPerSet);
+
+      for (let setIndex = 0; setIndex < totalSets; setIndex++) {
+        const setStartIndex = setIndex * pathsPerSet;
+        const setEndIndex = Math.min(setStartIndex + pathsPerSet, totalPaths);
+
+        tl.call(
+          () => {
             // Draw all paths in this set at once
             for (let i = setStartIndex; i < setEndIndex; i++) {
               drawPath(ctx, svgData.paths[i]);
             }
-
-            currentPathIndex = setEndIndex;
-            currentSet++;
-
-            // Schedule next set if there are more paths
-            if (currentPathIndex < totalPaths) {
-              setTimeout(drawNextPath, pathDelay);
-            }
-          }
-        } else {
-          // Progressive mode: Draw individual paths with acceleration
-          const pathsPerProgressivePeriod = Math.floor(
-            totalPaths * (progressivePercentage / 100),
-          );
-
-          // Draw the current path
-          drawPath(ctx, svgData.paths[currentPathIndex]);
-          currentPathIndex++;
-
-          // Check if we should continue progressive drawing or draw by sets
-          if (currentPathIndex < totalPaths) {
-            if (currentPathIndex < pathsPerProgressivePeriod) {
-              // Continue progressive drawing (individual paths)
-              setTimeout(drawNextPath, pathDelay);
-            } else {
-              // Draw by sets of X%
-              const setStartIndex =
-                pathsPerProgressivePeriod + currentSet * pathsPerSet;
-              const setEndIndex = Math.min(
-                setStartIndex + pathsPerSet,
-                totalPaths,
-              );
-
-              if (setStartIndex < totalPaths) {
-                // Draw all paths in this set at once
-                for (let i = setStartIndex; i < setEndIndex; i++) {
-                  drawPath(ctx, svgData.paths[i]);
-                }
-
-                currentPathIndex = setEndIndex;
-                currentSet++;
-
-                // Schedule next set if there are more paths
-                if (currentPathIndex < totalPaths) {
-                  setTimeout(drawNextPath, pathDelay * 5); // Slightly longer delay between sets
-                }
-              }
-            }
-          }
-        }
+          },
+          [],
+          setIndex * (pathDelay / 1000),
+        ); // Convert ms to seconds
       }
-    };
+    } else {
+      // Progressive mode: Draw individual paths with acceleration
+      const pathsPerProgressivePeriod = Math.floor(
+        totalPaths * (progressivePercentage / 100),
+      );
 
-    // Start drawing after delay
-    const timer = setTimeout(() => {
-      drawNextPath();
-    }, delay);
+      // Progressive phase
+      for (let i = 0; i < pathsPerProgressivePeriod; i++) {
+        tl.call(
+          () => {
+            drawPath(ctx, svgData.paths[i]);
+          },
+          [],
+          i * (pathDelay / 1000),
+        );
+      }
+
+      // Accelerated sets phase
+      const remainingPaths = totalPaths - pathsPerProgressivePeriod;
+      const remainingSets = Math.ceil(remainingPaths / pathsPerSet);
+
+      for (let setIndex = 0; setIndex < remainingSets; setIndex++) {
+        const setStartIndex =
+          pathsPerProgressivePeriod + setIndex * pathsPerSet;
+        const setEndIndex = Math.min(setStartIndex + pathsPerSet, totalPaths);
+
+        tl.call(
+          () => {
+            // Draw all paths in this set at once
+            for (let i = setStartIndex; i < setEndIndex; i++) {
+              drawPath(ctx, svgData.paths[i]);
+            }
+          },
+          [],
+          (pathsPerProgressivePeriod * pathDelay) / 1000 +
+            (setIndex * pathDelay * 5) / 1000,
+        );
+      }
+    }
 
     return () => {
-      clearTimeout(timer);
+      tl.kill(); // Kill GSAP timeline on cleanup
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [svgData, delay, pathDelay]);
+  }, [
+    svgData,
+    duration,
+    delay,
+    pathDelay,
+    progressivePercentage,
+    setPercentage,
+    useSetMode,
+  ]);
 
   if (!isLoaded) {
     return;
@@ -289,6 +310,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
           width: '100%',
           height: '100%',
           display: 'block',
+          zIndex: 5,
         }}
       />
     </div>

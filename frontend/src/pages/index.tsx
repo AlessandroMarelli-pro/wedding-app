@@ -46,7 +46,7 @@ const HeroSection = ({
   scrollToSection: (sectionId: string) => void;
 }) => {
   return (
-    <Section id="home">
+    <Section id="home" className="h-screen min-h-screen">
       <WeddingHero
         weddingInfo={weddingInfo}
         heroImage={heroImage}
