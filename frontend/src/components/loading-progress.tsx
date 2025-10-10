@@ -59,7 +59,7 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
           display: 'none',
         }}
         transition={{ duration: 1, delay: 0.5, ease: [0, 0.71, 0.2, 1.01] }}
-        className="fixed left-0  z-[500] w-[50%] h-full bg-[#F38181] flex flex-col items-center justify-center space-y-4"
+        className="fixed left-0  z-[500] w-[50%] h-full bg-theme-accent flex flex-col items-center justify-center space-y-4"
       ></motion.div>
 
       <motion.div
@@ -69,22 +69,24 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
           opacity: 0,
           display: 'none',
         }}
-        className="fixed right-0  z-[500]  w-[50%] h-full bg-[#F38181] flex flex-col items-center justify-center space-y-4"
+        className="fixed right-0  z-[500]  w-[50%] h-full bg-theme-accent flex flex-col items-center justify-center space-y-4"
       ></motion.div>
 
       {showProgress && (
         <div className="absolute top-0  z-[500] min-h-screen w-full bg-transparent flex flex-col items-center justify-center space-y-4">
-          <span className={cn(bilbo.className, 'text-white text-5xl')}>
+          <span
+            className={cn(bilbo.className, 'text-theme-accent-dark text-5xl')}
+          >
             Bienvenue
           </span>
 
           <Progress
             value={progress}
-            className="h-1  w-[50%]"
+            className="h-1  w-[50%] text-theme-accent-dark"
             style={
               {
                 '--progress-background': '#F38181',
-                '--progress-foreground': 'white',
+                '--progress-foreground': 'var(--color-theme-accent-dark)',
               } as React.CSSProperties
             }
           />

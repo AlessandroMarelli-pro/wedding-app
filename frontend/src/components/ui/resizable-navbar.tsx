@@ -3,7 +3,9 @@ import { IconMenu2, IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn } from 'src/lib/utils';
 
+import { useNavbarTheme } from '@/context/navbar-theme-context';
 import React, { useRef, useState } from 'react';
+import { MagneticButton } from './magnetic-button';
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -22,7 +24,7 @@ interface NavItemsProps {
     link: string;
   }[];
   className?: string;
-  onItemClick?: (e: React.MouseEvent<HTMLAnchorElement>, link: string) => void;
+  onItemClick?: (e: React.MouseEvent<HTMLElement>, link: string) => void;
 }
 
 interface MobileNavProps {
@@ -50,9 +52,10 @@ export const Navbar = ({ children, className }: NavbarProps) => {
 
   return (
     <motion.div
+      id="navbar"
       ref={ref}
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={{ scale: 0.9 }}
+      whileInView={{ scale: 1 }}
       viewport={{ once: true }}
       transition={{
         duration: 1.5,
@@ -81,7 +84,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         minWidth: '800px',
       }}
       className={cn(
-        'relative z-[60] mx-auto hidden w-full  flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 xl:flex dark:bg-transparent',
+        'relative z-[60] mx-auto hidden w-full  flex-row items-start justify-between self-start rounded-full bg-transparent px-4 py-2 xl:flex dark:bg-transparent',
         visible && 'bg-white/80 dark:bg-neutral-950/80',
         className,
       )}
@@ -93,6 +96,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { theme } = useNavbarTheme();
 
   return (
     <motion.div
@@ -103,21 +107,35 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => (
-        <a
-          onMouseEnter={() => setHovered(idx)}
-          onClick={(e) => onItemClick?.(e, item.link)}
-          className="relative px-4 py-2  hover:text-[#95E1D3]"
-          key={`link-${idx}`}
-          href={item.link}
-        >
-          {hovered === idx && (
-            <motion.div
-              layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-[#F38181] text-[#95E1D3] hover:text-[#95E1D3]"
-            />
+        <MagneticButton
+          key={idx}
+          variant="stroke"
+          className={cn(
+            'rounded-full  after:border-none hover:after:border-2   text-sm h-10',
+            theme.navItemsHoverColor,
+            theme.navItemsColor,
           )}
-          <span className="relative z-20">{item.name}</span>
-        </a>
+          flairClassName={cn('bg-theme-accent-dark ', theme.navItemsFlairColor)}
+          strokeColor={cn('bg-theme-accent-dark', theme.navItemsStrokeColor)}
+          onClick={(e) => onItemClick?.(e, item.link)}
+        >
+          {item.name}
+        </MagneticButton>
+        /*   <a
+            onMouseEnter={() => setHovered(idx)}
+            onClick={(e) => onItemClick?.(e, item.link)}
+            className="relative px-4 py-2  hover:text-theme-default"
+            key={`link-${idx}`}
+            href={item.link}
+          >
+            {hovered === idx && (
+              <motion.div
+                layoutId="hovered"
+                className="absolute inset-0 h-full w-full rounded-full bg-theme-accent text-theme-default hover:text-theme-default"
+              />
+            )}
+            <span className="relative z-20">{item.name}</span>
+          </a> */
       ))}
     </motion.div>
   );
@@ -177,7 +195,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 0.95 }}
           exit={{ opacity: 0 }}
           className={cn(
-            'fixed h-full w-full inset-0 bg-[#F38181]  p-10 z-[100] flex flex-col justify-start gap-4',
+            'fixed h-full w-full inset-0 bg-theme-accent  p-10 z-[100] flex flex-col justify-start gap-4',
             className,
           )}
         >

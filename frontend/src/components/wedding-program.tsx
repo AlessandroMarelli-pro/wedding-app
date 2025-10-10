@@ -1,7 +1,7 @@
 import { cn, formatTime } from '@/lib';
-import { IconGalaxy } from '@tabler/icons-react';
 import { motion } from 'motion/react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
+import Image from 'next/image';
 import { Fragment } from 'react';
 
 interface ProgramEvent {
@@ -14,6 +14,45 @@ interface ProgramEvent {
   displayOrder: number;
   includeInCalendar: boolean;
 }
+
+const ShakingDiv = ({
+  children,
+  index,
+  id,
+  className,
+}: {
+  children: React.ReactNode;
+  index: number;
+  id: string;
+  className?: string;
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ amount: 0.5, once: true }}
+      transition={{
+        duration: 0.8,
+        ease: 'linear',
+        delay: index * 0.2,
+      }}
+      id={id}
+      key={id}
+      className={className}
+    >
+      <motion.div
+        animate={{ rotate: 20 }}
+        transition={{
+          repeat: Infinity,
+          repeatType: 'reverse',
+          duration: 3,
+        }}
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+};
 
 const AnimatedDiv = ({
   children,
@@ -53,7 +92,7 @@ export function WeddingProgram({
   events: ProgramEvent[];
 }) {
   return (
-    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-[#F38181] xl:gap-5 lg:gap-0 gap-5 py-10 lg:py-0 lg:pb-5">
+    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent-dark xl:gap-5 lg:gap-0 gap-5    p-10 z-[99999]">
       {events.map((item, index) => (
         <Fragment key={item.id}>
           <AnimatedDiv
@@ -64,12 +103,12 @@ export function WeddingProgram({
             <div
               className={cn(
                 'text-5xl xl:text-6xl h-full flex items-center justify-center',
-                font.className,
+                'roundhand-regular',
               )}
             >
               {item.title}
             </div>
-            <div className="flex flex-col lg:gap-5 gap-2">
+            <div className="flex flex-col lg:gap-2 gap-2">
               <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
                 {new Date(item.startTime).toLocaleDateString('fr-FR', {
                   year: 'numeric',
@@ -96,9 +135,18 @@ export function WeddingProgram({
             </div>
           </AnimatedDiv>
           {index !== events.length - 1 && (
-            <AnimatedDiv index={index} id={item.id}>
-              <IconGalaxy className="lg:w-10 lg:h-10 w-8 h-8 animate-[spin_3s_linear_infinite]" />
-            </AnimatedDiv>
+            <ShakingDiv index={index} id={item.id}>
+              <Image
+                src="/images/lavandes.png"
+                alt="lavande"
+                width={100}
+                height={100}
+                className={cn(
+                  'w-1/2 h-1/2',
+                  index % 2 === 0 && 'scale-x-[-1] ',
+                )}
+              />
+            </ShakingDiv>
           )}
         </Fragment>
       ))}

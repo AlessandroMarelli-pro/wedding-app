@@ -2,7 +2,7 @@ import {
   convertTextWithLinksToReactNodes,
   LinkPreview,
 } from '@/components/ui/link-preview';
-import { cn, getOptimizedUrl } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import Image from 'next/image';
@@ -28,85 +28,83 @@ export const WeddingInformation = ({
 }) => {
   return (
     <div className="space-y-4 pb-4 lg:pb-0">
-      <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row gap-10 lg:gap-0">
+      <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row  lg:gap-0">
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
-          <DivWithAnimation className=" flex flex-row  ">
+          <div className="flex flex-col items-center justify-center min-h-10" />
+
+          <DivWithAnimation className=" flex flex-col items-center justify-center h-full ">
             <Image
-              src={
-                (infoImage && infoImage.cloudflareUrl) ||
-                (infoImage && getOptimizedUrl(infoImage.id)) ||
-                '/images/lauziers.webp'
-              }
+              src={'/images/lauziers2.png'}
               alt={weddingInfo.coupleNames}
               width={6000}
               height={600}
-              className="object-cover w-full "
+              className="object-cover w-[100%] "
             />
           </DivWithAnimation>
-          <DivWithAnimation className=" flex flex-row h-full  w-full text-center">
-            <div className="flex flex-col justify-around items-center w-full">
-              <h1
-                className={cn(
-                  'text-[#EAFFD0]  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
-                  font.className,
-                )}
-              >
-                Le lieu
-              </h1>
-              <div>
-                {weddingInfo.weddingAddress?.split(',').map((chunk) => (
-                  <p
-                    key={chunk}
-                    className="text-md lg:text-xl text-[#EAFFD0] font-light"
-                  >
-                    {chunk}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </DivWithAnimation>
         </div>
-        <div className="flex flex-col  lg:w-[50%]  gap-10 lg:gap-0">
-          <DivWithAnimation className="flex flex-row h-[25%] w-full text-center justify-center items-center ">
-            <div className="flex flex-colh-full ">
-              <h1
-                className={cn(
-                  ' text-5xl xl:text-8xl text-[#EAFFD0]',
-                  font.className,
-                )}
-              >
-                Comment venir ?
-              </h1>
+        <div className="flex flex-col  lg:min-h-10" />
+        <div className="flex flex-col  lg:w-[50%] gap-10 justify-start items-center text-center  ">
+          <div className="flex flex-col  min-h-15" />
+          <DivWithAnimation>
+            <h1
+              className={cn(
+                'text-theme-accent-dark  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
+                'roundhand-regular',
+              )}
+            >
+              Le lieu
+            </h1>
+          </DivWithAnimation>
+          <DivWithAnimation>
+            <div>
+              {weddingInfo.weddingAddress?.split(',').map((chunk) => (
+                <p
+                  key={chunk}
+                  className="text-md lg:text-lg text-theme-accent-dark font-regular"
+                >
+                  {chunk}
+                </p>
+              ))}
             </div>
           </DivWithAnimation>
-          <DivWithAnimation className="flex flex-row h-[75%] w-full ">
+          <DivWithAnimation>
+            <h1
+              className={cn(
+                ' text-5xl xl:text-8xl text-theme-accent-dark',
+                'roundhand-regular',
+              )}
+            >
+              Comment venir ?
+            </h1>
+          </DivWithAnimation>
+          <DivWithAnimation>
             <div className="flex flex-col text-center justify-around items-center w-full gap-10">
               {weddingInfo.locationDirections?.map((direction, index) => (
                 <div
                   key={index}
-                  className=" flex flex-col justify-center items-center w-full"
+                  className=" flex flex-col justify-center items-center w-full gap-2"
                 >
-                  <div className="flex   text-[#EAFFD0]">
-                    {WeddingHowToArriveIcons[direction.type]}
-                    <h5 className="font-medium text-[#EAFFD0] capitalize text-xl lg:text-3xl  ">
+                  <div className="flex   text-theme-accent-dark items-end gap-2">
+                    <h5 className="font-medium text-theme-accent-dark capitalize text-xl lg:text-2xl  ">
                       {getDirectionName(direction.type)}
                     </h5>
+                    {WeddingHowToArriveIcons[direction.type]}
                   </div>
-                  <div className=" text-white  text-sm lg:text-base px-10 lg:px-0 ">
+                  <div className=" text-theme-accent-dark/80  text-sm lg:text-base px-10 lg:px-0 ">
                     {convertTextWithLinksToReactNodes(
                       direction.information,
-                      'text-[#EAFFD0]',
+                      'text-theme-accent-dark/80',
                     )}
                   </div>
                   <div className=" flex flex-row justify-center items-center w-full">
-                    <span className="text-sm text-white ">
+                    <span className="text-sm text-theme-accent-dark/80 ">
                       <IconMapPinFilled className="w-4 h-4" />
                     </span>
                     <LinkPreview
                       width={300}
                       height={200}
                       url={direction.location.link || ''}
-                      className="text-[#EAFFD0] underline text-sm target:blank"
+                      className="text-theme-accent-dark underline text-sm "
                     >
                       {direction.location.address}
                     </LinkPreview>

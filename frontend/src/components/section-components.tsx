@@ -17,8 +17,8 @@ export function Section({
 }: SectionProps) {
   const backgroundClasses = {
     default: 'bg-background',
-    muted: 'bg-[#EAFFD0]',
-    accent: 'bg-[#F38181]',
+    muted: 'bg-theme-muted',
+    accent: 'bg-theme-accent',
   };
 
   return (

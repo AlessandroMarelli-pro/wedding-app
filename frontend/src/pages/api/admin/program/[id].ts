@@ -3,6 +3,7 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
 import { logger } from '@/logger';
+import { invalidateCache } from 'lib/admin-utils';
 import { toUTCDate } from 'lib/date';
 
 async function getEventById(req: AuthenticatedRequest, res: NextApiResponse) {
@@ -54,7 +55,7 @@ async function updateEvent(req: AuthenticatedRequest, res: NextApiResponse) {
         icon,
       },
     });
-
+    await invalidateCache(['findMany_programEvents']);
     res.json(event);
   } catch (error) {
     logger.error('Update program event error:', error as Error);

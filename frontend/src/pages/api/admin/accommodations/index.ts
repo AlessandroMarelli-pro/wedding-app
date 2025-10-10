@@ -3,6 +3,8 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
 import { logger } from '@/logger';
+import { invalidateCache } from 'lib/admin-utils';
+
 async function createAccommodation(
   req: AuthenticatedRequest,
   res: NextApiResponse,
@@ -46,7 +48,7 @@ async function createAccommodation(
         imagesUrl,
       },
     });
-
+    await invalidateCache(['findMany_accommodations']);
     res.status(201).json(accommodation);
   } catch (error) {
     logger.error('Create accommodation error:', error as Error);

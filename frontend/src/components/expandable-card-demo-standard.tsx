@@ -1,12 +1,20 @@
 'use client';
 
 import { cn } from '@/lib';
+import { Accommodation } from '@/types/api';
 import parse from 'html-react-parser';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useOutsideClick } from 'src/hooks/use-outside-click';
+import AccommodationSlider from './accommodation-slider';
 
-export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
+export default function ExpandableCardDemo({
+  cards,
+  accommodations,
+}: {
+  cards: any[];
+  accommodations?: Accommodation[];
+}) {
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null,
   );
@@ -65,7 +73,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
             <motion.div
               layoutId={`card-${active.id}-${id}`}
               ref={ref}
-              className="w-[90%] lg:w-full max-w-[800px]  h-[70%] md:h-fit md:max-h-[90%]  flex flex-col bg-[#EAFFD0]    "
+              className="w-[90%] lg:w-full max-w-[800px]  h-[70%] md:h-fit md:max-h-[90%]  flex flex-col bg-theme-muted    "
             >
               <motion.div
                 className="md:h-30 h-18 flex justify-center items-center [&>*:nth-child(even)]:hidden md:[&>*:nth-child(even)]:block -translate-y-10 -translate-x-2 md:-translate-x-0"
@@ -107,7 +115,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
               </motion.div>
 
               <div className="overflow-y-scroll">
-                <div className="flex justify-between items-left p-4 pb-0 text-[#F38181] ">
+                <div className="flex justify-between items-left p-4 pb-0 text-theme-accent ">
                   <div className="lg:p-4 text-left ">
                     <motion.h3
                       layoutId={`title-${active.id}-${id}`}
@@ -134,7 +142,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     Voir l'annonce
                   </motion.a>
                 </div>
-                <div className="relative lg:px-4 h-full text-[#F38181]">
+                <div className="relative lg:px-4 h-full text-theme-accent">
                   <motion.div
                     layout
                     initial={{ opacity: 0 }}
@@ -142,9 +150,16 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     exit={{ opacity: 0 }}
                     className=" h-fit lg:pb-10 flex flex-col items-start gap-4 overflow-scroll  [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
-                    {typeof active.content === 'function'
-                      ? active.content()
-                      : active.content}
+                    {/* Show accommodations slider if available */}
+                    {accommodations && accommodations.length > 0 ? (
+                      <div className="w-full h-96 lg:h-[500px]">
+                        <AccommodationSlider accommodations={accommodations} />
+                      </div>
+                    ) : typeof active.content === 'function' ? (
+                      active.content()
+                    ) : (
+                      active.content
+                    )}
                   </motion.div>
                 </div>
               </div>
@@ -165,7 +180,7 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
             layoutId={`card-${card.id}-${id}`}
             key={`card-${card.id}-${id}`}
             onClick={() => setActive(card)}
-            className="p-1 flex flex-col md:flex-row lg:justify-around   hover:bg-[#EAFFD0] text-[#EAFFD0] hover:text-[#F38181]   cursor-pointer"
+            className="p-1 flex flex-col md:flex-row lg:justify-around   hover:bg-theme-muted text-theme-accent-dark hover:text-theme-accent   cursor-pointer"
           >
             <div className="flex gap-4 flex-col  justify-items-start w-full ">
               <motion.div layoutId={`image-${card.id}-${id}`}>
@@ -184,6 +199,15 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     alt={card.title}
                     className="h-60 w-60 md:h-35 md:w-35  object-cover object-top hidden md:block"
                   />
+                  {card.image3 && (
+                    <img
+                      width={300}
+                      height={300}
+                      src={card.image3}
+                      alt={card.title}
+                      className="h-60 w-60 md:h-35 md:w-35  object-cover object-top hidden md:block"
+                    />
+                  )}
                 </div>
               </motion.div>
               <div className="p-4">

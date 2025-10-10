@@ -21,6 +21,8 @@ type LinkPreviewProps = {
   height?: number;
   quality?: number;
   layout?: string;
+  side?: 'top' | 'bottom' | 'left' | 'right';
+  align?: 'start' | 'center' | 'end';
 } & (
   | { isStatic: true; imageSrc: string }
   | { isStatic?: false; imageSrc?: never }
@@ -36,6 +38,8 @@ export const LinkPreview = ({
   layout = 'fixed',
   isStatic = false,
   imageSrc = '',
+  side = 'top',
+  align = 'center',
 }: LinkPreviewProps) => {
   let src;
   if (!isStatic) {
@@ -92,16 +96,17 @@ export const LinkPreview = ({
       >
         <HoverCardPrimitive.Trigger
           onMouseMove={handleMouseMove}
-          className={cn('text-black dark:text-white', className)}
+          className={cn(className)}
           href={url}
+          target="_blank"
         >
           {children}
         </HoverCardPrimitive.Trigger>
 
         <HoverCardPrimitive.Content
-          className="z-1000 [transform-origin:var(--radix-hover-card-content-transform-origin)]"
-          side="top"
-          align="center"
+          className="z-10000 [transform-origin:var(--radix-hover-card-content-transform-origin)]"
+          side={side}
+          align={align}
           sideOffset={10}
         >
           <AnimatePresence>
@@ -180,7 +185,7 @@ export const convertTextWithLinksToReactNodes = (
           width={300}
           height={200}
           url={url}
-          className={cn(' underline text-sm target:blank', className)}
+          className={cn(' underline text-sm ', className)}
         >
           {text.trim()}
         </LinkPreview>,

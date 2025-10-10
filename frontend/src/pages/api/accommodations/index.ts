@@ -6,6 +6,10 @@ async function getAllAccommodations(req: NextApiRequest, res: NextApiResponse) {
   try {
     const accommodations = await prisma.accommodation.findMany({
       orderBy: { displayOrder: 'asc' },
+      cacheStrategy: {
+        ttl: 24 * 60 * 30, // One month
+        tags: ['findMany_accommodations'],
+      },
     });
     // Generate a random ID for each accommodation (if needed for frontend use)
     // This does not modify the DB, just adds a randomId property to each item in the response

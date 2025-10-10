@@ -1,7 +1,6 @@
-import { cn, getOptimizedUrl } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { UploadedImage, WeddingInfo } from '@/types/api';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
-import Image from 'next/image';
 import { AccommodationsList, DivWithAnimation } from '../components';
 import { Accommodation } from '../types/api';
 
@@ -17,21 +16,26 @@ export const WeddingAccomodations = ({
   font: NextFontWithVariable;
 }) => (
   <div className="space-y-4 ">
-    <div className="text-center grid  xl:grid-cols-2 xl:grid-rows-2 lg:grid-rows-4  lg:max-h-screen lg:h-screen">
-      <div className="row-span-2">
-        <DivWithAnimation className="row-span-1 flex flex-col justify-around ">
-          <div className="lg:h-full ">
+    <div className="flex flex-col lg:max-h-screen lg:h-screen">
+      <div className="">
+        <div className="flex flex-col items-center justify-center min-h-10" />
+
+        <DivWithAnimation className=" flex flex-col justify-center items-center text-center px-2 lg:px-0">
+          <div className="h-full py-5   ">
             <h1
               className={cn(
-                'py-5  text-5xl lg:text-8xl text-[#EAFFD0]',
-                font.className,
+                'text-5xl lg:text-8xl text-theme-accent-dark',
+                'roundhand-regular',
               )}
             >
               Où dormir ?
             </h1>
+            <span className="text-theme-accent-dark/80 text-sm lg:text-base">
+              Quelques idées de logements pour votre séjour dromois !
+            </span>
           </div>
         </DivWithAnimation>
-        <DivWithAnimation className="row-span-1  flex flex-col max-h-[50%]">
+        <DivWithAnimation className=" flex flex-col max-h-[50%]">
           <AccommodationsList
             accommodations={accommodations}
             weddingInfo={{
@@ -43,7 +47,7 @@ export const WeddingAccomodations = ({
           />
         </DivWithAnimation>
       </div>
-      <div className=" row-span-2 xl:flex xl:flex-col justify-evenly">
+      {/*       <div className=" row-span-2 xl:flex xl:flex-col justify-evenly">
         <DivWithAnimation className="row-span-1  flex flex-col ">
           <div className="text-center  flex flex-row items-center justify-around ">
             <Image
@@ -60,7 +64,7 @@ export const WeddingAccomodations = ({
             />
           </div>
         </DivWithAnimation>
-      </div>
+      </div> */}
     </div>
   </div>
 );

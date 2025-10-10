@@ -1,11 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { Vortex } from '@/components/ui/vortex';
-import { cn, getOptimizedUrl } from '@/lib/utils';
 import { UploadedImage, WeddingInfo } from '@/types/api';
-import { IconArrowDown } from '@tabler/icons-react';
+import { gsap } from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
-import Image from 'next/image';
-import { DivWithAnimation } from './animations';
+import { useEffect, useRef, useState } from 'react';
+import { BrowserStylePainting } from './browser-style-painting';
 
 export const WeddingHero = ({
   weddingInfo,
@@ -18,59 +16,187 @@ export const WeddingHero = ({
   scrollToSection: (sectionId: string) => void;
   font: NextFontWithVariable;
 }) => {
-  return (
-    <Vortex
-      backgroundColor="black"
-      rangeY={800}
-      baseHue={150}
-      particleCount={150}
-      className="flex items-center flex-col justify-center px-2 xl:px-10  w-full h-screen"
-    >
-      <DivWithAnimation
-        duration={1.5}
-        className="relative grid grid-rows-3  grid-cols-1 xl:grid-rows-1 xl:grid-cols-6  items-center justify-center h-full w-full "
-      >
-        <p className="text-[#F38181]  row-span-1 xl:col-span-1  text-2xl xl:mb-2 font-light  h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end pb-10">
-          {weddingInfo.heroMessage}
-        </p>{' '}
-        <div className=" z-10 row-span-1 xl:col-span-4  h-full w-full flex flex-col items-center justify-center">
-          <div className="text-center text-white    flex flex-col items-center justify-center">
-            <h1
-              className={cn(
-                'text-5xl xl:text-9xl xl:mb-6 leading-tight color-black absolute w-full top-1/3 left-1/2 transform -translate-x-1/2  -translate-y-1/2',
-                font.className,
-              )}
-            >
-              {weddingInfo.coupleNames}
-            </h1>
+  const [imagePosition, setImagePosition] = useState<{
+    offsetX: number;
+    scaledWidth: number;
+    containerWidth: number;
+    svgWidth: number;
+    svgHeight: number;
+  } | null>(null);
 
-            <Image
-              width={500}
-              height={500}
-              priority
-              src={
-                (heroImage && heroImage.cloudflareUrl) ||
-                (heroImage && getOptimizedUrl(heroImage.id)) ||
-                '/images/maries.webp'
-              }
-              alt="Ariane and Timothé"
-              className="xl:h-180  xl:w-auto w-[90%]  xl:absolute  z-[-1] rounded-t-[90%]   xl:-bottom-5 xl:translate-y-0 translate-y-10"
-            />
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce   ">
-              <Button
-                className="hover:bg-transparent bg-transparent text-white  items-center space-x-2 cursor-pointer xl:flex hidden"
-                onClick={() => scrollToSection('nous')}
-              >
-                <IconArrowDown />
-                <span>Détails</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-        <p className=" text-[#F38181]  translate-y-10 lg:translate-y-0 font-bold row-span-1 xl:col-span-1 text-2xl   opacity-90 h-full w-full flex flex-col text-center xl:text-left justify-center xl:justify-end xl:pb-10 pt-10 xl:pt-0">
-          {weddingInfo.heroAddress}
-        </p>
-      </DivWithAnimation>
-    </Vortex>
+  const textElementsRef = useRef<{
+    coupleNames: HTMLHeadingElement | null;
+    heroMessage: HTMLHeadingElement | null;
+    heroAddress: HTMLHeadingElement | null;
+  }>({
+    coupleNames: null,
+    heroMessage: null,
+    heroAddress: null,
+  });
+
+  // Calculate right edge position of the image
+  const calculateRightEdgePosition = (position: {
+    offsetX: number;
+    scaledWidth: number;
+    containerWidth: number;
+  }) => {
+    // SVG is centered, so right edge = center + (SVG width / 2)
+    const center = 50; // 50% is the center
+    const svgWidthPercent =
+      (position.scaledWidth / position.containerWidth) * 100;
+    const rightEdge = center + svgWidthPercent / 2;
+    return rightEdge;
+  };
+
+  const getRightEdgePosition = () => {
+    if (!imagePosition) return '50%';
+    return `${calculateRightEdgePosition(imagePosition)}%`;
+  };
+
+  // GSAP responsive setup
+  useEffect(() => {
+    // Register SplitText plugin
+    gsap.registerPlugin(SplitText);
+
+    // Set up responsive animations with GSAP
+    const mm = gsap.matchMedia();
+
+    mm.add('(max-width: 768px)', () => {
+      // Mobile responsive settings
+      gsap.set(
+        [
+          textElementsRef.current.coupleNames,
+          textElementsRef.current.heroMessage,
+          textElementsRef.current.heroAddress,
+        ],
+        {
+          fontSize: '3rem',
+        },
+      );
+    });
+
+    mm.add('(min-width: 769px)', () => {
+      // Desktop responsive settings
+      gsap.set([textElementsRef.current.coupleNames], {
+        fontSize: '4rem',
+      });
+      gsap.set(
+        [
+          textElementsRef.current.heroMessage,
+          textElementsRef.current.heroAddress,
+        ],
+        {
+          fontSize: '3rem',
+        },
+      );
+    });
+
+    // Split text animations
+    // Set initial opacity for all h1 elements
+    gsap.set('h1', { opacity: 1 });
+
+    // Animate coupleNames
+    if (textElementsRef.current.coupleNames) {
+      const coupleNamesSplit = SplitText.create(
+        textElementsRef.current.coupleNames,
+        { type: 'chars' },
+      );
+      gsap.from(coupleNamesSplit.chars, {
+        y: 20,
+        autoAlpha: 0,
+        stagger: 0.05,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: 0.6,
+      });
+    }
+
+    // Animate heroMessage
+    if (textElementsRef.current.heroMessage) {
+      const heroMessageSplit = SplitText.create(
+        textElementsRef.current.heroMessage,
+        { type: 'chars' },
+      );
+      gsap.from(heroMessageSplit.chars, {
+        y: 20,
+        autoAlpha: 0,
+        stagger: 0.05,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: 0.9, // Slight delay after coupleNames
+      });
+    }
+
+    // Animate heroAddress
+    if (textElementsRef.current.heroAddress) {
+      const heroAddressSplit = SplitText.create(
+        textElementsRef.current.heroAddress,
+        { type: 'chars' },
+      );
+      gsap.from(heroAddressSplit.chars, {
+        y: 20,
+        autoAlpha: 0,
+        stagger: 0.05,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: 1.2, // Delay after heroMessage
+      });
+    }
+
+    return () => mm.revert();
+  }, []);
+
+  return (
+    <div className="relative w-full h-screen bg-theme-default overflow-hidden">
+      <BrowserStylePainting
+        src="/images/aqua.svg"
+        alt="Ariane and Timothé"
+        className="absolute inset-0"
+        duration={4000}
+        delay={5}
+        pathDelay={3}
+        useSetMode={false}
+        setPercentage={4}
+      />
+      <h1
+        ref={(el) => {
+          textElementsRef.current.coupleNames = el;
+        }}
+        id="couple-names"
+        className="absolute text-theme-accent-dark font-bold top-[calc(9%)] roundhand-regular z-10 w-max  "
+        style={{
+          left: imagePosition ? getRightEdgePosition() : '50%',
+          transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
+        }}
+      >
+        {weddingInfo.coupleNames}
+      </h1>
+      <h1
+        ref={(el) => {
+          textElementsRef.current.heroMessage = el;
+        }}
+        id="hero-message"
+        className="absolute text-theme-blue font-bold lg:bottom-[calc(10%)] bottom-[calc(25%)] roundhand-bold z-10 w-max"
+        style={{
+          left: imagePosition ? getRightEdgePosition() : '50%',
+          transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
+        }}
+      >
+        {weddingInfo.heroMessage}
+      </h1>
+      <h1
+        ref={(el) => {
+          textElementsRef.current.heroAddress = el;
+        }}
+        id="hero-address"
+        className="absolute text-theme-blue font-bold lg:bottom-[calc(3%)] bottom-[calc(15%)] roundhand-regular z-10 w-max"
+        style={{
+          left: imagePosition ? getRightEdgePosition() : '50%',
+          transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
+        }}
+      >
+        {weddingInfo.heroAddress}
+      </h1>
+    </div>
   );
 };

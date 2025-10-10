@@ -5,6 +5,7 @@ export * from './dialog';
 export * from './input';
 export * from './label';
 export * from './loading';
+export * from './magnetic-button';
 export * from './optimized-image';
 export * from './toast';
 export * from './toaster';

@@ -1,7 +1,10 @@
 'use client';
 
+import { useNavbarTheme } from '@/context/navbar-theme-context';
 import { ReactNode, useState } from 'react';
+import { cn } from 'src/lib/utils';
 import MobileNav2 from './mobile-nav';
+import { MagneticButton } from './ui';
 import { Navbar, NavBody, NavItems } from './ui/resizable-navbar';
 
 interface NavbarLayoutProps {
@@ -33,10 +36,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleNavClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    link: string,
-  ) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLElement>, link: string) => {
     e.preventDefault();
     const sectionId = link.replace('#', '');
     const element = document.getElementById(sectionId);
@@ -44,25 +44,47 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  const { theme } = useNavbarTheme();
 
   return (
     <div className="min-h-screen bg-background">
       <MobileNav2 items={navItems} />
 
-      <Navbar className={'fixed lg:absolute'}>
-        {/* Desktop Navigation */}
-        <NavBody className="h-20" visible>
-          <NavItems
-            items={navItems}
-            className="font-bold text-[#F38181]"
-            onItemClick={handleNavClick}
-          />
-          {/* <RSVPFormModal
-            shadowCls="shadow-none"
-            btnColor="bg-[#F38181]"
-            btnTextColor="text-[#95E1D3] font-bold"
-          /> */}
-        </NavBody>
+      <Navbar className={cn('fixed lg:h-15 lg:block hidden', theme.navColor)}>
+        {!theme.hideNavbar && (
+          <NavBody
+            className={cn('lg:h-15 flex flex-row items-start justify-end')}
+          >
+            <NavItems
+              items={navItems}
+              className={cn('font-bold', theme.navItemsColor)}
+              onItemClick={handleNavClick}
+            />
+            <MagneticButton
+              variant="stroke"
+              className={cn(
+                'h-10 rounded-full   hover:after:border-1     ',
+                theme.rsvpItemsHoverColor,
+                theme.rsvpItemsColor,
+                theme.rsvpAfterBorderColor,
+              )}
+              flairClassName={cn(
+                'bg-theme-default ',
+                theme.rsvpItemsFlairColor,
+              )}
+              strokeColor={cn(
+                'bg-theme-accent-dark',
+                theme.rsvpItemsStrokeColor,
+              )}
+              onClick={() =>
+                window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
+              }
+            >
+              RSVP
+            </MagneticButton>
+          </NavBody>
+        )}
+
         {/* Mobile Navigation */}
       </Navbar>
 
