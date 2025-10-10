@@ -19,6 +19,7 @@ export default function AccommodationSlider({
   const sliderRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLDivElement[]>([]);
   const indicatorsRef = useRef<HTMLDivElement[]>([]);
+  const letterRefs = useRef<HTMLSpanElement[][]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(true);
@@ -48,7 +49,41 @@ export default function AccommodationSlider({
         });
       }
     });
+
+    // Set initial letter states
+    letterRefs.current.forEach((letters, slideIndex) => {
+      if (letters) {
+        letters.forEach((letter) => {
+          if (letter) {
+            gsap.set(letter, {
+              opacity: slideIndex === 0 ? 1 : 0.5,
+            });
+          }
+        });
+      }
+    });
   }, [accommodations.length]);
+
+  // Helper function to split text into individual letters
+  const splitIntoLetters = (text: string, slideIndex: number) => {
+    return text.split('').map((char, letterIndex) => (
+      <span
+        key={`${slideIndex}-${letterIndex}`}
+        ref={(el) => {
+          if (el) {
+            if (!letterRefs.current[slideIndex]) {
+              letterRefs.current[slideIndex] = [];
+            }
+            letterRefs.current[slideIndex][letterIndex] = el;
+          }
+        }}
+        className="inline-block"
+        style={{ opacity: slideIndex === currentSlide ? 1 : 0.5 }}
+      >
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
+  };
 
   const slideToIndex = (index: number) => {
     if (isAnimating || !slidesRef.current[index] || index === currentSlide)
@@ -95,8 +130,43 @@ export default function AccommodationSlider({
             }
           }
         });
+
+        // Reset letter animations
+        letterRefs.current.forEach((letters, slideIndex) => {
+          if (letters) {
+            letters.forEach((letter) => {
+              if (letter) {
+                gsap.set(letter, {
+                  opacity: slideIndex === index ? 1 : 0.5,
+                });
+              }
+            });
+          }
+        });
       },
     });
+
+    // Position target slide off-screen first
+    tl.set(targetSlide, { x: direction > 0 ? '100%' : '-100%' })
+      // Animate both slides simultaneously
+      .to(
+        currentSlideElement,
+        {
+          x: direction > 0 ? '-100%' : '100%',
+          duration: 0.8,
+          ease: 'power2.inOut',
+        },
+        0,
+      )
+      .to(
+        targetSlide,
+        {
+          x: '0%',
+          duration: 0.8,
+          ease: 'power2.inOut',
+        },
+        0,
+      );
 
     // Animate indicators during transition
     indicators.forEach((indicator, indicatorIndex) => {
@@ -159,27 +229,61 @@ export default function AccommodationSlider({
       }
     });
 
-    // Position target slide off-screen first
-    tl.set(targetSlide, { x: direction > 0 ? '100%' : '-100%' })
-      // Animate both slides simultaneously
-      .to(
-        currentSlideElement,
-        {
-          x: direction > 0 ? '-100%' : '100%',
-          duration: 0.8,
-          ease: 'power2.inOut',
-        },
-        0,
-      )
-      .to(
-        targetSlide,
-        {
-          x: '0%',
-          duration: 0.8,
-          ease: 'power2.inOut',
-        },
-        0,
-      );
+    // Animate letters during transition with direction awareness
+    letterRefs.current.forEach((letters, slideIndex) => {
+      if (letters) {
+        letters.forEach((letter, letterIndex) => {
+          if (letter) {
+            if (slideIndex === index) {
+              // Letters for target slide - fade in with direction-based stagger
+              const staggerDelay =
+                direction > 0
+                  ? letterIndex * 0.05 // Left to right for forward direction
+                  : (letters.length - 1 - letterIndex) * 0.05; // Right to left for backward direction
+
+              tl.to(
+                letter,
+                {
+                  opacity: 1,
+                  duration: 0.3,
+                  ease: 'power2.out',
+                  delay: staggerDelay,
+                },
+                0.2,
+              );
+            } else if (slideIndex === currentSlide) {
+              // Letters for current slide - fade out with same direction stagger as target slide
+              const staggerDelay =
+                direction > 0
+                  ? letterIndex * 0.03 // Left to right for forward direction (same as target)
+                  : (letters.length - 1 - letterIndex) * 0.03; // Right to left for backward direction (same as target)
+
+              tl.to(
+                letter,
+                {
+                  opacity: 0.5,
+                  duration: 0.3,
+                  ease: 'power2.out',
+                  delay: staggerDelay,
+                },
+                0,
+              );
+            } else {
+              // Other slides stay dimmed
+              tl.to(
+                letter,
+                {
+                  opacity: 0.5,
+                  duration: 0.8,
+                  ease: 'power2.inOut',
+                },
+                0,
+              );
+            }
+          }
+        });
+      }
+    });
   };
 
   if (accommodations.length === 0) {
@@ -282,13 +386,10 @@ export default function AccommodationSlider({
                 setAutoAdvanceEnabled(false);
                 slideToIndex(index);
               }}
-              className={cn(
-                'flex flex-col items-start cursor-pointer transition-opacity duration-500',
-                index === currentSlide ? 'opacity-100' : 'opacity-50',
-              )}
+              className={cn('flex flex-col items-start cursor-pointer ')}
             >
-              <span className="text-theme-accent-dark font-bold text-base md:text-lg mb-5 transition-opacity duration-500">
-                {accommodation.name}
+              <span className="text-theme-accent-dark font-bold text-base md:text-lg mb-5">
+                {splitIntoLetters(accommodation.name, index)}
               </span>
               <div
                 id={`accommodation-slider-indicator-${index}`}
