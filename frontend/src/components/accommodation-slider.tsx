@@ -97,12 +97,6 @@ export default function AccommodationSlider({
       );
   };
 
-  const nextSlide = () => {
-    setAutoAdvanceEnabled(false); // Disable auto-advance when user interacts
-    const next = (currentSlide + 1) % accommodations.length;
-    slideToIndex(next);
-  };
-
   if (accommodations.length === 0) {
     return (
       <div className={cn('flex items-center justify-center h-96', className)}>
@@ -214,8 +208,8 @@ export default function AccommodationSlider({
                 className={cn(
                   'h-1 bg-theme-accent-dark/50 relative overflow-hidden transition-all duration-500',
                   index === currentSlide
-                    ? 'w-24 md:w-48 opacity-100'
-                    : 'w-16 md:w-32 opacity-50',
+                    ? 'w-24 md:w-full  opacity-100'
+                    : 'w-16 md:w-1/4 md:min-w-12 opacity-50',
                 )}
               >
                 <div

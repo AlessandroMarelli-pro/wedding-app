@@ -96,6 +96,7 @@ export const LinkPreview = ({
           onMouseMove={handleMouseMove}
           className={cn(className)}
           href={url}
+          target="_blank"
         >
           {children}
         </HoverCardPrimitive.Trigger>
@@ -182,7 +183,7 @@ export const convertTextWithLinksToReactNodes = (
           width={300}
           height={200}
           url={url}
-          className={cn(' underline text-sm target:blank', className)}
+          className={cn(' underline text-sm ', className)}
         >
           {text.trim()}
         </LinkPreview>,

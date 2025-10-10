@@ -32,7 +32,7 @@ export function WeddingPresentation({
             alt={'couple'}
             width={6000}
             height={600}
-            className="object-cover w-full shadow-2xl"
+            className="object-cover w-full shadow-xl"
           />
         </div>
         <div className="container-responsive flex flex-col items-center justify-center">

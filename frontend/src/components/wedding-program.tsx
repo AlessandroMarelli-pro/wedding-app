@@ -108,7 +108,7 @@ export function WeddingProgram({
             >
               {item.title}
             </div>
-            <div className="flex flex-col lg:gap-5 gap-2">
+            <div className="flex flex-col lg:gap-2 gap-2">
               <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
                 {new Date(item.startTime).toLocaleDateString('fr-FR', {
                   year: 'numeric',

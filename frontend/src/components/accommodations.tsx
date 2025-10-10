@@ -16,7 +16,7 @@ export function AccommodationsList({
   [...accommodations].sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen px-5">
       <AccommodationSlider accommodations={accommodations} />
     </div>
   );

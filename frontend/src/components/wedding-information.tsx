@@ -32,52 +32,52 @@ export const WeddingInformation = ({
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
           <div className="flex flex-col items-center justify-center min-h-10" />
 
-          <DivWithAnimation className=" flex flex-row  ">
+          <DivWithAnimation className=" flex flex-col items-center justify-center h-full ">
             <Image
               src={'/images/lauziers2.png'}
               alt={weddingInfo.coupleNames}
               width={6000}
               height={600}
-              className="object-cover w-[90%] "
+              className="object-cover w-[100%] "
             />
           </DivWithAnimation>
-          <DivWithAnimation className=" flex flex-row h-full  w-full text-center">
-            <div className="flex flex-col justify-around items-center w-full">
-              <h1
-                className={cn(
-                  'text-theme-accent-dark  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
-                  'roundhand-regular',
-                )}
-              >
-                Le lieu
-              </h1>
-              <div>
-                {weddingInfo.weddingAddress?.split(',').map((chunk) => (
-                  <p
-                    key={chunk}
-                    className="text-md lg:text-xl text-theme-accent-dark font-regular"
-                  >
-                    {chunk}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </DivWithAnimation>
         </div>
-        <div className="flex flex-col  lg:w-[50%]  gap-10 lg:gap-0  ">
-          <DivWithAnimation className="flex flex-row h-[25%] w-full text-center justify-center items-center pt-10">
-            <div className="flex flex-colh-full ">
-              <h1
-                className={cn(
-                  ' text-5xl xl:text-8xl text-theme-accent-dark',
-                  'roundhand-regular',
-                )}
-              >
-                Comment venir ?
-              </h1>
+        <div className="flex flex-col  min-h-10" />
+        <div className="flex flex-col  lg:w-[50%] gap-10 justify-start items-center text-center  ">
+          <div className="flex flex-col  min-h-15" />
+          <DivWithAnimation>
+            <h1
+              className={cn(
+                'text-theme-accent-dark  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
+                'roundhand-regular',
+              )}
+            >
+              Le lieu
+            </h1>
+          </DivWithAnimation>
+          <DivWithAnimation>
+            <div>
+              {weddingInfo.weddingAddress?.split(',').map((chunk) => (
+                <p
+                  key={chunk}
+                  className="text-md lg:text-lg text-theme-accent-dark font-regular"
+                >
+                  {chunk}
+                </p>
+              ))}
             </div>
           </DivWithAnimation>
-          <DivWithAnimation className="flex flex-row h-[75%] w-full ">
+          <DivWithAnimation>
+            <h1
+              className={cn(
+                ' text-5xl xl:text-8xl text-theme-accent-dark',
+                'roundhand-regular',
+              )}
+            >
+              Comment venir ?
+            </h1>
+          </DivWithAnimation>
+          <DivWithAnimation>
             <div className="flex flex-col text-center justify-around items-center w-full gap-10">
               {weddingInfo.locationDirections?.map((direction, index) => (
                 <div
@@ -104,7 +104,7 @@ export const WeddingInformation = ({
                       width={300}
                       height={200}
                       url={direction.location.link || ''}
-                      className="text-theme-accent-dark underline text-sm target:blank"
+                      className="text-theme-accent-dark underline text-sm "
                     >
                       {direction.location.address}
                     </LinkPreview>
