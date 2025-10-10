@@ -64,7 +64,7 @@ export function WeddingProgram({
             <div
               className={cn(
                 'text-5xl xl:text-6xl h-full flex items-center justify-center',
-                font.className,
+                'roundhand-regular',
               )}
             >
               {item.title}

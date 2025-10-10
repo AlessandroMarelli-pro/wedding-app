@@ -74,17 +74,19 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
 
       {showProgress && (
         <div className="absolute top-0  z-[500] min-h-screen w-full bg-transparent flex flex-col items-center justify-center space-y-4">
-          <span className={cn(bilbo.className, 'text-white text-5xl')}>
+          <span
+            className={cn(bilbo.className, 'text-theme-accent-dark text-5xl')}
+          >
             Bienvenue
           </span>
 
           <Progress
             value={progress}
-            className="h-1  w-[50%]"
+            className="h-1  w-[50%] text-theme-accent-dark"
             style={
               {
                 '--progress-background': '#F38181',
-                '--progress-foreground': 'white',
+                '--progress-foreground': 'var(--color-theme-accent-dark)',
               } as React.CSSProperties
             }
           />

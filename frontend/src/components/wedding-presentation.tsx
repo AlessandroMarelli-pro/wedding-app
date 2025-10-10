@@ -22,8 +22,10 @@ export function WeddingPresentation({
     '</span>';
   return (
     <div className={cn('space-y-4', className)}>
+      {' '}
+      <div className="flex flex-col items-center justify-center min-h-10" />
       {/* Couple's Message */}
-      <DivWithAnimation className="text-theme-accent-dark  text-center  flex flex-col lg:flex-row items-center justify-center  p-10 gap-10 lg:h-screen">
+      <DivWithAnimation className="text-theme-accent-dark  text-center  flex flex-col lg:flex-row items-center justify-center  p-10 gap-10 lg:h-screen pt-0">
         <div className="lg:m-10 ">
           <Image
             src={'/images/couple.jpeg'}
@@ -43,7 +45,7 @@ export function WeddingPresentation({
           <div className="py-4">
             <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
           </div>
-          <span className="text-base lg:text-2xl font-bold">
+          <span className="text-base lg:text-4xl font-bold roundhand-bold">
             {weddingInfo.coupleNames}
           </span>
         </div>

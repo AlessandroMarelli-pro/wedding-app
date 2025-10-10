@@ -52,8 +52,8 @@ export const Navbar = ({ children, className }: NavbarProps) => {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={{ scale: 0.9 }}
+      whileInView={{ scale: 1 }}
       viewport={{ once: true }}
       transition={{
         duration: 1.5,
@@ -106,7 +106,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => (
         <MagneticButton
           variant="stroke"
-          className="rounded-full  after:border-none hover:after:border-2 hover:text-theme-default text-theme-accent-dark"
+          className="rounded-full  after:border-none hover:after:border-2 hover:text-theme-default text-theme-accent-dark text-base h-10"
           flairClassName="bg-theme-accent-dark "
           strokeColor="bg-theme-accent-dark"
           onClick={(e) => onItemClick?.(e, item.link)}

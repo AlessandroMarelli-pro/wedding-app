@@ -30,13 +30,15 @@ export const WeddingInformation = ({
     <div className="space-y-4 pb-4 lg:pb-0">
       <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row gap-10 lg:gap-0">
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
+          <div className="flex flex-col items-center justify-center min-h-10" />
+
           <DivWithAnimation className=" flex flex-row  ">
             <Image
               src={'/images/lauziers2.png'}
               alt={weddingInfo.coupleNames}
               width={6000}
               height={600}
-              className="object-cover w-full "
+              className="object-cover w-[90%] "
             />
           </DivWithAnimation>
           <DivWithAnimation className=" flex flex-row h-full  w-full text-center">
@@ -44,7 +46,7 @@ export const WeddingInformation = ({
               <h1
                 className={cn(
                   'text-theme-accent-dark  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
-                  font.className,
+                  'roundhand-regular',
                 )}
               >
                 Le lieu
@@ -62,13 +64,13 @@ export const WeddingInformation = ({
             </div>
           </DivWithAnimation>
         </div>
-        <div className="flex flex-col  lg:w-[50%]  gap-10 lg:gap-0">
-          <DivWithAnimation className="flex flex-row h-[25%] w-full text-center justify-center items-center ">
+        <div className="flex flex-col  lg:w-[50%]  gap-10 lg:gap-0  ">
+          <DivWithAnimation className="flex flex-row h-[25%] w-full text-center justify-center items-center pt-10">
             <div className="flex flex-colh-full ">
               <h1
                 className={cn(
                   ' text-5xl xl:text-8xl text-theme-accent-dark',
-                  font.className,
+                  'roundhand-regular',
                 )}
               >
                 Comment venir ?

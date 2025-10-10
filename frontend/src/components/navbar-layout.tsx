@@ -50,9 +50,9 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
     <div className="min-h-screen bg-background">
       <MobileNav2 items={navItems} />
 
-      <Navbar className={'fixed lg:absolute'}>
+      <Navbar className={'fixed bg-theme-default-glassy'}>
         {/* Desktop Navigation */}
-        <NavBody className="h-20" visible>
+        <NavBody className="h-15 flex flex-row items-center justify-end bg-theme-default-glassy">
           <NavItems
             items={navItems}
             className="font-bold text-theme-accent-dark "
@@ -60,21 +60,15 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
           />
           <MagneticButton
             variant="stroke"
-            className="rounded-full after:border-theme-accent-dark hover:after:border-2 bg-theme-accent-dark text-theme-default  hover:text-theme-accent-dark"
+            className="h-10 rounded-full after:border-theme-accent-dark  hover:after:border-1 bg-theme-default text-theme-accent-dark  hover:text-theme-default "
             flairClassName="bg-theme-default "
-            strokeColor="bg-theme-default"
+            strokeColor="bg-theme-accent-dark"
             onClick={() =>
               window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
             }
           >
             RSVP
           </MagneticButton>
-
-          {/* <RSVPFormModal
-            shadowCls="shadow-none"
-            btnColor="bg-theme-accent"
-            btnTextColor="text-[#95E1D3] font-bold"
-          /> */}
         </NavBody>
         {/* Mobile Navigation */}
       </Navbar>

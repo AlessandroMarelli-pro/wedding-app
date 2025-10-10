@@ -18,12 +18,14 @@ export const WeddingAccomodations = ({
   <div className="space-y-4 ">
     <div className="flex flex-col lg:max-h-screen lg:h-screen">
       <div className="row-span-2">
+        <div className="flex flex-col items-center justify-center min-h-10" />
+
         <DivWithAnimation className="row-span-1 flex flex-col justify-center items-center ">
           <div className="lg:h-full py-5   ">
             <h1
               className={cn(
                 'text-5xl lg:text-8xl text-theme-accent-dark',
-                font.className,
+                'roundhand-regular',
               )}
             >
               Où dormir ?
