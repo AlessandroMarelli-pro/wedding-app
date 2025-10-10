@@ -31,7 +31,7 @@ export const WeddingAccomodations = ({
               Où dormir ?
             </h1>
             <span className="text-theme-accent-dark/80 text-sm lg:text-base">
-              Quelques idées de logements pour votre séjour dromois!
+              Quelques idées de logements pour votre séjour dromois !
             </span>
           </div>
         </DivWithAnimation>

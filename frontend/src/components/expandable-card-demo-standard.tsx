@@ -1,12 +1,20 @@
 'use client';
 
 import { cn } from '@/lib';
+import { Accommodation } from '@/types/api';
 import parse from 'html-react-parser';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useOutsideClick } from 'src/hooks/use-outside-click';
+import AccommodationSlider from './accommodation-slider';
 
-export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
+export default function ExpandableCardDemo({
+  cards,
+  accommodations,
+}: {
+  cards: any[];
+  accommodations?: Accommodation[];
+}) {
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null,
   );
@@ -142,9 +150,16 @@ export default function ExpandableCardDemo({ cards }: { cards: any[] }) {
                     exit={{ opacity: 0 }}
                     className=" h-fit lg:pb-10 flex flex-col items-start gap-4 overflow-scroll  [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
-                    {typeof active.content === 'function'
-                      ? active.content()
-                      : active.content}
+                    {/* Show accommodations slider if available */}
+                    {accommodations && accommodations.length > 0 ? (
+                      <div className="w-full h-96 lg:h-[500px]">
+                        <AccommodationSlider accommodations={accommodations} />
+                      </div>
+                    ) : typeof active.content === 'function' ? (
+                      active.content()
+                    ) : (
+                      active.content
+                    )}
                   </motion.div>
                 </div>
               </div>

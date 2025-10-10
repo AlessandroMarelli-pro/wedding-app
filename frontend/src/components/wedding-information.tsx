@@ -82,13 +82,13 @@ export const WeddingInformation = ({
               {weddingInfo.locationDirections?.map((direction, index) => (
                 <div
                   key={index}
-                  className=" flex flex-col justify-center items-center w-full"
+                  className=" flex flex-col justify-center items-center w-full gap-2"
                 >
-                  <div className="flex   text-theme-accent-dark">
-                    {WeddingHowToArriveIcons[direction.type]}
-                    <h5 className="font-medium text-theme-accent-dark capitalize text-xl lg:text-3xl  ">
+                  <div className="flex   text-theme-accent-dark items-end gap-2">
+                    <h5 className="font-medium text-theme-accent-dark capitalize text-xl lg:text-2xl  ">
                       {getDirectionName(direction.type)}
                     </h5>
+                    {WeddingHowToArriveIcons[direction.type]}
                   </div>
                   <div className=" text-theme-accent-dark/80  text-sm lg:text-base px-10 lg:px-0 ">
                     {convertTextWithLinksToReactNodes(
