@@ -3,6 +3,7 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
 import { logger } from '@/logger';
+import { invalidateCache } from 'lib/admin-utils';
 import { toUTCDate } from 'lib/date';
 
 async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
@@ -73,7 +74,7 @@ async function updateWeddingInfo(
         heroAddress,
       },
     });
-
+    await invalidateCache(['findFirst_weddingInfo']);
     res.json(weddingInfo);
   } catch (error) {
     logger.error('Update wedding info error:', error as Error);

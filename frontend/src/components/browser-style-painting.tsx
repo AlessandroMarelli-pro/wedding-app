@@ -201,8 +201,10 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     if (!ctx) return;
 
     // Parse viewBox (x, y, width, height)
-    let [x, y, svgWidth, svgHeight] = svgData.viewBox.split(' ').map(Number);
-    svgWidth = Math.max(svgWidth, 1000);
+    const [x, y, initialSvgWidth, svgHeight] = svgData.viewBox
+      .split(' ')
+      .map(Number);
+    const svgWidth = Math.max(initialSvgWidth, 1000);
 
     // Set canvas size
     const rect = canvas.getBoundingClientRect();

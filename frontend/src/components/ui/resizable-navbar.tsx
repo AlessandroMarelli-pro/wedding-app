@@ -24,7 +24,7 @@ interface NavItemsProps {
     link: string;
   }[];
   className?: string;
-  onItemClick?: (e: React.MouseEvent<HTMLAnchorElement>, link: string) => void;
+  onItemClick?: (e: React.MouseEvent<HTMLElement>, link: string) => void;
 }
 
 interface MobileNavProps {
@@ -108,6 +108,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
     >
       {items.map((item, idx) => (
         <MagneticButton
+          key={idx}
           variant="stroke"
           className={cn(
             'rounded-full  after:border-none hover:after:border-2   text-sm h-10',

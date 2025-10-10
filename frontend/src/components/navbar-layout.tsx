@@ -36,10 +36,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleNavClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    link: string,
-  ) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLElement>, link: string) => {
     e.preventDefault();
     const sectionId = link.replace('#', '');
     const element = document.getElementById(sectionId);
