@@ -18,6 +18,7 @@ export default function AccommodationSlider({
 }: AccommodationSliderProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLDivElement[]>([]);
+  const indicatorsRef = useRef<HTMLDivElement[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(true);
@@ -27,12 +28,23 @@ export default function AccommodationSlider({
     if (!sliderRef.current || accommodations.length === 0) return;
 
     const slides = slidesRef.current;
+    const indicators = indicatorsRef.current;
 
     // Set initial positions - only show first slide
     slides.forEach((slide, slideIndex) => {
       if (slide) {
         gsap.set(slide, {
           x: slideIndex === 0 ? '0%' : '100%',
+        });
+      }
+    });
+
+    // Set initial indicator states
+    indicators.forEach((indicator, indicatorIndex) => {
+      if (indicator) {
+        gsap.set(indicator, {
+          width: indicatorIndex === 0 ? '100%' : '67%',
+          opacity: indicatorIndex === 0 ? 1 : 0.5,
         });
       }
     });
@@ -43,6 +55,7 @@ export default function AccommodationSlider({
       return;
 
     const slides = slidesRef.current;
+    const indicators = indicatorsRef.current;
     const targetSlide = slides[index];
     const currentSlideElement = slides[currentSlide];
 
@@ -71,7 +84,79 @@ export default function AccommodationSlider({
             }
           }
         });
+
+        // Reset indicator animations
+        indicators.forEach((indicator, indicatorIndex) => {
+          if (indicator) {
+            if (indicatorIndex === index) {
+              gsap.set(indicator, { width: '100%', opacity: 1 });
+            } else {
+              gsap.set(indicator, { width: '67%', opacity: 0.5 });
+            }
+          }
+        });
       },
+    });
+
+    // Animate indicators during transition
+    indicators.forEach((indicator, indicatorIndex) => {
+      if (indicator) {
+        if (indicatorIndex === index) {
+          // Growing indicator for target slide
+          tl.to(
+            indicator,
+            {
+              width: '100%',
+              opacity: 1,
+              duration: 0.4,
+              ease: 'power2.out',
+            },
+            0,
+          ).to(
+            indicator,
+            {
+              width: '100%',
+              opacity: 1,
+              duration: 0.4,
+              ease: 'power2.in',
+            },
+            0.4,
+          );
+        } else if (indicatorIndex === currentSlide) {
+          // Shrinking indicator for current slide
+          tl.to(
+            indicator,
+            {
+              width: '67%',
+              opacity: 0.3,
+              duration: 0.4,
+              ease: 'power2.out',
+            },
+            0,
+          ).to(
+            indicator,
+            {
+              width: '67%',
+              opacity: 0.5,
+              duration: 0.4,
+              ease: 'power2.in',
+            },
+            0.4,
+          );
+        } else {
+          // Other indicators stay in their current state
+          tl.to(
+            indicator,
+            {
+              width: '67%',
+              opacity: 0.5,
+              duration: 0.8,
+              ease: 'power2.inOut',
+            },
+            0,
+          );
+        }
+      }
     });
 
     // Position target slide off-screen first
@@ -206,12 +291,18 @@ export default function AccommodationSlider({
                 {accommodation.name}
               </span>
               <div
+                id={`accommodation-slider-indicator-${index}`}
+                ref={(el) => {
+                  if (el) {
+                    indicatorsRef.current[index] = el;
+                  }
+                }}
                 className={cn(
-                  'h-1 bg-theme-accent-dark/50 relative overflow-hidden transition-all duration-500',
-                  index === currentSlide
-                    ? 'w-24 md:w-full  opacity-100'
-                    : 'w-16 md:w-1/4 md:min-w-12 opacity-50',
+                  'h-1 bg-theme-accent-dark/50 relative overflow-hidden',
                 )}
+                style={{
+                  transformOrigin: 'left center',
+                }}
               >
                 <div
                   className={cn(
