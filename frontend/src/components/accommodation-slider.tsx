@@ -5,6 +5,7 @@ import { Accommodation } from '@/types/api';
 import { gsap } from 'gsap';
 import parse from 'html-react-parser';
 import { useEffect, useRef, useState } from 'react';
+import { LinkPreview } from './ui/link-preview';
 
 interface AccommodationSliderProps {
   accommodations: Accommodation[];
@@ -165,13 +166,15 @@ export default function AccommodationSlider({
                       <h3 className="font-bold text-lg lg:text-2xl">
                         {accommodation.name}
                       </h3>
-                      <a
-                        href={accommodation.sourceUrl}
-                        target="_blank"
-                        className=" py-3  rounded-full font-bold text-sm lg:text-base underline"
+                      <LinkPreview
+                        width={300}
+                        height={200}
+                        url={accommodation.sourceUrl || ''}
+                        className=" py-3  rounded-full font-bold text-sm lg:text-base underline z-[1000]"
+                        side="bottom"
                       >
                         Voir l'annonce
-                      </a>
+                      </LinkPreview>
                     </div>
                     <p className="text-sm lg:text-md text-justify ">
                       {parse(
