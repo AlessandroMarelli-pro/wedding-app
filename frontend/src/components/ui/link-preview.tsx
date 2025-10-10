@@ -22,6 +22,7 @@ type LinkPreviewProps = {
   quality?: number;
   layout?: string;
   side?: 'top' | 'bottom' | 'left' | 'right';
+  align?: 'start' | 'center' | 'end';
 } & (
   | { isStatic: true; imageSrc: string }
   | { isStatic?: false; imageSrc?: never }
@@ -38,6 +39,7 @@ export const LinkPreview = ({
   isStatic = false,
   imageSrc = '',
   side = 'top',
+  align = 'center',
 }: LinkPreviewProps) => {
   let src;
   if (!isStatic) {
@@ -104,7 +106,7 @@ export const LinkPreview = ({
         <HoverCardPrimitive.Content
           className="z-10000 [transform-origin:var(--radix-hover-card-content-transform-origin)]"
           side={side}
-          align="center"
+          align={align}
           sideOffset={10}
         >
           <AnimatePresence>

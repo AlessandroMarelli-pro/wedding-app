@@ -166,6 +166,7 @@ export default function AccommodationSlider({
                         url={accommodation.sourceUrl || ''}
                         className=" py-3  rounded-full font-bold text-sm lg:text-base underline z-[1000]"
                         side="bottom"
+                        align="end"
                       >
                         Voir l'annonce
                       </LinkPreview>
