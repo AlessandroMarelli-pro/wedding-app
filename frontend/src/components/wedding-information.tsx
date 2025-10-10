@@ -34,7 +34,7 @@ export const WeddingInformation = ({
 
           <DivWithAnimation className=" flex flex-col items-center justify-center h-full ">
             <Image
-              src={'/images/lauziers2.png'}
+              src={'/images/Lauziers2.png'}
               alt={weddingInfo.coupleNames}
               width={6000}
               height={600}
