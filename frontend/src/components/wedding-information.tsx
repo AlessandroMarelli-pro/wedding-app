@@ -28,7 +28,7 @@ export const WeddingInformation = ({
 }) => {
   return (
     <div className="space-y-4 pb-4 lg:pb-0">
-      <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row gap-10 lg:gap-0">
+      <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row  lg:gap-0">
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
           <div className="flex flex-col items-center justify-center min-h-10" />
 
@@ -42,7 +42,7 @@ export const WeddingInformation = ({
             />
           </DivWithAnimation>
         </div>
-        <div className="flex flex-col  min-h-10" />
+        <div className="flex flex-col  lg:min-h-10" />
         <div className="flex flex-col  lg:w-[50%] gap-10 justify-start items-center text-center  ">
           <div className="flex flex-col  min-h-15" />
           <DivWithAnimation>

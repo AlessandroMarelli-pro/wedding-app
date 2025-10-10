@@ -17,11 +17,11 @@ export const WeddingAccomodations = ({
 }) => (
   <div className="space-y-4 ">
     <div className="flex flex-col lg:max-h-screen lg:h-screen">
-      <div className="row-span-2">
+      <div className="">
         <div className="flex flex-col items-center justify-center min-h-10" />
 
-        <DivWithAnimation className="row-span-1 flex flex-col justify-center items-center ">
-          <div className="lg:h-full py-5   ">
+        <DivWithAnimation className=" flex flex-col justify-center items-center text-center px-2 lg:px-0">
+          <div className="h-full py-5   ">
             <h1
               className={cn(
                 'text-5xl lg:text-8xl text-theme-accent-dark',
@@ -35,7 +35,7 @@ export const WeddingAccomodations = ({
             </span>
           </div>
         </DivWithAnimation>
-        <DivWithAnimation className="row-span-1  flex flex-col max-h-[50%]">
+        <DivWithAnimation className=" flex flex-col max-h-[50%]">
           <AccommodationsList
             accommodations={accommodations}
             weddingInfo={{

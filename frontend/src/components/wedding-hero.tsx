@@ -34,39 +34,6 @@ export const WeddingHero = ({
     heroAddress: null,
   });
 
-  const handlePositionUpdate = (position: {
-    offsetX: number;
-    scaledWidth: number;
-    containerWidth: number;
-    svgWidth: number;
-    svgHeight: number;
-  }) => {
-    console.log(position);
-    setImagePosition(position);
-
-    // Use GSAP for smooth responsive positioning
-    const rightEdgePercent = calculateRightEdgePosition(position);
-
-    // Animate text elements to new positions smoothly
-    gsap.to(textElementsRef.current.coupleNames, {
-      left: `${rightEdgePercent}%`,
-      duration: 0.3,
-      ease: 'power2.out',
-    });
-
-    gsap.to(textElementsRef.current.heroMessage, {
-      left: `${rightEdgePercent}%`,
-      duration: 0.3,
-      ease: 'power2.out',
-    });
-
-    gsap.to(textElementsRef.current.heroAddress, {
-      left: `${rightEdgePercent}%`,
-      duration: 0.3,
-      ease: 'power2.out',
-    });
-  };
-
   // Calculate right edge position of the image
   const calculateRightEdgePosition = (position: {
     offsetX: number;
@@ -103,7 +70,7 @@ export const WeddingHero = ({
           textElementsRef.current.heroAddress,
         ],
         {
-          fontSize: '2rem',
+          fontSize: '3rem',
         },
       );
     });
@@ -196,7 +163,7 @@ export const WeddingHero = ({
           textElementsRef.current.coupleNames = el;
         }}
         id="couple-names"
-        className="absolute text-theme-accent-dark font-bold top-[calc(9%)] roundhand-regular z-10 w-max"
+        className="absolute text-theme-accent-dark font-bold top-[calc(9%)] roundhand-regular z-10 w-max  "
         style={{
           left: imagePosition ? getRightEdgePosition() : '50%',
           transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
@@ -209,7 +176,7 @@ export const WeddingHero = ({
           textElementsRef.current.heroMessage = el;
         }}
         id="hero-message"
-        className="absolute text-theme-blue font-bold bottom-[calc(10%)] roundhand-bold z-10"
+        className="absolute text-theme-blue font-bold lg:bottom-[calc(10%)] bottom-[calc(25%)] roundhand-bold z-10 w-max"
         style={{
           left: imagePosition ? getRightEdgePosition() : '50%',
           transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
@@ -222,7 +189,7 @@ export const WeddingHero = ({
           textElementsRef.current.heroAddress = el;
         }}
         id="hero-address"
-        className="absolute text-theme-blue font-bold bottom-[calc(3%)] roundhand-regular z-10"
+        className="absolute text-theme-blue font-bold lg:bottom-[calc(3%)] bottom-[calc(15%)] roundhand-regular z-10 w-max"
         style={{
           left: imagePosition ? getRightEdgePosition() : '50%',
           transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',

@@ -297,7 +297,7 @@ export default function AccommodationSlider({
   return (
     <div
       className={cn(
-        'relative w-full h-[75vh] bg-theme-muted overflow-hidden',
+        'relative w-full lg:h-[75vh] h-screen bg-theme-muted overflow-hidden',
         className,
       )}
     >
@@ -316,10 +316,10 @@ export default function AccommodationSlider({
             }}
             className="absolute top-0 left-0 w-full h-full "
           >
-            <div className="flex flex-row p-5 items-start justify-center  gap-5">
+            <div className="flex flex-col lg:flex-row p-5 items-start justify-center  gap-5">
               {/* Background Image */}
-              <div className="h-full flex flex-col gap-4 flex-wrap w-1/2 ">
-                <div className="flex flex-row gap-10 flex-wrap justify-end ">
+              <div className="h-full flex flex-row lg:flex-col gap-4 flex-wrap lg:w-1/2 ">
+                <div className="flex flex-row lg:gap-10 gap-1 lg:flex-wrap flex-nowrapjustify-end overflow-x-scroll">
                   {accommodation.imagesUrl &&
                     accommodation.imagesUrl.split(',').length > 0 &&
                     accommodation.imagesUrl
@@ -332,7 +332,7 @@ export default function AccommodationSlider({
                           width={1000}
                           height={1000}
                           alt={accommodation.name}
-                          className="object-cover rounded-lg shadow-lg aspect-video max-w-[47%] hover:scale-105 transition-all duration-300 cursor-pointer"
+                          className="object-cover rounded-lg shadow-lg aspect-video lg:max-w-[47%] max-w-[90%] hover:scale-105 transition-all duration-300 cursor-pointer"
                           onClick={() => {
                             window.open(accommodation.sourceUrl, '_blank');
                           }}
@@ -342,10 +342,10 @@ export default function AccommodationSlider({
               </div>
 
               {/* Content Overlay */}
-              <div className="inset-0 flex flex-col items-center justify-start text-theme-accent-dark max-h-[50vh] w-1/2">
-                <div className="flex justify-between items-left  text-theme-accent-dark ">
+              <div className="inset-0 flex flex-col items-center justify-start text-theme-accent-dark lg:max-h-[50vh] lg:w-1/2">
+                <div className="flex flex-col lg:flex-row justify-between items-left  text-theme-accent-dark ">
                   <div className="text-left space-y-4">
-                    <div className="flex flex-row items-center justify-between items-left">
+                    <div className="flex flex-col lg:flex-row items-center justify-between items-left">
                       <h3 className="font-bold text-lg lg:text-2xl">
                         {accommodation.name}
                       </h3>
@@ -360,7 +360,7 @@ export default function AccommodationSlider({
                         Voir l'annonce
                       </LinkPreview>
                     </div>
-                    <p className="text-sm lg:text-md text-justify ">
+                    <p className="text-sm lg:text-md text-justify max-h-[200px] overflow-y-scroll lg:max-h-none lg:overflow-y-hidden">
                       {parse(
                         accommodation.description?.replace(
                           /(?:\r\n|\r|\n)/g,
@@ -376,9 +376,9 @@ export default function AccommodationSlider({
         ))}
       </div>
       {/* Navigation Controls */}
-      <div className="absolute bottom-10 left-6 md:bottom-10 md:left-6 flex flex-col md:flex-row gap-6 md:gap-8 z-10">
+      <div className="absolute bottom-0 lg:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center lg:justify-start overflow-x-scroll">
         {/* Slide Indicators */}
-        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+        <div className="flex flex-row gap-6 md:gap-8">
           {accommodations.map((accommodation, index) => (
             <div
               key={index}

@@ -50,9 +50,11 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
     <div className="min-h-screen bg-background">
       <MobileNav2 items={navItems} />
 
-      <Navbar className={cn('fixed h-15', theme.navColor)}>
+      <Navbar className={cn('fixed lg:h-15 lg:block hidden', theme.navColor)}>
         {!theme.hideNavbar && (
-          <NavBody className={cn('h-15 flex flex-row items-start justify-end')}>
+          <NavBody
+            className={cn('lg:h-15 flex flex-row items-start justify-end')}
+          >
             <NavItems
               items={navItems}
               className={cn('font-bold', theme.navItemsColor)}
