@@ -186,9 +186,9 @@ export const WeddingHero = ({
         alt="Ariane and Timothé"
         className="absolute inset-0"
         duration={4000}
-        delay={500}
-        pathDelay={200}
-        useSetMode={true}
+        delay={5}
+        pathDelay={3}
+        useSetMode={false}
         setPercentage={4}
       />
       <h1

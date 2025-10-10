@@ -130,9 +130,9 @@ export default function AccommodationSlider({
                 slidesRef.current[index] = el;
               }
             }}
-            className="absolute top-0 left-0 w-full h-full"
+            className="absolute top-0 left-0 w-full h-full "
           >
-            <div className="flex flex-row p-5">
+            <div className="flex flex-row p-5 items-start justify-center  gap-5">
               {/* Background Image */}
               <div className="h-full flex flex-col gap-4 flex-wrap w-1/2 ">
                 <div className="flex flex-row gap-10 flex-wrap justify-end ">
@@ -148,7 +148,10 @@ export default function AccommodationSlider({
                           width={1000}
                           height={1000}
                           alt={accommodation.name}
-                          className="object-cover rounded-lg shadow-lg aspect-square max-w-[30%]"
+                          className="object-cover rounded-lg shadow-lg aspect-video max-w-[47%] hover:scale-105 transition-all duration-300 cursor-pointer"
+                          onClick={() => {
+                            window.open(accommodation.sourceUrl, '_blank');
+                          }}
                         />
                       ))}
                 </div>
@@ -156,30 +159,28 @@ export default function AccommodationSlider({
 
               {/* Content Overlay */}
               <div className="inset-0 flex flex-col items-center justify-start text-theme-accent-dark max-h-[50vh] w-1/2">
-                <div className="text-center px-8 max-w-4xl">
-                  <div className="flex justify-between items-left  text-theme-accent-dark ">
-                    <div className="text-left space-y-4">
-                      <div className="flex flex-row items-center justify-between items-left">
-                        <h3 className="font-bold text-lg lg:text-2xl">
-                          {accommodation.name}
-                        </h3>
-                        <a
-                          href={accommodation.sourceUrl}
-                          target="_blank"
-                          className=" py-3  rounded-full font-bold text-sm lg:text-base underline"
-                        >
-                          Voir l'annonce
-                        </a>
-                      </div>
-                      <p className="text-sm lg:text-md ">
-                        {parse(
-                          accommodation.description?.replace(
-                            /(?:\r\n|\r|\n)/g,
-                            '<br>',
-                          ),
-                        )}
-                      </p>
+                <div className="flex justify-between items-left  text-theme-accent-dark ">
+                  <div className="text-left space-y-4">
+                    <div className="flex flex-row items-center justify-between items-left">
+                      <h3 className="font-bold text-lg lg:text-2xl">
+                        {accommodation.name}
+                      </h3>
+                      <a
+                        href={accommodation.sourceUrl}
+                        target="_blank"
+                        className=" py-3  rounded-full font-bold text-sm lg:text-base underline"
+                      >
+                        Voir l'annonce
+                      </a>
                     </div>
+                    <p className="text-sm lg:text-md text-justify ">
+                      {parse(
+                        accommodation.description?.replace(
+                          /(?:\r\n|\r|\n)/g,
+                          '<br>',
+                        ),
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -203,7 +204,7 @@ export default function AccommodationSlider({
                 index === currentSlide ? 'opacity-100' : 'opacity-50',
               )}
             >
-              <span className="text-theme-accent-dark font-bold text-sm md:text-base mb-5 transition-opacity duration-500">
+              <span className="text-theme-accent-dark font-bold text-base md:text-lg mb-5 transition-opacity duration-500">
                 {accommodation.name}
               </span>
               <div

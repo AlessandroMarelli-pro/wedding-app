@@ -3,6 +3,7 @@ import { IconMenu2, IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn } from 'src/lib/utils';
 
+import { useNavbarTheme } from '@/context/navbar-theme-context';
 import React, { useRef, useState } from 'react';
 import { MagneticButton } from './magnetic-button';
 
@@ -51,6 +52,7 @@ export const Navbar = ({ children, className }: NavbarProps) => {
 
   return (
     <motion.div
+      id="navbar"
       ref={ref}
       initial={{ scale: 0.9 }}
       whileInView={{ scale: 1 }}
@@ -82,7 +84,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         minWidth: '800px',
       }}
       className={cn(
-        'relative z-[60] mx-auto hidden w-full  flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 xl:flex dark:bg-transparent',
+        'relative z-[60] mx-auto hidden w-full  flex-row items-start justify-between self-start rounded-full bg-transparent px-4 py-2 xl:flex dark:bg-transparent',
         visible && 'bg-white/80 dark:bg-neutral-950/80',
         className,
       )}
@@ -94,6 +96,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { theme } = useNavbarTheme();
 
   return (
     <motion.div
@@ -106,9 +109,13 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => (
         <MagneticButton
           variant="stroke"
-          className="rounded-full  after:border-none hover:after:border-2 hover:text-theme-default text-theme-accent-dark text-base h-10"
-          flairClassName="bg-theme-accent-dark "
-          strokeColor="bg-theme-accent-dark"
+          className={cn(
+            'rounded-full  after:border-none hover:after:border-2   text-sm h-10',
+            theme.navItemsHoverColor,
+            theme.navItemsColor,
+          )}
+          flairClassName={cn('bg-theme-accent-dark ', theme.navItemsFlairColor)}
+          strokeColor={cn('bg-theme-accent-dark', theme.navItemsStrokeColor)}
           onClick={(e) => onItemClick?.(e, item.link)}
         >
           {item.name}

@@ -15,6 +15,45 @@ interface ProgramEvent {
   includeInCalendar: boolean;
 }
 
+const ShakingDiv = ({
+  children,
+  index,
+  id,
+  className,
+}: {
+  children: React.ReactNode;
+  index: number;
+  id: string;
+  className?: string;
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ amount: 0.5, once: true }}
+      transition={{
+        duration: 0.8,
+        ease: 'linear',
+        delay: index * 0.2,
+      }}
+      id={id}
+      key={id}
+      className={className}
+    >
+      <motion.div
+        animate={{ rotate: 20 }}
+        transition={{
+          repeat: Infinity,
+          repeatType: 'reverse',
+          duration: 3,
+        }}
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const AnimatedDiv = ({
   children,
   index,
@@ -53,7 +92,7 @@ export function WeddingProgram({
   events: ProgramEvent[];
 }) {
   return (
-    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent xl:gap-5 lg:gap-0 gap-5    p-10 z-[99999]">
+    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent-dark xl:gap-5 lg:gap-0 gap-5    p-10 z-[99999]">
       {events.map((item, index) => (
         <Fragment key={item.id}>
           <AnimatedDiv
@@ -96,15 +135,18 @@ export function WeddingProgram({
             </div>
           </AnimatedDiv>
           {index !== events.length - 1 && (
-            <AnimatedDiv index={index} id={item.id}>
+            <ShakingDiv index={index} id={item.id}>
               <Image
                 src="/images/lavandes.png"
                 alt="lavande"
                 width={100}
                 height={100}
-                className="w-1/2 h-1/2 "
+                className={cn(
+                  'w-1/2 h-1/2',
+                  index % 2 === 0 && 'scale-x-[-1] ',
+                )}
               />
-            </AnimatedDiv>
+            </ShakingDiv>
           )}
         </Fragment>
       ))}

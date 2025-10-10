@@ -1,6 +1,12 @@
+import { MagneticButton } from '@/components/ui/magnetic-button';
 import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
 import { WeddingInformation } from '@/components/wedding-information';
+import {
+  NavbarTheme,
+  navbarThemes,
+  useNavbarTheme,
+} from '@/context/navbar-theme-context';
 import { cn } from '@/lib/utils';
 import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
@@ -122,7 +128,7 @@ const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
 const RSVPSection = () => {
   return (
     <Section id="rsvp" background="accent" className="h-[50vh] max-h-screen ">
-      <div className="w-full h-full flex flex-col text-center ">
+      <div className="w-full h-full flex flex-col text-center  items-center ">
         <Image
           priority
           src="/images/capadocce.jpeg"
@@ -131,12 +137,30 @@ const RSVPSection = () => {
           height={1000}
           className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-center "
         />
-        <DivWithAnimation className=" text-4xl lg:text-6xl   text-theme-default z-1 pt-20 font-bold px-10 ">
+        <DivWithAnimation className=" text-4xl lg:text-6xl   text-theme-default z-1 pt-20 font-bold px-10 pb-5">
           Nous espérons vous voir nombreux en ce jour spécial !
         </DivWithAnimation>
-        <DivWithAnimation className=" text-4xl lg:text-4xl   text-theme-default z-1   font-bold">
+        <DivWithAnimation className=" text-4xl lg:text-4xl   text-theme-default z-1   font-bold pb-5">
           Réponse attendu avant le 28 février 2026
         </DivWithAnimation>
+        <MagneticButton
+          variant="stroke"
+          className={cn(
+            'h-15 rounded-full   hover:after:border-1    w-30',
+            'text-theme-accent-dark',
+            'hover:text-theme-default',
+            'after:border-none',
+            'bg-theme-default',
+            'text-2xl',
+          )}
+          flairClassName={cn('bg-theme-accent-dark ')}
+          strokeColor={cn('bg-theme-accent-dark')}
+          onClick={() =>
+            window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
+          }
+        >
+          RSVP
+        </MagneticButton>
       </div>
     </Section>
   );
@@ -199,66 +223,79 @@ const MissingDataSection = () => {
 };
 
 const MetaThemeChanger = () => {
-  // Change theme-color meta tag on scroll direction
-  const THEME_COLOR_NONE = '#FFFFFF';
-  const THEME_COLOR_DEFAULT = '#95E1D3';
-  const THEME_COLOR_MUTED = '#EAFFD0';
-  const THEME_COLOR_ACCENT = '#F38181';
-  // home -> default, nous -> none, informations -> accent,
-  // logements -> accent, programme -> muted, rsvp -> accent, bonus -> muted
-  const THEME_COLOR_MAP = {
-    home: THEME_COLOR_DEFAULT,
-    nous: THEME_COLOR_NONE,
-    informations: THEME_COLOR_ACCENT,
-    logements: THEME_COLOR_ACCENT,
-    programme: THEME_COLOR_MUTED,
-    rsvp: THEME_COLOR_MUTED,
-    bonus: THEME_COLOR_MUTED,
+  const { setTheme } = useNavbarTheme();
+
+  const NAVCOLOR_MAP = {
+    home: 'yellow',
+    nous: 'white',
+    informations: 'pink',
+    logements: 'pink',
+    programme: 'yellow',
+    rsvp: 'transparent',
+    bonus: 'transparent',
   };
 
   // If the section is visible, set the theme-color to the corresponding color
-  const setThemeColor = (sectionId: string) => {
-    const color = THEME_COLOR_MAP[sectionId as keyof typeof THEME_COLOR_MAP];
+  const setThemeColor = (sectionId: keyof typeof NAVCOLOR_MAP) => {
     try {
-      if (color) {
-        let meta = document.querySelector(
-          'meta[name="theme-color"]',
-        ) as HTMLMetaElement | null;
-        if (!meta) {
-          meta = document.createElement('meta');
-          meta.name = 'theme-color';
-          document.head.appendChild(meta);
-        }
-        if (meta.content !== color) {
-          meta.content = color;
-        }
-      }
+      const key = NAVCOLOR_MAP[sectionId] as keyof typeof navbarThemes;
+      if (navbarThemes[key]) setTheme(navbarThemes[key] as NavbarTheme);
+
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {}
   };
 
-  // Set initial color
-  const timeout = setTimeout(() => {
-    setThemeColor('home');
-  }, 1000);
+  // Get navbar height dynamically
+  const getNavbarHeight = () => {
+    const navbar = document.getElementById('navbar') as HTMLElement;
+    console.log('navbar', navbar);
+    return navbar ? navbar.offsetHeight : 0;
+  };
 
   useEffect(() => {
     // Only run on client
     if (typeof window === 'undefined') return;
 
     const onScroll = () => {
-      clearTimeout(timeout);
-      // get the id of the section in the view
-      const sections = document.querySelectorAll('section');
-      const sectionInView = Array.from(sections).find((section) => {
-        const rect = section.getBoundingClientRect();
+      const navbarHeight = getNavbarHeight();
+      console.log('navbarHeight', navbarHeight);
+      const viewportHeight = window.innerHeight;
+      const scrollY = window.scrollY;
 
-        return rect.top <= window.innerHeight && rect.bottom >= 0;
+      // Get all sections
+      const sections = document.querySelectorAll('section');
+
+      // Find the section that the navbar is currently "touching"
+      let currentSection = null;
+
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top + scrollY;
+        const sectionBottom = sectionTop + rect.height;
+
+        // Check if the navbar (at scrollY) is within this section's bounds
+        // The navbar "touches" a section when scrollY is between sectionTop and sectionBottom
+        if (scrollY >= sectionTop - navbarHeight && scrollY < sectionBottom) {
+          currentSection = section;
+        }
       });
-      if (sectionInView) {
-        setThemeColor(sectionInView.id);
+
+      // If we are at the bottom of the page, set the theme to transparent
+      if (
+        window.innerHeight + window.scrollY + navbarHeight >=
+        document.body.offsetHeight
+      ) {
+        setTheme(navbarThemes['transparent']);
+      } else if (currentSection) {
+        // Change theme when navbar touches the section
+        const sectionId = (currentSection as HTMLElement)
+          .id as keyof typeof NAVCOLOR_MAP;
+        setThemeColor(sectionId);
       }
     };
+
+    // Initial theme setting
+    onScroll();
 
     window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -266,6 +303,7 @@ const MetaThemeChanger = () => {
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
+
   return null;
 };
 

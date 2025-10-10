@@ -24,7 +24,7 @@ export const MagneticButton = ({
   onClick,
   disabled = false,
   type = 'button',
-  strokeColor = 'bg-white',
+  strokeColor = 'bg-transparent',
   ...props
 }: MagneticButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -125,7 +125,7 @@ export const MagneticButton = ({
         baseClasses,
         'bg-transparent text-white rounded-full px-6 py-4',
         'hover:text-black transition-colors duration-150',
-        'after:absolute after:inset-0 after:border-2 after:border-white after:rounded-full after:pointer-events-none',
+        'after:absolute after:inset-0 after:border-2 after:border-white after:rounded-full after:pointer-events-none after:bg-transparent',
         disabled && 'cursor-not-allowed opacity-50',
         className,
       );
@@ -148,7 +148,7 @@ export const MagneticButton = ({
     }
 
     return cn(
-      'absolute pointer-events-none rounded-full bg-white/20',
+      'absolute pointer-events-none rounded-full bg-transparent',
       'transform-gpu scale-0',
       flairClassName,
     );
