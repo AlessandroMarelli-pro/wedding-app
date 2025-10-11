@@ -143,24 +143,26 @@ const RSVPSection = () => {
         <DivWithAnimation className=" text-xl lg:text-4xl   text-theme-default z-1   font-bold pb-5">
           Réponse attendu avant le 28 février 2026
         </DivWithAnimation>
-        <MagneticButton
-          variant="stroke"
-          className={cn(
-            'h-10 lg:h-15 w-20 lg:w-30 rounded-full   hover:after:border-1    ',
-            'text-theme-accent-dark',
-            'hover:text-theme-default',
-            'after:border-none',
-            'bg-theme-default',
-            'text-lg lg:text-2xl',
-          )}
-          flairClassName={cn('bg-theme-accent-dark ')}
-          strokeColor={cn('bg-theme-accent-dark')}
-          onClick={() =>
-            window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
-          }
-        >
-          RSVP
-        </MagneticButton>
+        <DivWithAnimation>
+          <MagneticButton
+            variant="stroke"
+            className={cn(
+              'h-10 lg:h-15 w-20 lg:w-30 rounded-full   hover:after:border-1    ',
+              'text-theme-accent-dark',
+              'hover:text-theme-default',
+              'after:border-none',
+              'bg-theme-default',
+              'text-lg lg:text-2xl',
+            )}
+            flairClassName={cn('bg-theme-accent-dark ')}
+            strokeColor={cn('bg-theme-accent-dark')}
+            onClick={() =>
+              window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
+            }
+          >
+            RSVP
+          </MagneticButton>
+        </DivWithAnimation>
       </div>
     </Section>
   );
