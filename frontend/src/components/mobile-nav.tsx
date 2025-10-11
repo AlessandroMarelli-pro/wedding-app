@@ -25,7 +25,6 @@ export default function MobileNav2({
   const [navItemsCloseBgColor, setNavItemsCloseBgColor] = useState(
     theme.mobileNavCloseItemsBg,
   );
-  console.log('theme', theme);
   useEffect(() => {
     setNavItemsBgColor(theme.mobileNavItemsBg);
     setNavItemsTextColor(theme.mobileNavItemsTextColor);
@@ -269,7 +268,6 @@ const nav: React.CSSProperties = {
 };
 
 const background: React.CSSProperties = {
-  backgroundColor: 'oklch(0.76 0.14 17.27)',
   position: 'absolute',
   top: 0,
   left: 0,

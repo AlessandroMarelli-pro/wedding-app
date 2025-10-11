@@ -73,8 +73,6 @@ export const MagneticButton = ({
         duration: 0.4,
         ease: 'power2.out',
       });
-
-      console.log('Mouse enter - flair should be visible', { x, y });
     };
 
     const handleMouseLeave = (e: MouseEvent) => {
