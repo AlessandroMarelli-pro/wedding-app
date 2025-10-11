@@ -33,7 +33,13 @@ export default function MobileNav2({
   }, [theme]);
   return (
     <div className="lg:hidden z-[400]">
-      <motion.div animate={{}} style={container}>
+      <motion.div
+        animate={{}}
+        style={{
+          ...container,
+          pointerEvents: isOpen ? 'auto' : 'none',
+        }}
+      >
         <motion.nav
           initial={false}
           animate={isOpen ? 'open' : 'closed'}
@@ -283,6 +289,8 @@ const toggleContainer: React.CSSProperties = {
   width: 50,
   height: 50,
   backgroundColor: 'transparent',
+  pointerEvents: 'auto',
+  zIndex: 401,
 };
 
 const list: React.CSSProperties = {

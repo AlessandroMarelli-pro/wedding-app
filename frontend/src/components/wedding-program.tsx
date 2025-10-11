@@ -72,7 +72,7 @@ const AnimatedDiv = ({
       viewport={{ amount: 0.5, once: true }}
       transition={{
         duration: 0.8,
-        ease: 'linear',
+        ease: 'easeInOut',
         delay: index * 0.2,
       }}
       id={id}
@@ -135,14 +135,18 @@ export function WeddingProgram({
             </div>
           </AnimatedDiv>
           {index !== events.length - 1 && (
-            <ShakingDiv index={index} id={item.id}>
+            <ShakingDiv
+              index={index}
+              id={item.id}
+              className="flex justify-center items-center  w-full"
+            >
               <Image
                 src="/images/lavandes.png"
                 alt="lavande"
                 width={100}
                 height={100}
                 className={cn(
-                  'justify-self-center lg:w-1/2 lg:h-1/2 w-1/3 h-1/3',
+                  'justify-center items-center w-15 h-25 ',
                   index % 2 === 0 && 'scale-x-[-1] ',
                 )}
               />

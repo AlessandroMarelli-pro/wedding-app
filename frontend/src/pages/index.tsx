@@ -137,7 +137,7 @@ const RSVPSection = () => {
           height={1000}
           className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-center "
         />
-        <DivWithAnimation className=" text-xl lg:text-6xl   text-theme-default z-1 pt-10 lg:pt-20 font-bold px-10 pb-5">
+        <DivWithAnimation className=" text-xl lg:text-6xl   text-theme-default z-1 pt-20 font-bold px-10 pb-5">
           Nous espérons vous voir nombreux en ce jour spécial !
         </DivWithAnimation>
         <DivWithAnimation className=" text-xl lg:text-4xl   text-theme-default z-1   font-bold pb-5">

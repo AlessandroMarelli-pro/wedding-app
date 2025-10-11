@@ -382,7 +382,7 @@ export default function AccommodationSlider({
       {/* Navigation Controls */}
       <div className="absolute bottom-5 lg:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center lg:justify-start overflow-x-scroll ">
         {/* Slide Indicators */}
-        <div className="flex flex-row gap-6 md:gap-8 overflow-x-scroll">
+        <div className="flex flex-row gap-6 md:gap-8 overflow-x-scroll items-baseline align-baseline">
           {accommodations.map((accommodation, index) => (
             <div
               key={index}
@@ -391,11 +391,11 @@ export default function AccommodationSlider({
                 slideToIndex(index);
               }}
               className={cn(
-                'flex-col items-start cursor-pointer shrink-0  max-w-[75%]  ',
+                'flex-col  cursor-pointer shrink-0  max-w-[75%]  lg:w-auto w-[75%] justify-between h-full',
                 'flex',
               )}
             >
-              <span className="text-theme-accent-dark font-bold text-sm md:text-lg mb-5  line-clamp-1">
+              <span className="text-theme-accent-dark font-bold text-sm md:text-lg mb-5   w-full ">
                 {splitIntoLetters(accommodation.name, index)}
               </span>
               <div
