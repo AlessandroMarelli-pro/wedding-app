@@ -50,7 +50,7 @@ export const WeddingInformation = ({
         });
       },
       {
-        threshold: 0, // Trigger when 10% of the component is visible
+        threshold: 0.01, // Trigger when 10% of the component is visible
         rootMargin: '10px', // Start animation 50px before component enters viewport
       },
     );
