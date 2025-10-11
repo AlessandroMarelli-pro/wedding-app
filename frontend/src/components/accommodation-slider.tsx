@@ -324,7 +324,7 @@ export default function AccommodationSlider({
   return (
     <div
       className={cn(
-        'relative w-full lg:h-[75vh] h-screen bg-theme-muted overflow-hidden z-50',
+        'relative w-full lg:h-[75vh] h-screen bg-theme-muted overflow-hidden ',
         className,
       )}
     >
