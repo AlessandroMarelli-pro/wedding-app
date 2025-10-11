@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 interface BrowserStylePaintingProps {
   scaleMultiplier?: number;
+  offsetYDivider?: number;
   src: string;
   alt: string;
   className?: string;
@@ -12,13 +13,6 @@ interface BrowserStylePaintingProps {
   progressivePercentage?: number; // Percentage of paths to draw progressively (default 30%)
   setPercentage?: number; // Percentage of paths per set (default 10%)
   useSetMode?: boolean; // If true, draw by sets instead of progressive (default false)
-  onPositionUpdate?: (position: {
-    offsetX: number;
-    scaledWidth: number;
-    containerWidth: number;
-    svgWidth: number;
-    svgHeight: number;
-  }) => void;
 }
 
 interface PathData {
@@ -31,6 +25,7 @@ interface PathData {
 
 export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   scaleMultiplier = 1.5,
+  offsetYDivider = 2,
   src,
   alt,
   className = '',
@@ -40,7 +35,6 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   progressivePercentage = 30, // 30% of paths drawn progressively
   setPercentage = 10, // 10% of paths per set
   useSetMode = false, // Use set mode instead of progressive
-  onPositionUpdate,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [svgData, setSvgData] = useState<{
@@ -103,6 +97,10 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
       // Ensure we have a valid color
       if (!fill || fill === 'none' || fill === 'transparent') {
         fill = '#000';
+      }
+
+      if (fill === '#fff' || fill === '#ffffff' || fill === 'white') {
+        return;
       }
 
       // Extract other properties
@@ -196,19 +194,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     const scaledHeight = svgHeight * scale;
 
     const offsetX = (containerWidth - scaledWidth) / 2; // Center horizontally
-    const offsetY = (containerHeight - scaledHeight) / 4; // Position at bottom
+    const offsetY = (containerHeight - scaledHeight) / offsetYDivider; // Position at bottom
     // Apply viewBox offset to account for negative coordinates
-
-    // Notify parent component of position changes
-    if (onPositionUpdate) {
-      onPositionUpdate({
-        offsetX,
-        scaledWidth,
-        containerWidth,
-        svgWidth: svgWidth * scale,
-        svgHeight: svgHeight * scale,
-      });
-    }
 
     // Clear canvas first
     ctx.clearRect(0, 0, canvas.width, canvas.height);

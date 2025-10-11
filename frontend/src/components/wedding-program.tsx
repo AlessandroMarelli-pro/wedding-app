@@ -1,8 +1,9 @@
 import { cn, formatTime } from '@/lib';
 import { motion } from 'motion/react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
-import Image from 'next/image';
-import { Fragment } from 'react';
+import dynamic from 'next/dynamic';
+import { Fragment, useEffect, useRef, useState } from 'react';
+const BrowserStylePainting = dynamic(() => import('./browser-style-painting'));
 
 interface ProgramEvent {
   id: string;
@@ -47,6 +48,7 @@ const ShakingDiv = ({
           repeatType: 'reverse',
           duration: 2,
         }}
+        className={'h-full flex flex-col justify-center items-center'}
       >
         {children}
       </motion.div>
@@ -91,8 +93,44 @@ export function WeddingProgram({
   font: NextFontWithVariable;
   events: ProgramEvent[];
 }) {
+  const [isInViewport, setIsInViewport] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  // Intersection Observer to detect when component enters viewport
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          console.log('Intersection Observer:', entry.isIntersecting);
+          if (entry.isIntersecting) {
+            setIsInViewport(true);
+            setIsLoaded(true);
+          } else {
+            setIsInViewport(false);
+          }
+        });
+      },
+      {
+        threshold: 0.2, // Trigger when 10% of the component is visible
+        rootMargin: '10px', // Start animation 50px before component enters viewport
+      },
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isInViewport]);
+  console.log('isInViewport', isInViewport);
+
   return (
-    <div className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent-dark xl:gap-5 lg:gap-0 gap-5    p-10 z-[99999]">
+    <div
+      ref={containerRef}
+      className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent-dark xl:gap-5 lg:gap-0 gap-5    p-10 z-[99999]"
+    >
       {events.map((item, index) => (
         <Fragment key={item.id}>
           <AnimatedDiv
@@ -134,20 +172,25 @@ export function WeddingProgram({
               ))}
             </div>
           </AnimatedDiv>
-          {index !== events.length - 1 && (
+          {index !== events.length - 1 && (isInViewport || isLoaded) && (
             <ShakingDiv
               index={index}
               id={item.id}
-              className="flex justify-center items-center  w-full"
+              className="flex justify-center items-center  w-full h-full"
             >
-              <Image
-                src="/images/lavandes.png"
+              <BrowserStylePainting
+                scaleMultiplier={0.8}
+                src="/images/lavande.svg"
                 alt="lavande"
-                width={100}
-                height={100}
+                duration={5000}
+                delay={10}
+                pathDelay={30}
+                useSetMode={false}
+                setPercentage={4}
                 className={cn(
-                  'justify-center items-center w-15 h-25 ',
+                  'justify-center items-center flex flex-col',
                   index % 2 === 0 && 'scale-x-[-1] ',
+                  index % 2 === 0 ? ' -translate-x-5 ' : ' translate-x-5 ',
                 )}
               />
             </ShakingDiv>

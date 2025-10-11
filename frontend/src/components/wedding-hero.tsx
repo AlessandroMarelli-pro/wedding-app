@@ -157,6 +157,7 @@ export const WeddingHero = ({
         pathDelay={10}
         useSetMode={false}
         setPercentage={4}
+        offsetYDivider={4}
       />
       <h1
         ref={(el) => {

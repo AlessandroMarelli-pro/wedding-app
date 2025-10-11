@@ -50,7 +50,7 @@ export const WeddingInformation = ({
         });
       },
       {
-        threshold: 0.2, // Trigger when 10% of the component is visible
+        threshold: 0.1, // Trigger when 10% of the component is visible
         rootMargin: '10px', // Start animation 50px before component enters viewport
       },
     );
@@ -61,7 +61,6 @@ export const WeddingInformation = ({
       observer.disconnect();
     };
   }, [isInViewport]);
-  console.log('isInViewport', isInViewport);
   return (
     <div className="space-y-4 pb-4 lg:pb-0">
       <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row  lg:gap-0">
