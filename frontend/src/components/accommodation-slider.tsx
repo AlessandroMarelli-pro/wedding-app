@@ -324,7 +324,7 @@ export default function AccommodationSlider({
   return (
     <div
       className={cn(
-        'relative w-full lg:h-[75vh] h-screen bg-theme-muted overflow-hidden',
+        'relative w-full lg:h-[75vh] h-screen bg-theme-muted overflow-hidden z-50',
         className,
       )}
     >
@@ -359,7 +359,7 @@ export default function AccommodationSlider({
                           width={1000}
                           height={1000}
                           alt={accommodation.name}
-                          className="object-cover max-h-50 lg:max-h-none lg:object-cover rounded-lg  lg:shadow-lg lg:aspect-video lg:max-w-[47%] lg:w-[47%] lg:min-w-[47%]  max-w-[90%] min-w-[90%] w-[90%] hover:scale-105 transition-all duration-300 cursor-pointer"
+                          className="object-cover max-h-50 lg:max-h-none lg:object-cover rounded-lg  lg:shadow-lg lg:aspect-video lg:max-w-[47%] lg:w-[47%] lg:min-w-[47%]  max-w-[90%] min-w-[90%] w-[90%] hover:scale-95 transition-all duration-300 cursor-pointer"
                           onClick={() => {
                             window.open(accommodation.sourceUrl, '_blank');
                           }}
