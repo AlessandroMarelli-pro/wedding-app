@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface BrowserStylePaintingProps {
+  scaleMultiplier?: number;
   src: string;
   alt: string;
   className?: string;
@@ -29,6 +30,7 @@ interface PathData {
 }
 
 export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
+  scaleMultiplier = 1.5,
   src,
   alt,
   className = '',
@@ -47,9 +49,9 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   } | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
   const animationRef = useRef<number | undefined>(undefined);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const [scrollAcceleration, setScrollAcceleration] = useState(1);
 
   useEffect(() => {
     fetch(src)
@@ -62,43 +64,12 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
         // Smooth fade-in after a short delay
         setTimeout(() => {
           setIsVisible(true);
-        }, 100);
+        }, 200);
       })
       .catch((error) => {
         console.error('Error loading SVG:', error);
       });
   }, [src]);
-
-  // Scroll acceleration effect
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      // Calculate scroll progress (0 to 1)
-      const scrollProgress = Math.min(
-        scrollY / (documentHeight - windowHeight),
-        1,
-      );
-
-      // Accelerate painting based on scroll progress
-      // More scroll = faster painting (up to 10x speed)
-      const acceleration = 1 + scrollProgress * 9; // 1x to 10x speed
-      setScrollAcceleration(acceleration);
-
-      // Update timeline speed if it exists
-      if (timelineRef.current) {
-        timelineRef.current.timeScale(acceleration);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   const parseSVG = (svgContent: string) => {
     const parser = new DOMParser();
@@ -214,8 +185,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     // Calculate scale to fit the container while maintaining aspect ratio
     const scaleX = containerWidth / svgWidth;
     const scaleY = containerHeight / svgHeight;
-    const scale = Math.min(scaleX, scaleY) * 1.5; // Use Math.min to fit within container
-    console.log(scale);
+    const scale = Math.min(scaleX, scaleY) * scaleMultiplier; // Use Math.min to fit within container
     // Set canvas size
     canvas.width = containerWidth * window.devicePixelRatio;
     canvas.height = containerHeight * window.devicePixelRatio;
@@ -351,13 +321,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
           zIndex: 5,
         }}
       />
-
-      {/* Scroll acceleration indicator */}
-      {scrollAcceleration > 1 && (
-        <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-medium">
-          {scrollAcceleration.toFixed(1)}x speed
-        </div>
-      )}
     </div>
   );
 };
+
+export default BrowserStylePainting;

@@ -5,9 +5,13 @@ import {
 import { cn } from '@/lib/utils';
 import { IconCar, IconMapPinFilled, IconTrain } from '@tabler/icons-react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import { UploadedImage, WeddingInfo } from '../types/api';
 import { DivWithAnimation } from './animations';
+
+const BrowserStylePainting = dynamic(() => import('./browser-style-painting'));
 
 const WeddingHowToArriveIcons = {
   car: <IconCar className="lg:w-10 lg:h-10" />,
@@ -26,21 +30,69 @@ export const WeddingInformation = ({
   getDirectionName: (directionType: string) => string;
   font: NextFontWithVariable;
 }) => {
+  const [isInViewport, setIsInViewport] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  // Intersection Observer to detect when component enters viewport
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          console.log('Intersection Observer:', entry.isIntersecting);
+          if (entry.isIntersecting) {
+            setIsInViewport(true);
+            setIsLoaded(true);
+          } else {
+            setIsInViewport(false);
+          }
+        });
+      },
+      {
+        threshold: 0.2, // Trigger when 10% of the component is visible
+        rootMargin: '10px', // Start animation 50px before component enters viewport
+      },
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isInViewport]);
+  console.log('isInViewport', isInViewport);
   return (
     <div className="space-y-4 pb-4 lg:pb-0">
       <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row  lg:gap-0">
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
           <div className=" flex flex-col items-center justify-center lg:min-h-10" />
 
-          <DivWithAnimation className="hidden lg:flex flex-col items-center justify-center h-full ">
-            <Image
+          <div
+            ref={containerRef}
+            className="hidden lg:flex flex-col items-center justify-center h-full "
+          >
+            {(isInViewport || isLoaded) && (
+              <BrowserStylePainting
+                scaleMultiplier={1}
+                src="/images/lauziers.svg"
+                alt={weddingInfo.coupleNames}
+                className=" w-1/2"
+                duration={4000}
+                delay={5}
+                pathDelay={10}
+                useSetMode={false}
+                setPercentage={4}
+              />
+            )}
+            {/*  <Image
               src={'/images/Lauziers2.png'}
               alt={weddingInfo.coupleNames}
               width={6000}
               height={600}
               className="object-cover w-[100%] "
-            />
-          </DivWithAnimation>
+            /> */}
+          </div>
         </div>
         <div className="flex flex-col  lg:min-h-10" />
         <div className="flex flex-col  lg:w-[50%] gap-10 justify-start items-center text-center  ">

@@ -154,7 +154,7 @@ export const WeddingHero = ({
         className="absolute inset-0"
         duration={4000}
         delay={5}
-        pathDelay={3}
+        pathDelay={10}
         useSetMode={false}
         setPercentage={4}
       />
