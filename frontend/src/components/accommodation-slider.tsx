@@ -20,6 +20,7 @@ export default function AccommodationSlider({
   const slidesRef = useRef<HTMLDivElement[]>([]);
   const indicatorsRef = useRef<HTMLDivElement[]>([]);
   const letterRefs = useRef<HTMLSpanElement[][]>([]);
+  const indicatorsContainerRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(true);
@@ -44,7 +45,7 @@ export default function AccommodationSlider({
     indicators.forEach((indicator, indicatorIndex) => {
       if (indicator) {
         gsap.set(indicator, {
-          width: indicatorIndex === 0 ? '100%' : '67%',
+          width: indicatorIndex === 0 ? '100%' : '30%',
           opacity: indicatorIndex === 0 ? 1 : 0.5,
         });
       }
@@ -63,6 +64,29 @@ export default function AccommodationSlider({
       }
     });
   }, [accommodations.length]);
+
+  // Helper function to scroll indicators container to align clicked indicator to the left
+  const scrollToIndicator = (index: number) => {
+    if (!indicatorsContainerRef.current) return;
+
+    const container = indicatorsContainerRef.current;
+    const indicatorElement = indicatorsRef.current[index];
+
+    if (!indicatorElement) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const indicatorRect = indicatorElement.getBoundingClientRect();
+
+    // Calculate the scroll position needed to align the indicator to the left edge
+    const scrollLeft =
+      indicatorRect.left - containerRect.left + container.scrollLeft;
+
+    // Smooth scroll to the calculated position
+    container.scrollTo({
+      left: scrollLeft,
+      behavior: 'smooth',
+    });
+  };
 
   // Helper function to split text into individual letters
   const splitIntoLetters = (text: string, slideIndex: number) => {
@@ -100,6 +124,9 @@ export default function AccommodationSlider({
 
     setIsAnimating(true);
 
+    // Scroll to align the clicked indicator to the left on mobile
+    scrollToIndicator(index);
+
     // Determine slide direction
     const direction = index > currentSlide ? 1 : -1;
 
@@ -126,7 +153,7 @@ export default function AccommodationSlider({
             if (indicatorIndex === index) {
               gsap.set(indicator, { width: '100%', opacity: 1 });
             } else {
-              gsap.set(indicator, { width: '67%', opacity: 0.5 });
+              gsap.set(indicator, { width: '30%', opacity: 0.5 });
             }
           }
         });
@@ -197,7 +224,7 @@ export default function AccommodationSlider({
           tl.to(
             indicator,
             {
-              width: '67%',
+              width: '30%',
               opacity: 0.3,
               duration: 0.4,
               ease: 'power2.out',
@@ -206,7 +233,7 @@ export default function AccommodationSlider({
           ).to(
             indicator,
             {
-              width: '67%',
+              width: '30%',
               opacity: 0.5,
               duration: 0.4,
               ease: 'power2.in',
@@ -218,7 +245,7 @@ export default function AccommodationSlider({
           tl.to(
             indicator,
             {
-              width: '67%',
+              width: '30%',
               opacity: 0.5,
               duration: 0.8,
               ease: 'power2.inOut',
@@ -364,7 +391,7 @@ export default function AccommodationSlider({
                         </LinkPreview>
                       </div>
                     </div>
-                    <p className="text-xs lg:text-md text-justify max-h-[40vh] overflow-y-scroll lg:max-h-none lg:overflow-y-hidden w-full">
+                    <p className="text-xs lg:text-md text-justify max-h-[42vh] overflow-y-scroll lg:max-h-none lg:overflow-y-hidden w-full">
                       {parse(
                         accommodation.description?.replace(
                           /(?:\r\n|\r|\n)/g,
@@ -382,7 +409,10 @@ export default function AccommodationSlider({
       {/* Navigation Controls */}
       <div className="absolute bottom-5 lg:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center lg:justify-start overflow-x-scroll ">
         {/* Slide Indicators */}
-        <div className="flex flex-row gap-6 md:gap-8 overflow-x-scroll items-baseline align-baseline">
+        <div
+          ref={indicatorsContainerRef}
+          className="flex flex-row gap-6 md:gap-8 overflow-x-scroll items-baseline align-baseline"
+        >
           {accommodations.map((accommodation, index) => (
             <div
               key={index}
@@ -391,7 +421,7 @@ export default function AccommodationSlider({
                 slideToIndex(index);
               }}
               className={cn(
-                'flex-col  cursor-pointer shrink-0  max-w-[75%]  lg:w-auto w-[75%] justify-between h-full',
+                'flex-col  cursor-pointer shrink-0  max-w-[75%] w-auto justify-between h-full',
                 'flex',
               )}
             >
