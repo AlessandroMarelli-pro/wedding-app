@@ -30,9 +30,9 @@ export const WeddingInformation = ({
     <div className="space-y-4 pb-4 lg:pb-0">
       <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row  lg:gap-0">
         <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
-          <div className="flex flex-col items-center justify-center min-h-10" />
+          <div className=" flex flex-col items-center justify-center lg:min-h-10" />
 
-          <DivWithAnimation className=" flex flex-col items-center justify-center h-full ">
+          <DivWithAnimation className="hidden lg:flex flex-col items-center justify-center h-full ">
             <Image
               src={'/images/Lauziers2.png'}
               alt={weddingInfo.coupleNames}
@@ -66,6 +66,15 @@ export const WeddingInformation = ({
                 </p>
               ))}
             </div>
+          </DivWithAnimation>
+          <DivWithAnimation className="lg:hidden flex flex-col items-center justify-center h-full ">
+            <Image
+              src={'/images/Lauziers2.png'}
+              alt={weddingInfo.coupleNames}
+              width={6000}
+              height={600}
+              className="object-cover w-[100%] "
+            />
           </DivWithAnimation>
           <DivWithAnimation>
             <h1

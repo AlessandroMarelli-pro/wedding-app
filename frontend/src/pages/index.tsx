@@ -137,21 +137,21 @@ const RSVPSection = () => {
           height={1000}
           className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-center "
         />
-        <DivWithAnimation className=" text-4xl lg:text-6xl   text-theme-default z-1 pt-20 font-bold px-10 pb-5">
+        <DivWithAnimation className=" text-xl lg:text-6xl   text-theme-default z-1 pt-10 lg:pt-20 font-bold px-10 pb-5">
           Nous espérons vous voir nombreux en ce jour spécial !
         </DivWithAnimation>
-        <DivWithAnimation className=" text-4xl lg:text-4xl   text-theme-default z-1   font-bold pb-5">
+        <DivWithAnimation className=" text-xl lg:text-4xl   text-theme-default z-1   font-bold pb-5">
           Réponse attendu avant le 28 février 2026
         </DivWithAnimation>
         <MagneticButton
           variant="stroke"
           className={cn(
-            'h-15 rounded-full   hover:after:border-1    w-30',
+            'h-10 lg:h-15 w-20 lg:w-30 rounded-full   hover:after:border-1    ',
             'text-theme-accent-dark',
             'hover:text-theme-default',
             'after:border-none',
             'bg-theme-default',
-            'text-2xl',
+            'text-lg lg:text-2xl',
           )}
           flairClassName={cn('bg-theme-accent-dark ')}
           strokeColor={cn('bg-theme-accent-dark')}
@@ -248,7 +248,6 @@ const MetaThemeChanger = () => {
   // Get navbar height dynamically
   const getNavbarHeight = () => {
     const navbar = document.getElementById('navbar') as HTMLElement;
-    console.log('navbar', navbar);
     return navbar ? navbar.offsetHeight : 0;
   };
 
@@ -258,7 +257,6 @@ const MetaThemeChanger = () => {
 
     const onScroll = () => {
       const navbarHeight = getNavbarHeight();
-      console.log('navbarHeight', navbarHeight);
       const viewportHeight = window.innerHeight;
       const scrollY = window.scrollY;
 

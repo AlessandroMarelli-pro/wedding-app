@@ -13,6 +13,9 @@ export interface NavbarTheme {
   rsvpItemsFlairColor: string;
   rsvpItemsStrokeColor: string;
 
+  mobileNavItemsBg: string;
+  mobileNavCloseItemsBg: string;
+  mobileNavItemsTextColor: string;
   hideNavbar?: boolean;
 }
 
@@ -27,6 +30,9 @@ const defaultNavbarTheme: NavbarTheme = {
   rsvpAfterBorderColor: 'after:border-theme-accent-dark',
   rsvpItemsFlairColor: 'bg-theme-accent-dark',
   rsvpItemsStrokeColor: 'bg-theme-accent-dark',
+  mobileNavItemsBg: 'oklch(0.76 0.14 17.27)',
+  mobileNavCloseItemsBg: 'oklch(0.97 0.14 99)',
+  mobileNavItemsTextColor: 'text-theme-default',
   hideNavbar: false,
 };
 
@@ -119,6 +125,9 @@ export const navbarThemes = {
     navItemsStrokeColor: 'bg-theme-accent-dark',
     navItemsFlairColor: 'bg-theme-accent-dark',
     navItemsActiveColor: 'text-theme-accent',
+    mobileNavItemsBg: 'oklch(0.76 0.14 17.27)',
+    mobileNavCloseItemsBg: 'white',
+    mobileNavItemsTextColor: 'text-white',
   },
   white: {
     rsvpItemsColor: 'text-theme-accent-dark',
@@ -130,6 +139,9 @@ export const navbarThemes = {
     navItemsHoverColor: 'hover:text-white',
     navItemsStrokeColor: 'bg-theme-accent-dark',
     navItemsFlairColor: 'bg-theme-accent-dark',
+    mobileNavItemsBg: 'oklch(0.76 0.14 17.27)',
+    mobileNavCloseItemsBg: 'white',
+    mobileNavItemsTextColor: 'text-white',
   },
   transparent: {
     rsvpAfterBorderColor: 'after:border-theme-white',
@@ -139,12 +151,15 @@ export const navbarThemes = {
     rsvpItemsStrokeColor: 'bg-white',
 
     navColor: 'bg-transparent',
-    navItemsColor: 'text-none',
+    navItemsColor: 'text-transparent',
     navItemsHoverColor: 'hover:text-gray-300',
     navItemsStrokeColor: 'bg-white',
     navItemsFlairColor: 'bg-white/10',
     navItemsActiveColor: 'text-white',
     hideNavbar: true,
+    mobileNavItemsBg: 'oklch(0.97 0.14 99)',
+    mobileNavCloseItemsBg: 'oklch(0.76 0.14 17.27)',
+    mobileNavItemsTextColor: 'text-theme-accent-dark',
   },
 } as const;
 

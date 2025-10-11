@@ -1,5 +1,7 @@
 'use client';
 
+import { useNavbarTheme } from '@/context/navbar-theme-context';
+import { cn } from '@/lib';
 import type { Variants } from 'motion/react';
 import { stagger } from 'motion/react';
 import * as motion from 'motion/react-client';
@@ -10,12 +12,27 @@ export default function MobileNav2({
 }: {
   items: { name: string; link: string }[];
 }) {
+  const { theme } = useNavbarTheme();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { height } = useDimensions(containerRef);
-
+  const [navItemsBgColor, setNavItemsBgColor] = useState(
+    theme.mobileNavItemsBg,
+  );
+  const [navItemsTextColor, setNavItemsTextColor] = useState(
+    theme.mobileNavItemsTextColor,
+  );
+  const [navItemsCloseBgColor, setNavItemsCloseBgColor] = useState(
+    theme.mobileNavCloseItemsBg,
+  );
+  console.log('theme', theme);
+  useEffect(() => {
+    setNavItemsBgColor(theme.mobileNavItemsBg);
+    setNavItemsTextColor(theme.mobileNavItemsTextColor);
+    setNavItemsCloseBgColor(theme.mobileNavCloseItemsBg);
+  }, [theme]);
   return (
-    <div className="lg:hidden">
+    <div className="lg:hidden z-[400]">
       <motion.div animate={{}} style={container}>
         <motion.nav
           initial={false}
@@ -24,15 +41,23 @@ export default function MobileNav2({
           ref={containerRef}
           style={nav}
         >
-          <motion.div style={background} variants={sidebarVariants} />
+          <motion.div
+            style={{ ...background, backgroundColor: navItemsBgColor }}
+            variants={sidebarVariants}
+          />
 
           <Navigation
             items={items}
             setIsMobileMenuOpen={setIsOpen}
             isOpen={isOpen}
+            textColor={navItemsTextColor}
           />
 
-          <MenuToggle toggle={() => setIsOpen(!isOpen)} />
+          <MenuToggle
+            toggle={() => setIsOpen(!isOpen)}
+            strokeColor={navItemsBgColor}
+            strokeColorClose={navItemsCloseBgColor}
+          />
         </motion.nav>
       </motion.div>
     </div>
@@ -52,10 +77,12 @@ const Navigation = ({
   items,
   setIsMobileMenuOpen,
   isOpen,
+  textColor,
 }: {
   items: { name: string; link: string }[];
   setIsMobileMenuOpen: (isOpen: boolean) => void;
   isOpen: boolean;
+  textColor: string;
 }) => (
   <motion.ul style={list} variants={navVariants}>
     {items.map((item, index) => (
@@ -64,6 +91,7 @@ const Navigation = ({
         item={item}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
         isOpen={isOpen}
+        textColor={textColor}
       />
     ))}
   </motion.ul>
@@ -86,16 +114,16 @@ const itemVariants = {
   },
 };
 
-const colors = ['#FF008C', '#D309E1', '#9C1AFF', '#7700FF', '#4400FF'];
-
 const MenuItem = ({
   item,
   setIsMobileMenuOpen,
   isOpen,
+  textColor,
 }: {
   item: { name: string; link: string };
   setIsMobileMenuOpen: (isOpen: boolean) => void;
   isOpen: boolean;
+  textColor: string;
 }) => {
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -124,7 +152,7 @@ const MenuItem = ({
             handleNavClick(e, item.link);
             setIsMobileMenuOpen(false);
           }}
-          className="relative text-white"
+          className={cn('relative', textColor)}
         >
           <span className="flew flex-row">{item.name}</span>
         </a>
@@ -169,33 +197,44 @@ const Path = (props: PathProps) => (
   />
 );
 
-const MenuToggle = ({ toggle }: { toggle: () => void }) => (
+const MenuToggle = ({
+  toggle,
+  strokeColor,
+  strokeColorClose,
+}: {
+  toggle: () => void;
+  strokeColor: string;
+  strokeColorClose: string;
+}) => (
   <button style={toggleContainer} onClick={toggle}>
     <svg width="23" height="23" viewBox="0 0 23 23">
       <Path
         variants={{
           closed: {
             d: 'M 2 2.5 L 20 2.5',
-            stroke: '#F38181',
+            stroke: strokeColor,
           },
           open: {
             d: 'M 3 16.5 L 17 2.5',
-            stroke: 'white',
+            stroke: strokeColorClose,
           },
         }}
       />
       <Path
         d="M 2 9.423 L 20 9.423"
         variants={{
-          closed: { opacity: 1, stroke: '#F38181' },
-          open: { opacity: 0, stroke: 'white' },
+          closed: { opacity: 1, stroke: strokeColor },
+          open: { opacity: 0, stroke: strokeColorClose },
         }}
         transition={{ duration: 0.1 }}
       />
       <Path
         variants={{
-          closed: { d: 'M 2 16.346 L 20 16.346', stroke: '#F38181' },
-          open: { d: 'M 3 2.5 L 17 16.346', stroke: 'white' },
+          closed: {
+            d: 'M 2 16.346 L 20 16.346',
+            stroke: strokeColor,
+          },
+          open: { d: 'M 3 2.5 L 17 16.346', stroke: strokeColorClose },
         }}
       />
     </svg>
@@ -207,7 +246,7 @@ const MenuToggle = ({ toggle }: { toggle: () => void }) => (
  */
 
 const container: React.CSSProperties = {
-  position: 'absolute',
+  position: 'fixed',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'stretch',
@@ -216,7 +255,7 @@ const container: React.CSSProperties = {
   height: '100vh',
   backgroundColor: '',
   overflow: 'hidden',
-  zIndex: 1000,
+  zIndex: 400,
 };
 
 const nav: React.CSSProperties = {
@@ -224,12 +263,12 @@ const nav: React.CSSProperties = {
 };
 
 const background: React.CSSProperties = {
-  backgroundColor: '#F38181',
+  backgroundColor: 'oklch(0.76 0.14 17.27)',
   position: 'absolute',
   top: 0,
   left: 0,
   bottom: 0,
-  width: 300,
+  width: 200,
 };
 
 const toggleContainer: React.CSSProperties = {
@@ -250,9 +289,13 @@ const list: React.CSSProperties = {
   listStyle: 'none',
   padding: 25,
   margin: 0,
-  position: 'absolute',
-  top: 80,
-  width: 230,
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  top: 50,
+  width: 200,
 };
 
 const listItem: React.CSSProperties = {

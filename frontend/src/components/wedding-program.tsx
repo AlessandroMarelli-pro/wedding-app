@@ -41,11 +41,11 @@ const ShakingDiv = ({
       className={className}
     >
       <motion.div
-        animate={{ rotate: 20 }}
+        animate={{ rotate: [-10, 10] }}
         transition={{
           repeat: Infinity,
           repeatType: 'reverse',
-          duration: 3,
+          duration: 2,
         }}
       >
         {children}
@@ -142,7 +142,7 @@ export function WeddingProgram({
                 width={100}
                 height={100}
                 className={cn(
-                  'w-1/2 h-1/2',
+                  'justify-self-center lg:w-1/2 lg:h-1/2 w-1/3 h-1/3',
                   index % 2 === 0 && 'scale-x-[-1] ',
                 )}
               />

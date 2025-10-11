@@ -332,7 +332,7 @@ export default function AccommodationSlider({
                           width={1000}
                           height={1000}
                           alt={accommodation.name}
-                          className="object-cover rounded-lg shadow-lg aspect-video lg:max-w-[47%] max-w-[90%] hover:scale-105 transition-all duration-300 cursor-pointer"
+                          className="object-cover max-h-50 lg:max-h-none lg:object-cover rounded-lg  lg:shadow-lg lg:aspect-video lg:max-w-[47%] lg:w-[47%] lg:min-w-[47%]  max-w-[90%] min-w-[90%] w-[90%] hover:scale-105 transition-all duration-300 cursor-pointer"
                           onClick={() => {
                             window.open(accommodation.sourceUrl, '_blank');
                           }}
@@ -342,25 +342,29 @@ export default function AccommodationSlider({
               </div>
 
               {/* Content Overlay */}
-              <div className="inset-0 flex flex-col items-center justify-start text-theme-accent-dark lg:max-h-[50vh] lg:w-1/2">
-                <div className="flex flex-col lg:flex-row justify-between items-left  text-theme-accent-dark ">
-                  <div className="text-left space-y-4">
-                    <div className="flex flex-col lg:flex-row items-center justify-between items-left">
-                      <h3 className="font-bold text-lg lg:text-2xl">
-                        {accommodation.name}
-                      </h3>
-                      <LinkPreview
-                        width={300}
-                        height={200}
-                        url={accommodation.sourceUrl || ''}
-                        className=" py-3  rounded-full font-bold text-sm lg:text-base underline z-[1000]"
-                        side="bottom"
-                        align="end"
-                      >
-                        Voir l'annonce
-                      </LinkPreview>
+              <div className="inset-0 flex flex-col  justify-start text-theme-accent-dark lg:max-h-[50vh] lg:w-1/2">
+                <div className="flex flex-col lg:flex-row justify-between items-left  text-theme-accent-dark w-full">
+                  <div className="text-left space-y-4 w-full">
+                    <div className="flex flex-row lg:items-center items-top justify-between items-left w-full">
+                      <div>
+                        <h3 className="font-bold text-base lg:text-2xl">
+                          {accommodation.name}
+                        </h3>
+                      </div>
+                      <div>
+                        <LinkPreview
+                          width={300}
+                          height={200}
+                          url={accommodation.sourceUrl || ''}
+                          className=" lg:py-3  rounded-full font-bold text-sm lg:text-base underline z-[1000]"
+                          side="bottom"
+                          align="end"
+                        >
+                          Voir l'annonce
+                        </LinkPreview>
+                      </div>
                     </div>
-                    <p className="text-sm lg:text-md text-justify max-h-[200px] overflow-y-scroll lg:max-h-none lg:overflow-y-hidden">
+                    <p className="text-xs lg:text-md text-justify max-h-[40vh] overflow-y-scroll lg:max-h-none lg:overflow-y-hidden w-full">
                       {parse(
                         accommodation.description?.replace(
                           /(?:\r\n|\r|\n)/g,
@@ -376,9 +380,9 @@ export default function AccommodationSlider({
         ))}
       </div>
       {/* Navigation Controls */}
-      <div className="absolute bottom-0 lg:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center lg:justify-start overflow-x-scroll">
+      <div className="absolute bottom-5 lg:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center lg:justify-start overflow-x-scroll ">
         {/* Slide Indicators */}
-        <div className="flex flex-row gap-6 md:gap-8">
+        <div className="flex flex-row gap-6 md:gap-8 overflow-x-scroll">
           {accommodations.map((accommodation, index) => (
             <div
               key={index}
@@ -386,9 +390,12 @@ export default function AccommodationSlider({
                 setAutoAdvanceEnabled(false);
                 slideToIndex(index);
               }}
-              className={cn('flex flex-col items-start cursor-pointer ')}
+              className={cn(
+                'flex-col items-start cursor-pointer shrink-0  max-w-[75%]  ',
+                'flex',
+              )}
             >
-              <span className="text-theme-accent-dark font-bold text-base md:text-lg mb-5">
+              <span className="text-theme-accent-dark font-bold text-sm md:text-lg mb-5  line-clamp-1">
                 {splitIntoLetters(accommodation.name, index)}
               </span>
               <div
