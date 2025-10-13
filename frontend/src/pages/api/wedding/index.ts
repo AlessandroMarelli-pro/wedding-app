@@ -6,11 +6,11 @@ async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
     const weddingInfo = await prisma.weddingInfo.findFirst({
       cacheStrategy: {
-        ttl: 24 * 60 * 30, // One month
+        ttl: 1, // One month
         tags: ['findFirst_weddingInfo'],
       },
     });
-
+    logger.info('weddingInfo', { weddingInfo: JSON.stringify(weddingInfo) });
     if (!weddingInfo) {
       return res.status(404).json({ error: 'Wedding information not found' });
     }

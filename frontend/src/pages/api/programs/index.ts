@@ -7,7 +7,7 @@ async function getAllEvents(req: NextApiRequest, res: NextApiResponse) {
     const events = await prisma.programEvent.findMany({
       orderBy: { startTime: 'asc' },
       cacheStrategy: {
-        ttl: 24 * 60 * 30, // One month
+        ttl: 1, // One month
         tags: ['findMany_programEvents'],
       },
     });
