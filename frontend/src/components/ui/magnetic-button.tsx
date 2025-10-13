@@ -174,7 +174,6 @@ export const MagneticButton = ({
       ref={buttonRef}
       type={type}
       onClick={onClick}
-      disabled={disabled}
       className={getButtonClasses()}
       {...props}
     >
