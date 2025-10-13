@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
+import { CacheManager } from '../../../../lib/cache-manager';
 
 import { logger } from '@/logger';
 import { toUTCDate } from 'lib/date';
@@ -54,6 +55,13 @@ async function updateEvent(req: AuthenticatedRequest, res: NextApiResponse) {
         icon,
       },
     });
+
+    // Invalidate the cache using our cache manager
+    CacheManager.invalidate('programEvents');
+    logger.info(
+      '✅ Program events cache invalidated successfully - next request will fetch fresh data',
+    );
+
     res.json(event);
   } catch (error) {
     logger.error('Update program event error:', error as Error);
@@ -74,6 +82,12 @@ async function deleteEvent(req: AuthenticatedRequest, res: NextApiResponse) {
     await prisma.programEvent.delete({
       where: { id: id as string },
     });
+
+    // Invalidate the cache using our cache manager
+    CacheManager.invalidate('programEvents');
+    logger.info(
+      '✅ Program events cache invalidated successfully - next request will fetch fresh data',
+    );
 
     res.json({ message: 'Program event deleted successfully' });
   } catch (error) {
