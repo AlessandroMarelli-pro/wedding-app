@@ -18,14 +18,14 @@ export function WeddingPresentation({
 }: WeddingPresentationProps) {
   const presentationMessage =
     '<span>' +
-    weddingInfo.presentationMessage?.replace(/(?:\r\n|\r|\n)/g, '<br>') +
+    weddingInfo.presentationMessage?.trim().replace(/(?:\r\n|\r|\n)/g, '<br>') +
     '</span>';
   return (
     <div className={cn('space-y-4', className)}>
       {' '}
       <div className="flex flex-col items-center justify-center min-h-10" />
       {/* Couple's Message */}
-      <DivWithAnimation className="text-theme-accent-dark  text-center  flex flex-col xl:flex-row items-center justify-center  p-10 gap-10 xl:h-screen pt-0">
+      <DivWithAnimation className="text-theme-accent-dark  text-center  flex flex-col xl:flex-row items-center justify-center  p-10 gap-6 xl:h-screen pt-0">
         <div className="xl:m-10 ">
           <Image
             src={'/images/couple.jpeg'}
@@ -35,17 +35,17 @@ export function WeddingPresentation({
             className="object-cover w-full shadow-xl"
           />
         </div>
-        <div className="container-responsive flex flex-col items-center justify-center">
-          <div className="py-4">
-            <IconGalaxy className="xl:w-10 xl:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
+        <div className="container-responsive flex flex-col items-center justify-center gap-6">
+          <div>
+            <IconGalaxy className="xl:w-10 xl:h-10 w-8 h-8 animate-[spin_3s_linear_infinite]" />
           </div>
-          <p className="  leading-relaxed font-light italic font-small text-justify text-lg">
+          <p className=" leading-relaxed font-light italic font-small text-justify text-lg">
             {parse(presentationMessage)}
           </p>
-          <div className="py-4">
-            <IconGalaxy className="xl:w-10 xl:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
+          <div>
+            <IconGalaxy className="xl:w-10 xl:h-10 w-8 h-8 animate-[spin_3s_linear_infinite]" />
           </div>
-          <span className="text-base xl:text-4xl font-bold roundhand-bold">
+          <span className="text-3xl xl:text-4xl font-bold roundhand-bold">
             {weddingInfo.coupleNames}
           </span>
         </div>

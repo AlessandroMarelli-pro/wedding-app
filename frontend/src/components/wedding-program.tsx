@@ -32,8 +32,8 @@ const ShakingDiv = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -50 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ amount: 0.5, once: true }}
       transition={{
         duration: 0.8,
@@ -45,13 +45,15 @@ const ShakingDiv = ({
       className={className}
     >
       <motion.div
-        animate={{ rotate: [-10, 10] }}
+        animate={{ rotate: [-5, 15], transformOrigin: 'bottom center' }}
         transition={{
           repeat: Infinity,
           repeatType: 'reverse',
+          ease: 'linear',
           duration: 2,
         }}
         className={'h-full flex flex-col justify-center items-center'}
+        style={{ transformOrigin: '0% center' }}
       >
         {children}
       </motion.div>
@@ -72,8 +74,8 @@ const AnimatedDiv = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -50 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ amount: 0.5, once: true }}
       transition={{
         duration: 0.8,
@@ -185,7 +187,7 @@ export function WeddingProgram({
             <ShakingDiv
               index={index}
               id={item.id}
-              className="flex justify-center items-center  w-xs h-xs"
+              className="flex justify-center items-center  xl:w-full w-xs h-1/3 xl:h-xs"
             >
               <BrowserStylePainting
                 scaleMultiplier={0.8}
@@ -197,9 +199,7 @@ export function WeddingProgram({
                 useSetMode={false}
                 setPercentage={4}
                 className={cn(
-                  'justify-center items-center flex flex-col max-w-xs xl:max-w-xs',
-                  index % 2 === 0 && 'scale-x-[-1] ',
-                  index % 2 === 0 ? ' -translate-x-5 ' : ' translate-x-5 ',
+                  'justify-center items-center flex flex-col max-w-xs xl:max-w-xs translate-x-5 xl:translate-x-0',
                 )}
               />
             </ShakingDiv>
