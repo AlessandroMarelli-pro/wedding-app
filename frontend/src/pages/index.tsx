@@ -141,7 +141,7 @@ const RSVPSection = () => {
           Nous espérons vous voir nombreux en ce jour spécial !
         </DivWithAnimation>
         <DivWithAnimation className=" text-xl lg:text-4xl   text-theme-default z-1   font-bold pb-5">
-          Réponse attendu avant le 28 février 2026
+          Réponse attendue avant le 28 février 2026
         </DivWithAnimation>
         <DivWithAnimation>
           <MagneticButton

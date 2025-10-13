@@ -53,7 +53,9 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
       <Navbar className={cn('fixed lg:h-15 lg:block hidden', theme.navColor)}>
         {!theme.hideNavbar && (
           <NavBody
-            className={cn('lg:h-15 flex flex-row items-start justify-end')}
+            className={cn(
+              'lg:h-15 flex flex-row items-start justify-center gap-5',
+            )}
           >
             <NavItems
               items={navItems}
