@@ -391,7 +391,7 @@ export default function AccommodationSlider({
                         </LinkPreview>
                       </div>
                     </div>
-                    <p className="text-xs xl:text-md text-justify max-h-[42vh] overflow-y-scroll xl:max-h-none xl:overflow-y-hidden w-full">
+                    <p className="text-sm xl:text-md text-justify max-h-[42vh] overflow-y-scroll xl:max-h-none xl:overflow-y-hidden w-full">
                       {parse(
                         accommodation.description?.replace(
                           /(?:\r\n|\r|\n)/g,
