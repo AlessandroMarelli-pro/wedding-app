@@ -3,7 +3,6 @@ import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
 
 import { logger } from '@/logger';
-import { invalidateCache } from 'lib/admin-utils';
 async function updateAccommodation(
   req: AuthenticatedRequest,
   res: NextApiResponse,
@@ -40,7 +39,6 @@ async function updateAccommodation(
         imagesUrl,
       },
     });
-    await invalidateCache(['findMany_accommodations']);
     res.json(accommodation);
   } catch (error: any) {
     logger.error('Update accommodation error:', error as Error);

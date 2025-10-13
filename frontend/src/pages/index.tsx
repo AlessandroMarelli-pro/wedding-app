@@ -45,6 +45,7 @@ interface HomePageProps {
   images: UploadedImage[];
   programs: SerializedProgramEvent[];
   error?: string;
+  isFallback?: boolean;
 }
 
 const HeroSection = ({
@@ -318,6 +319,7 @@ export default function HomePage({
   images,
   programs,
   error,
+  isFallback,
 }: HomePageProps) {
   const scrollToSection = (
     sectionId: string,
@@ -344,6 +346,58 @@ export default function HomePage({
   const weddingDetailsImage = images.find(
     (image) => image.usageLocation === 'information',
   );
+
+  // Show fallback message if we're in a problematic environment
+  if (isFallback) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+          <div className="mb-6">
+            <div className="mx-auto w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center">
+              <svg
+                className="w-12 h-12 text-yellow-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+            </div>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            Site Temporarily Unavailable
+          </h1>
+          <p className="text-gray-600 mb-6">
+            We're experiencing technical difficulties. Our team is working to
+            resolve this issue.
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              Try Again
+            </button>
+            <p className="text-sm text-gray-500">
+              Please check back in a few minutes or contact us at{' '}
+              <a
+                href="mailto:support@ricerf2026en26.fr"
+                className="text-pink-600 hover:text-pink-700 underline"
+              >
+                support@ricerf2026en26.fr
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Show error message in development
   if (error) {
@@ -433,6 +487,30 @@ export default function HomePage({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
+    // Check if we're in a problematic environment and return a fallback
+    if (
+      typeof window === 'undefined' &&
+      process.env.NODE_ENV === 'production'
+    ) {
+      // Try to detect if we're in a problematic runtime environment
+      try {
+        // Test if we can access the prisma client
+        await prisma.$connect();
+      } catch (prismaError) {
+        console.error('Prisma connection error:', prismaError);
+        // Return a fallback response that won't cause serialization issues
+        return {
+          props: {
+            weddingInfo: null,
+            accommodations: [],
+            images: [],
+            programs: [],
+            isFallback: true,
+          },
+        };
+      }
+    }
+
     // Direct database calls instead of API calls to avoid server-to-server HTTP requests
     const [weddingInfo, accommodations, images, programs] = await Promise.all([
       // Direct Prisma call instead of ApiService.getWeddingInfo()
