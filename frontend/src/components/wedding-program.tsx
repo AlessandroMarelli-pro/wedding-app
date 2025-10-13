@@ -176,7 +176,7 @@ export function WeddingProgram({
             <ShakingDiv
               index={index}
               id={item.id}
-              className="flex justify-center items-center  w-full h-full"
+              className="flex justify-center items-center  w-xs h-xs"
             >
               <BrowserStylePainting
                 scaleMultiplier={0.8}
@@ -188,7 +188,7 @@ export function WeddingProgram({
                 useSetMode={false}
                 setPercentage={4}
                 className={cn(
-                  'justify-center items-center flex flex-col max-w-xs xl:max-w-full',
+                  'justify-center items-center flex flex-col max-w-xs xl:max-w-xs',
                   index % 2 === 0 && 'scale-x-[-1] ',
                   index % 2 === 0 ? ' -translate-x-5 ' : ' translate-x-5 ',
                 )}
