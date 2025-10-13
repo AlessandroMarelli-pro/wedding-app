@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -384,7 +384,7 @@ export default function HomePage({
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const isProd = process.env.NODE_ENV === 'production';
     const [weddingInfo, accommodations, images, programs] = await Promise.all([
@@ -400,8 +400,6 @@ export const getStaticProps: GetStaticProps = async () => {
         images,
         programs,
       },
-      // Revalidate every 60 seconds to keep data fresh
-      revalidate: isProd ? 1 : 1,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
@@ -412,8 +410,6 @@ export const getStaticProps: GetStaticProps = async () => {
         images: [],
         programs: [],
       },
-      // Still revalidate even on error to retry
-      revalidate: 1,
     };
   }
 };
