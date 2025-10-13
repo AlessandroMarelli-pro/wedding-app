@@ -95,17 +95,14 @@ function Error({ statusCode, hasGetInitialPropsRun, err }: ErrorProps) {
           </div>
 
           {/* Error Details (Development Only) */}
-          {process.env.NODE_ENV === 'development' && errorDetails && (
-            <div className="mb-6 p-4 bg-gray-100 rounded-lg text-left">
-              <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                Error Details (Development):
-              </h3>
-              <pre className="text-xs text-gray-600 whitespace-pre-wrap break-words">
-                {errorDetails}
-              </pre>
-            </div>
-          )}
-
+          <div className="mb-6 p-4 bg-gray-100 rounded-lg text-left">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">
+              Error Details (Development):
+            </h3>
+            <pre className="text-xs text-gray-600 whitespace-pre-wrap break-words">
+              {errorDetails}
+            </pre>
+          </div>
           {/* Action Buttons */}
           <div className="space-y-3">
             <button
