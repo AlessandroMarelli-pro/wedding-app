@@ -63,12 +63,12 @@
 @theme {
   --color-theme-none: #ffffff;
   --color-theme-none-glassy: oklch(100 0 0 / 0.95);
-  --color-theme-default: oklch(0.9581 0.0383 80.03);
-  --color-theme-default-glassy: oklch(0.9581 0.0383 80.03 / 0.95);
-  --color-theme-muted: oklch(0.9581 0.0383 80.03);
-  --color-theme-muted-glassy: oklch(0.9581 0.0383 80.03 / 0.95);
-  --color-theme-accent: oklch(0.9526 0.0765 26.73);
-  --color-theme-accent-glassy: oklch(0.9526 0.0765 26.73 / 0.95);
+  --color-theme-default: oklch(0.991 0.0383 80.03);
+  --color-theme-default-glassy: oklch(0.991 0.0383 80.03 / 0.95);
+  --color-theme-muted: oklch(0.991 0.0383 80.03);
+  --color-theme-muted-glassy: oklch(0.991 0.0383 80.03 / 0.95);
+  --color-theme-accent: oklch(0.991 0.0765 26.73);
+  --color-theme-accent-glassy: oklch(0.991 0.0765 26.73 / 0.95);
   --color-theme-accent-dark: oklch(0.6775 0.1304 20.48);
   --color-theme-accent-dark-glassy: oklch(0.6775 0.1304 20.48 / 0.95);
   --color-theme-blue: oklch(0.66 0.06 257.22);
