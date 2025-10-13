@@ -74,29 +74,11 @@ async function updateWeddingInfo(
       },
     });
 
-    // Trigger cache invalidation after successful update
-    try {
-      // Call our force update endpoint to invalidate the cache
-      const forceUpdateResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/force-update`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: req.headers.authorization || '',
-          },
-        },
-      );
-
-      if (forceUpdateResponse.ok) {
-        logger.info('Cache invalidated successfully after wedding info update');
-      } else {
-        logger.warn('Failed to invalidate cache, but update was successful');
-      }
-    } catch (cacheError) {
-      logger.error('Failed to invalidate cache:', cacheError as Error);
-      // Don't fail the request if cache invalidation fails
-    }
+    // With getServerSideProps, no cache invalidation needed
+    // The page will be generated fresh on each request
+    logger.info(
+      'Wedding info updated successfully - page will refresh on next request',
+    );
 
     res.json(weddingInfo);
   } catch (error) {

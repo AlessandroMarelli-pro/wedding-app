@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import { logger } from '@/logger';
 import { IconHeartHandshake } from '@tabler/icons-react';
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -387,26 +387,34 @@ export default function HomePage({
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const isProd = process.env.NODE_ENV === 'production';
+    console.log('=== getServerSideProps called ===');
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('Timestamp:', new Date().toISOString());
+
     const [weddingInfo, accommodations, images, programs] = await Promise.all([
       ApiService.getWeddingInfo(),
       ApiService.getAccommodations(),
       ApiService.getPublicImages(),
       ApiService.getPrograms(),
     ]);
+
+    console.log('Data fetched successfully:', {
+      weddingInfo: !!weddingInfo,
+      accommodations: accommodations.length,
+      images: images.length,
+      programs: programs.length,
+    });
+
     return {
       props: {
         weddingInfo,
         accommodations,
         images,
         programs,
-        // Add a timestamp to help with cache invalidation
         lastUpdated: new Date().toISOString(),
       },
-      // Revalidate every 5 seconds in production to ensure updates are reflected quickly
-      revalidate: isProd ? 5 : 1,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
@@ -419,8 +427,6 @@ export const getStaticProps: GetStaticProps = async () => {
         programs: [],
         lastUpdated: new Date().toISOString(),
       },
-      // Even on error, revalidate quickly to recover
-      revalidate: 5,
     };
   }
 };
