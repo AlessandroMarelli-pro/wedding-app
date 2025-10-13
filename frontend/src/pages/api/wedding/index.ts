@@ -4,12 +4,7 @@ import { prisma } from '../../../../lib/prisma';
 import { logger } from '@/logger';
 async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const weddingInfo = await prisma.weddingInfo.findFirst({
-      cacheStrategy: {
-        ttl: 1, // One month
-        tags: ['findFirst_weddingInfo'],
-      },
-    });
+    const weddingInfo = await prisma.weddingInfo.findFirst({});
     logger.info('weddingInfo', { weddingInfo: JSON.stringify(weddingInfo) });
     if (!weddingInfo) {
       return res.status(404).json({ error: 'Wedding information not found' });
