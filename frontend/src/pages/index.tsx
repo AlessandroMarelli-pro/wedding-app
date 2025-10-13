@@ -41,6 +41,7 @@ interface HomePageProps {
   accommodations: Accommodation[];
   images: UploadedImage[];
   programs: ProgramEvent[];
+  lastUpdated: string;
 }
 
 const HeroSection = ({
@@ -313,6 +314,7 @@ export default function HomePage({
   accommodations,
   images,
   programs,
+  lastUpdated,
 }: HomePageProps) {
   const scrollToSection = (
     sectionId: string,
@@ -323,7 +325,7 @@ export default function HomePage({
       element.scrollIntoView({ behavior });
     }
   };
-
+  console.log('lastUpdated', lastUpdated);
   const getDirectionName = (directionType: string) => {
     return directionType === 'car'
       ? 'En voiture'
@@ -400,9 +402,11 @@ export const getStaticProps: GetStaticProps = async () => {
         accommodations,
         images,
         programs,
+        // Add a timestamp to help with cache invalidation
+        lastUpdated: new Date().toISOString(),
       },
-      // Revalidate every 10 seconds in production to ensure updates are reflected quickly
-      revalidate: isProd ? 10 : 1,
+      // Revalidate every 5 seconds in production to ensure updates are reflected quickly
+      revalidate: isProd ? 5 : 1,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
@@ -413,9 +417,10 @@ export const getStaticProps: GetStaticProps = async () => {
         accommodations: [],
         images: [],
         programs: [],
+        lastUpdated: new Date().toISOString(),
       },
       // Even on error, revalidate quickly to recover
-      revalidate: 10,
+      revalidate: 5,
     };
   }
 };

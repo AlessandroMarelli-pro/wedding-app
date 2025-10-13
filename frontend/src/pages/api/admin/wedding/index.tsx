@@ -74,14 +74,28 @@ async function updateWeddingInfo(
       },
     });
 
-    // Trigger revalidation of the home page after successful update
+    // Trigger cache invalidation after successful update
     try {
-      // Use the res.revalidate method which is available in API routes
-      await res.revalidate('/');
-      logger.info('Home page revalidated after wedding info update');
-    } catch (revalidateError) {
-      logger.error('Failed to revalidate home page:', revalidateError as Error);
-      // Don't fail the request if revalidation fails
+      // Call our force update endpoint to invalidate the cache
+      const forceUpdateResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/force-update`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: req.headers.authorization || '',
+          },
+        },
+      );
+
+      if (forceUpdateResponse.ok) {
+        logger.info('Cache invalidated successfully after wedding info update');
+      } else {
+        logger.warn('Failed to invalidate cache, but update was successful');
+      }
+    } catch (cacheError) {
+      logger.error('Failed to invalidate cache:', cacheError as Error);
+      // Don't fail the request if cache invalidation fails
     }
 
     res.json(weddingInfo);
