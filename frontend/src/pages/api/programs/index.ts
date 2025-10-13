@@ -1,43 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unstable_cache } from 'next/cache';
 import { prisma } from '../../../../lib/prisma';
-import { CacheManager } from '../../../lib/cache-manager';
 
 import { logger } from '@/logger';
-
-// Server-side cached function with versioning
-const getCachedProgramEvents = unstable_cache(
-  async (version: number) => {
-    return await prisma.programEvent.findMany({
-      orderBy: { startTime: 'asc' },
-    });
-  },
-  ['program-events'],
-  {
-    tags: ['program-events'],
-    revalidate: 31536000, // Cache for 1 hour
-  },
-);
-
 async function getAllEvents(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const startTime = Date.now();
-    const currentVersion = CacheManager.getVersion('programEvents');
-    const events = await getCachedProgramEvents(currentVersion);
-    const duration = Date.now() - startTime;
-
-    logger.info(
-      `Program events fetched in ${duration}ms (server-side cache, version: ${currentVersion})`,
-    );
-
-    // Set HTTP cache headers for client-side caching
-    res.setHeader(
-      'Cache-Control',
-      'public, s-maxage=3600, stale-while-revalidate',
-    );
-    res.setHeader('CDN-Cache-Control', 'public, s-maxage=3600');
-    res.setHeader('Vary', 'Accept-Encoding');
-    res.setHeader('X-Cache-Version', currentVersion.toString());
+    const events = await prisma.programEvent.findMany({
+      orderBy: { startTime: 'asc' },
+    });
 
     res.json(events);
   } catch (error) {

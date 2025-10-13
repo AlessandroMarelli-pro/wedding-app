@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
-import { CacheManager } from '../../../../lib/cache-manager';
 
 import { logger } from '@/logger';
 import { toUTCDate } from 'lib/date';
@@ -39,13 +38,6 @@ async function createEvent(req: AuthenticatedRequest, res: NextApiResponse) {
         icon,
       },
     });
-
-    // Invalidate the cache using our cache manager
-    CacheManager.invalidate('programEvents');
-    logger.info(
-      '✅ Program events cache invalidated successfully - next request will fetch fresh data',
-    );
-
     res.status(201).json(event);
   } catch (error) {
     logger.error('Create program event error:', error as Error);
