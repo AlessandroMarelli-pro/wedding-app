@@ -13,6 +13,8 @@ interface BrowserStylePaintingProps {
   progressivePercentage?: number; // Percentage of paths to draw progressively (default 30%)
   setPercentage?: number; // Percentage of paths per set (default 10%)
   useSetMode?: boolean; // If true, draw by sets instead of progressive (default false)
+  centerSvg?: boolean; // If true, center the SVG in the container (default true)
+  preserveAspectRatio?: boolean; // If true, maintain aspect ratio (default true)
 }
 
 interface PathData {
@@ -35,6 +37,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   progressivePercentage = 30, // 30% of paths drawn progressively
   setPercentage = 10, // 10% of paths per set
   useSetMode = false, // Use set mode instead of progressive
+  centerSvg = true, // Center the SVG in the container
+  preserveAspectRatio = true, // Maintain aspect ratio
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [svgData, setSvgData] = useState<{
@@ -128,6 +132,68 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     return { viewBox, paths };
   };
 
+  // Parse and apply SVG transforms
+  const parseAndApplyTransform = (
+    ctx: CanvasRenderingContext2D,
+    transform: string,
+  ) => {
+    // Handle multiple transforms separated by spaces
+    const transforms = transform.trim().split(/\s+(?=\w+\()/);
+
+    transforms.forEach((transformStr) => {
+      // Translate: translate(x, y) or translate(x)
+      const translateMatch = transformStr.match(/translate\(([^)]+)\)/);
+      if (translateMatch) {
+        const coords = translateMatch[1].split(/[,\s]+/).map(Number);
+        const tx = coords[0] || 0;
+        const ty = coords[1] || 0;
+        ctx.translate(tx, ty);
+      }
+
+      // Scale: scale(x, y) or scale(x)
+      const scaleMatch = transformStr.match(/scale\(([^)]+)\)/);
+      if (scaleMatch) {
+        const coords = scaleMatch[1].split(/[,\s]+/).map(Number);
+        const sx = coords[0] || 1;
+        const sy = coords[1] || sx;
+        ctx.scale(sx, sy);
+      }
+
+      // Rotate: rotate(angle) or rotate(angle, cx, cy)
+      const rotateMatch = transformStr.match(/rotate\(([^)]+)\)/);
+      if (rotateMatch) {
+        const coords = rotateMatch[1].split(/[,\s]+/).map(Number);
+        const angle = coords[0] || 0;
+        const cx = coords[1] || 0;
+        const cy = coords[2] || 0;
+
+        if (cx !== 0 || cy !== 0) {
+          ctx.translate(cx, cy);
+          ctx.rotate((angle * Math.PI) / 180);
+          ctx.translate(-cx, -cy);
+        } else {
+          ctx.rotate((angle * Math.PI) / 180);
+        }
+      }
+
+      // Matrix: matrix(a, b, c, d, e, f)
+      const matrixMatch = transformStr.match(/matrix\(([^)]+)\)/);
+      if (matrixMatch) {
+        const coords = matrixMatch[1].split(/[,\s]+/).map(Number);
+        if (coords.length === 6) {
+          ctx.transform(
+            coords[0],
+            coords[1],
+            coords[2],
+            coords[3],
+            coords[4],
+            coords[5],
+          );
+        }
+      }
+    });
+  };
+
   const drawPath = (ctx: CanvasRenderingContext2D, pathData: PathData) => {
     ctx.save();
 
@@ -142,12 +208,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
 
     // Apply transform if present
     if (pathData.transform) {
-      // Simple transform parsing - you might want to make this more robust
-      const translateMatch = pathData.transform.match(/translate\(([^)]+)\)/);
-      if (translateMatch) {
-        const [tx, ty] = translateMatch[1].split(',').map(Number);
-        ctx.translate(tx, ty);
-      }
+      parseAndApplyTransform(ctx, pathData.transform);
     }
 
     // Create and draw path
@@ -183,24 +244,36 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     // Calculate scale to fit the container while maintaining aspect ratio
     const scaleX = containerWidth / svgWidth;
     const scaleY = containerHeight / svgHeight;
-    const scale = Math.min(scaleX, scaleY) * scaleMultiplier; // Use Math.min to fit within container
+    const scale = !scaleMultiplier
+      ? Math.min(scaleX, scaleY)
+      : Math.min(scaleX, scaleY) * scaleMultiplier;
     // Set canvas size
     canvas.width = containerWidth * window.devicePixelRatio;
     canvas.height = containerHeight * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
-    // Position the SVG in the center of the canvas
+    // Calculate proper positioning based on viewBox
     const scaledWidth = svgWidth * scale;
     const scaledHeight = svgHeight * scale;
 
-    const offsetX = (containerWidth - scaledWidth) / 2; // Center horizontally
-    const offsetY = (containerHeight - scaledHeight) / offsetYDivider; // Position at bottom
-    // Apply viewBox offset to account for negative coordinates
+    // Calculate offset to position SVG correctly
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (centerSvg) {
+      // Center the SVG in the container, accounting for viewBox offset
+      offsetX = (containerWidth - scaledWidth) / 2 - x * scale;
+      offsetY = (containerHeight - scaledHeight) / offsetYDivider - y * scale;
+    } else {
+      // Position at origin, accounting for viewBox offset
+      offsetX = -(x * scale);
+      offsetY = -(y * scale);
+    }
 
     // Clear canvas first
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Apply transform to position and scale (viewBox offset is handled in drawPath)
+    // Apply transform to position and scale
     ctx.translate(offsetX, offsetY);
     ctx.scale(scale, scale);
 
@@ -286,6 +359,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     progressivePercentage,
     setPercentage,
     useSetMode,
+    centerSvg,
+    preserveAspectRatio,
   ]);
 
   if (!isLoaded) {

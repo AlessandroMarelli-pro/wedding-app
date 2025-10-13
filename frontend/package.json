@@ -22,6 +22,7 @@
     "test:uploads": "node scripts/test-uploads.js",
     "test:maintenance": "node scripts/test-maintenance.js",
     "test:puppeteer": "tsx scripts/test-puppeteer-vercel.ts",
+    "optimize-svgs": "node scripts/optimize-svgs.js",
     "deploy": "node scripts/deploy-to-vercel.js",
     "deploy:setup": "vercel login && vercel link",
     "db:push": "prisma db push",
@@ -116,6 +117,8 @@
     "prettier": "^3.4.2",
     "puppeteer": "^24.21.0",
     "shadcn": "^3.2.1",
+    "svgo": "^3.3.2",
+    "@svgr/webpack": "^8.1.0",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.20.5"
   },
