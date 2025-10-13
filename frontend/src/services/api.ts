@@ -18,8 +18,8 @@ import {
   WeddingInfo,
 } from '../types/api';
 
-const baseApiUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-const baseURL = `${baseApiUrl}/api`;
+// Use relative URLs since API is on the same domain
+const baseURL = '/api';
 
 // Custom fetch wrapper with auth and error handling
 const apiRequest = async <T>(
