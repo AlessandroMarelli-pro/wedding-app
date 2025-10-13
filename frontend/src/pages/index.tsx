@@ -44,6 +44,7 @@ interface HomePageProps {
   accommodations: SerializedAccommodation[];
   images: UploadedImage[];
   programs: SerializedProgramEvent[];
+  error?: string;
 }
 
 const HeroSection = ({
@@ -316,6 +317,7 @@ export default function HomePage({
   accommodations,
   images,
   programs,
+  error,
 }: HomePageProps) {
   const scrollToSection = (
     sectionId: string,
@@ -342,6 +344,23 @@ export default function HomePage({
   const weddingDetailsImage = images.find(
     (image) => image.usageLocation === 'information',
   );
+
+  // Show error message in development
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <h1 className="text-4xl text-red-500 mb-4">Database Error</h1>
+          <p className="text-muted-foreground mb-4">
+            There was an error connecting to the database.
+          </p>
+          <pre className="text-sm bg-gray-100 p-4 rounded overflow-auto max-w-2xl">
+            {error}
+          </pre>
+        </div>
+      </div>
+    );
+  }
 
   if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
@@ -417,12 +436,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     // Direct database calls instead of API calls to avoid server-to-server HTTP requests
     const [weddingInfo, accommodations, images, programs] = await Promise.all([
       // Direct Prisma call instead of ApiService.getWeddingInfo()
-      prisma.weddingInfo.findFirst({
-        cacheStrategy: {
-          ttl: 1,
-          tags: ['findFirst_weddingInfo'],
-        },
-      }),
+      prisma.weddingInfo.findFirst(),
       // Direct Prisma call instead of ApiService.getAccommodations()
       prisma.accommodation.findMany({
         orderBy: { createdAt: 'desc' },
@@ -469,12 +483,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
   } catch (error) {
     console.error('Error fetching wedding data:', error);
     logger.error('Error fetching wedding data:', { error }, error);
+
+    // Return a more detailed error response for debugging
     return {
       props: {
         weddingInfo: null,
         accommodations: [],
         images: [],
         programs: [],
+        error:
+          process.env.NODE_ENV === 'development' ? String(error) : undefined,
       },
     };
   }
