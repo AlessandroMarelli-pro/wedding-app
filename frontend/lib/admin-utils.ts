@@ -58,8 +58,6 @@ export const invalidateCache = async (tags: string[]) => {
           "You've reached the cache invalidation rate limit. Please try again shortly.",
         );
       }
-    } else {
-      throw e;
     }
   }
 };
