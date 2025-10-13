@@ -33,20 +33,37 @@ export interface WeddingInfo {
   updatedAt: string;
 }
 
+// Serialized versions for getServerSideProps
+export interface SerializedWeddingInfo {
+  id: string;
+  coupleNames: string;
+  presentationMessage?: string;
+  weddingAddress?: string;
+  weddingDate: string;
+  heroMessage?: string;
+  heroAddress?: string;
+  locationDirections?: Direction[];
+  heroImageId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Accommodations
 export interface Accommodation {
   id: string;
   name: string;
   description: string;
   address: string;
+  contactInfo?: string;
+  latitude?: string | number;
+  longitude?: string | number;
   priceRange?: string;
   isRecommended: boolean;
   displayOrder: number;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
   sourceUrl?: string;
   imagesUrl?: string;
-  randomId?: string;
 }
 
 // RSVP
@@ -73,11 +90,44 @@ export interface ProgramEvent {
   id: string;
   title: string;
   description: string;
+  startTime: string | Date;
+  endTime: string | Date;
+  location: string;
+  displayOrder: number;
+  includeInCalendar: boolean;
+  icon?: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
+// Serialized versions for getServerSideProps
+export interface SerializedAccommodation {
+  id: string;
+  name: string;
+  description: string;
+  address: string;
+  contactInfo?: string;
+  latitude?: string | number;
+  longitude?: string | number;
+  priceRange?: string;
+  isRecommended: boolean;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  sourceUrl?: string;
+  imagesUrl?: string;
+}
+
+export interface SerializedProgramEvent {
+  id: string;
+  title: string;
+  description: string;
   startTime: string;
   endTime: string;
   location: string;
   displayOrder: number;
   includeInCalendar: boolean;
+  icon?: string;
   createdAt: string;
   updatedAt: string;
 }

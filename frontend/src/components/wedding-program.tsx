@@ -9,11 +9,14 @@ interface ProgramEvent {
   id: string;
   title: string;
   description: string;
-  startTime: string;
-  endTime: string;
+  startTime: string | Date;
+  endTime: string | Date;
   location: string;
   displayOrder: number;
   includeInCalendar: boolean;
+  icon?: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 const ShakingDiv = ({
@@ -157,19 +160,25 @@ export function WeddingProgram({
                 })}
               </div>
               <div className={cn('text-md xl:text-2xl xl:text-2xl ')}>
-                {formatTime(item.startTime)
-                  .split(':')
-                  .join('h ')
-                  .replace('h 00', 'h')}
+                {formatTime(
+                  typeof item.startTime === 'string'
+                    ? item.startTime
+                    : item.startTime.toISOString(),
+                )
+                  ?.split(':')
+                  ?.join('h ')
+                  ?.replace('h 00', 'h')}
               </div>
-              {item.location.split(',').map((loc) => (
-                <div
-                  key={loc}
-                  className={cn('text-md xl:text-2xl xl:text-2xl ')}
-                >
-                  {loc}
-                </div>
-              ))}
+              {item.location &&
+                typeof item.location === 'string' &&
+                item.location.split(',').map((loc) => (
+                  <div
+                    key={loc}
+                    className={cn('text-md xl:text-2xl xl:text-2xl ')}
+                  >
+                    {loc}
+                  </div>
+                ))}
             </div>
           </AnimatedDiv>
           {index !== events.length - 1 && (isInViewport || isLoaded) && (

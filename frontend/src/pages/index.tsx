@@ -8,7 +8,7 @@ import {
   useNavbarTheme,
 } from '@/context/navbar-theme-context';
 import { cn } from '@/lib/utils';
-import logger from '@/logger';
+import { logger } from '@/logger';
 import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
@@ -26,6 +26,9 @@ import {
 import {
   Accommodation,
   ProgramEvent,
+  SerializedAccommodation,
+  SerializedProgramEvent,
+  SerializedWeddingInfo,
   UploadedImage,
   WeddingInfo,
 } from '../types/api';
@@ -37,10 +40,10 @@ const bilbo = Parisienne({
 });
 
 interface HomePageProps {
-  weddingInfo: WeddingInfo | null;
-  accommodations: any[];
+  weddingInfo: SerializedWeddingInfo | null;
+  accommodations: SerializedAccommodation[];
   images: UploadedImage[];
-  programs: ProgramEvent[];
+  programs: SerializedProgramEvent[];
 }
 
 const HeroSection = ({
@@ -344,6 +347,30 @@ export default function HomePage({
     return <MissingDataSection />;
   }
 
+  // Convert serialized data back to expected format for components
+  const weddingInfoForComponents: WeddingInfo = weddingInfo
+    ? {
+        ...weddingInfo,
+        weddingDate: new Date(weddingInfo.weddingDate),
+      }
+    : (null as any);
+
+  const accommodationsForComponents: Accommodation[] = accommodations.map(
+    (accommodation) => ({
+      ...accommodation,
+      createdAt: new Date(accommodation.createdAt),
+      updatedAt: new Date(accommodation.updatedAt),
+    }),
+  );
+
+  const programsForComponents: ProgramEvent[] = programs.map((program) => ({
+    ...program,
+    startTime: new Date(program.startTime),
+    endTime: new Date(program.endTime),
+    createdAt: new Date(program.createdAt),
+    updatedAt: new Date(program.updatedAt),
+  }));
+
   return (
     <>
       <Head>
@@ -362,21 +389,21 @@ export default function HomePage({
         <div className="min-h-screen bg-white">
           <HeroSection
             heroImage={heroImage as UploadedImage}
-            weddingInfo={weddingInfo}
+            weddingInfo={weddingInfoForComponents}
             scrollToSection={scrollToSection}
           />
-          <OurStorySection weddingInfo={weddingInfo} />
+          <OurStorySection weddingInfo={weddingInfoForComponents} />
           <WeddingDetailsSection
             infoImage={weddingDetailsImage as UploadedImage}
-            weddingInfo={weddingInfo}
+            weddingInfo={weddingInfoForComponents}
             getDirectionName={getDirectionName}
           />{' '}
           <AccommodationsSection
-            accommodations={accommodations}
-            weddingInfo={weddingInfo}
+            accommodations={accommodationsForComponents}
+            weddingInfo={weddingInfoForComponents}
             accommodationsImage={accommodationsImage as UploadedImage}
           />
-          <WeddingProgramSection programs={programs} />
+          <WeddingProgramSection programs={programsForComponents} />
           <RSVPSection />
           <BonusSection />
         </div>
@@ -412,10 +439,31 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     return {
       props: {
-        weddingInfo,
-        accommodations,
-        images,
-        programs,
+        weddingInfo: weddingInfo
+          ? {
+              ...weddingInfo,
+              weddingDate: weddingInfo.weddingDate?.toISOString(),
+              createdAt: weddingInfo.createdAt?.toISOString(),
+              updatedAt: weddingInfo.updatedAt?.toISOString(),
+            }
+          : null,
+        accommodations: accommodations.map((accommodation) => ({
+          ...accommodation,
+          createdAt: accommodation.createdAt?.toISOString(),
+          updatedAt: accommodation.updatedAt?.toISOString(),
+        })),
+        images: images.map((image) => ({
+          ...image,
+          createdAt: image.createdAt?.toISOString(),
+          updatedAt: image.updatedAt?.toISOString(),
+        })),
+        programs: programs.map((program) => ({
+          ...program,
+          startTime: program.startTime?.toISOString(),
+          endTime: program.endTime?.toISOString(),
+          createdAt: program.createdAt?.toISOString(),
+          updatedAt: program.updatedAt?.toISOString(),
+        })),
       },
     };
   } catch (error) {
