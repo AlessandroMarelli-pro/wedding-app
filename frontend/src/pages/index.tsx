@@ -9,13 +9,13 @@ import {
 } from '@/context/navbar-theme-context';
 import { cn } from '@/lib/utils';
 import logger from '@/logger';
-import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect } from 'react';
+import { prisma } from '../../lib/prisma';
 import {
   DivWithAnimation,
   NavbarLayout,
@@ -387,13 +387,29 @@ export default function HomePage({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const isProd = process.env.NODE_ENV === 'production';
+    // Direct database calls instead of API calls to avoid server-to-server HTTP requests
     const [weddingInfo, accommodations, images, programs] = await Promise.all([
-      ApiService.getWeddingInfo(),
-      ApiService.getAccommodations(),
-      ApiService.getPublicImages(),
-      ApiService.getPrograms(),
+      // Direct Prisma call instead of ApiService.getWeddingInfo()
+      prisma.weddingInfo.findFirst({
+        cacheStrategy: {
+          ttl: 1,
+          tags: ['findFirst_weddingInfo'],
+        },
+      }),
+      // Direct Prisma call instead of ApiService.getAccommodations()
+      prisma.accommodation.findMany({
+        orderBy: { createdAt: 'desc' },
+      }),
+      // Direct Prisma call instead of ApiService.getPublicImages()
+      prisma.uploadedImage.findMany({
+        orderBy: { createdAt: 'desc' },
+      }),
+      // Direct Prisma call instead of ApiService.getPrograms()
+      prisma.programEvent.findMany({
+        orderBy: { startTime: 'asc' },
+      }),
     ]);
+
     return {
       props: {
         weddingInfo,
