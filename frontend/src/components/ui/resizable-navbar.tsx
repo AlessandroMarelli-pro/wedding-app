@@ -59,8 +59,6 @@ export const Navbar = ({ children, className }: NavbarProps) => {
       viewport={{ once: true }}
       transition={{
         duration: 1.5,
-        stiffness: 200,
-        damping: 50,
       }}
       // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
       className={cn('absolute inset-x-0  z-40 w-full', className)}
