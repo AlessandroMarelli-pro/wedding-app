@@ -14,9 +14,9 @@ import { DivWithAnimation } from './animations';
 const BrowserStylePainting = dynamic(() => import('./browser-style-painting'));
 
 const WeddingHowToArriveIcons = {
-  car: <IconCar className="lg:w-10 lg:h-10" />,
-  train: <IconTrain className="lg:w-10 lg:h-10" />,
-  'car rental': <IconCar className="lg:w-10 lg:h-10" />,
+  car: <IconCar className="xl:w-10 xl:h-10" />,
+  train: <IconTrain className="xl:w-10 xl:h-10" />,
+  'car rental': <IconCar className="xl:w-10 xl:h-10" />,
 };
 
 export const WeddingInformation = ({
@@ -62,14 +62,14 @@ export const WeddingInformation = ({
     };
   }, [isInViewport]);
   return (
-    <div className="space-y-4 pb-4 lg:pb-0">
-      <div className="lg:max-h-screen lg:h-screen flex flex-col lg:flex-row  lg:gap-0">
-        <div className="flex flex-col lg:w-[50%] gap-10 lg:gap-0">
-          <div className=" flex flex-col items-center justify-center lg:min-h-10" />
+    <div className="space-y-4 pb-4 xl:pb-0">
+      <div className="xl:max-h-screen xl:h-screen flex flex-col xl:flex-row  xl:gap-0">
+        <div className="flex flex-col xl:w-[50%] gap-10 xl:gap-0">
+          <div className=" flex flex-col items-center justify-center xl:min-h-10" />
 
           <div
             ref={containerRef}
-            className="hidden lg:flex flex-col items-center justify-center h-full "
+            className="hidden xl:flex flex-col items-center justify-center h-full "
           >
             {(isInViewport || isLoaded) && (
               <BrowserStylePainting
@@ -93,13 +93,13 @@ export const WeddingInformation = ({
             /> */}
           </div>
         </div>
-        <div className="flex flex-col  lg:min-h-10" />
-        <div className="flex flex-col  lg:w-[50%] gap-10 justify-start items-center text-center  ">
+        <div className="flex flex-col  xl:min-h-10" />
+        <div className="flex flex-col  xl:w-[50%] gap-10 justify-start items-center text-center  ">
           <div className="flex flex-col  min-h-15" />
           <DivWithAnimation>
             <h1
               className={cn(
-                'text-theme-accent-dark  text-7xl xl:text-8xl pb-10 lg:pb-0 ',
+                'text-theme-accent-dark  text-7xl xl:text-8xl pb-10 xl:pb-0 ',
                 'roundhand-regular',
               )}
             >
@@ -111,14 +111,14 @@ export const WeddingInformation = ({
               {weddingInfo.weddingAddress?.split(',').map((chunk) => (
                 <p
                   key={chunk}
-                  className="text-md lg:text-lg text-theme-accent-dark font-regular"
+                  className="text-md xl:text-lg text-theme-accent-dark font-regular"
                 >
                   {chunk}
                 </p>
               ))}
             </div>
           </DivWithAnimation>
-          <DivWithAnimation className="lg:hidden flex flex-col items-center justify-center h-full ">
+          <DivWithAnimation className="xl:hidden flex flex-col items-center justify-center h-full ">
             <Image
               src={'/images/Lauziers2.png'}
               alt={weddingInfo.coupleNames}
@@ -145,12 +145,12 @@ export const WeddingInformation = ({
                   className=" flex flex-col justify-center items-center w-full gap-2"
                 >
                   <div className="flex   text-theme-accent-dark items-end gap-2">
-                    <h5 className="font-medium text-theme-accent-dark capitalize text-xl lg:text-2xl  ">
+                    <h5 className="font-medium text-theme-accent-dark capitalize text-xl xl:text-2xl  ">
                       {getDirectionName(direction.type)}
                     </h5>
                     {WeddingHowToArriveIcons[direction.type]}
                   </div>
-                  <div className=" text-theme-accent-dark/80  text-sm lg:text-base px-10 lg:px-0 ">
+                  <div className=" text-theme-accent-dark/80  text-sm xl:text-base px-10 xl:px-0 ">
                     {convertTextWithLinksToReactNodes(
                       direction.information,
                       'text-theme-accent-dark/80',

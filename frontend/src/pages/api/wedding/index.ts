@@ -5,10 +5,10 @@ import { logger } from '@/logger';
 async function getWeddingInfo(req: NextApiRequest, res: NextApiResponse) {
   try {
     const weddingInfo = await prisma.weddingInfo.findFirst({
-      cacheStrategy: {
+      /*  cacheStrategy: {
         ttl: 24 * 60 * 30, // One month
         tags: ['findFirst_weddingInfo'],
-      },
+      }, */
     });
 
     if (!weddingInfo) {

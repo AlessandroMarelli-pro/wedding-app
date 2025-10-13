@@ -25,8 +25,8 @@ export function WeddingPresentation({
       {' '}
       <div className="flex flex-col items-center justify-center min-h-10" />
       {/* Couple's Message */}
-      <DivWithAnimation className="text-theme-accent-dark  text-center  flex flex-col lg:flex-row items-center justify-center  p-10 gap-10 lg:h-screen pt-0">
-        <div className="lg:m-10 ">
+      <DivWithAnimation className="text-theme-accent-dark  text-center  flex flex-col xl:flex-row items-center justify-center  p-10 gap-10 xl:h-screen pt-0">
+        <div className="xl:m-10 ">
           <Image
             src={'/images/couple.jpeg'}
             alt={'couple'}
@@ -37,15 +37,15 @@ export function WeddingPresentation({
         </div>
         <div className="container-responsive flex flex-col items-center justify-center">
           <div className="py-4">
-            <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
+            <IconGalaxy className="xl:w-10 xl:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
           </div>
           <p className="  leading-relaxed font-light italic font-small text-justify text-lg">
             {parse(presentationMessage)}
           </p>
           <div className="py-4">
-            <IconGalaxy className="lg:w-10 lg:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
+            <IconGalaxy className="xl:w-10 xl:h-10 w-5 h-5 animate-[spin_3s_linear_infinite]" />
           </div>
-          <span className="text-base lg:text-4xl font-bold roundhand-bold">
+          <span className="text-base xl:text-4xl font-bold roundhand-bold">
             {weddingInfo.coupleNames}
           </span>
         </div>

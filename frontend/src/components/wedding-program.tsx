@@ -129,14 +129,14 @@ export function WeddingProgram({
   return (
     <div
       ref={containerRef}
-      className="w-full lg:h-full flex lg:flex-row flex-col justify-center items-center text-theme-accent-dark xl:gap-5 lg:gap-0 gap-5    p-10 z-[99999]"
+      className="w-full xl:h-full flex xl:flex-row flex-col justify-center items-center text-theme-accent-dark xl:gap-5 xl:gap-0 gap-5    p-10 z-[99999]"
     >
       {events.map((item, index) => (
         <Fragment key={item.id}>
           <AnimatedDiv
             index={index}
             id={item.id}
-            className="flex flex-col flex-[1_1_20%] justify-center items-center text-center  pt-4 lg:pt-0 h-full space-y-5 lg:space-y-0"
+            className="flex flex-col flex-[1_1_20%] justify-center items-center text-center  pt-4 xl:pt-0 h-full space-y-5 xl:space-y-0"
           >
             <div
               className={cn(
@@ -146,8 +146,8 @@ export function WeddingProgram({
             >
               {item.title}
             </div>
-            <div className="flex flex-col lg:gap-2 gap-2">
-              <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
+            <div className="flex flex-col xl:gap-2 gap-2">
+              <div className={cn('text-md xl:text-2xl xl:text-2xl ')}>
                 {new Date(item.startTime).toLocaleDateString('fr-FR', {
                   year: 'numeric',
                   month: 'long',
@@ -156,7 +156,7 @@ export function WeddingProgram({
                   hour12: false,
                 })}
               </div>
-              <div className={cn('text-md lg:text-2xl xl:text-2xl ')}>
+              <div className={cn('text-md xl:text-2xl xl:text-2xl ')}>
                 {formatTime(item.startTime)
                   .split(':')
                   .join('h ')
@@ -165,7 +165,7 @@ export function WeddingProgram({
               {item.location.split(',').map((loc) => (
                 <div
                   key={loc}
-                  className={cn('text-md lg:text-2xl xl:text-2xl ')}
+                  className={cn('text-md xl:text-2xl xl:text-2xl ')}
                 >
                   {loc}
                 </div>
@@ -188,7 +188,7 @@ export function WeddingProgram({
                 useSetMode={false}
                 setPercentage={4}
                 className={cn(
-                  'justify-center items-center flex flex-col',
+                  'justify-center items-center flex flex-col max-w-xs xl:max-w-full',
                   index % 2 === 0 && 'scale-x-[-1] ',
                   index % 2 === 0 ? ' -translate-x-5 ' : ' translate-x-5 ',
                 )}

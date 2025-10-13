@@ -324,7 +324,7 @@ export default function AccommodationSlider({
   return (
     <div
       className={cn(
-        'relative w-full lg:h-[75vh] h-screen bg-theme-muted overflow-hidden ',
+        'relative w-full xl:h-[75vh] h-screen bg-theme-muted overflow-hidden ',
         className,
       )}
     >
@@ -343,10 +343,10 @@ export default function AccommodationSlider({
             }}
             className="absolute top-0 left-0 w-full h-full "
           >
-            <div className="flex flex-col lg:flex-row p-5 items-start justify-center  gap-5">
+            <div className="flex flex-col xl:flex-row p-5 items-start justify-center  gap-5">
               {/* Background Image */}
-              <div className="h-full flex flex-row lg:flex-col gap-4 flex-wrap lg:w-1/2 ">
-                <div className="flex flex-row lg:gap-10 gap-1 lg:flex-wrap flex-nowrapjustify-end overflow-x-scroll">
+              <div className="h-full flex flex-row xl:flex-col gap-4 flex-wrap xl:w-1/2 ">
+                <div className="flex flex-row xl:gap-10 gap-1 xl:flex-wrap flex-nowrapjustify-end overflow-x-scroll">
                   {accommodation.imagesUrl &&
                     accommodation.imagesUrl.split(',').length > 0 &&
                     accommodation.imagesUrl
@@ -359,7 +359,7 @@ export default function AccommodationSlider({
                           width={1000}
                           height={1000}
                           alt={accommodation.name}
-                          className="object-cover max-h-50 lg:max-h-none lg:object-cover rounded-lg  lg:shadow-lg lg:aspect-video lg:max-w-[47%] lg:w-[47%] lg:min-w-[47%]  max-w-[90%] min-w-[90%] w-[90%] hover:scale-95 transition-all duration-300 cursor-pointer"
+                          className="object-cover max-h-50 xl:max-h-none xl:object-cover rounded-lg  xl:shadow-lg xl:aspect-video xl:max-w-[47%] xl:w-[47%] xl:min-w-[47%]  max-w-[90%] min-w-[90%] w-[90%] hover:scale-95 transition-all duration-300 cursor-pointer"
                           onClick={() => {
                             window.open(accommodation.sourceUrl, '_blank');
                           }}
@@ -369,12 +369,12 @@ export default function AccommodationSlider({
               </div>
 
               {/* Content Overlay */}
-              <div className="inset-0 flex flex-col  justify-start text-theme-accent-dark lg:max-h-[50vh] lg:w-1/2">
-                <div className="flex flex-col lg:flex-row justify-between items-left  text-theme-accent-dark w-full">
+              <div className="inset-0 flex flex-col  justify-start text-theme-accent-dark xl:max-h-[50vh] xl:w-1/2">
+                <div className="flex flex-col xl:flex-row justify-between items-left  text-theme-accent-dark w-full">
                   <div className="text-left space-y-4 w-full">
-                    <div className="flex flex-row lg:items-center items-top justify-between items-left w-full">
+                    <div className="flex flex-row xl:items-center items-top justify-between items-left w-full">
                       <div>
-                        <h3 className="font-bold text-base lg:text-2xl">
+                        <h3 className="font-bold text-base xl:text-2xl">
                           {accommodation.name}
                         </h3>
                       </div>
@@ -383,7 +383,7 @@ export default function AccommodationSlider({
                           width={300}
                           height={200}
                           url={accommodation.sourceUrl || ''}
-                          className=" lg:py-3  rounded-full font-bold text-sm lg:text-base underline z-[1000]"
+                          className=" xl:py-3  rounded-full font-bold text-sm xl:text-base underline z-[1000]"
                           side="bottom"
                           align="end"
                         >
@@ -391,7 +391,7 @@ export default function AccommodationSlider({
                         </LinkPreview>
                       </div>
                     </div>
-                    <p className="text-xs lg:text-md text-justify max-h-[42vh] overflow-y-scroll lg:max-h-none lg:overflow-y-hidden w-full">
+                    <p className="text-xs xl:text-md text-justify max-h-[42vh] overflow-y-scroll xl:max-h-none xl:overflow-y-hidden w-full">
                       {parse(
                         accommodation.description?.replace(
                           /(?:\r\n|\r|\n)/g,
@@ -407,7 +407,7 @@ export default function AccommodationSlider({
         ))}
       </div>
       {/* Navigation Controls */}
-      <div className="absolute bottom-5 lg:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center lg:justify-start overflow-x-scroll ">
+      <div className="absolute bottom-5 xl:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center xl:justify-start overflow-x-scroll ">
         {/* Slide Indicators */}
         <div
           ref={indicatorsContainerRef}

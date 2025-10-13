@@ -31,7 +31,7 @@ export default function MobileNav2({
     setNavItemsCloseBgColor(theme.mobileNavCloseItemsBg);
   }, [theme]);
   return (
-    <div className="lg:hidden z-[400]">
+    <div className="xl:hidden z-[400]">
       <motion.div
         animate={{}}
         style={{

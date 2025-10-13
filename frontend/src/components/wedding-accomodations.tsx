@@ -16,21 +16,21 @@ export const WeddingAccomodations = ({
   font: NextFontWithVariable;
 }) => (
   <div className="space-y-4 ">
-    <div className="flex flex-col lg:max-h-screen lg:h-screen">
+    <div className="flex flex-col xl:max-h-screen xl:h-screen">
       <div className="">
         <div className="flex flex-col items-center justify-center min-h-10" />
 
-        <DivWithAnimation className=" flex flex-col justify-center items-center text-center px-2 lg:px-0">
+        <DivWithAnimation className=" flex flex-col justify-center items-center text-center px-2 xl:px-0">
           <div className="h-full py-5   ">
             <h1
               className={cn(
-                'text-5xl lg:text-8xl text-theme-accent-dark',
+                'text-5xl xl:text-8xl text-theme-accent-dark',
                 'roundhand-regular',
               )}
             >
               Où dormir ?
             </h1>
-            <span className="text-theme-accent-dark/80 text-sm lg:text-base">
+            <span className="text-theme-accent-dark/80 text-sm xl:text-base">
               Quelques idées de logements pour votre séjour dromois !
             </span>
           </div>
