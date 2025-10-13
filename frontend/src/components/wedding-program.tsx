@@ -129,7 +129,6 @@ export function WeddingProgram({
       observer.disconnect();
     };
   }, [isInViewport]);
-  console.log('isInViewport', isInViewport);
 
   return (
     <div
