@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticatedRequest, withAuth } from '../../../../../lib/middleware';
 import { prisma } from '../../../../../lib/prisma';
+import { CacheManager } from '../../../../lib/cache-manager';
 
 import { logger } from '@/logger';
 import { toUTCDate } from 'lib/date';
@@ -74,15 +75,16 @@ async function updateWeddingInfo(
       },
     });
 
-    // With client-side data fetching, we can trigger a refresh notification
-    // The page will automatically fetch fresh data within 10 seconds
+    // Invalidate the cache using our cache manager
+    CacheManager.invalidate('weddingInfo');
     logger.info(
-      'Wedding info updated successfully - client will fetch fresh data automatically',
+      '✅ Wedding info cache invalidated successfully - next request will fetch fresh data',
     );
 
     res.json(weddingInfo);
   } catch (error) {
-    logger.error('Update wedding info error:', error as Error);
+    console.log('error', error);
+    logger.error('Update wedding info error:', { error });
     res.status(500).json({
       error: 'Internal server error',
       message: (error as Error).message,
