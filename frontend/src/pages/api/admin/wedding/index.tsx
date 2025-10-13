@@ -73,6 +73,17 @@ async function updateWeddingInfo(
         heroAddress,
       },
     });
+
+    // Trigger revalidation of the home page after successful update
+    try {
+      // Use the res.revalidate method which is available in API routes
+      await res.revalidate('/');
+      logger.info('Home page revalidated after wedding info update');
+    } catch (revalidateError) {
+      logger.error('Failed to revalidate home page:', revalidateError as Error);
+      // Don't fail the request if revalidation fails
+    }
+
     res.json(weddingInfo);
   } catch (error) {
     logger.error('Update wedding info error:', error as Error);

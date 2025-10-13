@@ -401,8 +401,8 @@ export const getStaticProps: GetStaticProps = async () => {
         images,
         programs,
       },
-      // Revalidate every 60 seconds to keep data fresh
-      revalidate: isProd ? 1 : 1,
+      // Revalidate every 10 seconds in production to ensure updates are reflected quickly
+      revalidate: isProd ? 10 : 1,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
@@ -414,6 +414,8 @@ export const getStaticProps: GetStaticProps = async () => {
         images: [],
         programs: [],
       },
+      // Even on error, revalidate quickly to recover
+      revalidate: 10,
     };
   }
 };
