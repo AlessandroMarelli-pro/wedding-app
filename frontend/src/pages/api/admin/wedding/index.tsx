@@ -74,10 +74,10 @@ async function updateWeddingInfo(
       },
     });
 
-    // With getServerSideProps, no cache invalidation needed
-    // The page will be generated fresh on each request
+    // With client-side data fetching, we can trigger a refresh notification
+    // The page will automatically fetch fresh data within 10 seconds
     logger.info(
-      'Wedding info updated successfully - page will refresh on next request',
+      'Wedding info updated successfully - client will fetch fresh data automatically',
     );
 
     res.json(weddingInfo);

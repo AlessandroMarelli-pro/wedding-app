@@ -10,11 +10,10 @@ import {
 import { cn } from '@/lib/utils';
 import { logger } from '@/logger';
 import { IconHeartHandshake } from '@tabler/icons-react';
-import { GetServerSideProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   DivWithAnimation,
   NavbarLayout,
@@ -35,14 +34,6 @@ const bilbo = Parisienne({
   weight: ['400'],
   variable: '--font-bilbo',
 });
-
-interface HomePageProps {
-  weddingInfo: WeddingInfo | null;
-  accommodations: Accommodation[];
-  images: UploadedImage[];
-  programs: ProgramEvent[];
-  lastUpdated: string;
-}
 
 const HeroSection = ({
   weddingInfo,
@@ -226,6 +217,29 @@ const MissingDataSection = () => {
   );
 };
 
+const LoadingSection = () => {
+  return (
+    <>
+      <Head>
+        <title>Mariage d'Ariane & Timothe</title>
+        <meta name="description" content="Loading wedding information..." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <h1 className="text-4xl  text-foreground mb-4">Chargement...</h1>
+          <p className="text-muted-foreground">
+            Veuillez patienter pendant que nous chargeons les informations du
+            mariage.
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const MetaThemeChanger = () => {
   const { setTheme } = useNavbarTheme();
 
@@ -309,13 +323,92 @@ const MetaThemeChanger = () => {
   return null;
 };
 
-export default function HomePage({
-  weddingInfo,
-  accommodations,
-  images,
-  programs,
-  lastUpdated,
-}: HomePageProps) {
+export default function HomePage() {
+  // Client-side state for all data
+  const [currentData, setCurrentData] = useState<{
+    weddingInfo: WeddingInfo | null;
+    accommodations: Accommodation[];
+    images: UploadedImage[];
+    programs: ProgramEvent[];
+    lastUpdated: string;
+  }>({
+    weddingInfo: null,
+    accommodations: [],
+    images: [],
+    programs: [],
+    lastUpdated: '',
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastFetchTime, setLastFetchTime] = useState<number>(Date.now());
+
+  // Function to fetch fresh data from the API
+  const fetchFreshData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      console.log('Fetching fresh data from API...');
+
+      const [
+        freshWeddingInfo,
+        freshAccommodations,
+        freshImages,
+        freshPrograms,
+      ] = await Promise.all([
+        ApiService.getWeddingInfo(),
+        ApiService.getAccommodations(),
+        ApiService.getPublicImages(),
+        ApiService.getPrograms(),
+      ]);
+
+      setCurrentData({
+        weddingInfo: freshWeddingInfo,
+        accommodations: freshAccommodations,
+        images: freshImages,
+        programs: freshPrograms.map((program) => ({
+          ...program,
+          icon: program.icon || undefined,
+        })),
+        lastUpdated: new Date().toISOString(),
+      });
+
+      setLastFetchTime(Date.now());
+      console.log('Fresh data fetched successfully');
+    } catch (error) {
+      console.error('Failed to fetch fresh data:', error);
+      setError('Failed to load wedding data. Please try again later.');
+      logger.error('Failed to fetch fresh data:', { error }, error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial data fetch on component mount
+  useEffect(() => {
+    fetchFreshData();
+  }, []);
+
+  // Check for updates every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const timeSinceLastFetch = Date.now() - lastFetchTime;
+      // Only fetch if it's been more than 10 seconds since last fetch
+      if (timeSinceLastFetch > 10000) {
+        fetchFreshData();
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [lastFetchTime]);
+
+  // Use current data
+  const {
+    weddingInfo: displayWeddingInfo,
+    accommodations: displayAccommodations,
+    images: displayImages,
+    programs: displayPrograms,
+  } = currentData;
+
   const scrollToSection = (
     sectionId: string,
     behavior: 'smooth' | 'instant' = 'smooth',
@@ -325,7 +418,7 @@ export default function HomePage({
       element.scrollIntoView({ behavior });
     }
   };
-  console.log('lastUpdated', lastUpdated);
+
   const getDirectionName = (directionType: string) => {
     return directionType === 'car'
       ? 'En voiture'
@@ -334,51 +427,87 @@ export default function HomePage({
         : 'Location de voiture';
   };
 
-  const heroImage = images.find((image) => image.usageLocation === 'hero');
-  const accommodationsImage = images.find(
+  const heroImage = displayImages.find(
+    (image) => image.usageLocation === 'hero',
+  );
+  const accommodationsImage = displayImages.find(
     (image) => image.usageLocation === 'accommodation',
   );
-  const weddingDetailsImage = images.find(
+  const weddingDetailsImage = displayImages.find(
     (image) => image.usageLocation === 'information',
   );
 
-  if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
+  // Show loading state
+
+  // Show error state
+  if (error && !displayWeddingInfo) {
+    return (
+      <>
+        <Head>
+          <title>Erreur - Mariage d'Ariane & Timothe</title>
+          <meta
+            name="description"
+            content="Error loading wedding information"
+          />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="text-center">
+            <h1 className="text-4xl text-foreground mb-4">
+              Erreur de chargement
+            </h1>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <button
+              onClick={fetchFreshData}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+            >
+              Réessayer
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Show missing data state
+  if (!displayWeddingInfo || displayWeddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
 
   return (
     <>
       <Head>
-        <title>{`${weddingInfo.coupleNames} `}</title>
+        <title>{`${displayWeddingInfo.coupleNames} `}</title>
         <meta
           name="description"
-          content={`Venez fêter avec nous le mariage d'${weddingInfo.coupleNames}`}
+          content={`Venez fêter avec nous le mariage d'${displayWeddingInfo.coupleNames}`}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MetaThemeChanger />
-      {/* Progress Bar */}
 
       <NavbarLayout>
         <div className="min-h-screen bg-white">
           <HeroSection
             heroImage={heroImage as UploadedImage}
-            weddingInfo={weddingInfo}
+            weddingInfo={displayWeddingInfo}
             scrollToSection={scrollToSection}
           />
-          <OurStorySection weddingInfo={weddingInfo} />
+          <OurStorySection weddingInfo={displayWeddingInfo} />
           <WeddingDetailsSection
             infoImage={weddingDetailsImage as UploadedImage}
-            weddingInfo={weddingInfo}
+            weddingInfo={displayWeddingInfo}
             getDirectionName={getDirectionName}
           />{' '}
           <AccommodationsSection
-            accommodations={accommodations}
-            weddingInfo={weddingInfo}
+            accommodations={displayAccommodations}
+            weddingInfo={displayWeddingInfo}
             accommodationsImage={accommodationsImage as UploadedImage}
           />
-          <WeddingProgramSection programs={programs} />
+          <WeddingProgramSection programs={displayPrograms} />
           <RSVPSection />
           <BonusSection />
         </div>
@@ -386,47 +515,3 @@ export default function HomePage({
     </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    console.log('=== getServerSideProps called ===');
-    console.log('Environment:', process.env.NODE_ENV);
-    console.log('Timestamp:', new Date().toISOString());
-
-    const [weddingInfo, accommodations, images, programs] = await Promise.all([
-      ApiService.getWeddingInfo(),
-      ApiService.getAccommodations(),
-      ApiService.getPublicImages(),
-      ApiService.getPrograms(),
-    ]);
-
-    console.log('Data fetched successfully:', {
-      weddingInfo: !!weddingInfo,
-      accommodations: accommodations.length,
-      images: images.length,
-      programs: programs.length,
-    });
-
-    return {
-      props: {
-        weddingInfo,
-        accommodations,
-        images,
-        programs,
-        lastUpdated: new Date().toISOString(),
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching wedding data:', error);
-    logger.error('Error fetching wedding data:', { error }, error);
-    return {
-      props: {
-        weddingInfo: null,
-        accommodations: [],
-        images: [],
-        programs: [],
-        lastUpdated: new Date().toISOString(),
-      },
-    };
-  }
-};
