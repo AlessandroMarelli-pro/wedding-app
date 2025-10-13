@@ -7,7 +7,7 @@ interface CacheVersion {
 }
 
 // In-memory cache versions (in production, you might want to use Redis or a database)
-let cacheVersions: CacheVersion = {
+const cacheVersions: CacheVersion = {
   weddingInfo: Date.now(),
   programEvents: Date.now(),
 };
