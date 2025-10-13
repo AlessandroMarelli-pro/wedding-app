@@ -1,3 +1,4 @@
+import { LoadingProgress } from '@/components/loading-progress';
 import { MagneticButton } from '@/components/ui/magnetic-button';
 import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
@@ -316,11 +317,14 @@ export default function HomePage() {
     lastUpdated: '',
   });
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showLoadingProgress, setShowLoadingProgress] = useState(true);
 
   // Function to fetch fresh data from the API
   const fetchFreshData = async () => {
     try {
       setError(null);
+      setIsLoading(true);
       console.log('Fetching fresh data from API...');
 
       const [
@@ -351,6 +355,8 @@ export default function HomePage() {
       console.error('Failed to fetch fresh data:', error);
       setError('Failed to load wedding data. Please try again later.');
       logger.error('Failed to fetch fresh data:', { error }, error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -383,6 +389,10 @@ export default function HomePage() {
       : directionType === 'train'
         ? 'En train'
         : 'Location de voiture';
+  };
+
+  const handleLoadingComplete = () => {
+    setShowLoadingProgress(false);
   };
 
   const heroImage = displayImages.find(
@@ -429,9 +439,14 @@ export default function HomePage() {
     );
   }
 
-  // Show missing data state
-  if (!displayWeddingInfo || displayWeddingInfo.coupleNames === 'John Doe') {
-    return <MissingDataSection />;
+  if (showLoadingProgress || !displayWeddingInfo) {
+    return (
+      <LoadingProgress
+        endFunction={handleLoadingComplete}
+        bilbo={bilbo}
+        isLoading={isLoading}
+      />
+    );
   }
 
   return (
@@ -445,6 +460,7 @@ export default function HomePage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <MetaThemeChanger />
 
       <NavbarLayout>

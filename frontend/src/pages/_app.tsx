@@ -1,7 +1,5 @@
 import { NavbarLayout } from '@/components/admin/admin-navbar-layout';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { LoadingProgress } from '@/components/loading-progress';
-import { Section } from '@/components/section-components';
 import { Toaster } from '@/components/ui/sonner';
 import { NavbarThemeProvider } from '@/context/navbar-theme-context';
 import '@/styles/globals.css';
@@ -42,16 +40,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </div>
         ) : (
           <>
-            {!isAdminLoginPage && (
-              <Section id="progress" background="accent">
-                <LoadingProgress
-                  endFunction={() => {
-                    scrollToSection('home', 'instant');
-                  }}
-                  bilbo={bilbo}
-                />
-              </Section>
-            )}
             <Component {...pageProps} />
           </>
         )}
