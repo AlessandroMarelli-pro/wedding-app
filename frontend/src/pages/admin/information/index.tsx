@@ -149,9 +149,8 @@ export default function AdminWedding() {
       });
 
       if (response.ok) {
-        // Update original data to reflect saved state
-
-        form.reset(updatedValues);
+        // Reset form with original values to prevent date increment on subsequent saves
+        form.reset(values);
         setChangesStatus('2');
         toast.success(`Informations mises à jour avec succès! `, {
           duration: 10000,
