@@ -217,29 +217,6 @@ const MissingDataSection = () => {
   );
 };
 
-const LoadingSection = () => {
-  return (
-    <>
-      <Head>
-        <title>Mariage d'Ariane & Timothe</title>
-        <meta name="description" content="Loading wedding information..." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h1 className="text-4xl  text-foreground mb-4">Chargement...</h1>
-          <p className="text-muted-foreground">
-            Veuillez patienter pendant que nous chargeons les informations du
-            mariage.
-          </p>
-        </div>
-      </div>
-    </>
-  );
-};
-
 const MetaThemeChanger = () => {
   const { setTheme } = useNavbarTheme();
 
@@ -338,14 +315,11 @@ export default function HomePage() {
     programs: [],
     lastUpdated: '',
   });
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [lastFetchTime, setLastFetchTime] = useState<number>(Date.now());
 
   // Function to fetch fresh data from the API
   const fetchFreshData = async () => {
     try {
-      setIsLoading(true);
       setError(null);
       console.log('Fetching fresh data from API...');
 
@@ -372,14 +346,11 @@ export default function HomePage() {
         lastUpdated: new Date().toISOString(),
       });
 
-      setLastFetchTime(Date.now());
       console.log('Fresh data fetched successfully');
     } catch (error) {
       console.error('Failed to fetch fresh data:', error);
       setError('Failed to load wedding data. Please try again later.');
       logger.error('Failed to fetch fresh data:', { error }, error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -387,19 +358,6 @@ export default function HomePage() {
   useEffect(() => {
     fetchFreshData();
   }, []);
-
-  // Check for updates every 10 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const timeSinceLastFetch = Date.now() - lastFetchTime;
-      // Only fetch if it's been more than 10 seconds since last fetch
-      if (timeSinceLastFetch > 10000) {
-        fetchFreshData();
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [lastFetchTime]);
 
   // Use current data
   const {
