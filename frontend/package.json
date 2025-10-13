@@ -6,6 +6,7 @@
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev",
+    "prod": "next build && NODE_ENV=production next start",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",

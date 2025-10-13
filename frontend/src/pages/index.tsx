@@ -8,6 +8,7 @@ import {
   useNavbarTheme,
 } from '@/context/navbar-theme-context';
 import { cn } from '@/lib/utils';
+import logger from '@/logger';
 import ApiService from '@/services/api';
 import { IconHeartHandshake } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
@@ -403,6 +404,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
+    logger.error('Error fetching wedding data:', { error }, error);
     return {
       props: {
         weddingInfo: null,
