@@ -569,8 +569,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
         accommodations: [],
         images: [],
         programs: [],
-        error:
-          process.env.NODE_ENV === 'development' ? String(error) : undefined,
+        error: String(error),
       },
     };
   }
