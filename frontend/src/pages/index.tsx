@@ -10,12 +10,11 @@ import {
 import { cn } from '@/lib/utils';
 import { logger } from '@/logger';
 import { IconHeartHandshake } from '@tabler/icons-react';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import { Parisienne } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { prisma } from '../../lib/prisma';
 import {
   DivWithAnimation,
   NavbarLayout,
@@ -23,12 +22,10 @@ import {
   WeddingPresentation,
   WeddingProgram,
 } from '../components';
+import { ApiService } from '../services/api';
 import {
   Accommodation,
   ProgramEvent,
-  SerializedAccommodation,
-  SerializedProgramEvent,
-  SerializedWeddingInfo,
   UploadedImage,
   WeddingInfo,
 } from '../types/api';
@@ -40,12 +37,10 @@ const bilbo = Parisienne({
 });
 
 interface HomePageProps {
-  weddingInfo: SerializedWeddingInfo | null;
-  accommodations: SerializedAccommodation[];
+  weddingInfo: WeddingInfo | null;
+  accommodations: Accommodation[];
   images: UploadedImage[];
-  programs: SerializedProgramEvent[];
-  error?: string;
-  isFallback?: boolean;
+  programs: ProgramEvent[];
 }
 
 const HeroSection = ({
@@ -318,8 +313,6 @@ export default function HomePage({
   accommodations,
   images,
   programs,
-  error,
-  isFallback,
 }: HomePageProps) {
   const scrollToSection = (
     sectionId: string,
@@ -347,102 +340,9 @@ export default function HomePage({
     (image) => image.usageLocation === 'information',
   );
 
-  // Show fallback message if we're in a problematic environment
-  if (isFallback) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="mb-6">
-            <div className="mx-auto w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center">
-              <svg
-                className="w-12 h-12 text-yellow-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"
-                />
-              </svg>
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            Site Temporarily Unavailable
-          </h1>
-          <p className="text-gray-600 mb-6">
-            We're experiencing technical difficulties. Our team is working to
-            resolve this issue.
-          </p>
-          <div className="space-y-3">
-            <button
-              onClick={() => window.location.reload()}
-              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
-            >
-              Try Again
-            </button>
-            <p className="text-sm text-gray-500">
-              Please check back in a few minutes or contact us at{' '}
-              <a
-                href="mailto:support@ricerf2026en26.fr"
-                className="text-pink-600 hover:text-pink-700 underline"
-              >
-                support@ricerf2026en26.fr
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error message in development
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h1 className="text-4xl text-red-500 mb-4">Database Error</h1>
-          <p className="text-muted-foreground mb-4">
-            There was an error connecting to the database.
-          </p>
-          <pre className="text-sm bg-gray-100 p-4 rounded overflow-auto max-w-2xl">
-            {error}
-          </pre>
-        </div>
-      </div>
-    );
-  }
-
   if (!weddingInfo || weddingInfo.coupleNames === 'John Doe') {
     return <MissingDataSection />;
   }
-
-  // Convert serialized data back to expected format for components
-  const weddingInfoForComponents: WeddingInfo = weddingInfo
-    ? {
-        ...weddingInfo,
-        weddingDate: new Date(weddingInfo.weddingDate),
-      }
-    : (null as any);
-
-  const accommodationsForComponents: Accommodation[] = accommodations.map(
-    (accommodation) => ({
-      ...accommodation,
-      createdAt: new Date(accommodation.createdAt),
-      updatedAt: new Date(accommodation.updatedAt),
-    }),
-  );
-
-  const programsForComponents: ProgramEvent[] = programs.map((program) => ({
-    ...program,
-    startTime: new Date(program.startTime),
-    endTime: new Date(program.endTime),
-    createdAt: new Date(program.createdAt),
-    updatedAt: new Date(program.updatedAt),
-  }));
 
   return (
     <>
@@ -462,21 +362,21 @@ export default function HomePage({
         <div className="min-h-screen bg-white">
           <HeroSection
             heroImage={heroImage as UploadedImage}
-            weddingInfo={weddingInfoForComponents}
+            weddingInfo={weddingInfo}
             scrollToSection={scrollToSection}
           />
-          <OurStorySection weddingInfo={weddingInfoForComponents} />
+          <OurStorySection weddingInfo={weddingInfo} />
           <WeddingDetailsSection
             infoImage={weddingDetailsImage as UploadedImage}
-            weddingInfo={weddingInfoForComponents}
+            weddingInfo={weddingInfo}
             getDirectionName={getDirectionName}
           />{' '}
           <AccommodationsSection
-            accommodations={accommodationsForComponents}
-            weddingInfo={weddingInfoForComponents}
+            accommodations={accommodations}
+            weddingInfo={weddingInfo}
             accommodationsImage={accommodationsImage as UploadedImage}
           />
-          <WeddingProgramSection programs={programsForComponents} />
+          <WeddingProgramSection programs={programs} />
           <RSVPSection />
           <BonusSection />
         </div>
@@ -485,91 +385,34 @@ export default function HomePage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   try {
-    // Check if we're in a problematic environment and return a fallback
-    if (
-      typeof window === 'undefined' &&
-      process.env.NODE_ENV === 'production'
-    ) {
-      // Try to detect if we're in a problematic runtime environment
-      try {
-        // Test if we can access the prisma client
-        await prisma.$connect();
-      } catch (prismaError) {
-        console.error('Prisma connection error:', prismaError);
-        // Return a fallback response that won't cause serialization issues
-        return {
-          props: {
-            weddingInfo: null,
-            accommodations: [],
-            images: [],
-            programs: [],
-            isFallback: true,
-          },
-        };
-      }
-    }
-
-    // Direct database calls instead of API calls to avoid server-to-server HTTP requests
+    const isProd = process.env.NODE_ENV === 'production';
     const [weddingInfo, accommodations, images, programs] = await Promise.all([
-      // Direct Prisma call instead of ApiService.getWeddingInfo()
-      prisma.weddingInfo.findFirst(),
-      // Direct Prisma call instead of ApiService.getAccommodations()
-      prisma.accommodation.findMany({
-        orderBy: { createdAt: 'desc' },
-      }),
-      // Direct Prisma call instead of ApiService.getPublicImages()
-      prisma.uploadedImage.findMany({
-        orderBy: { createdAt: 'desc' },
-      }),
-      // Direct Prisma call instead of ApiService.getPrograms()
-      prisma.programEvent.findMany({
-        orderBy: { startTime: 'asc' },
-      }),
+      ApiService.getWeddingInfo(),
+      ApiService.getAccommodations(),
+      ApiService.getPublicImages(),
+      ApiService.getPrograms(),
     ]);
-
     return {
       props: {
-        weddingInfo: weddingInfo
-          ? {
-              ...weddingInfo,
-              weddingDate: weddingInfo.weddingDate?.toISOString(),
-              createdAt: weddingInfo.createdAt?.toISOString(),
-              updatedAt: weddingInfo.updatedAt?.toISOString(),
-            }
-          : null,
-        accommodations: accommodations.map((accommodation) => ({
-          ...accommodation,
-          createdAt: accommodation.createdAt?.toISOString(),
-          updatedAt: accommodation.updatedAt?.toISOString(),
-        })),
-        images: images.map((image) => ({
-          ...image,
-          createdAt: image.createdAt?.toISOString(),
-          updatedAt: image.updatedAt?.toISOString(),
-        })),
-        programs: programs.map((program) => ({
-          ...program,
-          startTime: program.startTime?.toISOString(),
-          endTime: program.endTime?.toISOString(),
-          createdAt: program.createdAt?.toISOString(),
-          updatedAt: program.updatedAt?.toISOString(),
-        })),
+        weddingInfo,
+        accommodations,
+        images,
+        programs,
       },
+      // Revalidate every 60 seconds to keep data fresh
+      revalidate: isProd ? 1 : 1,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
     logger.error('Error fetching wedding data:', { error }, error);
-
-    // Return a more detailed error response for debugging
     return {
       props: {
         weddingInfo: null,
         accommodations: [],
         images: [],
         programs: [],
-        error: String(error),
       },
     };
   }
