@@ -401,7 +401,7 @@ export const getStaticProps: GetStaticProps = async () => {
         programs,
       },
       // Revalidate every 60 seconds to keep data fresh
-      revalidate: isProd ? 60 : 1,
+      revalidate: isProd ? 1 : 1,
     };
   } catch (error) {
     console.error('Error fetching wedding data:', error);
@@ -413,7 +413,7 @@ export const getStaticProps: GetStaticProps = async () => {
         programs: [],
       },
       // Still revalidate even on error to retry
-      revalidate: 60,
+      revalidate: 1,
     };
   }
 };

@@ -29,6 +29,7 @@ const createApiClient = (): AxiosInstance => {
     timeout: 10000,
     headers: {
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     },
   });
 
