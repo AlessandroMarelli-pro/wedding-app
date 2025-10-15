@@ -34,7 +34,7 @@ const navItems = [
 const mobileNavItems = [
   ...navItems,
   {
-    name: 'Confirmer ma présence',
+    name: 'RSVP',
     link: 'https://form.typeform.com/to/JlsM3llP',
   },
 ];
