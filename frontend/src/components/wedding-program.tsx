@@ -1,4 +1,4 @@
-import { cn, formatTime } from '@/lib';
+import { cn } from '@/lib';
 import { motion } from 'motion/react';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 import dynamic from 'next/dynamic';
@@ -18,7 +18,12 @@ interface ProgramEvent {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
-
+// Helper function to format time without timezone conversion
+const formatTimeLocal = (date: Date) => {
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
+};
 const ShakingDiv = ({
   children,
   index,
@@ -161,11 +166,7 @@ export function WeddingProgram({
                 })}
               </div>
               <div>
-                {formatTime(
-                  typeof item.startTime === 'string'
-                    ? item.startTime
-                    : item.startTime.toISOString(),
-                )
+                {formatTimeLocal(new Date(item.startTime))
                   ?.split(':')
                   ?.join('h ')
                   ?.replace('h 00', 'h')}

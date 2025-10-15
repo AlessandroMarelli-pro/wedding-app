@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn, formatDate, formatTime } from '@/lib';
+import { cn, formatDate } from '@/lib';
 import {
   CalendarIcon,
   Clock,
@@ -232,17 +232,24 @@ export default function AdminProgram() {
   const handleChangeTime = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = e.target.value;
     if (!time) return;
-    const date = Date.UTC(
-      form.getValues('startTime').getFullYear(),
-      form.getValues('startTime').getMonth(),
-      form.getValues('startTime').getDate(),
-      parseInt(time.split(':')[0], 10),
-      parseInt(time.split(':')[1], 10),
-      0,
-    );
 
-    form.setValue('startTime', new Date(date));
+    const currentDate = form.getValues('startTime');
+    const [hours, minutes] = time.split(':').map(Number);
+
+    // Create new date with same date but different time
+    // Use setHours to avoid timezone issues
+    const newDate = new Date(currentDate);
+    newDate.setHours(hours, minutes, 0, 0);
+
+    form.setValue('startTime', newDate);
     form.trigger('startTime');
+  };
+
+  // Helper function to format time without timezone conversion
+  const formatTimeLocal = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
   };
 
   return (
@@ -394,9 +401,7 @@ export default function AdminProgram() {
                               type="time"
                               id="time-picker"
                               step="0"
-                              value={formatTime(
-                                form.getValues('startTime').toISOString(),
-                              )}
+                              value={formatTimeLocal(field.value)}
                               pattern="[0-9]{2}:[0-9]{2}"
                               onChange={handleChangeTime}
                               className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:disabled [&::-webkit-calendar-picker-indicator]:appearance-none text-xs lg:text-sm"
@@ -460,7 +465,7 @@ export default function AdminProgram() {
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
                             {formatDate(event.startTime)} à{' '}
-                            {formatTime(event.startTime)}
+                            {formatTimeLocal(new Date(event.startTime))}
                           </div>
                           <div className="flex items-center gap-1">
                             <MapPin className="w-4 h-4" />

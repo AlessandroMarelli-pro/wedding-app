@@ -61,7 +61,7 @@ async function getAllEvents(req: AuthenticatedRequest, res: NextApiResponse) {
     const events = await prisma.programEvent.findMany({
       orderBy: { startTime: 'asc' },
     });
-
+    console.log('Events:', events);
     res.json(events);
   } catch (error) {
     logger.error('Get program events error:', error as Error);
