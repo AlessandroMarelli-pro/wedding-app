@@ -59,13 +59,13 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
           >
             <NavItems
               items={navItems}
-              className={cn('font-bold', theme.navItemsColor)}
+              className={cn('roundhand-regular text-xl', theme.navItemsColor)}
               onItemClick={handleNavClick}
             />
             <MagneticButton
               variant="stroke"
               className={cn(
-                'h-10 rounded-full   hover:after:border-1     ',
+                'h-10 rounded-full   hover:after:border-1      text-xl ',
                 theme.rsvpItemsHoverColor,
                 theme.rsvpItemsColor,
                 theme.rsvpAfterBorderColor,
@@ -82,7 +82,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
                 window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
               }
             >
-              RSVP
+              R S V P
             </MagneticButton>
           </NavBody>
         )}

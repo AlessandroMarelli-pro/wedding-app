@@ -100,7 +100,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
     <motion.div
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        ' hidden  flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-600 transition duration-200 xl:flex xl:space-x-2',
+        ' hidden  flex-row items-center justify-center space-x-2     xl:flex xl:space-x-2',
         className,
       )}
     >
@@ -109,7 +109,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
           key={idx}
           variant="stroke"
           className={cn(
-            'rounded-full  after:border-none hover:after:border-2   text-sm h-10',
+            'rounded-full  after:border-none hover:after:border-2    h-10 text-xl',
             theme.navItemsHoverColor,
             theme.navItemsColor,
           )}

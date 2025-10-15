@@ -116,7 +116,7 @@ export const MagneticButton = ({
 
   const getButtonClasses = () => {
     const baseClasses =
-      'relative cursor-pointer overflow-hidden inline-flex items-center justify-center font-semibold text-lg tracking-tight leading-tight';
+      'relative cursor-pointer overflow-hidden inline-flex items-center justify-center font-semibold text-lg tracking-tight leading-tight ';
 
     if (variant === 'stroke') {
       return cn(
@@ -180,7 +180,7 @@ export const MagneticButton = ({
       <div ref={flairRef} className={getFlairClasses()} style={getFlairStyle()}>
         {variant === 'stroke' && (
           <div
-            className={cn('absolute rounded-full', strokeColor)}
+            className={cn('absolute rounded-full ', strokeColor)}
             style={{
               aspectRatio: '1/1',
               width: '170%',
@@ -191,7 +191,7 @@ export const MagneticButton = ({
           />
         )}
       </div>
-      <span className="relative z-10 text-center transition-colors duration-50">
+      <span className="relative z-10 text-center transition-colors duration-50 ">
         {children}
       </span>
     </button>

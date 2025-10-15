@@ -343,7 +343,7 @@ export default function AccommodationSlider({
             }}
             className="absolute top-0 left-0 w-full h-full "
           >
-            <div className="flex flex-col xl:flex-row p-5 items-start justify-center  gap-5">
+            <div className="flex flex-col xl:flex-row p-5 items-start justify-center  gap-5 ">
               {/* Background Image */}
               <div className="h-full flex flex-row xl:flex-col gap-4 flex-wrap xl:w-1/2 ">
                 <div className="flex flex-row xl:gap-10 gap-1 xl:flex-wrap flex-nowrapjustify-end overflow-x-scroll">
@@ -356,10 +356,10 @@ export default function AccommodationSlider({
                         <img
                           key={image}
                           src={image}
-                          width={1000}
-                          height={1000}
+                          width={800}
+                          height={800}
                           alt={accommodation.name}
-                          className="object-cover max-h-50 xl:max-h-none xl:object-cover rounded-lg  xl:shadow-lg xl:aspect-video xl:max-w-[47%] xl:w-[47%] xl:min-w-[47%]  max-w-[90%] min-w-[90%] w-[90%] hover:scale-95 transition-all duration-300 cursor-pointer"
+                          className="object-cover max-h-50 xl:max-h-none  xl:object-cover rounded-lg  xl:shadow-lg xl:aspect-video   2xl:max-w-[40%] 2xl:w-[40%] 2xl:min-w-[40%] xl:max-w-[47%] xl:w-[47%] xl:min-w-[47%]  max-w-[90%] min-w-[90%] w-[90%] hover:scale-95 transition-all duration-300 cursor-pointer"
                           onClick={() => {
                             window.open(accommodation.sourceUrl, '_blank');
                           }}
@@ -407,7 +407,7 @@ export default function AccommodationSlider({
         ))}
       </div>
       {/* Navigation Controls */}
-      <div className="absolute bottom-5 xl:bottom-10 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center xl:justify-start overflow-x-scroll ">
+      <div className="absolute bottom-5 xl:bottom-10 2xl:bottom-0 left-6  md:left-6 flex flex-row gap-6 md:gap-8 z-10 w-full justify-center xl:justify-start overflow-x-scroll ">
         {/* Slide Indicators */}
         <div
           ref={indicatorsContainerRef}

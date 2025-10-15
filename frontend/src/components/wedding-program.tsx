@@ -45,12 +45,12 @@ const ShakingDiv = ({
       className={className}
     >
       <motion.div
-        animate={{ rotate: [-5, 15], transformOrigin: 'bottom center' }}
+        animate={{ rotate: [-2, 3], transformOrigin: 'bottom center' }}
         transition={{
           repeat: Infinity,
           repeatType: 'reverse',
           ease: 'linear',
-          duration: 2,
+          duration: 4,
         }}
         className={'h-full flex flex-col justify-center items-center'}
         style={{ transformOrigin: '0% center' }}
@@ -133,14 +133,14 @@ export function WeddingProgram({
   return (
     <div
       ref={containerRef}
-      className="w-full xl:h-full flex xl:flex-row flex-col justify-center items-center text-theme-accent-dark xl:gap-5 xl:gap-0 gap-5    p-10 z-[99999]"
+      className="w-full xl:h-full flex xl:flex-row flex-col justify-center items-center text-theme-accent-dark  xl:gap-0 gap-5    p-10 z-[99999]"
     >
       {events.map((item, index) => (
         <Fragment key={item.id}>
           <AnimatedDiv
             index={index}
             id={item.id}
-            className="flex flex-col flex-[1_1_20%] justify-center items-center text-center  pt-4 xl:pt-0 h-full space-y-5 xl:space-y-0"
+            className="flex flex-col  justify-center items-center text-center  pt-4 xl:pt-0 h-full space-y-5 xl:space-y-0 flex-[1_1_25%]"
           >
             <div
               className={cn(
@@ -150,8 +150,8 @@ export function WeddingProgram({
             >
               {item.title}
             </div>
-            <div className="flex flex-col xl:gap-2 gap-2">
-              <div className={cn('text-md xl:text-2xl xl:text-2xl ')}>
+            <div className="flex flex-col xl:gap-2 gap-2 w-max text-3xl roundhand-regular">
+              <div>
                 {new Date(item.startTime).toLocaleDateString('fr-FR', {
                   year: 'numeric',
                   month: 'long',
@@ -160,7 +160,7 @@ export function WeddingProgram({
                   hour12: false,
                 })}
               </div>
-              <div className={cn('text-md xl:text-2xl xl:text-2xl ')}>
+              <div>
                 {formatTime(
                   typeof item.startTime === 'string'
                     ? item.startTime
@@ -172,21 +172,16 @@ export function WeddingProgram({
               </div>
               {item.location &&
                 typeof item.location === 'string' &&
-                item.location.split(',').map((loc) => (
-                  <div
-                    key={loc}
-                    className={cn('text-md xl:text-2xl xl:text-2xl ')}
-                  >
-                    {loc}
-                  </div>
-                ))}
+                item.location
+                  .split(',')
+                  .map((loc) => <div key={loc}>{loc}</div>)}
             </div>
           </AnimatedDiv>
           {index !== events.length - 1 && (isInViewport || isLoaded) && (
             <ShakingDiv
               index={index}
               id={item.id}
-              className="flex justify-center items-center  xl:w-full w-xs h-1/3 xl:h-xs"
+              className="flex justify-center items-center  w-[200px] h-1/3 xl:h-xs"
             >
               <BrowserStylePainting
                 scaleMultiplier={0.8}

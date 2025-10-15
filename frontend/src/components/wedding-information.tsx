@@ -87,7 +87,7 @@ export const WeddingInformation = ({
           </div>
         </div>
         <div className="flex flex-col  xl:min-h-10" />
-        <div className="flex flex-col  xl:w-[50%] gap-10 justify-start items-center text-center  ">
+        <div className="flex flex-col  xl:w-[50%] gap-10 justify-start items-center text-center  2xl:justify-center">
           <div className="flex flex-col  min-h-15" />
           <DivWithAnimation>
             <h1

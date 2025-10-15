@@ -1,5 +1,5 @@
 import { LoadingProgress } from '@/components/loading-progress';
-import { MagneticButton } from '@/components/ui/magnetic-button';
+import { MagneticButton } from '@/components/ui';
 import { WeddingAccomodations } from '@/components/wedding-accomodations';
 import { WeddingHero } from '@/components/wedding-hero';
 import { WeddingInformation } from '@/components/wedding-information';
@@ -122,39 +122,39 @@ const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
 const RSVPSection = () => {
   return (
     <Section id="rsvp" background="accent" className="h-[50vh] max-h-screen ">
-      <div className="w-full h-full flex flex-col text-center  items-center ">
+      <div className="w-full h-full flex flex-col text-center  items-center  2xl:justify-center">
         <Image
           priority
           src="/images/capadocce.jpg"
           alt="RSVP"
-          width={2000}
-          height={1000}
+          width={3440}
+          height={1920}
           className="xl:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-center "
         />
-        <DivWithAnimation className=" text-xl xl:text-6xl   text-theme-default z-1 pt-10 font-bold px-10 pb-5">
+        <DivWithAnimation className=" text-3xl xl:text-6xl   text-theme-default z-1 pt-10 font-bold px-4 xl:px-10 pb-5 roundhand-bold">
           Nous espérons vous voir nombreux en ce jour spécial !
         </DivWithAnimation>
-        <DivWithAnimation className=" text-xl xl:text-4xl   text-theme-default z-1   font-bold pb-5">
+        <DivWithAnimation className=" text-2xl xl:text-4xl   text-theme-default z-1   font-bold pb-5 roundhand-bold">
           Réponse attendue avant le 28 février 2026
         </DivWithAnimation>
-        <DivWithAnimation>
+        <DivWithAnimation className="">
           <MagneticButton
             variant="stroke"
             className={cn(
-              'h-10 xl:h-15 w-20 xl:w-30 rounded-full   hover:after:border-1    ',
-              'text-theme-accent-dark',
-              'hover:text-theme-default',
+              'h-10 xl:h-15 w-40 xl:w-60 rounded-full   hover:after:border-1   backdrop-blur-[2px] ',
+              'text-theme-default',
+              'hover:text-theme-accent-dark',
               'after:border-none',
-              'bg-theme-default',
-              'text-lg xl:text-2xl',
+              'bg-transparent ',
+              'text-3xl xl:text-5xl',
             )}
-            flairClassName={cn('bg-theme-accent-dark ')}
-            strokeColor={cn('bg-theme-accent-dark')}
+            flairClassName={cn('bg-theme-default ')}
+            strokeColor={cn('bg-theme-default')}
             onClick={() =>
               window.open('https://form.typeform.com/to/JlsM3llP', '_blank')
             }
           >
-            RSVP
+            R S V P
           </MagneticButton>
         </DivWithAnimation>
       </div>
@@ -169,7 +169,7 @@ const BonusSection = () => {
         <span
           className={cn(
             bilbo.className,
-            'text-2xl text-theme-accent-dark flex xl:flex-row flex-col items-center gap-2 pt-5',
+            'text-2xl text-theme-accent-dark flex xl:flex-row flex-col items-center gap-2 pt-5 2xl:text-4xl',
           )}
         >
           En bonus, l'instant où la demande de mariage a été faite{' '}
