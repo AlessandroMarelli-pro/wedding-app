@@ -31,6 +31,14 @@ const navItems = [
   },
 ];
 
+const mobileNavItems = [
+  ...navItems,
+  {
+    name: 'Confirmer ma présence',
+    link: 'https://form.typeform.com/to/JlsM3llP',
+  },
+];
+
 export function NavbarLayout({ children }: NavbarLayoutProps) {
   // Configure navbar based on type
 
@@ -48,7 +56,7 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <MobileNav2 items={navItems} />
+      <MobileNav2 items={mobileNavItems} />
 
       <Navbar className={cn('fixed lg:h-15 xl:block hidden', theme.navColor)}>
         {!theme.hideNavbar && (

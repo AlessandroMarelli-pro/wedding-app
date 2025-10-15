@@ -134,6 +134,10 @@ const MenuItem = ({
     e: React.MouseEvent<HTMLAnchorElement>,
     link: string,
   ) => {
+    if (link.startsWith('https://')) {
+      window.open(link, '_blank');
+      return;
+    }
     e.preventDefault();
     const sectionId = link.replace('#', '');
     const element = document.getElementById(sectionId);
@@ -152,7 +156,7 @@ const MenuItem = ({
       {isOpen && (
         <a
           key={`mobile-link-${item.link}`}
-          href={item.link}
+          href={item.link.startsWith('https://') ? '#' : '#' + item.link}
           onClick={(e) => {
             handleNavClick(e, item.link);
             setIsMobileMenuOpen(false);
