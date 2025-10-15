@@ -16,6 +16,7 @@ interface BrowserStylePaintingProps {
   useSetMode?: boolean; // If true, draw by sets instead of progressive (default false)
   centerSvg?: boolean; // If true, center the SVG in the container (default true)
   preserveAspectRatio?: boolean; // If true, maintain aspect ratio (default true)
+  maxHeight?: number | null; // Maximum height in pixels (default null)
 }
 
 interface PathData {
@@ -40,6 +41,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   useSetMode = false, // Use set mode instead of progressive
   centerSvg = true, // Center the SVG in the container
   preserveAspectRatio = true, // Maintain aspect ratio
+  maxHeight = null, // Maximum height in pixels (default null)
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [svgData, setSvgData] = useState<{
@@ -246,9 +248,16 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     // Calculate scale to fit the container while maintaining aspect ratio
     const scaleX = containerWidth / svgWidth;
     const scaleY = containerHeight / svgHeight;
-    const scale = !scaleMultiplier
-      ? Math.min(scaleX, scaleY)
-      : Math.min(scaleX, scaleY) * scaleMultiplier;
+
+    // Apply maxHeight constraint if specified
+    let constrainedScaleY = scaleY;
+    if (maxHeight !== null && maxHeight > 0) {
+      const maxHeightScale = maxHeight / svgHeight;
+      constrainedScaleY = Math.min(scaleY, maxHeightScale);
+    }
+
+    const baseScale = Math.min(scaleX, constrainedScaleY);
+    const scale = !scaleMultiplier ? baseScale : baseScale * scaleMultiplier;
     // Set canvas size
     canvas.width = containerWidth * window.devicePixelRatio;
     canvas.height = containerHeight * window.devicePixelRatio;
@@ -363,6 +372,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     useSetMode,
     centerSvg,
     preserveAspectRatio,
+    maxHeight,
     windowWidth,
     windowHeight,
   ]);

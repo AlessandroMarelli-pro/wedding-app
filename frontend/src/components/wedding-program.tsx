@@ -198,8 +198,9 @@ export function WeddingProgram({
                 useSetMode={false}
                 setPercentage={4}
                 className={cn(
-                  'justify-center items-center flex flex-col max-w-xs xl:max-w-xs translate-x-5 xl:translate-x-0',
+                  'justify-center items-center flex flex-col max-w-xs xl:max-w-xs xl:translate-x-0',
                 )}
+                maxHeight={100}
               />
             </ShakingDiv>
           )}

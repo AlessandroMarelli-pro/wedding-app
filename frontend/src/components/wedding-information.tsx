@@ -84,13 +84,6 @@ export const WeddingInformation = ({
                 setPercentage={4}
               />
             )}
-            {/*  <Image
-              src={'/images/Lauziers2.png'}
-              alt={weddingInfo.coupleNames}
-              width={6000}
-              height={600}
-              className="object-cover w-[100%] "
-            /> */}
           </div>
         </div>
         <div className="flex flex-col  xl:min-h-10" />
@@ -118,13 +111,13 @@ export const WeddingInformation = ({
               ))}
             </div>
           </DivWithAnimation>
-          <DivWithAnimation className="xl:hidden flex flex-col items-center justify-center h-full ">
+          <DivWithAnimation className="xl:hidden flex flex-col items-center justify-center h-full w-full max-h-[600px] xl:max-h-none">
             <Image
               src={'/images/Lauziers2.png'}
               alt={weddingInfo.coupleNames}
-              width={6000}
+              width={600}
               height={600}
-              className="object-cover w-[100%] "
+              className="object-cover w-[100%] max-w-[600px] max-h-[600px] xl:max-w-none xl:max-h-none "
             />
           </DivWithAnimation>
           <DivWithAnimation>
