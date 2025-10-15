@@ -86,10 +86,10 @@ export default function Document() {
         />
         <meta
           property="og:image"
-          content="https://www.ricerf2026en26.fr/screenshots/desktop-screenshot.png"
+          content="https://www.ricerf2026en26.fr/images/couple.jpeg"
         />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content="645" />
+        <meta property="og:image:height" content="860" />
         <meta
           property="og:image:alt"
           content="Mariage d'Ariane & Timothé Website Screenshot"
@@ -105,7 +105,7 @@ export default function Document() {
         />
         <meta
           property="twitter:image"
-          content="https://www.ricerf2026en26.fr/screenshots/desktop-screenshot.png"
+          content="https://www.ricerf2026en26.fr/images/couple.jpeg"
         />
         <meta
           property="twitter:image:alt"

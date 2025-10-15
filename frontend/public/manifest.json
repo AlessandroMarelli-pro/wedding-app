@@ -30,14 +30,14 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/mobile-screenshot.png",
-      "sizes": "390x844",
+      "src": "/images/couple.jpeg",
+      "sizes": "645x860",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "/screenshots/desktop-screenshot.png",
-      "sizes": "1280x720",
+      "src": "/images/couple.jpeg",
+      "sizes": "645x860",
       "type": "image/png",
       "form_factor": "wide"
     }
