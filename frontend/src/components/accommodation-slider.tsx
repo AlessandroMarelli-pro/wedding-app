@@ -411,7 +411,12 @@ export default function AccommodationSlider({
         {/* Slide Indicators */}
         <div
           ref={indicatorsContainerRef}
-          className="flex flex-row gap-6 md:gap-8 overflow-x-scroll items-baseline align-baseline"
+          className="flex flex-row gap-6 md:gap-8 items-baseline align-baseline overflow-x-auto scrollbar-hide pl-0 md:px-0 pr-8 md:pr-0"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}
         >
           {accommodations.map((accommodation, index) => (
             <div

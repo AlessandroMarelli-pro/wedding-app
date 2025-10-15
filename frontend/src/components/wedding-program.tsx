@@ -190,11 +190,11 @@ export function WeddingProgram({
                 alt="lavande"
                 duration={5000}
                 delay={10}
-                pathDelay={30}
+                pathDelay={3}
                 useSetMode={false}
                 setPercentage={4}
                 className={cn(
-                  'justify-center items-center flex flex-col max-w-xs xl:max-w-xs xl:translate-x-0',
+                  'justify-center items-center flex flex-col max-w-xs xl:max-w-xs translate-x-5',
                 )}
                 maxHeight={100}
               />
