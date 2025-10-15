@@ -103,7 +103,7 @@ export const WeddingInformation = ({
                 'roundhand-regular',
               )}
             >
-              Le lieu
+              Où ?
             </h1>
           </DivWithAnimation>
           <DivWithAnimation>

@@ -28,7 +28,7 @@ export function Section({
       viewport={{ amount: 0.8 }}
       id={id}
       className={cn(
-        'lg:max-h-screen ',
+        'xl:max-h-screen ',
         backgroundClasses[background],
         className,
       )}

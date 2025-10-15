@@ -1,3 +1,4 @@
+import useWindowSize from '@/hooks/useWindowResize';
 import { gsap } from 'gsap';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -50,6 +51,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
 
   const animationRef = useRef<number | undefined>(undefined);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
 
   useEffect(() => {
     fetch(src)
@@ -361,6 +363,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     useSetMode,
     centerSvg,
     preserveAspectRatio,
+    windowWidth,
+    windowHeight,
   ]);
 
   if (!isLoaded) {

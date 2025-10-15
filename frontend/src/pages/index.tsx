@@ -112,7 +112,7 @@ const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
     <Section
       id="programme"
       background="muted"
-      className="lg:h-[50vh] xl:max-h-screen "
+      className="xl:h-[50vh] xl:max-h-screen "
     >
       <WeddingProgram font={bilbo} events={programs} />
     </Section>
@@ -129,24 +129,24 @@ const RSVPSection = () => {
           alt="RSVP"
           width={2000}
           height={1000}
-          className="lg:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-center "
+          className="xl:max-h-[50vh] h-[50vh] absolute z-0 object-cover object-center "
         />
-        <DivWithAnimation className=" text-xl lg:text-6xl   text-theme-default z-1 pt-10 font-bold px-10 pb-5">
+        <DivWithAnimation className=" text-xl xl:text-6xl   text-theme-default z-1 pt-10 font-bold px-10 pb-5">
           Nous espérons vous voir nombreux en ce jour spécial !
         </DivWithAnimation>
-        <DivWithAnimation className=" text-xl lg:text-4xl   text-theme-default z-1   font-bold pb-5">
+        <DivWithAnimation className=" text-xl xl:text-4xl   text-theme-default z-1   font-bold pb-5">
           Réponse attendue avant le 28 février 2026
         </DivWithAnimation>
         <DivWithAnimation>
           <MagneticButton
             variant="stroke"
             className={cn(
-              'h-10 lg:h-15 w-20 lg:w-30 rounded-full   hover:after:border-1    ',
+              'h-10 xl:h-15 w-20 xl:w-30 rounded-full   hover:after:border-1    ',
               'text-theme-accent-dark',
               'hover:text-theme-default',
               'after:border-none',
               'bg-theme-default',
-              'text-lg lg:text-2xl',
+              'text-lg xl:text-2xl',
             )}
             flairClassName={cn('bg-theme-accent-dark ')}
             strokeColor={cn('bg-theme-accent-dark')}
@@ -169,7 +169,7 @@ const BonusSection = () => {
         <span
           className={cn(
             bilbo.className,
-            'text-2xl text-theme-accent-dark flex lg:flex-row flex-col items-center gap-2 pt-5',
+            'text-2xl text-theme-accent-dark flex xl:flex-row flex-col items-center gap-2 pt-5',
           )}
         >
           En bonus, l'instant où la demande de mariage a été faite{' '}

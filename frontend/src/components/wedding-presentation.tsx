@@ -21,21 +21,21 @@ export function WeddingPresentation({
     weddingInfo.presentationMessage?.trim().replace(/(?:\r\n|\r|\n)/g, '<br>') +
     '</span>';
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn('space-y-4 xl:max-h-screen xl:h-screen', className)}>
       {' '}
-      <div className="flex flex-col items-center justify-center min-h-10" />
+      <div className="flex flex-col items-center justify-center min-h-5" />
       {/* Couple's Message */}
       <DivWithAnimation className="text-theme-accent-dark  text-center  flex flex-col xl:flex-row items-center justify-center  p-10 gap-6 xl:h-screen pt-0">
-        <div className="xl:m-10 ">
+        <div className=" xl:w-1/2">
           <Image
             src={'/images/couple.jpeg'}
             alt={'couple'}
-            width={6000}
+            width={600}
             height={600}
-            className="object-cover w-full shadow-xl"
+            className="object-cover  shadow-xl"
           />
         </div>
-        <div className="container-responsive flex flex-col items-center justify-center gap-6">
+        <div className=" flex flex-col items-center justify-center gap-6  ">
           <div>
             <IconGalaxy className="xl:w-10 xl:h-10 w-8 h-8 animate-[spin_3s_linear_infinite]" />
           </div>
