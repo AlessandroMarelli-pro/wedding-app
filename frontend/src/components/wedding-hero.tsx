@@ -177,7 +177,7 @@ export const WeddingHero = ({
           textElementsRef.current.heroMessage = el;
         }}
         id="hero-message"
-        className="absolute text-theme-blue font-bold sm:bottom-15 bottom-[calc(25%)] roundhand-bold z-10 w-max"
+        className="absolute text-theme-blue font-bold sm:bottom-15 bottom-[calc(25%)] roundhand-regular z-10 w-max"
         style={{
           left: imagePosition ? getRightEdgePosition() : '50%',
           transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
