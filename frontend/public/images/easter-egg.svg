@@ -1,0 +1,27 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#1a1a2e"/>
+  
+  <!-- Easter egg shape -->
+  <ellipse cx="200" cy="200" rx="120" ry="160" fill="#ff6b6b" stroke="#ff5252" stroke-width="4"/>
+  
+  <!-- Decorative patterns -->
+  <circle cx="160" cy="160" r="15" fill="#4ecdc4"/>
+  <circle cx="240" cy="160" r="15" fill="#4ecdc4"/>
+  <circle cx="200" cy="200" r="20" fill="#ffe66d"/>
+  <circle cx="180" cy="240" r="12" fill="#4ecdc4"/>
+  <circle cx="220" cy="240" r="12" fill="#4ecdc4"/>
+  
+  <!-- Sparkles -->
+  <g fill="#ffe66d">
+    <polygon points="100,100 105,110 115,110 107,117 110,127 100,120 90,127 93,117 85,110 95,110" opacity="0.8"/>
+    <polygon points="300,80 305,90 315,90 307,97 310,107 300,100 290,107 293,97 285,90 295,90" opacity="0.8"/>
+    <polygon points="80,300 85,310 95,310 87,317 90,327 80,320 70,327 73,317 65,310 75,310" opacity="0.8"/>
+    <polygon points="320,320 325,330 335,330 327,337 330,347 320,340 310,347 313,337 305,330 315,330" opacity="0.8"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="350" text-anchor="middle" fill="#ffe66d" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    🎉 Surprise! 🎉
+  </text>
+</svg>
