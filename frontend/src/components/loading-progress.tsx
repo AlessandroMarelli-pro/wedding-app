@@ -47,6 +47,9 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({
       // While loading, gradually increase progress but don't reach 100%
       loadingInterval = setInterval(() => {
         setProgress((prev) => {
+          if (!isLoading) {
+            return 100;
+          }
           if (prev >= 90 || !isLoading) {
             return prev;
           }
