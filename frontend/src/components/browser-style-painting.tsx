@@ -66,7 +66,7 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
         // Smooth fade-in after a short delay
         setTimeout(() => {
           setIsVisible(true);
-        }, 200);
+        }, 50);
       })
       .catch((error) => {
         console.error('Error loading SVG:', error);

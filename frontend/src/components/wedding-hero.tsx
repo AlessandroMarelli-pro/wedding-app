@@ -23,6 +23,7 @@ export const WeddingHero = ({
     svgWidth: number;
     svgHeight: number;
   } | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const textElementsRef = useRef<{
     coupleNames: HTMLHeadingElement | null;
@@ -58,6 +59,9 @@ export const WeddingHero = ({
     // Register SplitText plugin
     gsap.registerPlugin(SplitText);
 
+    // Set initial opacity for all h1 elements to prevent flash
+    gsap.set('h1', { opacity: 0 });
+
     // Set up responsive animations with GSAP
     const mm = gsap.matchMedia();
 
@@ -91,11 +95,23 @@ export const WeddingHero = ({
       );
     });
 
-    // Split text animations
-    // Set initial opacity for all h1 elements
-    gsap.set('h1', { opacity: 1 });
+    // Trigger loaded state after a short delay
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
 
-    // Animate coupleNames
+    return () => {
+      mm.revert();
+      clearTimeout(timer);
+    };
+  }, []);
+
+  // Separate useEffect for animations that depends on isLoaded
+  useEffect(() => {
+    if (!isLoaded) return;
+    gsap.set('h1', { opacity: 1 });
+    // Split text animations - only run when loaded
+    // Animate coupleNames - start after SVG begins drawing
     if (textElementsRef.current.coupleNames) {
       const coupleNamesSplit = SplitText.create(
         textElementsRef.current.coupleNames,
@@ -104,10 +120,10 @@ export const WeddingHero = ({
       gsap.from(coupleNamesSplit.chars, {
         y: 20,
         autoAlpha: 0,
-        stagger: 0.05,
-        duration: 0.6,
+        stagger: 0.03,
+        duration: 0.8,
         ease: 'power2.out',
-        delay: 0.6,
+        delay: 0.8, // Start after SVG drawing begins
       });
     }
 
@@ -120,10 +136,10 @@ export const WeddingHero = ({
       gsap.from(heroMessageSplit.chars, {
         y: 20,
         autoAlpha: 0,
-        stagger: 0.05,
-        duration: 0.6,
+        stagger: 0.03,
+        duration: 0.8,
         ease: 'power2.out',
-        delay: 0.9, // Slight delay after coupleNames
+        delay: 1.2, // Staggered after coupleNames
       });
     }
 
@@ -136,25 +152,28 @@ export const WeddingHero = ({
       gsap.from(heroAddressSplit.chars, {
         y: 20,
         autoAlpha: 0,
-        stagger: 0.05,
-        duration: 0.6,
+        stagger: 0.03,
+        duration: 0.8,
         ease: 'power2.out',
-        delay: 1.2, // Delay after heroMessage
+        delay: 1.6, // Final text element
       });
     }
-
-    return () => mm.revert();
-  }, []);
+  }, [isLoaded]);
 
   return (
     <div className="relative w-full h-screen bg-theme-default overflow-hidden">
+      {/* Loading indicator */}
+
       <BrowserStylePainting
         src="/images/aqua.svg"
         alt="Ariane and Timothé"
         className="absolute inset-0"
-        duration={1000}
-        delay={5}
-        pathDelay={10}
+        duration={2000}
+        delay={200}
+        pathDelay={5}
+        progressivePercentage={10}
+        drawablePercentage={1}
+        batchDelay={30}
         offsetYDivider={4}
       />
       <h1
@@ -175,7 +194,7 @@ export const WeddingHero = ({
           textElementsRef.current.heroMessage = el;
         }}
         id="hero-message"
-        className="absolute text-theme-blue font-bold sm:bottom-15 bottom-[calc(25%)] roundhand-regular z-10 w-max"
+        className="absolute text-theme-blue font-bold sm:bottom-15 bottom-[calc(25%)] roundhand-regular z-10 w-max "
         style={{
           left: imagePosition ? getRightEdgePosition() : '50%',
           transform: imagePosition ? 'translateX(-100%)' : 'translateX(-50%)',
