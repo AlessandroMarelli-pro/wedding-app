@@ -188,11 +188,9 @@ export function WeddingProgram({
                 scaleMultiplier={0.8}
                 src="/images/lavande.svg"
                 alt="lavande"
-                duration={5000}
-                delay={10}
-                pathDelay={3}
-                useSetMode={false}
-                setPercentage={4}
+                duration={1000}
+                delay={5}
+                pathDelay={10}
                 className={cn(
                   'justify-center items-center flex flex-col max-w-xs xl:max-w-xs translate-x-5',
                 )}

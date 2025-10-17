@@ -10,10 +10,10 @@ interface BrowserStylePaintingProps {
   className?: string;
   duration?: number;
   delay?: number;
-  pathDelay?: number; // Delay between each path
-  progressivePercentage?: number; // Percentage of paths to draw progressively (default 30%)
-  setPercentage?: number; // Percentage of paths per set (default 10%)
-  useSetMode?: boolean; // If true, draw by sets instead of progressive (default false)
+  pathDelay?: number; // Delay between each path in progressive phase
+  progressivePercentage?: number; // Percentage of paths to draw progressively initially (default 30%)
+  drawablePercentage?: number; // Percentage of paths to draw in each batch after progressive phase (default 10%)
+  batchDelay?: number; // Delay between each batch (default 50ms)
   centerSvg?: boolean; // If true, center the SVG in the container (default true)
   preserveAspectRatio?: boolean; // If true, maintain aspect ratio (default true)
   maxHeight?: number | null; // Maximum height in pixels (default null)
@@ -36,9 +36,9 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
   duration = 3000,
   delay = 500,
   pathDelay = 10, // 10ms between each path
-  progressivePercentage = 30, // 30% of paths drawn progressively
-  setPercentage = 10, // 10% of paths per set
-  useSetMode = false, // Use set mode instead of progressive
+  progressivePercentage = 0, // 30% of paths drawn progressively initially
+  drawablePercentage = 0.5, // 10% of paths per batch after progressive phase
+  batchDelay = 100, // 50ms delay between batches
   centerSvg = true, // Center the SVG in the container
   preserveAspectRatio = true, // Maintain aspect ratio
   maxHeight = null, // Maximum height in pixels (default null)
@@ -288,71 +288,51 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     ctx.translate(offsetX, offsetY);
     ctx.scale(scale, scale);
 
-    // GSAP-optimized drawing with configurable modes
+    // GSAP-optimized drawing with progressive + batch phases
     const totalPaths = svgData.paths.length;
-    const pathsPerSet = Math.floor(totalPaths * (setPercentage / 100));
+    const pathsPerProgressivePeriod = Math.floor(
+      totalPaths * (progressivePercentage / 100),
+    );
+    const pathsPerBatch = Math.floor(totalPaths * (drawablePercentage / 100));
 
     // Create GSAP timeline for smooth animation
     const tl = gsap.timeline({ delay: delay / 1000 }); // Convert ms to seconds
     timelineRef.current = tl; // Store reference for scroll acceleration
 
-    if (useSetMode) {
-      // Set mode: Draw by sets of X% with GSAP
-      const totalSets = Math.ceil(totalPaths / pathsPerSet);
+    // Progressive phase: Draw individual paths initially
+    for (let i = 0; i < pathsPerProgressivePeriod; i++) {
+      tl.call(
+        () => {
+          drawPath(ctx, svgData.paths[i]);
+        },
+        [],
+        i * (pathDelay / 1000),
+      );
+    }
 
-      for (let setIndex = 0; setIndex < totalSets; setIndex++) {
-        const setStartIndex = setIndex * pathsPerSet;
-        const setEndIndex = Math.min(setStartIndex + pathsPerSet, totalPaths);
+    // Batch phase: Draw remaining paths in batches
+    const remainingPaths = totalPaths - pathsPerProgressivePeriod;
+    const totalBatches = Math.ceil(remainingPaths / pathsPerBatch);
 
-        tl.call(
-          () => {
-            // Draw all paths in this set at once
-            for (let i = setStartIndex; i < setEndIndex; i++) {
-              drawPath(ctx, svgData.paths[i]);
-            }
-          },
-          [],
-          setIndex * (pathDelay / 1000),
-        ); // Convert ms to seconds
-      }
-    } else {
-      // Progressive mode: Draw individual paths with acceleration
-      const pathsPerProgressivePeriod = Math.floor(
-        totalPaths * (progressivePercentage / 100),
+    for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
+      const batchStartIndex =
+        pathsPerProgressivePeriod + batchIndex * pathsPerBatch;
+      const batchEndIndex = Math.min(
+        batchStartIndex + pathsPerBatch,
+        totalPaths,
       );
 
-      // Progressive phase
-      for (let i = 0; i < pathsPerProgressivePeriod; i++) {
-        tl.call(
-          () => {
+      tl.call(
+        () => {
+          // Draw all paths in this batch at once
+          for (let i = batchStartIndex; i < batchEndIndex; i++) {
             drawPath(ctx, svgData.paths[i]);
-          },
-          [],
-          i * (pathDelay / 1000),
-        );
-      }
-
-      // Accelerated sets phase
-      const remainingPaths = totalPaths - pathsPerProgressivePeriod;
-      const remainingSets = Math.ceil(remainingPaths / pathsPerSet);
-
-      for (let setIndex = 0; setIndex < remainingSets; setIndex++) {
-        const setStartIndex =
-          pathsPerProgressivePeriod + setIndex * pathsPerSet;
-        const setEndIndex = Math.min(setStartIndex + pathsPerSet, totalPaths);
-
-        tl.call(
-          () => {
-            // Draw all paths in this set at once
-            for (let i = setStartIndex; i < setEndIndex; i++) {
-              drawPath(ctx, svgData.paths[i]);
-            }
-          },
-          [],
-          (pathsPerProgressivePeriod * pathDelay) / 1000 +
-            (setIndex * pathDelay * 5) / 1000,
-        );
-      }
+          }
+        },
+        [],
+        pathsPerProgressivePeriod * (pathDelay / 1000) +
+          batchIndex * (batchDelay / 1000),
+      );
     }
 
     return () => {
@@ -368,8 +348,8 @@ export const BrowserStylePainting: React.FC<BrowserStylePaintingProps> = ({
     delay,
     pathDelay,
     progressivePercentage,
-    setPercentage,
-    useSetMode,
+    drawablePercentage,
+    batchDelay,
     centerSvg,
     preserveAspectRatio,
     maxHeight,

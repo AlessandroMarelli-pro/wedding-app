@@ -77,11 +77,9 @@ export const WeddingInformation = ({
                 src="/images/lauziers.svg"
                 alt={weddingInfo.coupleNames}
                 className=" w-1/2"
-                duration={4000}
+                duration={1000}
                 delay={5}
                 pathDelay={10}
-                useSetMode={false}
-                setPercentage={4}
               />
             )}
           </div>

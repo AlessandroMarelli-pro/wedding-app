@@ -152,11 +152,9 @@ export const WeddingHero = ({
         src="/images/aqua.svg"
         alt="Ariane and Timothé"
         className="absolute inset-0"
-        duration={4000}
+        duration={1000}
         delay={5}
         pathDelay={10}
-        useSetMode={false}
-        setPercentage={4}
         offsetYDivider={4}
       />
       <h1

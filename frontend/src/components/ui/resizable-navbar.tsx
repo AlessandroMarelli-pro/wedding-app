@@ -54,8 +54,8 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     <motion.div
       id="navbar"
       ref={ref}
-      initial={{ scale: 0.9 }}
-      whileInView={{ scale: 1 }}
+      initial={{ scale: 1, y: -20 }}
+      whileInView={{ scale: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{
         duration: 1.5,
