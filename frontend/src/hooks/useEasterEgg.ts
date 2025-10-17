@@ -178,7 +178,7 @@ export const useEasterEgg = (config: Partial<EasterEggConfig> = {}) => {
     // Auto-close after 5 seconds
     setTimeout(() => {
       closeEasterEgg();
-    }, 100000);
+    }, 10000);
   };
 
   const closeEasterEgg = () => {
