@@ -23,8 +23,10 @@ async function createAccommodation(
     } = req.body;
 
     // Get the next display order if not provided
-    const totalAccommodations = await prisma.accommodation.count({});
-    const finalDisplayOrder = totalAccommodations + 1;
+    const totalAccommodations = await prisma.accommodation.findFirst({
+      orderBy: { displayOrder: 'desc' },
+    });
+    const finalDisplayOrder = (totalAccommodations?.displayOrder || 0) + 1;
 
     const accommodation = await prisma.accommodation.create({
       data: {
