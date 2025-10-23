@@ -18,7 +18,6 @@ async function createAccommodation(
       longitude,
       priceRange,
       isRecommended,
-      displayOrder,
       sourceUrl,
       imagesUrl,
     } = req.body;
