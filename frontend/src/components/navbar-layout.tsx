@@ -35,7 +35,7 @@ const mobileNavItems = [
   ...navItems,
   {
     name: 'RSVP',
-    link: 'https://app.youform.com/forms/i15ap0em',
+    link: 'https://app.youform.com/forms/i15ap0em?mariage=2026-07-13',
   },
 ];
 
@@ -87,7 +87,10 @@ export function NavbarLayout({ children }: NavbarLayoutProps) {
                 theme.rsvpItemsStrokeColor,
               )}
               onClick={() =>
-                window.open('https://app.youform.com/forms/i15ap0em', '_blank')
+                window.open(
+                  'https://app.youform.com/forms/i15ap0em?mariage=2026-07-13',
+                  '_blank',
+                )
               }
             >
               R S V P

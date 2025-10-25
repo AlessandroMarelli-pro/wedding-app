@@ -151,7 +151,10 @@ const RSVPSection = () => {
             flairClassName={cn('bg-theme-default ')}
             strokeColor={cn('bg-theme-default')}
             onClick={() =>
-              window.open('https://app.youform.com/forms/i15ap0em', '_blank')
+              window.open(
+                'https://app.youform.com/forms/i15ap0em?mariage=2026-07-13',
+                '_blank',
+              )
             }
           >
             R S V P
