@@ -99,7 +99,7 @@ export function WeddingRegistry() {
   return (
     <div className="space-y-4 ">
       <div className="flex flex-col xl:max-h-screen xl:h-screen">
-        <div className=" flex flex-col items-center justify-center xl:min-h-10" />
+        <div className=" flex flex-col items-center justify-center min-h-10" />
         <DivWithAnimation className=" flex flex-col justify-center items-center text-center px-2 xl:px-0">
           <div className="h-full py-5   ">
             <h1
@@ -116,8 +116,8 @@ export function WeddingRegistry() {
           </div>
         </DivWithAnimation>
         <div className=" flex flex-col xl:flex-row  xl:gap-10 px-10 pb-10">
-          <div className="flex flex-col  xl:w-[50%]  justify-center items-center text-center  2xl:justify-center gap-10">
-            <span className="text-theme-accent-dark text-sm xl:text-base xl:text-justify text-center">
+          <div className="flex flex-col  xl:w-[50%]  justify-center items-center text-center  2xl:justify-center xl:gap-20 gap-10">
+            <span className="text-theme-accent-dark leading-relaxed font-light  font-small text-justify text-base xl:text-lg">
               Nous avons comme rêve de prolonger ce jour de fête par un voyage
               en Colombie qui allie sommets andins, vallées du café, plages
               caribéennes, treks vers des cités perdues dans la jungle et villes
@@ -134,7 +134,7 @@ export function WeddingRegistry() {
                 'hover:text-theme-default',
                 'after:border-theme-accent-dark',
                 'bg-transparent ',
-                'text-sm xl:text-xl',
+                'text-md xl:text-base',
               )}
               flairClassName={cn('bg-theme-accent-dark ')}
               strokeColor={cn('bg-theme-accent-dark')}
