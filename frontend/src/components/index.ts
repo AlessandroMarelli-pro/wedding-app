@@ -14,3 +14,4 @@ export { RSVPFormModal } from './rsvp-form-modal';
 export { Section } from './section-components';
 export { WeddingCountdown, WeddingPresentation } from './wedding-presentation';
 export { WeddingProgram } from './wedding-program';
+export { WeddingRegistry } from './wedding-registry';

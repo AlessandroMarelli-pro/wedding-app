@@ -8,12 +8,10 @@ import { BrowserStylePainting } from './browser-style-painting';
 export const WeddingHero = ({
   weddingInfo,
   heroImage,
-  scrollToSection,
   font,
 }: {
   weddingInfo: WeddingInfo;
   heroImage: UploadedImage;
-  scrollToSection: (sectionId: string) => void;
   font: NextFontWithVariable;
 }) => {
   const [imagePosition, setImagePosition] = useState<{

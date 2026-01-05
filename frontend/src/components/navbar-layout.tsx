@@ -29,6 +29,10 @@ const navItems = [
     name: 'Programme',
     link: '#programme',
   },
+  {
+    name: 'Liste de mariage',
+    link: '#liste-de-mariage',
+  },
 ];
 
 const mobileNavItems = [

@@ -31,15 +31,6 @@ export default function App({ Component, pageProps }: AppProps) {
     text: 'Une production Hackerman 🕵️‍♂️',
   });
 
-  const scrollToSection = (
-    sectionId: string,
-    behavior: 'smooth' | 'instant' = 'smooth',
-  ) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior });
-    }
-  };
   return (
     <NavbarThemeProvider>
       <ErrorBoundary>

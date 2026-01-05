@@ -21,6 +21,7 @@ import {
   Section,
   WeddingPresentation,
   WeddingProgram,
+  WeddingRegistry,
 } from '../components';
 import { ApiService } from '../services/api';
 import {
@@ -39,18 +40,15 @@ const bilbo = Parisienne({
 const HeroSection = ({
   weddingInfo,
   heroImage,
-  scrollToSection,
 }: {
   weddingInfo: WeddingInfo;
   heroImage: UploadedImage;
-  scrollToSection: (sectionId: string) => void;
 }) => {
   return (
     <Section id="home" className="h-screen min-h-screen">
       <WeddingHero
         weddingInfo={weddingInfo}
         heroImage={heroImage}
-        scrollToSection={scrollToSection}
         font={bilbo}
       />
     </Section>
@@ -115,6 +113,14 @@ const WeddingProgramSection = ({ programs }: { programs: ProgramEvent[] }) => {
       className="xl:h-[50vh] xl:max-h-screen "
     >
       <WeddingProgram font={bilbo} events={programs} />
+    </Section>
+  );
+};
+
+const WeddingRegistrySection = () => {
+  return (
+    <Section id="liste-de-mariage" background="accent">
+      <WeddingRegistry />
     </Section>
   );
 };
@@ -194,33 +200,6 @@ const BonusSection = () => {
   );
 };
 
-const MissingDataSection = () => {
-  return (
-    <>
-      <Head>
-        <title>Mariage d'Ariane & Timothe</title>
-        <meta
-          name="description"
-          content="Please check back later for details about our special day"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h1 className="text-4xl  text-foreground mb-4">
-            Le site est en cours de construction
-          </h1>
-          <p className="text-muted-foreground">
-            Veuillez vérifier plus tard pour les détails de notre jour spécial.
-          </p>
-        </div>
-      </div>
-    </>
-  );
-};
-
 const MetaThemeChanger = () => {
   const { setTheme } = useNavbarTheme();
 
@@ -230,6 +209,7 @@ const MetaThemeChanger = () => {
     informations: 'pink',
     logements: 'pink',
     programme: 'yellow',
+    'liste-de-mariage': 'pink',
     rsvp: 'transparent',
     bonus: 'transparent',
   };
@@ -376,16 +356,6 @@ export default function HomePage() {
     programs: displayPrograms,
   } = currentData;
 
-  const scrollToSection = (
-    sectionId: string,
-    behavior: 'smooth' | 'instant' = 'smooth',
-  ) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior });
-    }
-  };
-
   const getDirectionName = (directionType: string) => {
     return directionType === 'car'
       ? 'En voiture'
@@ -471,7 +441,6 @@ export default function HomePage() {
           <HeroSection
             heroImage={heroImage as UploadedImage}
             weddingInfo={displayWeddingInfo}
-            scrollToSection={scrollToSection}
           />
           <OurStorySection weddingInfo={displayWeddingInfo} />
           <WeddingDetailsSection
@@ -485,6 +454,7 @@ export default function HomePage() {
             accommodationsImage={accommodationsImage as UploadedImage}
           />
           <WeddingProgramSection programs={displayPrograms} />
+          <WeddingRegistrySection />
           <RSVPSection />
           <BonusSection />
         </div>
