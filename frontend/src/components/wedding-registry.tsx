@@ -140,7 +140,7 @@ export function WeddingRegistry() {
               strokeColor={cn('bg-theme-accent-dark')}
               onClick={() =>
                 window.open(
-                  'https://app.youform.com/forms/i15ap0em?mariage=2026-07-13',
+                  'https://www.millemercismariage.com/arichoutim/liste.html',
                   '_blank',
                 )
               }
