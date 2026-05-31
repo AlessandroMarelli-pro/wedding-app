@@ -448,7 +448,6 @@ export default function HomePage() {
             weddingInfo={displayWeddingInfo}
             getDirectionName={getDirectionName}
           />{' '}
-   
           <WeddingProgramSection programs={displayPrograms} />
           <WeddingRegistrySection />
           <RSVPSection />
