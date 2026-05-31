@@ -210,7 +210,7 @@ const MetaThemeChanger = () => {
     logements: 'pink',
     programme: 'yellow',
     'liste-de-mariage': 'pink',
-    rsvp: 'transparent',
+    rsvp: 'pink',
     bonus: 'transparent',
   };
 
