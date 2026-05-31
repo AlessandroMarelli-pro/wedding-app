@@ -28,11 +28,11 @@ const navItems = [
   {
     name: 'Liste de mariage',
     link: '#liste-de-mariage',
-  }, 
+  },
   {
     name: 'Où dormir ?',
     link: '#logements',
-  }
+  },
 ];
 
 const mobileNavItems = [
