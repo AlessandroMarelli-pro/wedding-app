@@ -32,7 +32,7 @@ const navItems = [
   {
     name: 'Où dormir ?',
     link: '#logements',
-  },
+  }
 ];
 
 const mobileNavItems = [
