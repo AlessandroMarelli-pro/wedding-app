@@ -448,14 +448,15 @@ export default function HomePage() {
             weddingInfo={displayWeddingInfo}
             getDirectionName={getDirectionName}
           />{' '}
+   
+          <WeddingProgramSection programs={displayPrograms} />
+          <WeddingRegistrySection />
+          <RSVPSection />
           <AccommodationsSection
             accommodations={displayAccommodations}
             weddingInfo={displayWeddingInfo}
             accommodationsImage={accommodationsImage as UploadedImage}
           />
-          <WeddingProgramSection programs={displayPrograms} />
-          <WeddingRegistrySection />
-          <RSVPSection />
           <BonusSection />
         </div>
       </NavbarLayout>
