@@ -22,16 +22,16 @@ const navItems = [
     link: '#informations',
   },
   {
-    name: 'Où dormir ?',
-    link: '#logements',
-  },
-  {
     name: 'Programme',
     link: '#programme',
   },
   {
     name: 'Liste de mariage',
     link: '#liste-de-mariage',
+  }, 
+  {
+    name: 'Où dormir ?',
+    link: '#logements',
   },
 ];
 
